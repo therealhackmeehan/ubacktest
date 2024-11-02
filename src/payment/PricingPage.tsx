@@ -93,7 +93,7 @@ const PricingPage = () => {
       <div className='mx-auto max-w-7xl px-6 lg:px-8'>
         <div id='pricing' className='mx-auto max-w-4xl text-center'>
           <h2 className='mt-2 text-4xl font-bold tracking-tight text-gray-900 sm:text-5xl dark:text-white'>
-            Pick your <span className='text-yellow-500'>pricing</span>
+            Pick your <span className='text-purple-500'>pricing</span>
           </h2>
         </div>
         <p className='mx-auto mt-6 max-w-2xl text-center text-lg leading-8 text-gray-600 dark:text-white'>
@@ -146,7 +146,7 @@ const PricingPage = () => {
                 <ul role='list' className='mt-8 space-y-3 text-sm leading-6 text-gray-600 dark:text-white'>
                   {paymentPlanCards[planId].features.map((feature) => (
                     <li key={feature} className='flex gap-x-3'>
-                      <AiFillCheckCircle className='h-6 w-5 flex-none text-yellow-500' aria-hidden='true' />
+                      <AiFillCheckCircle className='h-6 w-5 flex-none text-purple-500' aria-hidden='true' />
                       {feature}
                     </li>
                   ))}
@@ -158,9 +158,9 @@ const PricingPage = () => {
                   disabled={isCustomerPortalUrlLoading}
                   aria-describedby='manage-subscription'
                   className={cn(
-                    'mt-8 block rounded-md py-2 px-3 text-center text-sm font-semibold leading-6 focus-visible:outline focus-visible:outline-2 focus-visible:outline-yellow-400',
+                    'mt-8 block rounded-md py-2 px-3 text-center text-sm font-semibold leading-6 focus-visible:outline focus-visible:outline-2 focus-visible:outline-purple-400',
                     {
-                      'bg-yellow-500 text-white hover:text-white shadow-sm hover:bg-yellow-400':
+                      'bg-purple-500 text-white hover:text-white shadow-sm hover:bg-purple-400':
                         planId === bestDealPaymentPlanId,
                       'text-gray-600 ring-1 ring-inset ring-purple-200 hover:ring-purple-400':
                         planId !== bestDealPaymentPlanId,
@@ -175,7 +175,7 @@ const PricingPage = () => {
                   aria-describedby={planId}
                   className={cn(
                     {
-                      'bg-yellow-500 text-white hover:text-white shadow-sm hover:bg-yellow-400':
+                      'bg-purple-500 text-white hover:text-white shadow-sm hover:bg-purple-400':
                         planId === bestDealPaymentPlanId,
                       'text-gray-600  ring-1 ring-inset ring-purple-200 hover:ring-purple-400':
                         planId !== bestDealPaymentPlanId,
@@ -183,7 +183,7 @@ const PricingPage = () => {
                     {
                       'opacity-50 cursor-wait': isPaymentLoading,
                     },
-                    'mt-8 block rounded-md py-2 px-3 text-center text-sm dark:text-white font-semibold leading-6 focus-visible:outline focus-visible:outline-2 focus-visible:outline-yellow-400'
+                    'mt-8 block rounded-md py-2 px-3 text-center text-sm dark:text-white font-semibold leading-6 focus-visible:outline focus-visible:outline-2 focus-visible:outline-purple-400'
                   )}
                   disabled={isPaymentLoading}
                 >

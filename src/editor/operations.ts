@@ -9,7 +9,6 @@ import {
   type GetSpecificStrategy,
 } from 'wasp/server/operations';
 
-
 type FileCreationInfo = {
   name: string;
   code: string;

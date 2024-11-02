@@ -17,6 +17,8 @@ const navigation = [
   { name: 'Pricing', href: routes.PricingPageRoute.build() },
   { name: 'Documentation', href: DocsUrl },
   { name: 'Blog', href: BlogUrl },
+  { name: 'Home', href: routes.HomePageRoute.build() },
+  { name: 'Editor', href: routes.EditorRoute.build() },
 ];
 
 const NavLogo = () => <img className='h-8 w-8' src={logo} alt='Your SaaS App' />;
@@ -48,7 +50,7 @@ export default function AppNavBar() {
             <a
               key={item.name}
               href={item.href}
-              className='text-sm font-semibold leading-6 text-gray-900 duration-300 ease-in-out hover:text-yellow-500 dark:text-white'
+              className='text-sm font-semibold leading-6 text-gray-900 duration-300 ease-in-out hover:text-purple-500 dark:text-white'
             >
               {item.name}
             </a>
@@ -61,7 +63,7 @@ export default function AppNavBar() {
 
           {isUserLoading ? null : !user ? (
             <a href={!user ? routes.LoginRoute.build() : routes.AccountRoute.build()} className='text-sm font-semibold leading-6 ml-4'>
-              <div className='flex items-center duration-300 ease-in-out text-gray-900 hover:text-yellow-500 dark:text-white'>
+              <div className='flex items-center duration-300 ease-in-out text-gray-900 hover:text-purple-500 dark:text-white'>
                 Log in <BiLogIn size='1.1rem' className='ml-1 mt-[0.1rem]' />
               </div>
             </a>
@@ -106,7 +108,7 @@ export default function AppNavBar() {
               <div className='py-6'>
                 {isUserLoading ? null : !user ? (
                   <Link to='/login'>
-                    <div className='flex justify-end items-center duration-300 ease-in-out text-gray-900 hover:text-yellow-500 dark:text-white'>
+                    <div className='flex justify-end items-center duration-300 ease-in-out text-gray-900 hover:text-purple-500 dark:text-white'>
                       Log in <BiLogIn size='1.1rem' className='ml-1' />
                     </div>
                   </Link>
