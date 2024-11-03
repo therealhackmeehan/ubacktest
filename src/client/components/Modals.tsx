@@ -11,7 +11,7 @@ import { TiDelete } from "react-icons/ti";
 interface ModalProps {
     isOpen: boolean;
     action: () => void;
-    id: string;
+    id: string;           
 }
 
 export const RenameModal: React.FC<ModalProps> = ({ isOpen, action, id }) => {

@@ -1,5 +1,10 @@
-import React, { useState, useEffect } from 'react';
 import { Line } from 'react-chartjs-2';
+import { FiShare, FiSave } from "react-icons/fi";
+import { MdOutlineCancel } from "react-icons/md";
+import { MdOutlineTransitEnterexit } from "react-icons/md";
+import { IoCloudDownloadOutline } from "react-icons/io5";
+
+import { useState } from 'react';
 
 import {
   Chart as ChartJS,
@@ -22,63 +27,45 @@ ChartJS.register(
   Legend
 );
 
+export const StockChart = ({ stockData }) => {
 
-export const StockChart = ({ stockData, stockSymbol, buySellSignal}) => {
+  const [resultOpen, setResultOpen] = useState<boolean>(true);
 
-  const dates = stockData.timestamp.map((timestamp: number) =>
+  const symbol = stockData[0].meta.symbol;
+
+  const dates = stockData[0].timestamp.map((timestamp: number) =>
     new Date(timestamp * 1000).toLocaleDateString()
   );
-  const openPrices = stockData.indicators.quote[0].open;
-  const closePrices = stockData.indicators.quote[0].close;
 
-  const [strategyValues, setStrategyValues] = useState<number[]>([]);
-
-  // Function to apply the strategy
-  const applyStrategy = (openPrices: number[], closePrices: number[], strategy: number[]) => {
-    let portfolioValue = closePrices[0]; // Starting portfolio value (could be any number)
-    const values = [portfolioValue]; // Store cumulative portfolio values over time
-  
-    for (let i = 0; i < openPrices.length - 1; i++) {
-      const dailyChange = (closePrices[i + 1] - closePrices[i]) / closePrices[i]; // Next day's percentage change
-      const position = strategy[i]; // -1: short, 0: hold, 1: buy on current day's signal
-  
-      portfolioValue += portfolioValue * dailyChange * position; // Apply position to next day's change
-      values.push(portfolioValue); // Store updated portfolio value
-    }
-  
-    return values;
-  };
-  
-  useEffect(() => {
-    if (openPrices && closePrices) {
-      const strategy = buySellSignal;
-      const portfolioValues = applyStrategy(openPrices, closePrices, strategy);
-      setStrategyValues(portfolioValues);
-    }
-  }, [openPrices, closePrices]);
+  const indicators = stockData[0].indicators;
+  const openPrices = indicators.quote[0].open;
+  const closePrices = indicators.quote[0].close;
+  const portfolioValues = indicators.quote[0].portfolio;
+  const volumes = indicators.quote[0].volume;
+  const adjClosePrices = indicators.adjclose[0];
 
   const data = {
     labels: dates,
     datasets: [
-      // {
-      //   label: 'Open',
-      //   data: openPrices,
-      //   borderColor: 'rgba(75, 192, 192, 1)',
-      //   backgroundColor: 'rgba(75, 192, 192, 0.2)',
-      //   fill: false,
-      // },
+      {
+        label: 'Open',
+        data: openPrices,
+        borderColor: 'rgba(123, 50, 168, 1)',
+        backgroundColor: 'rgba(123, 50, 168, 0.2)',
+        fill: false,
+      },
       {
         label: 'Close',
         data: closePrices,
-        borderColor: 'rgba(153, 102, 255, 1)',
-        backgroundColor: 'rgba(153, 102, 255, 0.2)',
+        borderColor: 'rgba(70, 15, 105, 1)',
+        backgroundColor: 'rgba(70, 15, 105, 0.2)',
         fill: false,
       },
       {
         label: 'Backtested Strategy',
-        data: strategyValues,
-        borderColor: 'rgba(255, 99, 132, 1)',
-        backgroundColor: 'rgba(255, 99, 132, 0.2)',
+        data: portfolioValues,
+        borderColor: 'rgba(235, 198, 134, 1)',
+        backgroundColor: 'rgba(235, 198, 134, 0.2)',
         fill: false,
       },
     ],
@@ -91,17 +78,66 @@ export const StockChart = ({ stockData, stockSymbol, buySellSignal}) => {
         position: 'top' as const,
       },
       title: {
-        display: true,
-        text: `Stock Data and Simulated Portfolio for ${stockSymbol}`,
+        display: false,
+        text: `Stock Data and Simulated Portfolio for ${symbol}`,
       },
     },
   };
 
   return (
-    <div className="mt-10">
-      <h2>Stock Data for {stockSymbol}</h2>
-      <Line data={data} options={options} />
-    </div>
+    <>
+      {resultOpen && (
+        <div className="fixed inset-0 flex items-center justify-center z-50">
+          <div className="bg-gray-500 w-full opacity-75 fixed inset-0"></div>
+          <div className="bg-white rounded-lg shadow-lg z-10 border-purple-600 border-1 shadow-md shadow-purple-900 rounded-xl">
+            <div className='flex -mr-2 -mt-2 justify-end'>
+              <button className='bg-red-500 rotate-180 rounded-full text-white' onClick={() => setResultOpen(false)}>
+                <MdOutlineTransitEnterexit size='2rem' />
+              </button>
+            </div>
+            <div className='items-center flex m-2 justify-between'>
+              <h4 className="tracking-tight text-xl font-extrabold text-left m-4">
+                Stock Data and Simulated Backtest Portfolio for {symbol}
+              </h4>
+              <div className='flex'>
+                <button className='p-2 m-1 tracking-tight hover:bg-purple-900 rounded-md bg-purple-700 text-white font-light'><FiSave /></button>
+                <button className='p-2 m-1 tracking-tight hover:bg-purple-900 rounded-md bg-purple-700 text-white font-light'><IoCloudDownloadOutline /></button>
+                <button className='p-2 m-1 tracking-tight hover:bg-purple-900 rounded-md bg-purple-700 text-white font-light'><FiShare /></button>
+                <button className='p-2 m-1 tracking-tight hover:bg-purple-900 rounded-md bg-purple-700 text-white font-light'>
+                  Implement With Real Money
+                  <span className="pl-1 text-xs font-extrabold tracking-tight uppercase align-top">
+                    (Beta)
+                  </span>
+                </button>
+              </div>
+            </div>
+            <Line className='p-4' data={data} options={options} />
+            <div className='bg-purple-900 flex justify-between rounded-lg rounded-t-none'>
+              <div className='bg-slate-200 rounded-lg p-3 m-2'>
+                <div className="flex tracking-tight text-lg text-purple-900 font-bold gap-2 text-white">Sharpe Ratio</div>
+                <div className='font-extralight tracking-loose'>12.32%</div>
+              </div>
+              <div className='bg-slate-200 rounded-lg p-3 m-2'>
+                <div className="flex tracking-tight text-lg text-purple-900 font-bold gap-2 text-white">Sortino Ratio</div>
+                <div className='font-extralight tracking-loose'>12.32%</div>
+              </div>
+              <div className='bg-slate-200 rounded-lg p-3 m-2'>
+                <div className="flex tracking-tight text-lg text-purple-900 font-bold gap-2 text-white">Number of Trades</div>
+                <div className='font-extralight tracking-loose'>12.32%</div>
+              </div>
+              <div className='bg-slate-200 rounded-lg p-3 m-2'>
+                <div className="flex tracking-tight text-lg text-purple-900 font-bold gap-2 text-white">Overall Profit/Loss</div>
+                <div className='font-extralight tracking-loose'>12.32%</div>
+              </div>
+              <div className='bg-slate-200 rounded-lg p-3 m-2'>
+                <div className="flex tracking-tight text-lg text-purple-900 font-bold gap-2 text-white">Overall Profit/Loss (Annualized)</div>
+                <div className='font-extralight tracking-loose'>12.32%</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
+    </>
   );
 };
 

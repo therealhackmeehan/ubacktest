@@ -15,7 +15,7 @@ export default function HomePage() {
 
     // for the overarching new strategy modal, keep track of function handle and modal state
     const [newProjectModalOpen, setNewProjectModalOpen] = useState<boolean>(false);
-    const handleCloseModal = () => {
+    const handleCloseNewProjectModal = () => {
         setNewProjectModalOpen(false);
     };
 
@@ -36,7 +36,7 @@ export default function HomePage() {
 
                     <NewProjectModal
                         isOpen={newProjectModalOpen}
-                        action={handleCloseModal}
+                        action={handleCloseNewProjectModal}
                         id={''} //not applicable
                     />
 
