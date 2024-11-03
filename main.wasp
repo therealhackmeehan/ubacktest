@@ -62,7 +62,7 @@ app OpenSaaS {
     },
     onAfterSignup: import { onAfterSignup } from "@src/auth/hooks",
     onAuthFailedRedirectTo: "/login",
-    onAuthSucceededRedirectTo: "/demo-app",
+    onAuthSucceededRedirectTo: "/home",
   },
 
   db: {
@@ -192,44 +192,6 @@ action updateUserById {
 }
 //#endregion
 
-//#region Demo AI App
-route DemoAppRoute { path: "/demo-app", to: DemoAppPage }
-page DemoAppPage {
-  authRequired: true,
-  component: import DemoAppPage from "@src/demo-ai-app/DemoAppPage"
-}
-
-action generateGptResponse {
-  fn: import { generateGptResponse } from "@src/demo-ai-app/operations",
-  entities: [User, Task, GptResponse]
-}
-
-action createTask {
-  fn: import { createTask } from "@src/demo-ai-app/operations",
-  entities: [Task]
-}
-
-action deleteTask {
-  fn: import { deleteTask } from "@src/demo-ai-app/operations",
-  entities: [Task]
-}
-
-action updateTask {
-  fn: import { updateTask } from "@src/demo-ai-app/operations",
-  entities: [Task]
-}
-
-query getGptResponses {
-  fn: import { getGptResponses } from "@src/demo-ai-app/operations",
-  entities: [User, GptResponse]
-}
-
-query getAllTasksByUser {
-  fn: import { getAllTasksByUser } from "@src/demo-ai-app/operations",
-  entities: [Task]
-}
-//#endregion
-
 //#region Payment
 route PricingPageRoute { path: "/pricing", to: PricingPage }
 page PricingPage {
@@ -257,29 +219,6 @@ api paymentsWebhook {
   entities: [User],
   middlewareConfigFn: import { paymentsMiddlewareConfigFn } from "@src/payment/webhook",
   httpRoute: (POST, "/payments-webhook")
-}
-//#endregion
-
-//#region File Upload
-route FileUploadRoute { path: "/file-upload", to: FileUploadPage }
-page FileUploadPage {
-  authRequired: true,
-  component: import FileUpload from "@src/file-upload/FileUploadPage"
-}
-
-action createFile {
-  fn: import { createFile } from "@src/file-upload/operations",
-  entities: [User, File]
-}
-
-query getAllFilesByUser {
-  fn: import { getAllFilesByUser } from "@src/file-upload/operations",
-  entities: [User, File]
-}
-
-query getDownloadFileSignedURL {
-  fn: import { getDownloadFileSignedURL } from "@src/file-upload/operations",
-  entities: [User, File]
 }
 //#endregion
 
