@@ -2,7 +2,6 @@ import {
   features,
   navigation,
   faqs,
-  footerNavigation,
   testimonials
 } from './contentSections';
 import Header from './components/Header';
@@ -11,7 +10,6 @@ import Clients from './components/Clients';
 import Features from './components/Features';
 import Testimonials from './components/Testimonials';
 import FAQ from './components/FAQ';
-import Footer from './components/Footer';
 
 export default function LandingPage() {
   return (
@@ -25,8 +23,6 @@ export default function LandingPage() {
         <Testimonials testimonials={testimonials} />
         <FAQ faqs={faqs} />
       </main>
-
-      <Footer footerNavigation={footerNavigation} />
     </div>
   );
 }

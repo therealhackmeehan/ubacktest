@@ -41,16 +41,18 @@ export default function HomePage() {
                     />
 
                     <div className='mt-12 space-y-4'>
-                        {isStrategiesLoading && <div className='mx-auto text-2xl'>Loading...</div>}
-                        {strategies && !isStrategiesLoading ? (
-                            <ul>
-                                {strategies.map((strategy: Strategy) => (
-                                    <StrategyDropDownContents strategy={strategy} />
+                        {isStrategiesLoading ?
+                            <div className='mx-auto text-2xl'>Loading...</div>
+                            : (
+                                strategies.length > 0 ? (
+                                    <ul>
+                                        {strategies.map((strategy: Strategy) => (
+                                            <StrategyDropDownContents strategy={strategy} />
+                                        ))}
+                                    </ul>
+                                ) : (
+                                    <div className='text-2xl'>No strategies found. Create one now!</div>
                                 ))}
-                            </ul>
-                        ) : (
-                            <div className='text-2xl'>No strategies found.</div>
-                        )}
                     </div>
                 </div>
             </div>

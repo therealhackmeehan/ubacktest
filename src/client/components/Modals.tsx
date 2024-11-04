@@ -113,7 +113,7 @@ export const NewProjectModal: React.FC<ModalProps> = ({ isOpen, action }) => {
 
     const handleNewProject = async () => {
         try {
-            const starter = "Open in the Backtest Editor to Get Started.";
+            const starter = "Start Editing Your Strategy!!";
             await createStrategy({ name: newProjectName, code: starter });
             setNewProjectName('');
             action(); // Close modal after successful project creation

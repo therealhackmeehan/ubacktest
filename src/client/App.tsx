@@ -5,6 +5,7 @@ import AppNavBar from './components/AppNavBar';
 import CookieConsentBanner from './components/cookie-consent/Banner';
 import { useMemo, useEffect, ReactNode } from 'react';
 import { Outlet, useLocation } from 'react-router-dom';
+import Footer from './components/Footer';
 
 /**
  * use this component to wrap all child components
@@ -50,13 +51,14 @@ export default function App() {
         ) : (
           <>
             {shouldDisplayAppNavBar && <AppNavBar />}
-            <div className='mx-auto max-w-7xl sm:px-6 lg:px-8'>
+            <div className='mx-auto sm:px-6 lg:px-8'>
               <Outlet />
             </div>
           </>
         )}
       </div>
       <CookieConsentBanner />
+      <Footer />
     </>
   );
 }

@@ -1,0 +1,55 @@
+import { DocsUrl, BlogUrl } from '../../shared/common';
+import { routes } from 'wasp/client/router';
+
+const footerInfo = {
+  app: [
+    { name: 'Documentation', href: DocsUrl },
+    { name: 'Blog', href: BlogUrl },
+  ],
+  company: [
+    { name: 'About', href: 'https://wasp-lang.dev' },
+    { name: 'Privacy', href: '#' },
+    { name: 'Terms of Service', href: '#' },
+  ],
+};
+
+export default function Footer() {
+  return (
+    <div className='mx-auto mt-6 max-w-7xl px-6 lg:px-8 dark:bg-boxdark-2'>
+      <footer
+        aria-labelledby='footer-heading'
+        className='relative border-t border-gray-900/10 dark:border-gray-200/10 py-12 sm:mt-32'
+      >
+        <h2 id='footer-heading' className='sr-only'>
+          Footer
+        </h2>
+        <div className='flex items-start justify-end gap-20'>
+          <div>
+            <h3 className='text-sm font-semibold leading-6 text-gray-900 dark:text-white'>App</h3>
+            <ul role='list' className='mt-6 space-y-2'>
+              {footerInfo.app.map((item) => (
+                <li key={item.name}>
+                  <a href={item.href} className='text-sm leading-6 text-gray-600 hover:text-purple-700 dark:text-white'>
+                    {item.name}
+                  </a>
+                </li>
+              ))}
+            </ul>
+          </div>
+          <div>
+            <h3 className='text-sm font-semibold leading-6 text-gray-900 dark:text-white'>Company</h3>
+            <ul role='list' className='mt-6 space-y-2'>
+              {footerInfo.company.map((item) => (
+                <li key={item.name}>
+                  <a href={item.href} className='text-sm leading-6 text-gray-600 hover:text-purple-700 dark:text-white'>
+                    {item.name}
+                  </a>
+                </li>
+              ))}
+            </ul>
+          </div>
+        </div>
+      </footer>
+    </div>
+  )
+}

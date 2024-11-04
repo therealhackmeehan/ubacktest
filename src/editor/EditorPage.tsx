@@ -3,6 +3,7 @@ import { useState, useEffect, useRef } from "react";
 import { Results } from "./Results";
 import Editor from '@monaco-editor/react';
 import {
+  createStrategy,
   getStrategies,
   getSpecificStrategy,
   updateStrategy,
@@ -10,9 +11,11 @@ import {
 } from 'wasp/client/operations';
 import { type Strategy } from "wasp/entities";
 import { IoMdAddCircleOutline } from "react-icons/io";
+import { MdOutlineCancel } from "react-icons/md";
 import { RenameModal, DeleteModal, NewProjectModal } from "../client/components/Modals";
 import { MdDeleteOutline, MdOutlineEdit } from "react-icons/md";
-import { FaChevronRight } from "react-icons/fa";
+import { FaChevronRight, FaChevronDown } from "react-icons/fa";
+import { FiSave } from "react-icons/fi";
 
 import getStockData from "../server/getStockData";
 import executePythonCode from "../server/executePythonCode";
@@ -27,35 +30,44 @@ export default function EditorPage() {
 
   const [stockData, setStockData] = useState<any>(null);
   const [loading, setLoading] = useState<boolean>(false);
-  const [error, setError] = useState<string | null>(null);
+
   const [pythonResponse, setPythonResponse] = useState<string>('');
 
+  const [inputError, setInputError] = useState<boolean>(false);
+  const [inputErrorMessage, setInputErrorMessage] = useState<string>('');
+
+  const [pythonError, setPythonError] = useState<boolean>(false);
+  const [pythonErrorMessage, setPythonErrorMessage] = useState<string>('');
+
+  const [stockDataError, setStockDataError] = useState<boolean>(false);
+  const [stockDataErrorMessage, setStockDataErrorMessage] = useState<string>('');
+
   const [stratID, setStratID] = useState<string>('');
-  const [name, setName] = useState<string>('Untitled_Project');
-  const [code, setCode] = useState<string>('# Your Code Here:');
+  const [name, setName] = useState<string>('...');
+  const [code, setCode] = useState<string>('...');
 
   const hasLoadedInitialData = useRef(false); // To track whether we've already loaded the data
-
 
 
   const [isRenameModalOpen, setIsRenameModalOpen] = useState<boolean>(false);
   const handleCloseRenameModal = () => {
     setIsRenameModalOpen(false);
+    location.reload();
   }
 
   // handle delete modal operations
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState<boolean>(false);
   const handleCloseDeleteModal = () => {
     setIsDeleteModalOpen(false);
+    location.reload();
   }
 
   // for the overarching new strategy modal, keep track of function handle and modal state
   const [newProjectModalOpen, setNewProjectModalOpen] = useState<boolean>(false);
   const handleCloseNewProjectModal = () => {
     setNewProjectModalOpen(false);
+    location.reload();
   };
-
-
 
   const setNameAndCodeFromID = async (savedValue: string) => {
     try {
@@ -71,49 +83,132 @@ export default function EditorPage() {
   };
 
   useEffect(() => {
-    if (!hasLoadedInitialData.current) {
-      const savedValue = localStorage.getItem('projectToLoad');
-      if (savedValue) {
-        setNameAndCodeFromID(savedValue).then(() => {
-          localStorage.setItem('projectToLoad', ''); // Clear local storage once data is loaded
-        });
-      } else if (strategies) {
-        setStratID(strategies[0].id);
-        setName(strategies[0].name);
-        setCode(strategies[0].code);
-      }
+    const loadInitialData = async () => {
+      if (!hasLoadedInitialData.current && !isStrategiesLoading) {
+        const savedValue = localStorage.getItem('projectToLoad');
 
-      hasLoadedInitialData.current = true; // Mark the initial load as complete
-    }
-  }, [strategies]); // Only trigger this when the strategies array changes
+        if (savedValue) {
+          await setNameAndCodeFromID(savedValue);
+          localStorage.setItem('projectToLoad', ''); // Clear local storage once data is loaded
+        } else if (strategies.length > 0) {
+          setStratID(strategies[0].id);
+          setName(strategies[0].name);
+          setCode(strategies[0].code);
+        } else {
+          await createStrategy({ name: "My Strategy", code: "Start Editing Your Strategy!!" });
+          location.reload();
+        }
+        hasLoadedInitialData.current = true; // Mark the initial load as complete
+      }
+    };
+
+    loadInitialData(); // Call the async function
+
+  }, [strategies, isStrategiesLoading]); // Only trigger this when the strategies array or isStrategiesLoading changes
 
   const runStrategy = async () => {
+
+    // check to make sure inputs exists
+    // Check for missing input fields
+    if (!startDate || !endDate || !stockSymbol || !intval) {
+      setInputErrorMessage('You are missing some input entries.');
+      setInputError(true);
+      return;
+    }
+
+    // Check for valid date format (assuming format is YYYY-MM-DD)
+    const dateRegex = /^\d{4}-\d{2}-\d{2}$/;
+    if (!dateRegex.test(startDate) || !dateRegex.test(endDate)) {
+      setInputErrorMessage('Date format should be YYYY-MM-DD.');
+      setInputError(true);
+      return;
+    }
+
+    // Check if start date is before end date
+    if (new Date(startDate) > new Date(endDate)) {
+      setInputErrorMessage('Start date cannot be later than end date.');
+      setInputError(true);
+      return;
+    }
+
+    // Check if symbol is alphanumeric and between 1 and 5 characters (typical for stock symbols)
+    const symbolRegex = /^[A-Za-z0-9]{1,5}$/;
+    if (!symbolRegex.test(stockSymbol)) {
+      setInputErrorMessage('Symbol should be alphanumeric and between 1 to 5 characters.');
+      setInputError(true);
+      return;
+    }
+
+    // Define allowed interval values
+    const allowedIntervals = ['1m', '5m', '15m', '30m', '1h', '1d', '1w', '1m', '1y'];
+
+    // Check if intval is one of the allowed values
+    if (!allowedIntervals.includes(intval)) {
+      setInputErrorMessage("Interval must be one of the following: '1m', '5m', '15m', '30m', '1h', '1d', '1w', '1m', '1y'");
+      setInputError(true);
+      return;
+    }
+
+    // Check if start date and end date are within a reasonable range (e.g., within the last 20 years)
+    const today = new Date();
+    const twentyYearsAgo = new Date(today.getFullYear() - 20, today.getMonth(), today.getDate());
+
+    if (new Date(startDate) < twentyYearsAgo || new Date(endDate) < twentyYearsAgo) {
+      setInputErrorMessage('Dates should be within the last 20 years.');
+      setInputError(true);
+      return;
+    }
+
+    // Check if start date and end date are at least 3 days apart
+    const start = new Date(startDate);
+    const end = new Date(endDate);
+    const differenceInDays = (end - start) / (1000 * 60 * 60 * 24); // Convert milliseconds to days
+
+    if (differenceInDays < 3) {
+      setInputErrorMessage('Start date and end date must be at least 3 days apart.');
+      setInputError(true);
+      return
+    }
+
+    // Check if startDate and endDate are not in the future
+    if (new Date(startDate) > today || new Date(endDate) > today) {
+      setInputErrorMessage('Dates cannot be in the future.');
+      setInputError(true);
+      return;
+    }
+
+    setInputErrorMessage('');
+    setInputError(false);
+
     setLoading(true);
-    setError(null);
 
     try {
-      // Fetch stock data
       let stockData = await getStockData(stockSymbol, startDate, endDate, intval);
       if (stockData.error) {
-        throw(stockData.error);
+        throw (stockData.error);
       }
       stockData = stockData.chart.result;
       setStockData(stockData);
+    } catch (e1) {
+      setStockDataErrorMessage("Stock Data Retrieval Error!!!");
+      setStockDataError(true);
+      setLoading(false);
+      return;
+    }
 
+    try {
       const stockDataForPython = stockData[0].indicators.quote[0];
-
-      // Run the strategy in Python and set response
       const returnedFromPython = await executePythonCode(stockDataForPython, code);
       setPythonResponse(returnedFromPython);
-
-    } catch (error) {
-      // Improved error handling
-      const errorMessage = error instanceof Error ? error.message : "Unknown error occurred.";
-      setError(`Error: ${errorMessage}`);
-      console.error("Error occurred:", errorMessage);
-    } finally {
+    } catch (e2) {
+      setPythonErrorMessage("Error in Executing Python!!!");
+      setPythonError(true);
       setLoading(false);
+      return;
     }
+
+    setLoading(false);
+
   };
 
   const saveCodeToDB = async () => {
@@ -246,54 +341,90 @@ export default function EditorPage() {
                 GO
               </button>
             </div>
+
+            {inputError &&
+              <div className='cursor-pointer text-end items-center border-3 border-red-300 rounded-sm flex hover:bg-red-300 bg-red-100 textrounded-md justify-between gap-3 dark:text-purple-900 p-3 m-3'
+                onClick={() => setInputError(false)}>
+                {inputErrorMessage}
+                <MdOutlineCancel size='1.6rem' />
+              </div>
+            }
+
+            {pythonError &&
+              <div className='cursor-pointer text-end items-center border-3 border-red-300 rounded-sm flex hover:bg-red-300 bg-red-100 textrounded-md justify-between gap-3 dark:text-purple-900 p-3 m-3'
+                onClick={() => setPythonError(false)}>
+                {pythonErrorMessage}
+                <MdOutlineCancel size='1.6rem' />
+              </div>
+            }
+
+            {stockDataError &&
+              <div className='cursor-pointer text-end items-center border-3 border-red-300 rounded-sm flex hover:bg-red-300 bg-red-100 textrounded-md justify-between gap-3 dark:text-purple-900 p-3 m-3'
+                onClick={() => setStockDataError(false)}>
+                {stockDataErrorMessage}
+                <MdOutlineCancel size='1.6rem' />
+              </div>
+            }
+
             <div className='grid grid-cols-6 gap-3'>
               <div className="col-span-1 snap-y max-h-96 overflow-auto rounded-md bg-purple-900">
                 {isStrategiesLoading && <div className="text-xl font-extrabold text-white">Loading...</div>}
+                <h4 className='sticky top-0 rounded-md bg-gray-800/40 font-bold border-b border-gray-500 text-end text-lg tracking-tight p-2 text-white dark:text-white'>
+                  Strategies
+                </h4>
                 {strategies && strategies.length > 0 ? (
-                  <>
-                    <h4 className='sticky top-0 rounded-md bg-gray-800/40 font-bold border-b border-gray-500 text-end text-lg tracking-tight p-2 text-white dark:text-white'>
-                      Strategies
-                    </h4>
-                    <ul>
-                      {strategies.map((strategy: Strategy) => (
-                        <li key={strategy.id} className="flex pl-2 pb-1 pr-2 hover:bg-gray-800">
-                          <button
-                            type='button'
-                            onClick={() => setNameAndCodeFromID(strategy.id)} // Keep the existing button functionality
-                            className='w-full truncate text-start hover:tracking-tight text-white hover:font-extrabold '
-                          >
-                            <div className="flex tracking-tight text-xs font-extrabold">
-                              {strategy.name}
-                              <div className='pl-2 opacity-10'>
-                                ---------------------------------------------
-                              </div>
+                  <ul>
+                    {strategies.map((strategy: Strategy) => (
+                      <li key={strategy.id} className="flex pl-2 pb-1 pr-2 hover:bg-gray-800">
+                        <button
+                          type='button'
+                          onClick={() => setNameAndCodeFromID(strategy.id)} // Keep the existing button functionality
+                          className='w-full truncate text-start hover:tracking-tight text-white hover:font-extrabold '
+                        >
+                          <div className="flex pt-1 tracking-tight text-xs font-extrabold">
+                            {strategy.name}
+                            <div className='pl-2 opacity-10'>
+                              ---------------------------------------------
                             </div>
-                          </button>
-                          {(strategy.name === name) && (
-                            <div className="flex pr-1 items-center opacity-25 pl-4 text-white">
-                              <FaChevronRight size='.4rem' />
-                              <FaChevronRight size='.5rem' />
-                              <FaChevronRight size='.6rem' />
-                            </div>)
-                          }
-                        </li>
-                      ))}
-                    </ul>
-                  </>
+                          </div>
+                        </button>
+                        {(strategy.name === name) && (
+                          <div className="flex pr-1 items-center opacity-25 pl-4 text-white">
+                            <FaChevronRight size='.4rem' />
+                            <FaChevronRight size='.5rem' />
+                            <FaChevronRight size='.6rem' />
+                          </div>)
+                        }
+                      </li>
+                    ))}
+                  </ul>
                 ) : (
-                  <p>No strategies found.</p>
+                  <div className="flex tracking-tight text-white p-4 text-xs font-extrabold"> No Strategies Found.</div>
                 )}
               </div>
               <div className="relative col-span-5">
-                <button
-                  type='button'
-                  onClick={saveCodeToDB} // Keep the existing button functionality
-                  className='z-50 absolute right-0 rounded-lg bg-purple-800/80 hover:bg-purple-600 text-center text-white tracking-tight font-extrabold p-3 mr-24 mt-8'
-                >
-                  Save
-                </button>
                 {loading && <div className="absolute z-50 m-50 p-50 font-xl text-purple-800 font-extrabold">Loading</div>}
                 <div className="bg-purple-900 rounded-md p-3">
+                  <div className="flex justify-between pb-2">
+                    <div className="flex gap-x-2">
+                      <button className='flex gap-x-1 hover:bg-purple-600 items-center rounded-lg p-1 m-1 text-center text-white tracking-tight font-extrabold'>
+                        <FaChevronDown />Examples
+                      </button>
+                      <button className='flex gap-x-1 hover:bg-purple-600 items-center rounded-lg p-1 m-1 text-center text-white tracking-tight font-extrabold'>
+                        <FaChevronDown />Ask AI for Help
+                      </button>
+                      <button className='flex gap-x-1 hover:bg-purple-600 items-center rounded-lg p-1 m-1 text-center text-white tracking-tight font-extrabold'>
+                        <FaChevronDown />Libraries Included
+                      </button>
+                    </div>
+                    <button
+                      type='button'
+                      onClick={saveCodeToDB} // Keep the existing button functionality
+                      className='flex rounded-lg p-1 m-1 hover:bg-purple-600 text-center text-white tracking-tight font-light'
+                    >
+                      <FiSave size='1.6rem' className="pr-2" /> save
+                    </button>
+                  </div>
                   <Editor className="invert" height="70vh" defaultLanguage='python' theme="vs-dark" value={code} onChange={handleEditorChange}
                     loading={(<div className="text-white font-2xl tracking-tight">Loading...</div>)} />
                 </div>
@@ -303,16 +434,13 @@ export default function EditorPage() {
         </div>
       </div>
 
-      {loading ? (
-        <p>Loading data...</p>
-      ) : error ? (
-        <p>{error}</p>
-      ) : stockData && pythonResponse ? (
+      {stockData && pythonResponse &&
         <Results
           stockData={stockData}
           pythonResponse={pythonResponse}
         />
-      ) : null /* Optional: Define any additional case if needed */}
+      }
 
     </>
-)}
+  )
+}

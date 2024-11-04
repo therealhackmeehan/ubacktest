@@ -67,14 +67,3 @@ export const faqs = [
     href: 'https://en.wikipedia.org/wiki/42_(number)',
   },
 ];
-export const footerNavigation = {
-  app: [
-    { name: 'Documentation', href: DocsUrl },
-    { name: 'Blog', href: BlogUrl },
-  ],
-  company: [
-    { name: 'About', href: 'https://wasp-lang.dev' },
-    { name: 'Privacy', href: '#' },
-    { name: 'Terms of Service', href: '#' },
-  ],
-};
