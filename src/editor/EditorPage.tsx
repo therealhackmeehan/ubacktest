@@ -1,7 +1,17 @@
+// react imports
 import React from "react";
 import { useState, useEffect, useRef } from "react";
+
+// my imports
 import { Results } from "./Results";
+import getStockData from "./getStockData";
+import executePythonCode from "./executePythonCode";
+import { RenameModal, DeleteModal, NewProjectModal } from "../client/components/Modals";
+
+// npm imports
 import Editor from '@monaco-editor/react';
+
+// wasp imports
 import {
   createStrategy,
   getStrategies,
@@ -10,15 +20,12 @@ import {
   useQuery,
 } from 'wasp/client/operations';
 import { type Strategy } from "wasp/entities";
+
+// icon imports
 import { IoMdAddCircleOutline } from "react-icons/io";
-import { MdOutlineCancel } from "react-icons/md";
-import { RenameModal, DeleteModal, NewProjectModal } from "../client/components/Modals";
-import { MdDeleteOutline, MdOutlineEdit } from "react-icons/md";
+import { MdDeleteOutline, MdOutlineEdit, MdOutlineCancel } from "react-icons/md";
 import { FaChevronRight, FaChevronDown } from "react-icons/fa";
 import { FiSave } from "react-icons/fi";
-
-import getStockData from "../server/getStockData";
-import executePythonCode from "../server/executePythonCode";
 
 export default function EditorPage() {
   const { data: strategies, isLoading: isStrategiesLoading } = useQuery(getStrategies);
@@ -183,12 +190,9 @@ export default function EditorPage() {
     setLoading(true);
 
     try {
-      let stockData = await getStockData(stockSymbol, startDate, endDate, intval);
-      if (stockData.error) {
-        throw (stockData.error);
-      }
-      stockData = stockData.chart.result;
-      setStockData(stockData);
+      let data = await getStockData(stockSymbol, startDate, endDate, intval);
+      data = data.chart.result;
+      setStockData(data);
     } catch (e1) {
       setStockDataErrorMessage("Stock Data Retrieval Error!!!");
       setStockDataError(true);

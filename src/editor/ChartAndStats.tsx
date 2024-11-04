@@ -1,6 +1,5 @@
 import { Line } from 'react-chartjs-2';
 import { FiShare, FiSave } from "react-icons/fi";
-import { MdOutlineCancel } from "react-icons/md";
 import { MdOutlineTransitEnterexit } from "react-icons/md";
 import { IoCloudDownloadOutline } from "react-icons/io5";
 
@@ -27,7 +26,9 @@ ChartJS.register(
   Legend
 );
 
-export const StockChart = ({ stockData }) => {
+export default function ChartAndStats ({ stockData }) {
+
+  const exampleStat = '12.3%';
 
   const [resultOpen, setResultOpen] = useState<boolean>(true);
 
@@ -113,26 +114,11 @@ export const StockChart = ({ stockData }) => {
             </div>
             <Line className='p-4' data={data} options={options} />
             <div className='bg-purple-900 flex justify-between rounded-lg rounded-t-none'>
-              <div className='bg-slate-200 rounded-lg p-3 m-2'>
-                <div className="flex tracking-tight text-lg text-purple-900 font-bold gap-2 text-white">Sharpe Ratio</div>
-                <div className='font-extralight tracking-loose'>12.32%</div>
-              </div>
-              <div className='bg-slate-200 rounded-lg p-3 m-2'>
-                <div className="flex tracking-tight text-lg text-purple-900 font-bold gap-2 text-white">Sortino Ratio</div>
-                <div className='font-extralight tracking-loose'>12.32%</div>
-              </div>
-              <div className='bg-slate-200 rounded-lg p-3 m-2'>
-                <div className="flex tracking-tight text-lg text-purple-900 font-bold gap-2 text-white">Number of Trades</div>
-                <div className='font-extralight tracking-loose'>12.32%</div>
-              </div>
-              <div className='bg-slate-200 rounded-lg p-3 m-2'>
-                <div className="flex tracking-tight text-lg text-purple-900 font-bold gap-2 text-white">Overall Profit/Loss</div>
-                <div className='font-extralight tracking-loose'>12.32%</div>
-              </div>
-              <div className='bg-slate-200 rounded-lg p-3 m-2'>
-                <div className="flex tracking-tight text-lg text-purple-900 font-bold gap-2 text-white">Overall Profit/Loss (Annualized)</div>
-                <div className='font-extralight tracking-loose'>12.32%</div>
-              </div>
+              <StatBox stat={exampleStat} text='Sharpe Ratio' />
+              <StatBox stat={exampleStat} text='Sortino Ratio' />
+              <StatBox stat={exampleStat} text='Number of Trades' />
+              <StatBox stat={exampleStat} text='Overall Profit/Loss' />
+              <StatBox stat={exampleStat} text='Overall Profit/Loss (Annualized)' />
             </div>
           </div>
         </div>
@@ -141,4 +127,11 @@ export const StockChart = ({ stockData }) => {
   );
 };
 
-export default StockChart;
+function StatBox({ text, stat }) {
+  return (
+    <div className='bg-slate-200 rounded-lg p-3 m-2'>
+      <div className="flex tracking-tight text-lg text-purple-900 font-bold gap-2 text-white">{text}</div>
+      <div className='font-extralight tracking-loose'>{stat}</div>
+    </div>
+  )
+}

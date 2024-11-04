@@ -1,12 +1,19 @@
+// react imports
+import { useState } from 'react';
+
+// wasp imports
 import { type Strategy } from 'wasp/entities';
 import {
     getStrategies,
     useQuery
 } from 'wasp/client/operations';
-import { useState } from 'react';
+
+// my imports
 import { StrategyDropDownContents } from './HomePageDD';
-import { IoMdAddCircleOutline } from "react-icons/io";
 import { NewProjectModal } from '../client/components/Modals';
+
+// icon imports
+import { IoMdAddCircleOutline } from "react-icons/io";
 
 export default function HomePage() {
 

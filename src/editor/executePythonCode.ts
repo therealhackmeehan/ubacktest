@@ -49,5 +49,7 @@ print(str(signalResult.to_json(orient='values')))
     });
 
     const output: Promise<any> = await response.json();
+
+    // intense error processing here
     return output;
 };
