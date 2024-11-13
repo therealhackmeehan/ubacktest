@@ -16,7 +16,7 @@ const navigation = [
   { name: 'Documentation', href: DocsUrl },
   { name: 'Blog', href: BlogUrl },
   { name: 'Home', href: routes.HomePageRoute.build() },
-  { name: 'Editor', href: routes.EditorRoute.build() },
+  { name: 'Editor', href: routes.PlaygroundRoute.build()},
 ];
 
 const NavLogo = () => <img className='h-8 w-8' src={logo} alt='Your SaaS App' />;

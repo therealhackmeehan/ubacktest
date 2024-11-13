@@ -4,30 +4,35 @@ import {
     renameStrategy,
     deleteStrategy,
     createStrategy,
+    getStrategies,
 } from 'wasp/client/operations';
 
 import { TiDelete } from "react-icons/ti";
 
-interface ModalProps {
-    isOpen: boolean;
-    action: () => void;
-    id: string;           
+import { validateNewName } from './modalHelpers';
+
+interface RenameModalProps {
+    onSuccess: (newName: string) => void;
+    onFailure: () => void;
+    id: string;
+    currName: string;
 }
 
-export const RenameModal: React.FC<ModalProps> = ({ isOpen, action, id }) => {
-    
-    const [newName, setNewName] = useState<string>('');
+export function RenameModal({ onSuccess, onFailure, id, currName }: RenameModalProps) {
+
+    const [newName, setNewName] = useState<string>(currName);
+    const [errMsg, setErrMsg] = useState<string>('');
 
     const handleRename = async () => {
+        setErrMsg('');
         try {
+            validateNewName(newName);
             await renameStrategy({ id, name: newName });
-            action();
+            onSuccess(newName);
         } catch (error) {
-            console.error('Failed to update name:', error);
+            setErrMsg(error.message);
         }
     };
-
-    if (!isOpen) return null;
 
     return (
         <div className="fixed inset-0 flex items-center justify-center z-50">
@@ -35,8 +40,8 @@ export const RenameModal: React.FC<ModalProps> = ({ isOpen, action, id }) => {
             <div className="bg-white p-6 w-1/3 rounded-lg shadow-lg z-10">
                 <div className='flex justify-between'>
                     <h2 className="text-xl text-purple-500 font-semibold">Rename Your <span className="text-slate-800">Strategy</span></h2>
-                    <button onClick={action}>
-                        <TiDelete size='1.8rem' className='hover:rotate-6 hover:scale-110' />
+                    <button onClick={onFailure}>
+                        <TiDelete size='1.8rem' className='hover:rotate-6 text-gray-900 hover:scale-110' />
                     </button>
                 </div>
                 <input
@@ -49,7 +54,7 @@ export const RenameModal: React.FC<ModalProps> = ({ isOpen, action, id }) => {
                 <div className="flex justify-between mt-4">
                     <button
                         className="bg-gray-500 text-white p-2 rounded hover:bg-gray-700"
-                        onClick={action}
+                        onClick={onFailure}
                     >
                         Cancel
                     </button>
@@ -60,23 +65,42 @@ export const RenameModal: React.FC<ModalProps> = ({ isOpen, action, id }) => {
                         Confirm
                     </button>
                 </div>
+                {errMsg &&
+                    <div className='mt-4 rounded-md p-2 bg-red-200 tracking-tight font-bold text-xs'>
+                        {errMsg}
+                    </div>}
             </div>
         </div>
     );
 };
 
-export const DeleteModal: React.FC<ModalProps> = ({ isOpen, action, id }) => {
-    
+interface DeleteModalProps {
+    onSuccess: (value: string) => void;
+    onFailure: () => void;
+    id: string;
+}
+
+export function DeleteModal({ onSuccess, onFailure, id }: DeleteModalProps) {
+
+    const [errMsg, setErrMsg] = useState('');
+
     const handleStrategyDelete = async () => {
+        setErrMsg('');
         try {
             await deleteStrategy({ id });
-            action();
+            const strategies = await getStrategies();
+
+            if (strategies.length > 0) {
+                onSuccess(strategies[0].id);
+            } else {
+                const starter = "Start Editing Your Strategy!!";
+                const newID = await createStrategy({ name: "MyFirstStrategy", code: starter });
+                onSuccess(newID.id);
+            }
         } catch (error) {
-            console.error('Failed to delete strategy:', error);
+            setErrMsg(error.message);
         }
     };
-
-    if (!isOpen) return null;
 
     return (
         <div className="fixed inset-0 flex items-center justify-center z-50">
@@ -84,14 +108,14 @@ export const DeleteModal: React.FC<ModalProps> = ({ isOpen, action, id }) => {
             <div className="bg-white p-6 w-1/3 rounded-lg shadow-lg z-10">
                 <div className='flex justify-between'>
                     <h2 className="text-xl text-purple-500 font-semibold">Are you sure you'd like to delete your <span className="text-slate-800">strategy</span>?</h2>
-                    <button onClick={action}>
-                        <TiDelete size='1.8rem' className='hover:rotate-6 hover:scale-110' />
+                    <button onClick={onFailure}>
+                        <TiDelete size='1.8rem' className='hover:rotate-6 text-gray-900 hover:scale-110' />
                     </button>
                 </div>
                 <div className="flex justify-between mt-4">
                     <button
                         className="bg-gray-500 text-white p-2 rounded hover:bg-gray-700"
-                        onClick={action}
+                        onClick={onFailure}
                     >
                         Cancel
                     </button>
@@ -102,27 +126,36 @@ export const DeleteModal: React.FC<ModalProps> = ({ isOpen, action, id }) => {
                         Confirm
                     </button>
                 </div>
+                {errMsg &&
+                    <div className='mt-4 rounded-md p-2 bg-red-200 tracking-tight font-bold text-xs'>
+                        {errMsg}
+                    </div>}
             </div>
         </div>
     );
 };
 
-export const NewProjectModal: React.FC<ModalProps> = ({ isOpen, action }) => {
-    
+interface NewProjectModalProps {
+    onSuccess: (id: string) => void;
+    onFailure: () => void;
+}
+
+export function NewProjectModal({ onSuccess, onFailure }: NewProjectModalProps) {
+
     const [newProjectName, setNewProjectName] = useState<string>('');
+    const [errMsg, setErrMsg] = useState<string>('');
 
     const handleNewProject = async () => {
+        setErrMsg('');
         try {
+            validateNewName(newProjectName);
             const starter = "Start Editing Your Strategy!!";
-            await createStrategy({ name: newProjectName, code: starter });
-            setNewProjectName('');
-            action(); // Close modal after successful project creation
+            const newID = await createStrategy({ name: newProjectName, code: starter });
+            onSuccess(newID.id);
         } catch (error) {
-            console.error('Failed to create new project:', error);
+            setErrMsg(error.message);
         }
     };
-
-    if (!isOpen) return null;
 
     return (
         <div className="fixed inset-0 flex items-center justify-center z-50">
@@ -130,8 +163,8 @@ export const NewProjectModal: React.FC<ModalProps> = ({ isOpen, action }) => {
             <div className="bg-white p-6 w-1/3 rounded-lg shadow-lg z-10">
                 <div className='flex justify-between'>
                     <h2 className="text-xl text-purple-500 font-semibold">Create New <span className="text-slate-800">Strategy</span></h2>
-                    <button onClick={action}>
-                        <TiDelete size='1.8rem' className='hover:rotate-6 hover:scale-110' />
+                    <button onClick={onFailure}>
+                        <TiDelete size='1.8rem' className='hover:rotate-6 text-gray-900 hover:scale-110' />
                     </button>
                 </div>
                 <input
@@ -144,7 +177,7 @@ export const NewProjectModal: React.FC<ModalProps> = ({ isOpen, action }) => {
                 <div className="flex justify-between mt-4">
                     <button
                         className="bg-gray-500 text-white p-2 rounded hover:bg-gray-700"
-                        onClick={action}
+                        onClick={onFailure}
                     >
                         Cancel
                     </button>
@@ -155,6 +188,10 @@ export const NewProjectModal: React.FC<ModalProps> = ({ isOpen, action }) => {
                         Confirm
                     </button>
                 </div>
+                {errMsg &&
+                    <div className='mt-4 rounded-md p-2 bg-red-200 tracking-tight font-bold text-xs'>
+                        {errMsg}
+                    </div>}
             </div>
         </div>
     );

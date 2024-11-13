@@ -6,7 +6,8 @@ import { type Strategy } from "wasp/entities"
 import { routes } from 'wasp/client/router';
 
 // my imports
-import { RenameModal, DeleteModal } from "../client/components/Modals";
+import { RenameModal, DeleteModal } from "../../playground/components/modals/Modals";
+import ToolTip from "./Tooltip";
 
 // icon imports
 import { MdDeleteOutline, MdOutlineEdit } from "react-icons/md";
@@ -17,17 +18,11 @@ export function StrategyDropDownContents({ strategy }: { strategy: Strategy }) {
     // keep track of each dropdown's expansion
     const [isExpanded, setIsExpanded] = useState(false);
 
-    // handle respective rename modal operations
+    // keep track of modal states
     const [isRenameModalOpen, setIsRenameModalOpen] = useState<boolean>(false);
-    const handleCloseRenameModal = () => {
-        setIsRenameModalOpen(false);
-    }
-
-    // handle delete modal operations
     const [isDeleteModalOpen, setIsDeleteModalOpen] = useState<boolean>(false);
-    const handleCloseDeleteModal = () => {
-        setIsDeleteModalOpen(false);
-    }
+
+    const [toolTipShown, setIsToolTipShown] = useState<boolean>(false);
 
     // send latest info to local storage in case user clicks go to strategy
     const handleToLocalStorage = async (id: string) => {
@@ -36,7 +31,7 @@ export function StrategyDropDownContents({ strategy }: { strategy: Strategy }) {
         } catch (error) {
             console.log(error);
         } finally {
-            window.location.href = routes.EditorRoute.build();
+            window.location.href = routes.PlaygroundRoute.build();
         }
     }
 
@@ -65,9 +60,12 @@ export function StrategyDropDownContents({ strategy }: { strategy: Strategy }) {
                         <MdOutlineEdit size='1.4rem' />
                     </button>
 
-                    <RenameModal isOpen={isRenameModalOpen}
-                        action={handleCloseRenameModal}
-                        id={strategy.id} />
+                    {isRenameModalOpen && <RenameModal
+                        onSuccess={() => setIsRenameModalOpen(false)}
+                        onFailure={() => setIsRenameModalOpen(false)}
+                        id={strategy.id}
+                        currName={strategy.name} />}
+
                 </div>
                 <div className='flex items-end'>
                     <div className='flex items-center dark:text-white'>
@@ -76,9 +74,10 @@ export function StrategyDropDownContents({ strategy }: { strategy: Strategy }) {
                             <MdDeleteOutline size='1.4rem' />
                         </button>
 
-                        <DeleteModal isOpen={isDeleteModalOpen}
-                            action={handleCloseDeleteModal}
-                            id={strategy.id} />
+                        {isDeleteModalOpen && <DeleteModal
+                            onSuccess={() => setIsDeleteModalOpen(false)}
+                            onFailure={() => setIsDeleteModalOpen(false)}
+                            id={strategy.id} />}
 
                     </div>
                     <div className='font-mono text-purple-400 text-xs dark:text-white px-3'>
@@ -100,10 +99,17 @@ export function StrategyDropDownContents({ strategy }: { strategy: Strategy }) {
                             title='Open in Editor'>
                         </textarea>
                         <button
-                            className="absolute invisible top-0 right-0 mr-24 mt-8 group-hover:visible text-white hover:rotate-6"
+                            className="absolute invisible top-0 right-0 mr-24 mt-8 group-hover:visible duration-700 text-white hover:scale-110"
                             onClick={() => handleToLocalStorage(strategy.id)}
+                            onMouseEnter={() => setIsToolTipShown(true)}
+                            onMouseLeave={() => setIsToolTipShown(false)}
                         >
-                            <FaRegEdit size='2rem' />
+                            <div className="p-2 flex">
+                                {toolTipShown &&
+                                    <ToolTip text={`Edit ${strategy.name} in Editor`} />
+                                }
+                                <FaRegEdit size='2rem' />
+                            </div>
                         </button>
                     </div>
                 </>

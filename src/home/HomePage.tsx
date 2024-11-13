@@ -9,8 +9,8 @@ import {
 } from 'wasp/client/operations';
 
 // my imports
-import { StrategyDropDownContents } from './HomePageDD';
-import { NewProjectModal } from '../client/components/Modals';
+import { StrategyDropDownContents } from './components/HomePageDD';
+import { NewProjectModal } from '../playground/components/modals/Modals';
 
 // icon imports
 import { IoMdAddCircleOutline } from "react-icons/io";
@@ -22,9 +22,6 @@ export default function HomePage() {
 
     // for the overarching new strategy modal, keep track of function handle and modal state
     const [newProjectModalOpen, setNewProjectModalOpen] = useState<boolean>(false);
-    const handleCloseNewProjectModal = () => {
-        setNewProjectModalOpen(false);
-    };
 
     return (
         <div className='flex flex-col justify-center gap-10'>
@@ -41,11 +38,10 @@ export default function HomePage() {
                         </button>
                     </div>
 
-                    <NewProjectModal
-                        isOpen={newProjectModalOpen}
-                        action={handleCloseNewProjectModal}
-                        id={''} //not applicable
-                    />
+                    {newProjectModalOpen && <NewProjectModal
+                        onSuccess={() => setNewProjectModalOpen(false)}
+                        onFailure={() => setNewProjectModalOpen(false)}
+                    />}
 
                     <div className='mt-12 space-y-4'>
                         {isStrategiesLoading ?
