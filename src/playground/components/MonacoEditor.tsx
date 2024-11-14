@@ -2,15 +2,16 @@ import { Editor } from "@monaco-editor/react";
 import { FaChevronDown } from "react-icons/fa";
 import { FiSave } from "react-icons/fi";
 import { updateStrategy } from "wasp/client/operations";
-import { useState } from "react";
 
 interface MEditorProps {
     code: string | null;
     setCode: (value: string) => void;
     ID: string;
+    userPrint: string;
+    errPrint: string;
 }
 
-function MonacoEditor({code, setCode, ID}: MEditorProps) {
+function MonacoEditor({ code, setCode, ID, userPrint, errPrint }: MEditorProps) {
 
     const handleEditorChange = (value: string | undefined) => {
         if (value !== undefined) {
@@ -26,7 +27,7 @@ function MonacoEditor({code, setCode, ID}: MEditorProps) {
             window.alert('Error: ' + (err.message || 'Something went wrong'));
         }
     };
-    
+
     window.addEventListener("keydown", async (event: KeyboardEvent) => {
         if ((event.ctrlKey || event.metaKey) && event.key === "s") {
             event.preventDefault();  // Prevent the default save behavior
@@ -59,6 +60,11 @@ function MonacoEditor({code, setCode, ID}: MEditorProps) {
                 </div>
                 <Editor className="invert" height="24vh" defaultLanguage='python' theme="vs-dark" value={code} onChange={handleEditorChange}
                     loading={(<div className="text-white font-2xl tracking-tight">Loading...</div>)} />
+                <div className="p-4 m-4 border-2 border-gray-700">
+                    Program Output
+                    {userPrint && <div className="font-mono">{userPrint}</div>}
+                    {errPrint && <div className="font-mono text-red-100">{errPrint}</div>}
+                </div>
             </div>
         </div>
 

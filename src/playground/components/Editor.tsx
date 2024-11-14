@@ -1,7 +1,8 @@
 import { useState } from "react"
 import StrategyHeader from "./StrategyHeader"
 import MonacoEditor from "./MonacoEditor";
-import Pipeline from "./Pipeline/Pipeline";
+import Pipeline from "../Pipeline/Pipeline";
+import { ErrorModal } from "./modals/Modals";
 
 interface EditorProps {
     nameToDisplay: string;
@@ -12,25 +13,45 @@ interface EditorProps {
     setSelectedStrategy: (value: string) => void;
 }
 
-function Editor({nameToDisplay, codeToDisplay, selectedStrategy, setNameToDisplay, setCodeToDisplay, setSelectedStrategy}: EditorProps) {
+function Editor({ nameToDisplay, codeToDisplay, selectedStrategy, setNameToDisplay, setCodeToDisplay, setSelectedStrategy }: EditorProps) {
 
     const [startDate, setStartDate] = useState<string>('2020-02-02');
     const [endDate, setEndDate] = useState<string>('2020-05-02');
     const [symbol, setSymbol] = useState<string>('SPY');
     const [intval, setIntval] = useState<string>('1d');
 
-    function run() {
+    const [errorModalMessage, setErrorModalMessage] = useState<string>('');
+
+    const [userStdout, setUserStdout] = useState<string>('');
+    const [userStderr, setUserStdErr] = useState<string>('');
+    const [result, setResult] = useState<any>(null);
+
+    async function run() {
+
+        setUserStdErr('');
+        setUserStdout('');
+        setResult(null);
+        setErrorModalMessage('');
 
         try {
-            Pipeline({symbol, startDate, endDate, intval, codeToDisplay})
-        } catch {
-            console.log("error")
+            const r = await Pipeline({ symbol, startDate, endDate, intval, code: codeToDisplay })
+
+            if (r.userPrint) {
+                setUserStdout(r.userPrint)
+            }
+            if (r.errPrint) {
+                setUserStdErr(r.errPrint)
+            }
+            setResult(r.data);
+
+        } catch (error) {
+            setErrorModalMessage(error.msg);
         }
     }
 
     return (
         <div className="col-span-5">
-            <StrategyHeader name={nameToDisplay} ID={selectedStrategy} setNameToDisplay={setNameToDisplay} setSelectedStrategy={setSelectedStrategy}/>
+            <StrategyHeader name={nameToDisplay} ID={selectedStrategy} setNameToDisplay={setNameToDisplay} setSelectedStrategy={setSelectedStrategy} />
 
             <div className='flex bg-gray-100 rounded-md gap-y-2 justify-between dark:text-purple-900 gap-3 px-12 m-4 p-2 mx-2 '>
                 <InputComponent text="Stock" varToSet={symbol} varToSetMethod={setSymbol} />
@@ -46,7 +67,11 @@ function Editor({nameToDisplay, codeToDisplay, selectedStrategy, setNameToDispla
                 </button>
             </div>
 
-            <MonacoEditor code={codeToDisplay} setCode={setCodeToDisplay} ID={selectedStrategy} />
+            {errorModalMessage.length > 0 &&
+                <ErrorModal onClose={() => setErrorModalMessage('')} msg={errorModalMessage} />
+            }
+
+            <MonacoEditor code={codeToDisplay} setCode={setCodeToDisplay} ID={selectedStrategy} stdOut={userPrint} stdErr={errPrint}/>
 
         </div>
     )
@@ -58,7 +83,7 @@ interface InputComponentProps {
     varToSetMethod: (value: string) => void;
 }
 
-function InputComponent({text, varToSet, varToSetMethod}: InputComponentProps) {
+function InputComponent({ text, varToSet, varToSetMethod }: InputComponentProps) {
 
     return (
         <div className='flex items-center justify-between gap-3'>

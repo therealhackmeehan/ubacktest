@@ -196,3 +196,36 @@ export function NewProjectModal({ onSuccess, onFailure }: NewProjectModalProps) 
         </div>
     );
 };
+
+interface ErrorModalProps {
+    onClose: () => void;
+    msg: string;
+}
+export function ErrorModal({ onClose, msg }: ErrorModalProps) {
+
+    return (
+        <div className="fixed inset-0 flex items-center justify-center z-50">
+            <div className="bg-gray-800 w-full opacity-50 fixed inset-0"></div>
+            <div className="bg-white p-6 w-1/3 rounded-lg shadow-lg z-10">
+                <div className='flex justify-between'>
+                    <h2 className="text-xl text-purple-500 font-semibold">Error</h2>
+                    <div className='mt-4 rounded-md p-2 bg-red-200 tracking-tight font-bold text-xs'>
+                        {msg}
+                    </div>
+                    <button onClick={onClose}>
+                        <TiDelete size='1.8rem' className='hover:rotate-6 text-gray-900 hover:scale-110' />
+                    </button>
+                </div>
+                <div className="flex justify-between mt-4">
+                    <button
+                        className="bg-purple-500 text-white p-2 rounded hover:bg-purple-700"
+                        onClick={onClose}
+                    >
+                        OK
+                    </button>
+                </div>
+            </div>
+        </div>
+    )
+
+}
