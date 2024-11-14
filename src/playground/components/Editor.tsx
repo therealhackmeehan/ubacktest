@@ -1,6 +1,7 @@
 import { useState } from "react"
 import StrategyHeader from "./StrategyHeader"
 import MonacoEditor from "./MonacoEditor";
+import Pipeline from "./Pipeline/Pipeline";
 
 interface EditorProps {
     nameToDisplay: string;
@@ -15,13 +16,13 @@ function Editor({nameToDisplay, codeToDisplay, selectedStrategy, setNameToDispla
 
     const [startDate, setStartDate] = useState<string>('2020-02-02');
     const [endDate, setEndDate] = useState<string>('2020-05-02');
-    const [stockSymbol, setStockSymbol] = useState<string>('SPY');
+    const [symbol, setSymbol] = useState<string>('SPY');
     const [intval, setIntval] = useState<string>('1d');
 
     function run() {
 
         try {
-            console.log("no error")
+            Pipeline({symbol, startDate, endDate, intval, codeToDisplay})
         } catch {
             console.log("error")
         }
@@ -32,7 +33,7 @@ function Editor({nameToDisplay, codeToDisplay, selectedStrategy, setNameToDispla
             <StrategyHeader name={nameToDisplay} ID={selectedStrategy} setNameToDisplay={setNameToDisplay} setSelectedStrategy={setSelectedStrategy}/>
 
             <div className='flex bg-gray-100 rounded-md gap-y-2 justify-between dark:text-purple-900 gap-3 px-12 m-4 p-2 mx-2 '>
-                <InputComponent text="Stock" varToSet={stockSymbol} varToSetMethod={setStockSymbol} />
+                <InputComponent text="Stock" varToSet={symbol} varToSetMethod={setSymbol} />
                 <InputComponent text="Start" varToSet={startDate} varToSetMethod={setStartDate} />
                 <InputComponent text="End" varToSet={endDate} varToSetMethod={setEndDate} />
                 <InputComponent text="Frequency" varToSet={intval} varToSetMethod={setIntval} />
