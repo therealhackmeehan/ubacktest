@@ -60,10 +60,11 @@ function MonacoEditor({ code, setCode, ID, userPrint, errPrint }: MEditorProps) 
                 </div>
                 <Editor className="invert" height="24vh" defaultLanguage='python' theme="vs-dark" value={code} onChange={handleEditorChange}
                     loading={(<div className="text-white font-2xl tracking-tight">Loading...</div>)} />
-                <div className="p-4 m-4 border-2 border-gray-700">
+                <div className="p-2 mt-4 rounded-lg font-mono tracking-tight border-2 text-purple-800 bg-white">
                     Program Output
-                    {userPrint && <div className="font-mono">{userPrint}</div>}
-                    {errPrint && <div className="font-mono text-red-100">{errPrint}</div>}
+                    <div className="border-b border-2"></div>
+                    {userPrint && <div className="text-xs font-mono m-1">{userPrint}</div>}
+                    {errPrint && <div className="text-xs font-mono text-red-700 m-1">{errPrint}</div>}
                 </div>
             </div>
         </div>

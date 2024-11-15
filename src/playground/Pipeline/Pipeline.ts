@@ -28,17 +28,26 @@ async function Pipeline({ symbol, startDate, endDate, intval, code }: pipelinePr
     let errPrint = pythonExecutionInfo.stderr;
     errPrint = validateErrPrint({err: errPrint});
 
-    const pandasPrint = pythonExecutionInfo.mainResult;
-    const parsedSignal = JSON.parse(pandasPrint);
-    data.signal = parsedSignal;
-    const closes = data.close;
+    const signal = pythonExecutionInfo.myStdout;
+    if (!signal || errPrint) {
+        const earlyResult = {
+            data: null,
+            userPrint: userPrint,
+            errPrint: errPrint
+        }
+        return earlyResult;
+    }
+
+    // but if signal exists, proceed with the backtest!
+
+    data.signal = signal;
 
     // build the portfolio value array
     let portfolioValue = 1; // Starting portfolio value (could be any number)
     const dailyValues = [portfolioValue]; // Store cumulative portfolio values over time
 
-    for (let i = 0; i < closes.length - 1; i++) {
-        const dailyChange = (closes[i + 1] - closes[i]) / closes[i]; // Next day's percentage change
+    for (let i = 0; i < data.close.length - 1; i++) {
+        const dailyChange = (data.close[i + 1] - data.close[i]) / data.close[i]; // Next day's percentage change
         const position = data.signal[i]; // -1: short, 0: hold, 1: buy on current day's signal
 
         portfolioValue += portfolioValue * dailyChange * position; // Apply position to next day's change

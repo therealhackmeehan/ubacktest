@@ -10,23 +10,23 @@ function generateRandomKey(): string {
 async function runPythonCode({ data, code }: DataProps) {
     // Generate a unique key to mark the output
     const uniqueKey = generateRandomKey();
-    const mainFile = `
-  from strategy import mystrategy
-  import json
-  import pandas as pd
-  
-  # Parse input data and format as DataFrame
-  jsonCodeUnformatted = '${JSON.stringify(data)}'
-  jsonCodeFormatted = json.loads(jsonCodeUnformatted)
-  df = pd.DataFrame(jsonCodeFormatted)
-  
-  # Execute strategy and get signal result
-  signalResult = mystrategy(df)
-  signalResult = signalResult['signal']
-  
-  # Print the result with a unique delimiter for easy extraction
-  print("${uniqueKey}START${uniqueKey}" + str(signalResult.to_json(orient='values')) + "${uniqueKey}END${uniqueKey}")
-  `;
+const mainFile = `#
+from mystrategy import mystrategy
+import json
+import pandas as pd
+
+# Parse input data and format as DataFrame
+jsonCodeUnformatted = '${JSON.stringify(data)}'
+jsonCodeFormatted = json.loads(jsonCodeUnformatted)
+df = pd.DataFrame(jsonCodeFormatted)
+
+# Execute strategy and get signal result
+signalResult = mystrategy(df)
+signalResult = signalResult['signal']
+
+# Print the result with a unique delimiter for easy extraction
+print("${uniqueKey}START${uniqueKey}" + str(signalResult.to_json(orient='values')) + "${uniqueKey}END${uniqueKey}")
+`;
 
     const response = await fetch('https://emkc.org/api/v2/piston/execute', {
         method: 'POST',
@@ -50,31 +50,26 @@ async function runPythonCode({ data, code }: DataProps) {
     });
 
     const result = await response.json();
-    const output = result.run.output;
-    if (output.run.signal == "SIGKILL") {
-        throw new Error("SIGKILL");
+    const signal = result.run.signal;
+    if (signal && signal === "SIGKILL") {
+        throw new Error("SIGKILL: We killed your program because it taxed the machine beyond reason.");
     }
 
-    const stderr = output.run.stderr;
+    const stderr = result.run.stderr;
+    const stdout = result.run.stdout;
 
-    // Use the unique key to create a regex for extracting the output within the keys
+    // extract the important result
+    // forward all other stdout to the console
     const regex = new RegExp(`${uniqueKey}START${uniqueKey}(.*?)${uniqueKey}END${uniqueKey}`, "s");
-    const mainResultMatch = output.match(regex);
-    const mainResult = mainResultMatch ? mainResultMatch[1] : null;
+    const match = stdout.match(regex);
+    const myStdout = match ? JSON.parse(match[1]) : null;
+    const userStdout = stdout ? stdout.replace(regex, '').trim() : null;
 
-    // Capture all other output outside the delimiters by removing the matched result from the original output
-    const otherOutput = output.replace(regex, "").trim();
-
-    if (!mainResult) {
-        throw new Error("No valid output found between delimiters.");
-    }
-
-    // Parse the extracted main JSON data
-    const parsedData = JSON.parse(mainResult);
-
-    return { mainResult: parsedData, 
-             userStdout: otherOutput,
-             stderr: stderr};
+    return {
+        myStdout: myStdout,
+        userStdout: userStdout,
+        stderr: stderr
+    };
 }
 
 export default runPythonCode;

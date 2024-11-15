@@ -3,6 +3,7 @@ import StrategyHeader from "./StrategyHeader"
 import MonacoEditor from "./MonacoEditor";
 import Pipeline from "../Pipeline/Pipeline";
 import { ErrorModal } from "./modals/Modals";
+import ChartAndStats from "./ChartAndStats";
 
 interface EditorProps {
     nameToDisplay: string;
@@ -26,12 +27,15 @@ function Editor({ nameToDisplay, codeToDisplay, selectedStrategy, setNameToDispl
     const [userStderr, setUserStdErr] = useState<string>('');
     const [result, setResult] = useState<any>(null);
 
+    const [loading, setLoading] = useState<boolean>(false);
+
     async function run() {
 
         setUserStdErr('');
         setUserStdout('');
         setResult(null);
         setErrorModalMessage('');
+        setLoading(true);
 
         try {
             const r = await Pipeline({ symbol, startDate, endDate, intval, code: codeToDisplay })
@@ -39,19 +43,31 @@ function Editor({ nameToDisplay, codeToDisplay, selectedStrategy, setNameToDispl
             if (r.userPrint) {
                 setUserStdout(r.userPrint)
             }
+
             if (r.errPrint) {
                 setUserStdErr(r.errPrint)
+            } else {
+                setResult(r.data);
             }
-            setResult(r.data);
 
         } catch (error) {
-            setErrorModalMessage(error.msg);
+            setErrorModalMessage(error.message);
+        } finally {
+            setLoading(false);
         }
     }
 
     return (
         <div className="col-span-5">
             <StrategyHeader name={nameToDisplay} ID={selectedStrategy} setNameToDisplay={setNameToDisplay} setSelectedStrategy={setSelectedStrategy} />
+
+            {loading &&
+                <div className="fixed inset-0 flex items-center justify-center z-50">
+                    <div className="absolute inset-0 bg-gray-800 opacity-50"></div>
+                    <div className="border-gray-300 h-20 w-20 animate-spin rounded-full border-8 border-t-purple-600"></div>
+                </div>
+
+            }
 
             <div className='flex bg-gray-100 rounded-md gap-y-2 justify-between dark:text-purple-900 gap-3 px-12 m-4 p-2 mx-2 '>
                 <InputComponent text="Stock" varToSet={symbol} varToSetMethod={setSymbol} />
@@ -67,11 +83,14 @@ function Editor({ nameToDisplay, codeToDisplay, selectedStrategy, setNameToDispl
                 </button>
             </div>
 
-            {errorModalMessage.length > 0 &&
+            {errorModalMessage &&
                 <ErrorModal onClose={() => setErrorModalMessage('')} msg={errorModalMessage} />
             }
 
-            <MonacoEditor code={codeToDisplay} setCode={setCodeToDisplay} ID={selectedStrategy} stdOut={userPrint} stdErr={errPrint}/>
+
+            {result && <ChartAndStats stockData={result} />}
+
+            <MonacoEditor code={codeToDisplay} setCode={setCodeToDisplay} ID={selectedStrategy} userPrint={userStdout} errPrint={userStderr} />
 
         </div>
     )

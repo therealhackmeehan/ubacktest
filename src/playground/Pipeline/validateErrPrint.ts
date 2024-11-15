@@ -1,10 +1,15 @@
 function validateErrPrint({ err }: { err: string }) {
+
+    if (!err) {
+        return;
+    }
+    
     // Base message
     let message = err;
 
     // Check if 'main.py' exists in stderr
     if (err.includes('main.py')) {
-        message = 'Note: Errors related to "main.py" may be disregarded, as it serves as the processing function orchestrating the test.\n' + message;
+        message = message + `\n\n\nNote: Errors related to "main.py" may be disregarded, as it serves as the processing function orchestrating the test.`;
     }
 
     return message;

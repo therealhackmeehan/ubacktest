@@ -1,7 +1,7 @@
 function validateStrategyResult({ data }: { data: any }) {
     const portfolioValues = data.portfolio;
-    const signals = data.signals; // Assuming signals are passed within data
-    const closes = data.closes; // Assuming closes (daily prices) are passed within data
+    const signals = data.signal; // Assuming signals are passed within data
+    const closes = data.close; // Assuming closes (daily prices) are passed within data
 
     // Check 1: Portfolio values should always be numbers and never be NaN or Infinity
     for (let i = 0; i < portfolioValues.length; i++) {
