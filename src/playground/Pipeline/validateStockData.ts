@@ -41,6 +41,9 @@ function validateStockData({ stockData }: { stockData: any }) {
     throw new Error("Mismatch between timestamps and close prices.");
   }
 
+  // Append the timestamp
+  quote.timestamp = timestamps;
+
   return quote;
 }
 

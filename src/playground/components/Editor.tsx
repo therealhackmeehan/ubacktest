@@ -25,7 +25,9 @@ function Editor({ nameToDisplay, codeToDisplay, selectedStrategy, setNameToDispl
 
     const [userStdout, setUserStdout] = useState<string>('');
     const [userStderr, setUserStdErr] = useState<string>('');
+
     const [result, setResult] = useState<any>(null);
+    const [resultOpen, setResultOpen] = useState<boolean>(false);
 
     const [loading, setLoading] = useState<boolean>(false);
 
@@ -48,6 +50,7 @@ function Editor({ nameToDisplay, codeToDisplay, selectedStrategy, setNameToDispl
                 setUserStdErr(r.errPrint)
             } else {
                 setResult(r.data);
+                setResultOpen(true);
             }
 
         } catch (error) {
@@ -66,7 +69,6 @@ function Editor({ nameToDisplay, codeToDisplay, selectedStrategy, setNameToDispl
                     <div className="absolute inset-0 bg-gray-800 opacity-50"></div>
                     <div className="border-gray-300 h-20 w-20 animate-spin rounded-full border-8 border-t-purple-600"></div>
                 </div>
-
             }
 
             <div className='flex bg-gray-100 rounded-md gap-y-2 justify-between dark:text-purple-900 gap-3 px-12 m-4 p-2 mx-2 '>
@@ -87,8 +89,13 @@ function Editor({ nameToDisplay, codeToDisplay, selectedStrategy, setNameToDispl
                 <ErrorModal onClose={() => setErrorModalMessage('')} msg={errorModalMessage} />
             }
 
+            {result && resultOpen && <ChartAndStats stockData={result} symbol={symbol} setResultOpen={setResultOpen} />}
 
-            {result && <ChartAndStats stockData={result} />}
+            {result &&
+                <button className="p-2 my-2 tracking-tight font-bold border-2 border-purple-800 rounded-lg hover:bg-purple-100 w-full" onClick={() => setResultOpen(true)}>
+                    Click to Open Result of Most Recent Backtest
+                </button>
+            }
 
             <MonacoEditor code={codeToDisplay} setCode={setCodeToDisplay} ID={selectedStrategy} userPrint={userStdout} errPrint={userStderr} />
 

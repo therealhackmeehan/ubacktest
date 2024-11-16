@@ -10,22 +10,16 @@ function generateRandomKey(): string {
 async function runPythonCode({ data, code }: DataProps) {
     // Generate a unique key to mark the output
     const uniqueKey = generateRandomKey();
-const mainFile = `#
+
+    const mainFile = `# main.py
 from mystrategy import mystrategy
 import json
 import pandas as pd
-
-# Parse input data and format as DataFrame
 jsonCodeUnformatted = '${JSON.stringify(data)}'
 jsonCodeFormatted = json.loads(jsonCodeUnformatted)
 df = pd.DataFrame(jsonCodeFormatted)
-
-# Execute strategy and get signal result
-signalResult = mystrategy(df)
-signalResult = signalResult['signal']
-
-# Print the result with a unique delimiter for easy extraction
-print("${uniqueKey}START${uniqueKey}" + str(signalResult.to_json(orient='values')) + "${uniqueKey}END${uniqueKey}")
+df.columns = df.columns.str.lower()
+print("${uniqueKey}START${uniqueKey}" + str(df['signal'].to_json(orient='values')) + "${uniqueKey}END${uniqueKey}")
 `;
 
     const response = await fetch('https://emkc.org/api/v2/piston/execute', {
@@ -51,6 +45,8 @@ print("${uniqueKey}START${uniqueKey}" + str(signalResult.to_json(orient='values'
 
     const result = await response.json();
     const signal = result.run.signal;
+
+    debugger
     if (signal && signal === "SIGKILL") {
         throw new Error("SIGKILL: We killed your program because it taxed the machine beyond reason.");
     }

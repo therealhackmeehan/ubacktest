@@ -43,7 +43,7 @@ async function Pipeline({ symbol, startDate, endDate, intval, code }: pipelinePr
     data.signal = signal;
 
     // build the portfolio value array
-    let portfolioValue = 1; // Starting portfolio value (could be any number)
+    let portfolioValue = data.close[0]; // Starting portfolio value (could be any number)
     const dailyValues = [portfolioValue]; // Store cumulative portfolio values over time
 
     for (let i = 0; i < data.close.length - 1; i++) {
