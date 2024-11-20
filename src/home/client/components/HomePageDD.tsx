@@ -1,15 +1,10 @@
-// react imports
 import { useState } from "react";
-
-// wasp imports
 import { type Strategy } from "wasp/entities"
 import { routes } from 'wasp/client/router';
 
-// my imports
 import { RenameModal, DeleteModal } from "../../../playground/client/components/modals/Modals";
 import ToolTip from "./Tooltip";
 
-// icon imports
 import { MdDeleteOutline, MdOutlineEdit } from "react-icons/md";
 import { FaRegEdit, FaChevronRight, FaChevronDown } from "react-icons/fa";
 

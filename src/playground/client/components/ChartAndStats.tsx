@@ -81,7 +81,7 @@ export default function ChartAndStats({ stockData, symbol, setResultOpen }: char
     <>
       <div className="fixed inset-0 flex items-center justify-center z-50">
         <div className="bg-gray-500 w-full opacity-75 fixed inset-0"></div>
-        <div className="bg-white rounded-lg shadow-lg z-10 border-purple-800 border-4 shadow-md rounded-xl">
+        <div className="bg-white rounded-lg shadow-lg w-5/6 z-10 border-purple-800 border-4 shadow-md rounded-xl">
           <div className='flex -mr-2 -mt-2 justify-end'>
             <button className='bg-red-500 rotate-180 rounded-full text-white' onClick={() => setResultOpen(false)}>
               <MdOutlineTransitEnterexit size='2rem' />

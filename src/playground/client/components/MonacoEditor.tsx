@@ -60,12 +60,15 @@ function MonacoEditor({ code, setCode, ID, userPrint, errPrint }: MEditorProps) 
                 </div>
                 <Editor className="invert" height="24vh" defaultLanguage='python' theme="vs-dark" value={code} onChange={handleEditorChange}
                     loading={(<div className="text-white font-2xl tracking-tight">Loading...</div>)} />
-                <div className="p-2 mt-4 rounded-lg font-mono tracking-tight border-2 text-purple-800 bg-white">
-                    Program Output
-                    <div className="border-b border-2"></div>
-                    {userPrint && <div className="text-xs font-mono m-1">{userPrint}</div>}
-                    {errPrint && <div className="text-xs font-mono text-red-700 m-1">{errPrint}</div>}
-                </div>
+                {(userPrint || errPrint) &&
+                    <div className="p-2 mt-4 rounded-lg text-sm tracking-tight border-2 text-purple-800 bg-white">
+                        Output Console
+                        <div className="border-b border-2 mb-2"></div>
+                        <div className="text-end tracking-tight font-bold text-xs">Debug Output</div>
+                        <textarea rows={Math.round(userPrint.length)/25} className="w-full rounded-md text-xs/4 font-mono m-1" readOnly={true} value={userPrint}></textarea>
+                        <div className="text-end tracking-tight font-bold text-xs">Error Output</div>
+                        <textarea rows={Math.round(errPrint.length)/75} className="w-full rounded-md text-xs/4 text-red-500 font-mono m-1" readOnly={true} value={errPrint}></textarea>
+                    </div>}
             </div>
         </div>
 

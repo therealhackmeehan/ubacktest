@@ -1,9 +1,9 @@
 import getStockData from "./getStockData";
 import validateStockData from "./validation/validateStockData";
-import runPythonCode from "./runPythonCode";
 import validateErrPrint from "./validation/validateErrPrint";
 import validateStrategyResult from "./validation/validateStrategyResult";
 import calculatePortfolio from "./calculations"
+import runPythonCode from "./runPythonCode";
 
 import type { RunStrategy } from "wasp/server/operations";
 import { HttpError } from "wasp/server";

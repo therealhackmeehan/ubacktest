@@ -147,7 +147,7 @@ query runStrategy {
 }
 
 action charge {
-  fn: import { charge } from "@src/playground/server/Pipeline/charge",
+  fn: import { charge } from "@src/playground/server/operations",
   entities: [User]
 }
 // end runStrategy

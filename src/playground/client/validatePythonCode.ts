@@ -4,7 +4,7 @@ interface CodeProps {
 
 function validatePythonCode({ code }: CodeProps): void {
     const errorHelper =
-        " You must define a function named mystrategy with one input, data, and return one output, data. All functions should contain the following: \n def myStrategy(data):\n    return data";
+        " You must define a function named strategy with one input, data, and return one output, data. All functions should contain the following: \n def strategy(data):\n    return data";
 
     // Check 1: Basic validation for Python syntax by looking for 'def'
     if (!code.includes('def')) {
@@ -14,18 +14,18 @@ function validatePythonCode({ code }: CodeProps): void {
     }
 
     // Check 2: Ensure function named 'mystrategy' is defined
-    const functionRegex = /def\s+mystrategy\s*\(([^)]*)\)\s*:/;
+    const functionRegex = /def\s+strategy\s*\(([^)]*)\)\s*:/;
     const functionMatch = code.match(functionRegex);
     if (!functionMatch) {
         throw new Error(
-            "Function 'mystrategy' is not defined or improperly named. " + errorHelper
+            "Function 'strategy' is not defined or improperly named. " + errorHelper
         );
     } else {
         // Check 3: Validate that 'mystrategy' has exactly one parameter named 'data'
         const params = functionMatch[1].trim();
         if (params !== "data") {
             throw new Error(
-                "Function 'mystrategy' must have exactly one parameter named 'data'. " + errorHelper
+                "Function 'strategy' must have exactly one parameter named 'data'. " + errorHelper
             );
         }
     }
@@ -34,7 +34,7 @@ function validatePythonCode({ code }: CodeProps): void {
     const returnRegex = /return\s+data\b/;
     if (!returnRegex.test(code)) {
         throw new Error(
-            "Function 'mystrategy' must return 'data'. " + errorHelper
+            "Function 'strategy' must return 'data'. " + errorHelper
         );
     }
 }

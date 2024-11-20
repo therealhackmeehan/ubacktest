@@ -14,12 +14,13 @@ async function runPythonCode({ data, code }: DataProps) {
     const uniqueKey = generateRandomKey();
 
     const mainFile = `# main.py
-from mystrategy import mystrategy
+from strategy import strategy
 import json
 import pandas as pd
 jsonCodeUnformatted = '${JSON.stringify(data)}'
 jsonCodeFormatted = json.loads(jsonCodeUnformatted)
 df = pd.DataFrame(jsonCodeFormatted)
+df = strategy(df)
 df.columns = df.columns.str.lower()
 print("${uniqueKey}START${uniqueKey}" + str(df['signal'].to_json(orient='values')) + "${uniqueKey}END${uniqueKey}")
 `;
@@ -38,7 +39,7 @@ print("${uniqueKey}START${uniqueKey}" + str(df['signal'].to_json(orient='values'
                     content: mainFile
                 },
                 {
-                    name: "mystrategy.py",
+                    name: "strategy.py",
                     content: code
                 },
             ],
@@ -46,22 +47,24 @@ print("${uniqueKey}START${uniqueKey}" + str(df['signal'].to_json(orient='values'
     });
 
     const result = await response.json();
-    if (result.run.signal == "SIGKILL") {
+    console.log(result)
+
+    const stderr = result.run.stderr;
+    const stdout = result.run.stdout;
+    if (result.run.signal == "SIGKILL" && !stderr && !stdout) {
         throw new HttpError(
             500,
             "SIGKILL: Your program was terminated because it exceeded resource limits."
         );
     }
 
-    const stderr = result.run.stderr;
-    const stdout = result.run.stdout;
-
     // extract the important result
     // forward all other stdout to the console
     const regex = new RegExp(`${uniqueKey}START${uniqueKey}(.*?)${uniqueKey}END${uniqueKey}`, "s");
     const match = stdout.match(regex);
     const signal = match ? JSON.parse(match[1]) : null;
-    const debugOutput = signal ? stdout.replace(regex, '').trim() : null;
+    const debugOutput = signal ? stdout.replace(regex, '').trim() : stdout;
+    ;
 
     return { signal, debugOutput, stderr };
 }
