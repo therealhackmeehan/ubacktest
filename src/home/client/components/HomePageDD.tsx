@@ -6,7 +6,7 @@ import { type Strategy } from "wasp/entities"
 import { routes } from 'wasp/client/router';
 
 // my imports
-import { RenameModal, DeleteModal } from "../../playground/components/modals/Modals";
+import { RenameModal, DeleteModal } from "../../../playground/client/components/modals/Modals";
 import ToolTip from "./Tooltip";
 
 // icon imports

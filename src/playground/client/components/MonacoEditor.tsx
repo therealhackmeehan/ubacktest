@@ -4,7 +4,7 @@ import { FiSave } from "react-icons/fi";
 import { updateStrategy } from "wasp/client/operations";
 
 interface MEditorProps {
-    code: string | null;
+    code: string;
     setCode: (value: string) => void;
     ID: string;
     userPrint: string;

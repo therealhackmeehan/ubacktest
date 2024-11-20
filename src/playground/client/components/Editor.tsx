@@ -1,9 +1,11 @@
 import { useState } from "react"
 import StrategyHeader from "./StrategyHeader"
 import MonacoEditor from "./MonacoEditor";
-import Pipeline from "../Pipeline/Pipeline";
 import { ErrorModal } from "./modals/Modals";
 import ChartAndStats from "./ChartAndStats";
+import { runStrategy, charge } from "wasp/client/operations";
+import validateFormInputs from "../validateFormInputs";
+import validatePythonCode from "../validatePythonCode";
 
 interface EditorProps {
     nameToDisplay: string;
@@ -40,17 +42,21 @@ function Editor({ nameToDisplay, codeToDisplay, selectedStrategy, setNameToDispl
         setLoading(true);
 
         try {
-            const r = await Pipeline({ symbol, startDate, endDate, intval, code: codeToDisplay })
+            validateFormInputs({ symbol, startDate, endDate, intval });
+            validatePythonCode({ code: codeToDisplay });
 
-            if (r.userPrint) {
-                setUserStdout(r.userPrint)
+            const {data, debugOutput, stderr} = await runStrategy({ symbol, startDate, endDate, intval, code: codeToDisplay })
+
+            if (debugOutput) {
+                setUserStdout(debugOutput);
             }
 
-            if (r.errPrint) {
-                setUserStdErr(r.errPrint)
-            } else {
-                setResult(r.data);
+            if (stderr) {
+                setUserStdErr(stderr);
+            } else if (data.portfolio) {
+                setResult(data);
                 setResultOpen(true);
+                charge(); // charge a credit (if applicable)
             }
 
         } catch (error) {

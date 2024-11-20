@@ -2,7 +2,7 @@ import { IoMdAddCircleOutline } from "react-icons/io"
 import { useState } from "react";
 import { NewProjectModal } from "./modals/Modals";
 
-export default function PageHeader({setSelectedStrategy}) {
+export default function PageHeader({setSelectedStrategy}: {setSelectedStrategy: (id: string) => void}) {
 
     const [newProjectModalOpen, setNewProjectModalOpen] = useState<boolean>(false);
 

@@ -1,3 +1,5 @@
+import { HttpError } from "wasp/server";
+
 interface DataProps {
     data: any;
     code: string;
@@ -44,11 +46,11 @@ print("${uniqueKey}START${uniqueKey}" + str(df['signal'].to_json(orient='values'
     });
 
     const result = await response.json();
-    const signal = result.run.signal;
-
-    debugger
-    if (signal && signal === "SIGKILL") {
-        throw new Error("SIGKILL: We killed your program because it taxed the machine beyond reason.");
+    if (result.run.signal == "SIGKILL") {
+        throw new HttpError(
+            500,
+            "SIGKILL: Your program was terminated because it exceeded resource limits."
+        );
     }
 
     const stderr = result.run.stderr;
@@ -58,14 +60,10 @@ print("${uniqueKey}START${uniqueKey}" + str(df['signal'].to_json(orient='values'
     // forward all other stdout to the console
     const regex = new RegExp(`${uniqueKey}START${uniqueKey}(.*?)${uniqueKey}END${uniqueKey}`, "s");
     const match = stdout.match(regex);
-    const myStdout = match ? JSON.parse(match[1]) : null;
-    const userStdout = stdout ? stdout.replace(regex, '').trim() : null;
+    const signal = match ? JSON.parse(match[1]) : null;
+    const debugOutput = signal ? stdout.replace(regex, '').trim() : null;
 
-    return {
-        myStdout: myStdout,
-        userStdout: userStdout,
-        stderr: stderr
-    };
+    return { signal, debugOutput, stderr };
 }
 
 export default runPythonCode;

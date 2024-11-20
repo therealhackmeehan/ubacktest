@@ -100,7 +100,7 @@ page LandingPage {
 route HomePageRoute { path: "/home", to: HomePage }
 page HomePage {
   authRequired: true,
-  component: import HomePage from "@src/home/HomePage"
+  component: import HomePage from "@src/home/client/HomePage"
 }
 //#endregion
 
@@ -108,36 +108,49 @@ page HomePage {
 route PlaygroundRoute { path: "/editor", to: PlaygroundPage }
 page PlaygroundPage {
   authRequired: true,
-  component: import Layout from "@src/playground/layout"
+  component: import Layout from "@src/playground/client/layout"
 }
 
 
 //#region strategy-related actions
 action createStrategy {
-  fn: import { createStrategy } from "@src/playground/operations",
+  fn: import { createStrategy } from "@src/playground/server/operations",
   entities: [Strategy]
 }
 action updateStrategy {
-  fn: import { updateStrategy } from "@src/playground/operations",
+  fn: import { updateStrategy } from "@src/playground/server/operations",
   entities: [Strategy]
 }
 action deleteStrategy {
-  fn: import { deleteStrategy } from "@src/playground/operations",
+  fn: import { deleteStrategy } from "@src/playground/server/operations",
   entities: [Strategy]
 }
 action renameStrategy {
-  fn: import { renameStrategy } from "@src/playground/operations",
+  fn: import { renameStrategy } from "@src/playground/server/operations",
   entities: [Strategy]
 }
 query getStrategies {
-  fn: import { getStrategies } from "@src/playground/operations",
+  fn: import { getStrategies } from "@src/playground/server/operations",
   entities: [Strategy]
 }
 query getSpecificStrategy {
-  fn: import { getSpecificStrategy } from "@src/playground/operations",
+  fn: import { getSpecificStrategy } from "@src/playground/server/operations",
   entities: [Strategy]
 }
 //#end strategy-related actions
+
+
+// The big action -> run strategy and initiate a backend process
+query runStrategy {
+  fn: import { runStrategy } from "@src/playground/server/Pipeline/Pipeline",
+  entities: [User]
+}
+
+action charge {
+  fn: import { charge } from "@src/playground/server/Pipeline/charge",
+  entities: [User]
+}
+// end runStrategy
 
 
 //#region Auth Pages
