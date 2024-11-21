@@ -1,4 +1,5 @@
-# <YOUR_APP_NAME>
+# Stock Trading Strategy Backtesting Web App
+by Jack Meehan
 
 Built with [Wasp](https://wasp-lang.dev), based on the [Open Saas](https://opensaas.sh) template.
 
