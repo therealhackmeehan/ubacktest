@@ -4,7 +4,7 @@ interface CodeProps {
 
 function validatePythonCode({ code }: CodeProps): void {
     const errorHelper =
-        " You must define a function named strategy with one input, data, and return one output, data. All functions should contain the following: \n def strategy(data):\n    return data";
+        " You must define a function named strategy with one input, data, and return one output, data. All functions should contain the following: \n\n def strategy(data):\n # some code of yours... \n\t\treturn data";
 
     // Check 1: Basic validation for Python syntax by looking for 'def'
     if (!code.includes('def')) {

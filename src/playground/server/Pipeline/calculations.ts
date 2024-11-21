@@ -2,6 +2,7 @@
 const calculatePortfolio = (data: any): number[] => {
     const dailyValues: number[] = [];
     let portfolioValue = data.close[0]; // Initial portfolio value
+    dailyValues.push(portfolioValue);
 
     for (let i = 0; i < data.close.length - 1; i++) {
         const dailyChange = (data.close[i + 1] - data.close[i]) / data.close[i];

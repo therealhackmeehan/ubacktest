@@ -23,6 +23,8 @@ function Editor({ nameToDisplay, codeToDisplay, selectedStrategy, setNameToDispl
     const [symbol, setSymbol] = useState<string>('SPY');
     const [intval, setIntval] = useState<string>('1d');
 
+    // useState for time at which to trade (open, close, etc)
+
     const [errorModalMessage, setErrorModalMessage] = useState<string>('');
 
     const [userStdout, setUserStdout] = useState<string>('');
@@ -78,10 +80,10 @@ function Editor({ nameToDisplay, codeToDisplay, selectedStrategy, setNameToDispl
             }
 
             <div className='flex bg-gray-100 rounded-md gap-y-2 justify-between dark:text-purple-900 gap-3 px-12 m-4 p-2 mx-2 '>
-                <InputComponent text="Stock" varToSet={symbol} varToSetMethod={setSymbol} />
-                <InputComponent text="Start" varToSet={startDate} varToSetMethod={setStartDate} />
-                <InputComponent text="End" varToSet={endDate} varToSetMethod={setEndDate} />
-                <InputComponent text="Frequency" varToSet={intval} varToSetMethod={setIntval} />
+                <InputComponent type='text' text="Stock" varToSet={symbol} varToSetMethod={setSymbol} />
+                <InputComponent type='date' text="Start" varToSet={startDate} varToSetMethod={setStartDate} />
+                <InputComponent type='date' text="End" varToSet={endDate} varToSetMethod={setEndDate} />
+                <InputComponent type='text' text="Frequency" varToSet={intval} varToSetMethod={setIntval} />
                 <button
                     type='button'
                     onClick={run}
@@ -97,7 +99,7 @@ function Editor({ nameToDisplay, codeToDisplay, selectedStrategy, setNameToDispl
 
             {result && resultOpen && <ChartAndStats stockData={result} symbol={symbol} setResultOpen={setResultOpen} />}
 
-            {result &&
+            {result && !resultOpen &&
                 <button className="p-2 my-2 tracking-tight font-bold border-2 border-purple-800 rounded-lg hover:bg-purple-100 w-full" onClick={() => setResultOpen(true)}>
                     Click to Open Result of Most Recent Backtest
                 </button>
@@ -113,9 +115,10 @@ interface InputComponentProps {
     text: string;
     varToSet: string;
     varToSetMethod: (value: string) => void;
+    type: string;
 }
 
-function InputComponent({ text, varToSet, varToSetMethod }: InputComponentProps) {
+function InputComponent({ text, varToSet, varToSetMethod, type }: InputComponentProps) {
 
     return (
         <div className='flex items-center justify-between gap-3'>
@@ -123,7 +126,7 @@ function InputComponent({ text, varToSet, varToSetMethod }: InputComponentProps)
                 {text}
             </div>
             <input
-                type='text'
+                type={type}
                 className='text-sm text-gray-600 w-full rounded-md border border-gray-200 shadow-md focus:outline-none focus:border-transparent focus:shadow-none duration-200 ease-in-out hover:shadow-none'
                 placeholder={text}
                 value={varToSet}

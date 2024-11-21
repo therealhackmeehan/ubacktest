@@ -13,17 +13,49 @@ async function runPythonCode({ data, code }: DataProps) {
     // Generate a unique key to mark the output
     const uniqueKey = generateRandomKey();
 
-    const mainFile = `# main.py
+
+    const mainFile = 
+`# main.py
+
 from strategy import strategy
 import json
 import pandas as pd
+
 jsonCodeUnformatted = '${JSON.stringify(data)}'
 jsonCodeFormatted = json.loads(jsonCodeUnformatted)
+
 df = pd.DataFrame(jsonCodeFormatted)
+initHeight = df.shape[0]
+
 df = strategy(df)
+if not isinstance(df, pd.DataFrame):
+    raise Exception("You must return a dataframe from your strategy.")
+
 df.columns = df.columns.str.lower()
+
+
+if 'signal' not in df.columns:
+    raise Exception("There is no 'signal' column in the table.")
+
+if any(df.columns.duplicated()):
+    raise Exception("There are two or more 'signal' columns in the table.")
+
+if df['signal'].empty:
+    raise Exception("'signal' column is empty.")
+
+if df['signal'].isnull().any():
+    raise Exception("'signal' column contains null values.")
+
+if not df.index.is_unique:
+    raise Exception("Table index is not unique.")
+
+if df.shape[0] != initHeight:
+    raise Exception("The height of the dataframe has changed upon applying your strategy.")
+
+
 print("${uniqueKey}START${uniqueKey}" + str(df['signal'].to_json(orient='values')) + "${uniqueKey}END${uniqueKey}")
 `;
+
 
     const response = await fetch('https://emkc.org/api/v2/piston/execute', {
         method: 'POST',
@@ -58,13 +90,10 @@ print("${uniqueKey}START${uniqueKey}" + str(df['signal'].to_json(orient='values'
         );
     }
 
-    // extract the important result
-    // forward all other stdout to the console
     const regex = new RegExp(`${uniqueKey}START${uniqueKey}(.*?)${uniqueKey}END${uniqueKey}`, "s");
     const match = stdout.match(regex);
     const signal = match ? JSON.parse(match[1]) : null;
     const debugOutput = signal ? stdout.replace(regex, '').trim() : stdout;
-    ;
 
     return { signal, debugOutput, stderr };
 }

@@ -30,17 +30,20 @@ export const runStrategy: RunStrategy<PipelineProps, BacktestResultProps> = asyn
         throw new HttpError(402, "You must add more credits or purchase an basic monthy subscription to use this software.");
     }
 
+    //STEP 1 - GET STOCK DATA
     const rawStockData = await getStockData({ symbol, startDate, endDate, intval });
     let data = validateStockData({ stockData: rawStockData });
 
-    // from this point on, we don't want to throw errors, but print them to the console
+    // STEP 2 - RUN PYTHON CODE (w/ above stock data)
     let { signal, debugOutput, stderr } = await runPythonCode({ data, code });
-    stderr = validateErrPrint({ err: stderr });
 
+    // STEP 3 - PROCESS DATA FOR RESULTS PANEL (if no stderr)
     if (!stderr && signal) {
         data.signal = signal;
         data.portfolio = calculatePortfolio(data);
         validateStrategyResult({ data });
+    } else {
+        stderr = validateErrPrint({ err: stderr });
     }
 
     return { data, debugOutput, stderr };

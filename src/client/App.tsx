@@ -3,7 +3,7 @@ import { updateCurrentUser } from 'wasp/client/operations';
 import './Main.css';
 import AppNavBar from './components/AppNavBar';
 import CookieConsentBanner from './components/cookie-consent/Banner';
-import { useMemo, useEffect, ReactNode } from 'react';
+import { useMemo, useEffect } from 'react';
 import { Outlet, useLocation } from 'react-router-dom';
 import Footer from './components/Footer';
 
@@ -17,6 +17,10 @@ export default function App() {
 
   const shouldDisplayAppNavBar = useMemo(() => {
     return location.pathname !== '/' && location.pathname !== '/login' && location.pathname !== '/signup';
+  }, [location]);
+
+  const shouldDisplayFooter = useMemo(() => {
+    return location.pathname !== '/editor';
   }, [location]);
 
   const isAdminDashboard = useMemo(() => {
@@ -51,14 +55,12 @@ export default function App() {
         ) : (
           <>
             {shouldDisplayAppNavBar && <AppNavBar />}
-            <div className='mx-auto sm:px-6 lg:px-8'>
               <Outlet />
-            </div>
           </>
         )}
       </div>
       <CookieConsentBanner />
-      <Footer />
+      {shouldDisplayFooter && <Footer />}
     </>
   );
 }

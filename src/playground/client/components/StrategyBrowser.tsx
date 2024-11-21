@@ -36,7 +36,7 @@ function StrategyBrowser({ selectedStrategy, setSelectedStrategy, strategies, is
                                     {strategy.name}
                                     {(strategy.id === selectedStrategy) &&
                                         (<div className="pl-2 w-full text-end font-mono opacity-30">
-                                            {`last edited ${strategy.updatedAt.toLocaleDateString()}`}
+                                            {`${strategy.updatedAt.toLocaleDateString()}`}
                                         </div>)}
                                 </div>
                             </button>

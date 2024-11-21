@@ -6,10 +6,9 @@ import {
     createStrategy,
     getStrategies,
 } from 'wasp/client/operations';
-
 import { TiDelete } from "react-icons/ti";
-
 import { validateNewName } from './modalHelpers';
+import { starterName, starterCode } from '../../../../client/starterTemplate';
 
 interface RenameModalProps {
     onSuccess: (newName: string) => void;
@@ -66,7 +65,7 @@ export function RenameModal({ onSuccess, onFailure, id, currName }: RenameModalP
                     </button>
                 </div>
                 {errMsg &&
-                    <div className='mt-4 rounded-md p-2 bg-red-200 tracking-tight font-bold text-xs'>
+                    <div className='mt-4 rounded-md p-2 bg-red-200 tracking-tight font-bold text-sm'>
                         {errMsg}
                     </div>}
             </div>
@@ -93,8 +92,7 @@ export function DeleteModal({ onSuccess, onFailure, id }: DeleteModalProps) {
             if (strategies.length > 0) {
                 onSuccess(strategies[0].id);
             } else {
-                const starter = "Start Editing Your Strategy!!";
-                const newID = await createStrategy({ name: "MyFirstStrategy", code: starter });
+                const newID = await createStrategy({ name: starterName, code: starterCode });
                 onSuccess(newID.id);
             }
         } catch (error) {
@@ -127,7 +125,7 @@ export function DeleteModal({ onSuccess, onFailure, id }: DeleteModalProps) {
                     </button>
                 </div>
                 {errMsg &&
-                    <div className='mt-4 rounded-md p-2 bg-red-200 tracking-tight font-bold text-xs'>
+                    <div className='mt-4 rounded-md p-2 bg-red-200 tracking-tight font-bold text-sm'>
                         {errMsg}
                     </div>}
             </div>
@@ -149,8 +147,7 @@ export function NewProjectModal({ onSuccess, onFailure }: NewProjectModalProps) 
         setErrMsg('');
         try {
             validateNewName(newProjectName);
-            const starter = "Start Editing Your Strategy!!";
-            const newID = await createStrategy({ name: newProjectName, code: starter });
+            const newID = await createStrategy({ name: newProjectName, code: starterCode });
             onSuccess(newID.id);
         } catch (error) {
             setErrMsg(error.message);
@@ -189,7 +186,7 @@ export function NewProjectModal({ onSuccess, onFailure }: NewProjectModalProps) 
                     </button>
                 </div>
                 {errMsg &&
-                    <div className='mt-4 rounded-md p-2 bg-red-200 tracking-tight font-bold text-xs'>
+                    <div className='mt-4 rounded-md p-2 bg-red-200 tracking-tight font-bold text-sm'>
                         {errMsg}
                     </div>}
             </div>
@@ -207,10 +204,24 @@ export function ErrorModal({ onClose, msg }: ErrorModalProps) {
         <div className="fixed inset-0 flex items-center justify-center z-50">
             <div className="bg-gray-800 w-full opacity-50 fixed inset-0"></div>
             <div className="bg-white p-6 w-1/4 rounded-lg shadow-lg z-10">
-                <div className='font-bold text-red-700 tracking-tight'>
-                    {msg}
+                <div className='flex justify-between'>
+                    <div className='p-3 tracking-tight font-bold text-gray-800'>
+                        We've Encountered an Error...
+                    </div>
+                    <button onClick={onClose}>
+                        <TiDelete size='1.8rem' className='hover:rotate-6 text-gray-900 hover:scale-110' />
+                    </button>
                 </div>
-                <div className="flex justify-between mt-4">
+                <textarea rows={7} className='w-full border-0 border-transparent bg-gray-100 rounded-lg font-bold text-sm text-red-700 tracking-tight' readOnly={true} value={msg}>
+                </textarea>
+                <div className="flex justify-between mt-4 gap-x-3">
+                    {msg.includes('Purchase') &&
+                        <button
+                            className="bg-purple-500 w-full text-white p-2 shadow-sm hover:shadow-purple-700 rounded hover:bg-purple-700"
+                            onClick={onClose}
+                        >
+                            Buy More Credits
+                        </button>}
                     <button
                         className="bg-purple-500 w-full text-white p-2 rounded hover:bg-purple-700"
                         onClick={onClose}

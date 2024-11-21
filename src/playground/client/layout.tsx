@@ -3,6 +3,7 @@ import StrategyBrowser from "./components/StrategyBrowser"
 import Editor from "./components/Editor"
 import { useState, useEffect, useRef } from "react"
 import { getSpecificStrategy, createStrategy, getStrategies, useQuery } from "wasp/client/operations"
+import { starterName, starterCode } from '../../client/starterTemplate';
 
 export default function Layout() {
 
@@ -30,7 +31,7 @@ export default function Layout() {
                 } else if (strategies.length > 0) {
                     setSelectedStrategy(strategies[0].id)
                 } else {
-                    await createStrategy({ name: "My Strategy", code: "Start Editing Your Strategy!!" });
+                    await createStrategy({ name: starterName, code: starterCode });
                     setSelectedStrategy(strategies[0].id)
                 }
             }
@@ -58,17 +59,21 @@ export default function Layout() {
 
     return (
         <div className='flex flex-col justify-center gap-10'>
-            <div className='lg:mt-10'>
+            <div className='mt-10'>
                 <div className='mx-auto'>
-                    <PageHeader setSelectedStrategy={setSelectedStrategy}/>
-                    <div className="lg:grid lg:grid-cols-6 gap-3">
 
-                        <StrategyBrowser selectedStrategy={selectedStrategy}
+                    <PageHeader setSelectedStrategy={setSelectedStrategy}/>
+
+                    <div className="lg:grid lg:grid-cols-6 gap-3">
+                        
+                        <StrategyBrowser 
+                            selectedStrategy={selectedStrategy}
                             setSelectedStrategy={setSelectedStrategy}
                             strategies={strategies} 
                             isStrategiesLoading={isStrategiesLoading}/>
 
-                        <Editor nameToDisplay={nameToDisplay}
+                        <Editor 
+                            nameToDisplay={nameToDisplay}
                             codeToDisplay={codeToDisplay}
                             selectedStrategy={selectedStrategy}
                             setNameToDisplay={setNameToDisplay}
@@ -76,6 +81,7 @@ export default function Layout() {
                             setSelectedStrategy={setSelectedStrategy} />
 
                     </div>
+
                 </div>
             </div>
         </div>

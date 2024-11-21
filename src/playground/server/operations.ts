@@ -32,7 +32,6 @@ export const getStrategies: GetStrategies<void, Strategy[]> = async (_args, cont
   });
 };
 
-
 //to come: getSpecificStrategy
 export const getSpecificStrategy: GetSpecificStrategy<Pick<Strategy, 'id'>, Strategy> = async ({ id }, context) => {
   if (!context.user) throw new HttpError(401);
@@ -74,15 +73,12 @@ export const updateStrategy: UpdateStrategy<Partial<Strategy>, Strategy> = async
 export const charge: Charge<void, void> = async (_args, context) => {
 
   if (!context.user) throw new HttpError(401);
+  if (context.user.isAdmin) return;
 
-  if (!context.user.credits && context.user.subscriptionPlan !== "active" && !context.user.isAdmin) {
-      await context.entities.User.update({
-          where: { id: context.user.id },
-          data: {
-              credits: {
-                  decrement: 1,
-              },
-          },
-      });
+  if (context.user.credits) {
+    await context.entities.User.update({
+      where: { id: context.user.id },
+      data: { credits: { increment: 1, }, }, // for now increment while testing
+    });
   }
 }

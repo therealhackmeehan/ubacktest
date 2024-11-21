@@ -21,7 +21,7 @@ async function getStockData({ symbol, startDate, endDate, intval }: stockDataPro
     if (!response.ok) {
         throw new HttpError(
             503, // Service Unavailable
-            `Unable to connect to the internet to retrieve stock data: ${response.statusText}`
+            `Unable to connect to retrieve stock data: ${response.statusText}`
         );
     }
 
