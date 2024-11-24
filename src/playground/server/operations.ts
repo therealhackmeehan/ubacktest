@@ -49,7 +49,6 @@ export const deleteStrategy: DeleteStrategy<Pick<Strategy, 'id'>, Strategy> = as
   });
 };
 
-
 export const renameStrategy: RenameStrategy<Partial<Strategy>, Strategy> = async ({ id, name }, context) => {
   if (!context.user) throw new HttpError(401);
 
@@ -59,7 +58,6 @@ export const renameStrategy: RenameStrategy<Partial<Strategy>, Strategy> = async
   });
 };
 
-
 export const updateStrategy: UpdateStrategy<Partial<Strategy>, Strategy> = async ({ id, code }, context) => {
   if (!context.user) throw new HttpError(401);
 
@@ -68,7 +66,6 @@ export const updateStrategy: UpdateStrategy<Partial<Strategy>, Strategy> = async
     data: { code, },
   });
 };
-
 
 export const charge: Charge<void, void> = async (_args, context) => {
 

@@ -1,4 +1,6 @@
 import type { Strategy } from "wasp/entities";
+import { useState } from "react";
+import { NewProjectModal } from "./modals/Modals";
 
 interface StrategyBrowserProps {
     selectedStrategy: string;
@@ -8,6 +10,13 @@ interface StrategyBrowserProps {
 }
 
 function StrategyBrowser({ selectedStrategy, setSelectedStrategy, strategies, isStrategiesLoading }: StrategyBrowserProps) {
+
+    const [newProjectModalOpen, setNewProjectModalOpen] = useState<boolean>(false);
+
+    function onSuccessfulNewProject(id: string) {
+        setSelectedStrategy(id);
+        setNewProjectModalOpen(false);
+    }
 
     return (
         <div className="col-span-1 mb-4 overflow-auto rounded-md bg-purple-900">
@@ -42,6 +51,16 @@ function StrategyBrowser({ selectedStrategy, setSelectedStrategy, strategies, is
                             </button>
                         </li>
                     ))}
+                    <button className='border-2 border-white/30 rounded-lg w-1/2 bg-purple-800/10 mx-2 my-1 hover:bg-purple-200/40'
+                        onClick={() => setNewProjectModalOpen(true)}>
+                        <span className='font-bold text-white text-xl'>new</span>
+                    </button>
+
+                    {newProjectModalOpen && <NewProjectModal
+                        onSuccess={onSuccessfulNewProject}
+                        onFailure={() => setNewProjectModalOpen(false)}
+                    />}
+
                 </ul>
             ) : (
                 <div className="flex tracking-tight text-white p-4 text-xs font-extrabold">

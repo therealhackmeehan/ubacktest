@@ -1,4 +1,5 @@
 import { HttpError } from "wasp/server";
+import main_py from "./main_py";
 
 interface DataProps {
     data: any;
@@ -6,96 +7,73 @@ interface DataProps {
 }
 
 function generateRandomKey(): string {
-    return Math.random().toString(36).substring(2, 15) + Math.random().toString(36).substring(2, 15);
+    return Math.random().toString(36).substring(2, 8) + Math.random().toString(36).substring(2, 8);
 }
 
+
 async function runPythonCode({ data, code }: DataProps) {
-    // Generate a unique key to mark the output
+    // Generate unique markers for parsing the output
     const uniqueKey = generateRandomKey();
+    const mainFileContent = main_py({ data, uniqueKey, colToTest: 'close' });
 
+    // Prepare the request payload
+    const payload = {
+        language: "python",
+        version: "3.10.0",
+        files: [
+            { name: "main.py", content: mainFileContent },
+            { name: "strategy.py", content: code },
+        ],
+    };
 
-    const mainFile = 
-`# main.py
-
-from strategy import strategy
-import json
-import pandas as pd
-
-jsonCodeUnformatted = '${JSON.stringify(data)}'
-jsonCodeFormatted = json.loads(jsonCodeUnformatted)
-
-df = pd.DataFrame(jsonCodeFormatted)
-initHeight = df.shape[0]
-
-df = strategy(df)
-if not isinstance(df, pd.DataFrame):
-    raise Exception("You must return a dataframe from your strategy.")
-
-df.columns = df.columns.str.lower()
-
-
-if 'signal' not in df.columns:
-    raise Exception("There is no 'signal' column in the table.")
-
-if any(df.columns.duplicated()):
-    raise Exception("There are two or more 'signal' columns in the table.")
-
-if df['signal'].empty:
-    raise Exception("'signal' column is empty.")
-
-if df['signal'].isnull().any():
-    raise Exception("'signal' column contains null values.")
-
-if not df.index.is_unique:
-    raise Exception("Table index is not unique.")
-
-if df.shape[0] != initHeight:
-    raise Exception("The height of the dataframe has changed upon applying your strategy.")
-
-
-print("${uniqueKey}START${uniqueKey}" + str(df['signal'].to_json(orient='values')) + "${uniqueKey}END${uniqueKey}")
-`;
-
-
+    // Make the API call to execute the Python code
     const response = await fetch('https://emkc.org/api/v2/piston/execute', {
         method: 'POST',
-        headers: {
-            'Content-Type': 'application/json'
-        },
-        body: JSON.stringify({
-            language: "python",
-            version: "3.10.0",
-            files: [
-                {
-                    name: "main.py",
-                    content: mainFile
-                },
-                {
-                    name: "strategy.py",
-                    content: code
-                },
-            ],
-        })
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(payload),
     });
 
-    const result = await response.json();
-    console.log(result)
+    // Parse the response
+    const { run } = await response.json();
+    console.log(run);
+    const { stderr = '', stdout = '', signal } = run;
 
-    const stderr = result.run.stderr;
-    const stdout = result.run.stdout;
-    if (result.run.signal == "SIGKILL" && !stderr && !stdout) {
+    // Handle resource-limit termination
+    if (signal === "SIGKILL" && !stderr && !stdout) {
         throw new HttpError(
             500,
             "SIGKILL: Your program was terminated because it exceeded resource limits."
         );
     }
 
+    // Append warning if `main.py` errors are present
+    const updatedStderr = stderr.includes('main.py')
+        ? `${stderr}\n\nNote: Errors related to "main.py" may be disregarded, as it serves as the processing function orchestrating the test.`
+        : stderr;
+
+    // Extract data from the Python output
+    const parsedData = parsePythonOutput(stdout, uniqueKey);
+
+    // Update `data` with results or reset to null
+    if (parsedData) Object.assign(data, parsedData);
+
+    return {
+        data,
+        debugOutput: parsedData ? stripDebugOutput(stdout, uniqueKey) : stdout,
+        stderr: updatedStderr,
+    };
+}
+
+// Helper Functions
+function parsePythonOutput(stdout: string, uniqueKey: string) {
     const regex = new RegExp(`${uniqueKey}START${uniqueKey}(.*?)${uniqueKey}END${uniqueKey}`, "s");
     const match = stdout.match(regex);
-    const signal = match ? JSON.parse(match[1]) : null;
-    const debugOutput = signal ? stdout.replace(regex, '').trim() : stdout;
+    return match ? JSON.parse(match[1]) : null;
+}
 
-    return { signal, debugOutput, stderr };
+function stripDebugOutput(stdout: string, uniqueKey: string) {
+    const regex = new RegExp(`${uniqueKey}START${uniqueKey}(.*?)${uniqueKey}END${uniqueKey}`, "s");
+    return stdout.replace(regex, '').trim();
 }
 
 export default runPythonCode;

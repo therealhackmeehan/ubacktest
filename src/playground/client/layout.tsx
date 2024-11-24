@@ -2,8 +2,7 @@ import PageHeader from "./components/PageHeader"
 import StrategyBrowser from "./components/StrategyBrowser"
 import Editor from "./components/Editor"
 import { useState, useEffect, useRef } from "react"
-import { getSpecificStrategy, createStrategy, getStrategies, useQuery } from "wasp/client/operations"
-import { starterName, starterCode } from '../../client/starterTemplate';
+import { getSpecificStrategy, getStrategies, useQuery } from "wasp/client/operations"
 
 export default function Layout() {
 
@@ -22,6 +21,7 @@ export default function Layout() {
     useEffect(() => {
         const loadInitialData = async () => {
             if (!hasLoadedInitialData.current && !isStrategiesLoading) {
+                
                 hasLoadedInitialData.current = true; // Mark the initial load as complete
 
                 const savedValue = localStorage.getItem('projectToLoad');
@@ -31,8 +31,7 @@ export default function Layout() {
                 } else if (strategies.length > 0) {
                     setSelectedStrategy(strategies[0].id)
                 } else {
-                    await createStrategy({ name: starterName, code: starterCode });
-                    setSelectedStrategy(strategies[0].id)
+                    setSelectedStrategy('')
                 }
             }
         };

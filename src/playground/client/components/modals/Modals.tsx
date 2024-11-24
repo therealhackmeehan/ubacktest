@@ -8,7 +8,7 @@ import {
 } from 'wasp/client/operations';
 import { TiDelete } from "react-icons/ti";
 import { validateNewName } from './modalHelpers';
-import { starterName, starterCode } from '../../../../client/starterTemplate';
+import { starterCode } from './starterTemplate';
 
 interface RenameModalProps {
     onSuccess: (newName: string) => void;
@@ -92,8 +92,7 @@ export function DeleteModal({ onSuccess, onFailure, id }: DeleteModalProps) {
             if (strategies.length > 0) {
                 onSuccess(strategies[0].id);
             } else {
-                const newID = await createStrategy({ name: starterName, code: starterCode });
-                onSuccess(newID.id);
+                onSuccess('');
             }
         } catch (error) {
             setErrMsg(error.message);

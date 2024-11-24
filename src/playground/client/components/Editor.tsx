@@ -3,7 +3,7 @@ import StrategyHeader from "./StrategyHeader"
 import MonacoEditor from "./MonacoEditor";
 import { ErrorModal } from "./modals/Modals";
 import ChartAndStats from "./ChartAndStats";
-import { runStrategy, charge } from "wasp/client/operations";
+import { runStrategy, charge, updateStrategy } from "wasp/client/operations";
 import validateFormInputs from "../validateFormInputs";
 import validatePythonCode from "../validatePythonCode";
 
@@ -19,7 +19,7 @@ interface EditorProps {
 function Editor({ nameToDisplay, codeToDisplay, selectedStrategy, setNameToDisplay, setCodeToDisplay, setSelectedStrategy }: EditorProps) {
 
     const [startDate, setStartDate] = useState<string>('2020-02-02');
-    const [endDate, setEndDate] = useState<string>('2020-05-02');
+    const [endDate, setEndDate] = useState<string>('2020-03-02');
     const [symbol, setSymbol] = useState<string>('SPY');
     const [intval, setIntval] = useState<string>('1d');
 
@@ -36,41 +36,57 @@ function Editor({ nameToDisplay, codeToDisplay, selectedStrategy, setNameToDispl
     const [loading, setLoading] = useState<boolean>(false);
 
     async function run() {
-
-        setUserStdErr('');
-        setUserStdout('');
-        setResult(null);
-        setErrorModalMessage('');
-        setLoading(true);
+        setInitialState();
 
         try {
-            validateFormInputs({ symbol, startDate, endDate, intval });
-            validatePythonCode({ code: codeToDisplay });
+            await handlePreRunValidations();
 
-            const {data, debugOutput, stderr} = await runStrategy({ symbol, startDate, endDate, intval, code: codeToDisplay })
+            const { data, debugOutput, stderr } = await executeStrategy();
+            handleDebugOutput(debugOutput, stderr);
 
-            if (debugOutput) {
-                setUserStdout(debugOutput);
-            }
-
-            if (stderr) {
-                setUserStdErr(stderr);
-            } else if (data.portfolio) {
+            const existsData = data?.portfolio && data?.signal && data?.returns;
+            if (existsData) {
                 setResult(data);
                 setResultOpen(true);
-                charge(); // charge a credit (if applicable)
+                charge(); // Deduct a credit
+            } else if (!stderr) {
+                throw new Error('Something went wrong. No stderr was reported but also no data was returned.');
             }
 
-        } catch (error) {
+        } catch (error: any) {
             setErrorModalMessage(error.message);
         } finally {
             setLoading(false);
         }
     }
 
+    // Helper Functions
+    function setInitialState() {
+        setUserStdErr('');
+        setUserStdout('');
+        setResult(null);
+        setErrorModalMessage('');
+        setLoading(true);
+    }
+
+    async function handlePreRunValidations() {
+        await updateStrategy({ id: selectedStrategy, code: codeToDisplay });
+        validateFormInputs({ symbol, startDate, endDate, intval });
+        validatePythonCode({ code: codeToDisplay });
+    }
+
+    async function executeStrategy() {
+        return await runStrategy({ symbol, startDate, endDate, intval, code: codeToDisplay });
+    }
+
+    function handleDebugOutput(debugOutput: string, stderr: string) {
+        if (debugOutput) setUserStdout(debugOutput);
+        if (stderr) setUserStdErr(stderr);
+    }
+
     return (
         <div className="col-span-5">
-            <StrategyHeader name={nameToDisplay} ID={selectedStrategy} setNameToDisplay={setNameToDisplay} setSelectedStrategy={setSelectedStrategy} />
+            {selectedStrategy && <StrategyHeader name={nameToDisplay} ID={selectedStrategy} setNameToDisplay={setNameToDisplay} setSelectedStrategy={setSelectedStrategy} />}
 
             {loading &&
                 <div className="fixed inset-0 flex items-center justify-center z-50">
@@ -85,29 +101,36 @@ function Editor({ nameToDisplay, codeToDisplay, selectedStrategy, setNameToDispl
                 <InputComponent type='date' text="End" varToSet={endDate} varToSetMethod={setEndDate} />
                 <InputComponent type='text' text="Frequency" varToSet={intval} varToSetMethod={setIntval} />
                 <button
-                    type='button'
+                    type="button"
                     onClick={run}
-                    className='min-w-[7rem] text-2xl border-black border-2 tracking-tight font-extrabold text-purple-800 shadow-md ring-1 ring-inset ring-slate-200 p-1 rounded-md hover:bg-green-200 duration-200 ease-in-out focus:outline-none focus:shadow-none hover:shadow-none'
+                    disabled={!selectedStrategy}
+                    className={`min-w-[7rem] text-2xl border-black border-2 tracking-tight font-extrabold text-purple-800 shadow-md ring-1 ring-inset ring-slate-200 p-1 rounded-md duration-200 ease-in-out focus:outline-none focus:shadow-none hover:shadow-none ${!selectedStrategy ? 'opacity-50 cursor-not-allowed' : 'hover:bg-green-200'
+                        }`}
                 >
                     GO
                 </button>
+
             </div>
 
-            {errorModalMessage &&
+            {
+                errorModalMessage &&
                 <ErrorModal onClose={() => setErrorModalMessage('')} msg={errorModalMessage} />
             }
 
             {result && resultOpen && <ChartAndStats stockData={result} symbol={symbol} setResultOpen={setResultOpen} />}
 
-            {result && !resultOpen &&
+            {
+                result && !resultOpen &&
                 <button className="p-2 my-2 tracking-tight font-bold border-2 border-purple-800 rounded-lg hover:bg-purple-100 w-full" onClick={() => setResultOpen(true)}>
                     Click to Open Result of Most Recent Backtest
                 </button>
             }
 
-            <MonacoEditor code={codeToDisplay} setCode={setCodeToDisplay} ID={selectedStrategy} userPrint={userStdout} errPrint={userStderr} />
+            {selectedStrategy ?
+                <MonacoEditor code={codeToDisplay} setCode={setCodeToDisplay} ID={selectedStrategy} userPrint={userStdout} errPrint={userStderr} />
+                : <div className="p-3 m-4 text-xl">Create a strategy to activate the editor.</div>}
 
-        </div>
+        </div >
     )
 }
 
