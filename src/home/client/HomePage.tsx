@@ -18,19 +18,20 @@ export default function HomePage() {
     const [newProjectModalOpen, setNewProjectModalOpen] = useState<boolean>(false);
 
     return (
-        <div className='flex flex-col justify-center gap-10'>
-            <div className='lg:mt-10'>
+        <div className='mt-12 flex flex-col max-w-7xl mx-auto rounded-lg'>
+            <div>
                 <div className='mx-auto max-w-7xl px-6 lg:px-8'>
                     <div className='mx-auto flex justify-between text-end'>
                         <h4 className='my-2 font-bold tracking-tight text-gray-900 sm:text-3xl text-xl dark:text-white'>
-                            My <span className='text-purple-500'>Strategies</span>
+                            My <span className='text-slate-500'>Strategies</span>
                         </h4>
-                        <button className='group hover:bg-gray-200 mr-6 gap-2 flex bg-gray-100 rounded-lg p-1 pr-3 dark:bg-gray-600 dark:border-2 dark:border-white'
+                        <button className='group bg-slate-100 mr-6 gap-2 flex border-2 border-black rounded-lg p-1 pr-3 dark:bg-gray-600 dark:border-2 dark:border-white'
                             onClick={() => setNewProjectModalOpen(true)}>
-                            <IoMdAddCircleOutline size='3rem' className='text-purple-500 group-hover:rotate-6 group-hover:scale-110 duration-500' />
+                            <IoMdAddCircleOutline size='3rem' className='text-slate-500 group-hover:rotate-6 group-hover:scale-110 duration-500' />
                             <span className='font-bold text-xl'>new</span>
                         </button>
                     </div>
+                    <div className='border-b-2 w-5/6 border-slate-400'></div>
 
                     {newProjectModalOpen && <NewProjectModal
                         onSuccess={() => setNewProjectModalOpen(false)}

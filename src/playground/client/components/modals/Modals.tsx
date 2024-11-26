@@ -38,7 +38,7 @@ export function RenameModal({ onSuccess, onFailure, id, currName }: RenameModalP
             <div className="bg-gray-800 w-full opacity-50 fixed inset-0"></div>
             <div className="bg-white p-6 w-1/3 rounded-lg shadow-lg z-10">
                 <div className='flex justify-between'>
-                    <h2 className="text-xl text-purple-500 font-semibold">Rename Your <span className="text-slate-800">Strategy</span></h2>
+                    <h2 className="text-xl text-slate-500 font-semibold">Rename Your <span className="text-slate-800">Strategy</span></h2>
                     <button onClick={onFailure}>
                         <TiDelete size='1.8rem' className='hover:rotate-6 text-gray-900 hover:scale-110' />
                     </button>
@@ -58,7 +58,7 @@ export function RenameModal({ onSuccess, onFailure, id, currName }: RenameModalP
                         Cancel
                     </button>
                     <button
-                        className="bg-purple-500 text-white p-2 rounded hover:bg-purple-700"
+                        className="bg-slate-500 text-white p-2 rounded hover:bg-slate-700"
                         onClick={handleRename}
                     >
                         Confirm
@@ -104,7 +104,7 @@ export function DeleteModal({ onSuccess, onFailure, id }: DeleteModalProps) {
             <div className="bg-gray-800 w-full opacity-50 fixed inset-0"></div>
             <div className="bg-white p-6 w-1/3 rounded-lg shadow-lg z-10">
                 <div className='flex justify-between'>
-                    <h2 className="text-xl text-purple-500 font-semibold">Are you sure you'd like to delete your <span className="text-slate-800">strategy</span>?</h2>
+                    <h2 className="text-xl text-slate-500 font-semibold">Are you sure you'd like to delete your <span className="text-slate-800">strategy</span>?</h2>
                     <button onClick={onFailure}>
                         <TiDelete size='1.8rem' className='hover:rotate-6 text-gray-900 hover:scale-110' />
                     </button>
@@ -117,7 +117,7 @@ export function DeleteModal({ onSuccess, onFailure, id }: DeleteModalProps) {
                         Cancel
                     </button>
                     <button
-                        className="bg-purple-500 text-white p-2 rounded hover:bg-purple-700"
+                        className="bg-slate-500 text-white p-2 rounded hover:bg-slate-700"
                         onClick={handleStrategyDelete}
                     >
                         Confirm
@@ -158,7 +158,7 @@ export function NewProjectModal({ onSuccess, onFailure }: NewProjectModalProps) 
             <div className="bg-gray-800 w-full opacity-50 fixed inset-0"></div>
             <div className="bg-white p-6 w-1/3 rounded-lg shadow-lg z-10">
                 <div className='flex justify-between'>
-                    <h2 className="text-xl text-purple-500 font-semibold">Create New <span className="text-slate-800">Strategy</span></h2>
+                    <h2 className="text-xl text-slate-500 font-semibold">Create New <span className="text-slate-800">Strategy</span></h2>
                     <button onClick={onFailure}>
                         <TiDelete size='1.8rem' className='hover:rotate-6 text-gray-900 hover:scale-110' />
                     </button>
@@ -178,7 +178,7 @@ export function NewProjectModal({ onSuccess, onFailure }: NewProjectModalProps) 
                         Cancel
                     </button>
                     <button
-                        className="bg-purple-500 text-white p-2 rounded hover:bg-purple-700"
+                        className="bg-slate-500 text-white p-2 rounded hover:bg-slate-700"
                         onClick={handleNewProject}
                     >
                         Confirm
@@ -216,13 +216,13 @@ export function ErrorModal({ onClose, msg }: ErrorModalProps) {
                 <div className="flex justify-between mt-4 gap-x-3">
                     {msg.includes('Purchase') &&
                         <button
-                            className="bg-purple-500 w-full text-white p-2 shadow-sm hover:shadow-purple-700 rounded hover:bg-purple-700"
+                            className="bg-slate-500 w-full text-white p-2 shadow-sm hover:shadow-slate-700 rounded hover:bg-slate-700"
                             onClick={onClose}
                         >
                             Buy More Credits
                         </button>}
                     <button
-                        className="bg-purple-500 w-full text-white p-2 rounded hover:bg-purple-700"
+                        className="bg-slate-500 w-full text-white p-2 rounded hover:bg-slate-700"
                         onClick={onClose}
                     >
                         OK

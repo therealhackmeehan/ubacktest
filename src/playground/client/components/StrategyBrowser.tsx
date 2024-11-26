@@ -1,6 +1,7 @@
 import type { Strategy } from "wasp/entities";
 import { useState } from "react";
 import { NewProjectModal } from "./modals/Modals";
+import { FaPlus } from "react-icons/fa";
 
 interface StrategyBrowserProps {
     selectedStrategy: string;
@@ -18,42 +19,42 @@ function StrategyBrowser({ selectedStrategy, setSelectedStrategy, strategies, is
         setNewProjectModalOpen(false);
     }
 
+    //     <h4 className="sticky top-0 pb-2 bg-gray-800/40 font-bold border-b border-gray-500 text-end tracking-tight p-2 text-white">
+    //     Strategies
+    //     </h4>
+
     return (
-        <div className="col-span-1 mb-4 overflow-auto rounded-md bg-purple-900">
-            <h4 className="sticky top-0 pb-2 rounded-md bg-gray-800/40 font-bold border-b border-gray-500 text-end text-lg tracking-tight p-2 text-white dark:text-white">
-                Strategies
-            </h4>
+        <div className="overflow-y-auto h-full col-span-1 bg-gray-50 border-r-2 border-black">
 
             {isStrategiesLoading && (
                 <div className="text-xl font-extrabold p-4 text-white">Loading...</div>
             )}
 
-            {strategies ? (
+            {strategies && (
                 <ul>
                     {strategies.map((strategy) => (
                         <li
                             key={strategy.id}
-                            className={`flex pl-2 pb-1 pr-2 ${strategy.id === selectedStrategy ? "bg-gray-800" : "hover:bg-gray-800"
+                            className={`flex pl-2 pb-1 pr-2 ${strategy.id === selectedStrategy ? "bg-gray-100" : "hover:bg-gray-100"
                                 }`}
                         >
                             <button
                                 type="button"
                                 onClick={() => setSelectedStrategy(strategy.id)}
-                                className="w-full truncate text-start hover:tracking-tight text-white hover:font-extrabold"
+                                className="flex pt-1 w-full tracking-tight text-sm font-light"
                             >
-                                <div className="flex pt-1 tracking-tight text-xs font-extrabold">
-                                    {strategy.name}
-                                    {(strategy.id === selectedStrategy) &&
-                                        (<div className="pl-2 w-full text-end font-mono opacity-30">
-                                            {`${strategy.updatedAt.toLocaleDateString()}`}
-                                        </div>)}
-                                </div>
+                                {strategy.name}
+                                {(strategy.id === selectedStrategy) &&
+                                    (<div className="pl-2 text-end font-mono items-center opacity-30">
+                                        {`${strategy.updatedAt.toLocaleDateString()}`}
+                                    </div>)}
                             </button>
                         </li>
                     ))}
-                    <button className='border-2 border-white/30 rounded-lg w-1/2 bg-purple-800/10 mx-2 my-1 hover:bg-purple-200/40'
+                    <button className='justify-between items-center gap-x-2 border-2 flex border-gray-800/30 rounded-lg px-8 my-4 justify-self-center hover:bg-gray-200/40'
                         onClick={() => setNewProjectModalOpen(true)}>
-                        <span className='font-bold text-white text-xl'>new</span>
+                        <span className='font-bold text-gray-800 text-lg'>new</span>
+                        <FaPlus />
                     </button>
 
                     {newProjectModalOpen && <NewProjectModal
@@ -62,10 +63,6 @@ function StrategyBrowser({ selectedStrategy, setSelectedStrategy, strategies, is
                     />}
 
                 </ul>
-            ) : (
-                <div className="flex tracking-tight text-white p-4 text-xs font-extrabold">
-                    No Strategies Found.
-                </div>
             )}
         </div>
 

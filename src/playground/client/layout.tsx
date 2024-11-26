@@ -1,6 +1,5 @@
-import PageHeader from "./components/PageHeader"
 import StrategyBrowser from "./components/StrategyBrowser"
-import Editor from "./components/Editor"
+import Editor from "./components/Editor/Editor"
 import { useState, useEffect, useRef } from "react"
 import { getSpecificStrategy, getStrategies, useQuery } from "wasp/client/operations"
 
@@ -21,7 +20,7 @@ export default function Layout() {
     useEffect(() => {
         const loadInitialData = async () => {
             if (!hasLoadedInitialData.current && !isStrategiesLoading) {
-                
+
                 hasLoadedInitialData.current = true; // Mark the initial load as complete
 
                 const savedValue = localStorage.getItem('projectToLoad');
@@ -57,32 +56,21 @@ export default function Layout() {
     }, [selectedStrategy]);
 
     return (
-        <div className='flex flex-col justify-center gap-10'>
-            <div className='mt-10'>
-                <div className='mx-auto'>
-
-                    <PageHeader setSelectedStrategy={setSelectedStrategy}/>
-
-                    <div className="lg:grid lg:grid-cols-6 gap-3">
-                        
-                        <StrategyBrowser 
-                            selectedStrategy={selectedStrategy}
-                            setSelectedStrategy={setSelectedStrategy}
-                            strategies={strategies} 
-                            isStrategiesLoading={isStrategiesLoading}/>
-
-                        <Editor 
-                            nameToDisplay={nameToDisplay}
-                            codeToDisplay={codeToDisplay}
-                            selectedStrategy={selectedStrategy}
-                            setNameToDisplay={setNameToDisplay}
-                            setCodeToDisplay={setCodeToDisplay}
-                            setSelectedStrategy={setSelectedStrategy} />
-
-                    </div>
-
-                </div>
+        <>
+            <div className='grid-cols-6 grid h-[92vh] border-black border-t-2'>
+                <StrategyBrowser
+                    selectedStrategy={selectedStrategy}
+                    setSelectedStrategy={setSelectedStrategy}
+                    strategies={strategies}
+                    isStrategiesLoading={isStrategiesLoading} />
+                <Editor
+                    nameToDisplay={nameToDisplay}
+                    codeToDisplay={codeToDisplay}
+                    selectedStrategy={selectedStrategy}
+                    setNameToDisplay={setNameToDisplay}
+                    setCodeToDisplay={setCodeToDisplay}
+                    setSelectedStrategy={setSelectedStrategy} />
             </div>
-        </div>
+        </>
     )
 }

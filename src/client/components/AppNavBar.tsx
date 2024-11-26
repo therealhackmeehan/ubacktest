@@ -26,7 +26,7 @@ export default function AppNavBar() {
 
   const { data: user, isLoading: isUserLoading } = useAuth();
   return (
-    <header className='absolute inset-x-0 top-0 z-50 shadow sticky bg-white bg-opacity-50 backdrop-blur-lg backdrop-filter dark:border dark:border-gray-100/10 dark:bg-boxdark-2'>
+    <header className='z-50 bg-white bg-opacity-50 backdrop-blur-lg backdrop-filter dark:border dark:border-gray-100/10 dark:bg-boxdark-2'>
       <nav className='flex items-center justify-between p-6 lg:px-8' aria-label='Global'>
         <div className='flex lg:flex-1'>
           <a href='/' className='-m-1.5 p-1.5'>
@@ -48,7 +48,7 @@ export default function AppNavBar() {
             <a
               key={item.name}
               href={item.href}
-              className='text-sm font-semibold leading-6 text-gray-900 duration-300 ease-in-out hover:text-purple-500 dark:text-white'
+              className='text-sm font-semibold leading-6 text-gray-900 duration-300 ease-in-out hover:text-slate-500 dark:text-white'
             >
               {item.name}
             </a>
@@ -61,7 +61,7 @@ export default function AppNavBar() {
 
           {isUserLoading ? null : !user ? (
             <a href={!user ? routes.LoginRoute.build() : routes.AccountRoute.build()} className='text-sm font-semibold leading-6 ml-4'>
-              <div className='flex items-center duration-300 ease-in-out text-gray-900 hover:text-purple-500 dark:text-white'>
+              <div className='flex items-center duration-300 ease-in-out text-gray-900 hover:text-slate-500 dark:text-white'>
                 Log in <BiLogIn size='1.1rem' className='ml-1 mt-[0.1rem]' />
               </div>
             </a>
@@ -106,7 +106,7 @@ export default function AppNavBar() {
               <div className='py-6'>
                 {isUserLoading ? null : !user ? (
                   <Link to='/login'>
-                    <div className='flex justify-end items-center duration-300 ease-in-out text-gray-900 hover:text-purple-500 dark:text-white'>
+                    <div className='flex justify-end items-center duration-300 ease-in-out text-gray-900 hover:text-slate-500 dark:text-white'>
                       Log in <BiLogIn size='1.1rem' className='ml-1' />
                     </div>
                   </Link>

@@ -1,11 +1,12 @@
 import { useState } from "react"
 import StrategyHeader from "./StrategyHeader"
 import MonacoEditor from "./MonacoEditor";
-import { ErrorModal } from "./modals/Modals";
-import ChartAndStats from "./ChartAndStats";
+import { ErrorModal } from "../modals/Modals";
+import Result from "../Result/Result";
 import { runStrategy, charge, updateStrategy } from "wasp/client/operations";
-import validateFormInputs from "../validateFormInputs";
-import validatePythonCode from "../validatePythonCode";
+import validateFormInputs from "../../validateFormInputs";
+import validatePythonCode from "../../validatePythonCode";
+import { FaCaretDown } from "react-icons/fa";
 
 interface EditorProps {
     nameToDisplay: string;
@@ -52,7 +53,6 @@ function Editor({ nameToDisplay, codeToDisplay, selectedStrategy, setNameToDispl
             } else if (!stderr) {
                 throw new Error('Something went wrong. No stderr was reported but also no data was returned.');
             }
-
         } catch (error: any) {
             setErrorModalMessage(error.message);
         } finally {
@@ -85,50 +85,71 @@ function Editor({ nameToDisplay, codeToDisplay, selectedStrategy, setNameToDispl
     }
 
     return (
-        <div className="col-span-5">
-            {selectedStrategy && <StrategyHeader name={nameToDisplay} ID={selectedStrategy} setNameToDisplay={setNameToDisplay} setSelectedStrategy={setSelectedStrategy} />}
+        <div className="col-span-5 h-full overflow-y-auto">
+            {selectedStrategy && <StrategyHeader
+                name={nameToDisplay}
+                ID={selectedStrategy}
+                result={result}
+                resultOpen={resultOpen}
+                setNameToDisplay={setNameToDisplay}
+                setSelectedStrategy={setSelectedStrategy}
+                setResultOpen={setResultOpen} />}
 
-            {loading &&
-                <div className="fixed inset-0 flex items-center justify-center z-50">
-                    <div className="absolute inset-0 bg-gray-800 opacity-50"></div>
-                    <div className="border-gray-300 h-20 w-20 animate-spin rounded-full border-8 border-t-purple-600"></div>
+            {!resultOpen && <div className='z-40 flex border-y-2 border-l-2 border-black flex-col justify-between rounded-l-lg fixed right-0 h-2/3 overflow-auto bg-white my-16 p-6'>
+                <div className="space-y-3">
+                    <div className="text-lg text-gray-800 tracking-tight font-extrabold text-end">
+                        <span className="text-sm font-light">the</span> Backtest Engine
+                    </div>
+                    <InputComponent type='text' text="Stock" varToSet={symbol} varToSetMethod={setSymbol} />
+                    <InputComponent type='date' text="Start" varToSet={startDate} varToSetMethod={setStartDate} />
+                    <InputComponent type='date' text="End" varToSet={endDate} varToSetMethod={setEndDate} />
+                    <InputComponent type='text' text="Frequency" varToSet={intval} varToSetMethod={setIntval} />
+                    <button className="flex hover:font-bold items-center justify-self-center text-xs">
+                        advanced options
+                        <FaCaretDown size="1rem" />
+                    </button>
                 </div>
-            }
-
-            <div className='flex bg-gray-100 rounded-md gap-y-2 justify-between dark:text-purple-900 gap-3 px-12 m-4 p-2 mx-2 '>
-                <InputComponent type='text' text="Stock" varToSet={symbol} varToSetMethod={setSymbol} />
-                <InputComponent type='date' text="Start" varToSet={startDate} varToSetMethod={setStartDate} />
-                <InputComponent type='date' text="End" varToSet={endDate} varToSetMethod={setEndDate} />
-                <InputComponent type='text' text="Frequency" varToSet={intval} varToSetMethod={setIntval} />
                 <button
                     type="button"
                     onClick={run}
                     disabled={!selectedStrategy}
-                    className={`min-w-[7rem] text-2xl border-black border-2 tracking-tight font-extrabold text-purple-800 shadow-md ring-1 ring-inset ring-slate-200 p-1 rounded-md duration-200 ease-in-out focus:outline-none focus:shadow-none hover:shadow-none ${!selectedStrategy ? 'opacity-50 cursor-not-allowed' : 'hover:bg-green-200'
+                    className={`bg-gray-100 justify-self-center w-full text-xl font-extrabold tracking-tight border-2 border-gray-800 rounded-lg ${!selectedStrategy ? 'opacity-50 cursor-not-allowed' : 'hover:bg-green-200'
                         }`}
                 >
                     GO
                 </button>
+            </div>}
 
-            </div>
 
-            {
-                errorModalMessage &&
-                <ErrorModal onClose={() => setErrorModalMessage('')} msg={errorModalMessage} />
-            }
+            {loading && <div className="fixed inset-0 flex items-center justify-center z-50">
+                <div className="absolute inset-0 bg-slate-800 opacity-50"></div>
+                <div className="border-gray-300 h-20 w-20 animate-spin rounded-full border-8 border-t-gray-600"></div>
+            </div>}
 
-            {result && resultOpen && <ChartAndStats stockData={result} symbol={symbol} setResultOpen={setResultOpen} />}
+            {errorModalMessage && <ErrorModal onClose={() => setErrorModalMessage('')} msg={errorModalMessage} />}
 
-            {
-                result && !resultOpen &&
-                <button className="p-2 my-2 tracking-tight font-bold border-2 border-purple-800 rounded-lg hover:bg-purple-100 w-full" onClick={() => setResultOpen(true)}>
-                    Click to Open Result of Most Recent Backtest
-                </button>
-            }
+            {result && resultOpen ? (
+                <Result
+                    stockData={result}
+                    symbol={symbol}
+                    setResultOpen={setResultOpen}
+                />
+            ) : selectedStrategy ? (
+                <MonacoEditor
+                    code={codeToDisplay}
+                    setCode={setCodeToDisplay}
+                    ID={selectedStrategy}
+                    userPrint={userStdout}
+                    errPrint={userStderr}
+                />
+            ) : (
+                <div className="p-3 m-4 tracking-tight text-gray-300 font-extrabold text-xl">
+                    Create a strategy to start the editor!
+                </div>
+            )}
 
-            {selectedStrategy ?
-                <MonacoEditor code={codeToDisplay} setCode={setCodeToDisplay} ID={selectedStrategy} userPrint={userStdout} errPrint={userStderr} />
-                : <div className="p-3 m-4 text-xl">Create a strategy to activate the editor.</div>}
+
+
 
         </div >
     )
@@ -144,13 +165,13 @@ interface InputComponentProps {
 function InputComponent({ text, varToSet, varToSetMethod, type }: InputComponentProps) {
 
     return (
-        <div className='flex items-center justify-between gap-3'>
-            <div className="tracking-tight text-xl font-bold">
+        <div className='flex items-center text-end grid-cols-4 gap-3'>
+            <div className="tracking-tight col-span-2 font-bold">
                 {text}
             </div>
             <input
                 type={type}
-                className='text-sm text-gray-600 w-full rounded-md border border-gray-200 shadow-md focus:outline-none focus:border-transparent focus:shadow-none duration-200 ease-in-out hover:shadow-none'
+                className='col-span-2 text-xs text-gray-600 w-full rounded-md border border-gray-200 shadow-md focus:outline-none focus:border-transparent focus:shadow-none duration-200 ease-in-out hover:shadow-none'
                 placeholder={text}
                 value={varToSet}
                 onChange={(e) => varToSetMethod(e.currentTarget.value)}

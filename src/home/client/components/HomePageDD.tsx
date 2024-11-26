@@ -3,8 +3,6 @@ import { type Strategy } from "wasp/entities"
 import { routes } from 'wasp/client/router';
 
 import { RenameModal, DeleteModal } from "../../../playground/client/components/modals/Modals";
-import ToolTip from "./Tooltip";
-
 import { MdDeleteOutline, MdOutlineEdit } from "react-icons/md";
 import { FaRegEdit, FaChevronRight, FaChevronDown } from "react-icons/fa";
 
@@ -31,8 +29,8 @@ export function StrategyDropDownContents({ strategy }: { strategy: Strategy }) {
     }
 
     return (
-        <li key={strategy.id}>
-            <div className='flex items-end px-4 justify-between dark:text-white'>
+        <li className="p-2" key={strategy.id}>
+            <div className='flex items-end justify-between dark:text-white'>
                 <div className="absolute -ml-8 mb-1 hover:cursor-pointer hover:text-gray-500"
                     onClick={() => {
                         setIsExpanded(!isExpanded)
@@ -44,13 +42,13 @@ export function StrategyDropDownContents({ strategy }: { strategy: Strategy }) {
                     )}
                 </div>
                 <div className='flex'>
-                    <div className='mt-2 font-bold tracking-tight text-gray-900 sm:text-lg lg:text-xl  dark:text-white hover:text-gray-500 hover:cursor-pointer'
+                    <div className='mt-2 font-bold tracking-tight text-gray-900 sm:text-sm lg:text-base dark:text-white hover:text-gray-500 hover:cursor-pointer'
                         onClick={() => {
                             setIsExpanded(!isExpanded)
                         }}>
                         {strategy.name}
                     </div>
-                    <button className='pl-3 hover:text-purple-500' title='Rename Strategy'
+                    <button className='pl-3 hover:text-slate-500' title='Rename Strategy'
                         onClick={() => setIsRenameModalOpen(true)}>
                         <MdOutlineEdit size='1.4rem' />
                     </button>
@@ -63,10 +61,10 @@ export function StrategyDropDownContents({ strategy }: { strategy: Strategy }) {
 
                 </div>
                 <div className='flex items-end'>
-                    <div className='flex items-center dark:text-white'>
-                        <button className='hover:text-purple-500' title='Delete Strategy'
+                    <div className='flex dark:text-white'>
+                        <button className='hover:text-slate-500 px-1' title='Delete Strategy'
                             onClick={() => setIsDeleteModalOpen(true)}>
-                            <MdDeleteOutline size='1.4rem' />
+                            <MdDeleteOutline size='1.2rem' />
                         </button>
 
                         {isDeleteModalOpen && <DeleteModal
@@ -75,41 +73,46 @@ export function StrategyDropDownContents({ strategy }: { strategy: Strategy }) {
                             id={strategy.id} />}
 
                     </div>
-                    <div className='font-mono text-purple-400 text-xs dark:text-white px-3'>
+                    <div className='font-light text-slate-400 text-xs dark:text-white px-2'>
                         created {strategy.createdAt.toLocaleDateString()}
                     </div>
-                    <div className='font-mono text-gray-700 text-sm dark:text-white px-3'>
+                    <div className='font-light text-gray-700 text-sm dark:text-white px-2'>
                         last updated {strategy.updatedAt.toLocaleDateString()}
                     </div>
                 </div>
             </div>
 
             {isExpanded &&
-                <>
-                    <div className='relative group'>
-                        <textarea className="select-none m-4 p-4 text-sm w-11/12 font-mono bg-slate-950 text-gray-300 rounded-lg border-purple-500 border-2 group-hover:bg-purple-950 resize-none duration-400"
-                            readOnly={true}
-                            value={strategy.code}
-                            rows={15}
-                            title='Open in Editor'>
-                        </textarea>
-                        <button
-                            className="absolute invisible top-0 right-0 mr-24 mt-8 group-hover:visible duration-700 text-white hover:scale-110"
-                            onClick={() => handleToLocalStorage(strategy.id)}
-                            onMouseEnter={() => setIsToolTipShown(true)}
-                            onMouseLeave={() => setIsToolTipShown(false)}
-                        >
-                            <div className="p-2 flex">
-                                {toolTipShown &&
-                                    <ToolTip text={`Edit ${strategy.name} in Editor`} />
-                                }
-                                <FaRegEdit size='2rem' />
-                            </div>
-                        </button>
-                    </div>
-                </>
+                <div className='relative group'>
+                    <textarea className="select-none m-4 p-4 text-sm w-11/12 font-mono bg-slate-950 text-gray-300 rounded-lg border-slate-500 border-2 group-hover:text-black group-hover:bg-slate-300 resize-none duration-400"
+                        readOnly={true}
+                        value={strategy.code}
+                        rows={15}
+                        title='Open in Editor'>
+                    </textarea>
+                    <button
+                        className="absolute invisible top-0 right-0 mr-24 mt-8 group-hover:visible duration-700 ease-in-out text-white hover:scale-110"
+                        onClick={() => handleToLocalStorage(strategy.id)}
+                        onMouseEnter={() => setIsToolTipShown(true)}
+                        onMouseLeave={() => setIsToolTipShown(false)}
+                    >
+                        <div className="p-2 flex">
+                            {toolTipShown &&
+                                <ToolTip text={`Edit ${strategy.name} in Editor`} />
+                            }
+                            <FaRegEdit size='2rem' />
+                        </div>
+                    </button>
+                </div>
             }
-            <div className="border m-4"></div>
         </li>
+    )
+}
+
+function ToolTip({text}: string) {
+    return (
+        <div className="p-1 mx-3 opacity-75 duration-700 bg-white text-gray-800 rounded-md border-2 font-xs hover:scale-110">
+            {text}
+        </div>
     )
 }
