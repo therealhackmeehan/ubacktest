@@ -1,4 +1,4 @@
-import StrategyBrowser from "./components/StrategyBrowser"
+import StrategyBrowser from "./components/Parent/StrategyBrowser"
 import Editor from "./components/Editor/Editor"
 import { useState, useEffect, useRef } from "react"
 import { getSpecificStrategy, getStrategies, useQuery } from "wasp/client/operations"
@@ -65,6 +65,8 @@ export default function Layout() {
                     strategies={strategies}
                     isStrategiesLoading={isStrategiesLoading} />
 
+                {/* <Strategy Header></Strategy> */}
+
                 <Editor
                     nameToDisplay={nameToDisplay}
                     codeToDisplay={codeToDisplay}
@@ -72,7 +74,7 @@ export default function Layout() {
                     setNameToDisplay={setNameToDisplay}
                     setCodeToDisplay={setCodeToDisplay}
                     setSelectedStrategy={setSelectedStrategy} />
-                    
+
             </div>
         </>
     )

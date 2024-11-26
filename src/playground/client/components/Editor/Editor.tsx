@@ -1,7 +1,7 @@
 import { useState } from "react"
-import StrategyHeader from "./StrategyHeader"
+import StrategyHeader from "../Parent/StrategyHeader"
 import MonacoEditor from "./MonacoEditor";
-import { ErrorModal } from "../modals/Modals";
+import { ErrorModal } from "../Modals/Modals";
 import Result from "../Result/Result";
 import { runStrategy, charge, updateStrategy } from "wasp/client/operations";
 import validateFormInputs from "../../validateFormInputs";

@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { DeleteModal, RenameModal } from "../modals/Modals"
+import { DeleteModal, RenameModal } from "../Modals/Modals"
 import { MdDeleteOutline, MdOutlineEdit } from "react-icons/md";
 import { useAuth } from "wasp/client/auth";
 import { routes } from "wasp/client/router";

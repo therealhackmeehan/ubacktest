@@ -2,7 +2,7 @@ import { useState } from "react";
 import { type Strategy } from "wasp/entities"
 import { routes } from 'wasp/client/router';
 
-import { RenameModal, DeleteModal } from "../../../playground/client/components/modals/Modals";
+import { RenameModal, DeleteModal } from "../../../playground/client/components/Modals/Modals";
 import { MdDeleteOutline, MdOutlineEdit } from "react-icons/md";
 import { FaRegEdit, FaChevronRight, FaChevronDown } from "react-icons/fa";
 
