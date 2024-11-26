@@ -58,11 +58,13 @@ export default function Layout() {
     return (
         <>
             <div className='grid-cols-6 grid h-[92vh] border-black border-t-2'>
+                
                 <StrategyBrowser
                     selectedStrategy={selectedStrategy}
                     setSelectedStrategy={setSelectedStrategy}
                     strategies={strategies}
                     isStrategiesLoading={isStrategiesLoading} />
+
                 <Editor
                     nameToDisplay={nameToDisplay}
                     codeToDisplay={codeToDisplay}
@@ -70,6 +72,7 @@ export default function Layout() {
                     setNameToDisplay={setNameToDisplay}
                     setCodeToDisplay={setCodeToDisplay}
                     setSelectedStrategy={setSelectedStrategy} />
+                    
             </div>
         </>
     )
