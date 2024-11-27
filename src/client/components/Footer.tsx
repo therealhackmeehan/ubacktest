@@ -29,7 +29,7 @@ export default function Footer() {
             <ul role='list' className='mt-6 space-y-2'>
               {footerInfo.app.map((item) => (
                 <li key={item.name}>
-                  <a href={item.href} className='text-sm leading-6 text-gray-600 hover:text-purple-700 dark:text-white'>
+                  <a href={item.href} className='text-sm leading-6 text-gray-600 hover:text-slate-700 dark:text-white'>
                     {item.name}
                   </a>
                 </li>
@@ -41,7 +41,7 @@ export default function Footer() {
             <ul role='list' className='mt-6 space-y-2'>
               {footerInfo.company.map((item) => (
                 <li key={item.name}>
-                  <a href={item.href} className='text-sm leading-6 text-gray-600 hover:text-purple-700 dark:text-white'>
+                  <a href={item.href} className='text-sm leading-6 text-gray-600 hover:text-slate-700 dark:text-white'>
                     {item.name}
                   </a>
                 </li>

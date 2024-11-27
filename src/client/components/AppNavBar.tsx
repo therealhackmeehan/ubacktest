@@ -12,11 +12,11 @@ import { DocsUrl, BlogUrl } from '../../shared/common';
 import DarkModeSwitcher from './DarkModeSwitcher';
 
 const navigation = [
+  { name: 'Home', href: routes.HomePageRoute.build() },
+  { name: 'Editor', href: routes.PlaygroundRoute.build() },
   { name: 'Pricing', href: routes.PricingPageRoute.build() },
   { name: 'Documentation', href: DocsUrl },
   { name: 'Blog', href: BlogUrl },
-  { name: 'Home', href: routes.HomePageRoute.build() },
-  { name: 'Editor', href: routes.PlaygroundRoute.build()},
 ];
 
 const NavLogo = () => <img className='h-8 w-8' src={logo} alt='Your SaaS App' />;
@@ -30,7 +30,7 @@ export default function AppNavBar() {
       <nav className='flex items-center justify-between p-6 lg:px-8' aria-label='Global'>
         <div className='flex lg:flex-1'>
           <a href='/' className='-m-1.5 p-1.5'>
-            <img className='h-8 w-8' src={logo} alt='My SaaS App' />
+            <img className='h-8 w-8 invert grayscale' src={logo} alt='My SaaS App' />
           </a>
         </div>
         <div className='flex lg:hidden'>

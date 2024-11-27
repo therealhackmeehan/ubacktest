@@ -39,7 +39,7 @@ const DropdownUser = ({ user }: { user: Partial<User> }) => {
       <button
         ref={trigger}
         onClick={toggleDropdown}
-        className='flex items-center gap-4 duration-300 ease-in-out text-gray-900 hover:text-purple-500'
+        className='flex items-center gap-4 duration-300 ease-in-out text-gray-900 hover:text-slate-500'
       >
         <span className='hidden text-right lg:block'>
           <span className='block text-sm font-medium dark:text-white'>{user.username}</span>
