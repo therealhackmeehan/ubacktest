@@ -98,7 +98,9 @@ export function StrategyDropDownContents({ strategy }: { strategy: Strategy }) {
                     >
                         <div className="p-2 flex">
                             {toolTipShown &&
-                                <ToolTip text={`Edit ${strategy.name} in Editor`} />
+                                <div className="p-1 mx-3 opacity-75 duration-700 bg-white text-gray-800 rounded-md border-2 font-xs hover:scale-110">
+                                    Edit {strategy.name} in Editor
+                                </div>
                             }
                             <FaRegEdit size='2rem' />
                         </div>
@@ -106,13 +108,5 @@ export function StrategyDropDownContents({ strategy }: { strategy: Strategy }) {
                 </div>
             }
         </li>
-    )
-}
-
-function ToolTip({text}: string) {
-    return (
-        <div className="p-1 mx-3 opacity-75 duration-700 bg-white text-gray-800 rounded-md border-2 font-xs hover:scale-110">
-            {text}
-        </div>
     )
 }

@@ -1,7 +1,8 @@
-import StrategyBrowser from "./components/Parent/StrategyBrowser"
-import Editor from "./components/Editor/Editor"
+import StrategyBrowser from "./components/StrategyBrowser"
 import { useState, useEffect, useRef } from "react"
 import { getSpecificStrategy, getStrategies, useQuery } from "wasp/client/operations"
+import StrategyHeader from "./components/StrategyHeader"
+import Dashboard from "./components/Editor/Dashboard"
 
 export default function Layout() {
 
@@ -13,17 +14,16 @@ export default function Layout() {
     const [codeToDisplay, setCodeToDisplay] = useState<string>('');
 
     // strategy database contents
-    const { data: strategies, isLoading: isStrategiesLoading } = useQuery(getStrategies)
-    const hasLoadedInitialData = useRef(false); // To track whether we've already loaded the data
+    const { data: strategies, isLoading: isStrategiesLoading } = useQuery(getStrategies);
+    const hasLoadedInitial = useRef(false); // To track whether we've already loaded the data
 
-    // Initial load of strategies --------
     useEffect(() => {
         const loadInitialData = async () => {
-            if (!hasLoadedInitialData.current && !isStrategiesLoading) {
 
-                hasLoadedInitialData.current = true; // Mark the initial load as complete
-
+            if (!hasLoadedInitial.current && !isStrategiesLoading) {
+                hasLoadedInitial.current = true; // Mark the initial load as complete
                 const savedValue = localStorage.getItem('projectToLoad');
+
                 if (savedValue) {
                     setSelectedStrategy(savedValue);
                     localStorage.setItem('projectToLoad', ''); // Clear local storage once data is loaded
@@ -37,10 +37,10 @@ export default function Layout() {
 
         loadInitialData(); // Call the async function
 
-    }, [strategies, isStrategiesLoading]); // Only trigger this when the strategies array or isStrategiesLoading change
+    }, [strategies, isStrategiesLoading]);
 
     const setNameAndCodeFromID = async (selectedValue: string) => {
-        if (!hasLoadedInitialData.current) {
+        if (!hasLoadedInitial.current) {
             return;
         }
         const strategy = await getSpecificStrategy({ id: selectedValue });
@@ -50,7 +50,6 @@ export default function Layout() {
         }
     }
 
-    // listen for an update in selected strategy
     useEffect(() => {
         setNameAndCodeFromID(selectedStrategy);
     }, [selectedStrategy]);
@@ -58,22 +57,32 @@ export default function Layout() {
     return (
         <>
             <div className='grid-cols-6 grid h-[92vh] border-black border-t-2'>
-                
+
                 <StrategyBrowser
                     selectedStrategy={selectedStrategy}
                     setSelectedStrategy={setSelectedStrategy}
                     strategies={strategies}
                     isStrategiesLoading={isStrategiesLoading} />
 
-                {/* <Strategy Header></Strategy> */}
+                <div className="col-span-5 h-full overflow-y-auto">
+                    {selectedStrategy ? (
+                        <>
+                            <StrategyHeader
+                                nameToDisplay={nameToDisplay}
+                                selectedStrategy={selectedStrategy}
+                                setNameToDisplay={setNameToDisplay}
+                                setSelectedStrategy={setSelectedStrategy} />
 
-                <Editor
-                    nameToDisplay={nameToDisplay}
-                    codeToDisplay={codeToDisplay}
-                    selectedStrategy={selectedStrategy}
-                    setNameToDisplay={setNameToDisplay}
-                    setCodeToDisplay={setCodeToDisplay}
-                    setSelectedStrategy={setSelectedStrategy} />
+                            <Dashboard
+                                codeToDisplay={codeToDisplay}
+                                selectedStrategy={selectedStrategy}
+                                setCodeToDisplay={setCodeToDisplay}
+                            />
+                        </>
+                    ) : (
+                        <div className="border-2 p-4 border-black font-extrabold mt-12 justify-self-center blur-sm text-5xl text-slate-800/30 tracking-tight">No Strategies Exist (yet)</div>
+                    )}
+                </div>
 
             </div>
         </>

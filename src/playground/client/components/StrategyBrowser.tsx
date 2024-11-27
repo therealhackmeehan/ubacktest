@@ -1,6 +1,6 @@
 import type { Strategy } from "wasp/entities";
 import { useState } from "react";
-import { NewProjectModal } from "../Modals/Modals";
+import { NewProjectModal } from "./Modals/Modals";
 import { FaPlus } from "react-icons/fa";
 
 interface StrategyBrowserProps {
@@ -18,10 +18,6 @@ function StrategyBrowser({ selectedStrategy, setSelectedStrategy, strategies, is
         setSelectedStrategy(id);
         setNewProjectModalOpen(false);
     }
-
-    //     <h4 className="sticky top-0 pb-2 bg-gray-800/40 font-bold border-b border-gray-500 text-end tracking-tight p-2 text-white">
-    //     Strategies
-    //     </h4>
 
     return (
         <div className="overflow-y-auto h-full col-span-1 bg-gray-50 border-r-2 border-black">

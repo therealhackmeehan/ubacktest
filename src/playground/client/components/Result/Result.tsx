@@ -6,14 +6,19 @@ import DataTable from "./DataTable";
 interface resultProps {
     stockData: any;
     symbol: string;
-    setResultOpen: (value: boolean) => void;
 }
 
-export default function Result({ stockData, symbol, setResultOpen }: resultProps) {
+export default function Result({ stockData, symbol }: resultProps) {
+
+    if (!stockData) {
+        return (
+            <div className="border-2 p-4 border-black font-extrabold mt-12 justify-self-center blur-sm text-5xl text-slate-800/30 tracking-tight">No Results to Display</div>
+        )
+    }
 
     return (
         <>
-            <ResultHeader symbol={symbol} setResultOpen={setResultOpen} />
+            <ResultHeader symbol={symbol} />
             <div className="grid grid-cols-4 p-5">
                 <div className="col-span-3">
                     <LinePlot stockData={stockData} />

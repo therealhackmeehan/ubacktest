@@ -1,20 +1,17 @@
 import { useState } from "react";
-import { DeleteModal, RenameModal } from "../Modals/Modals"
+import { DeleteModal, RenameModal } from "./Modals/Modals"
 import { MdDeleteOutline, MdOutlineEdit } from "react-icons/md";
 import { useAuth } from "wasp/client/auth";
 import { routes } from "wasp/client/router";
 
 interface StrategyHeaderProps {
-    name: string;
-    ID: string;
-    result: any;
-    resultOpen: boolean;
+    nameToDisplay: string;
+    selectedStrategy: string;
     setNameToDisplay: (value: string) => void;
     setSelectedStrategy: (value: string) => void;
-    setResultOpen: (value: boolean) => void;
 }
 
-export default function StrategyHeader({ name, ID, result, resultOpen, setNameToDisplay, setSelectedStrategy, setResultOpen }: StrategyHeaderProps) {
+export default function StrategyHeader({ nameToDisplay, selectedStrategy, setNameToDisplay, setSelectedStrategy }: StrategyHeaderProps) {
     const { data: user } = useAuth();
 
     const [isDeleteModalOpen, setIsDeleteModalOpen] = useState<boolean>(false);
@@ -37,7 +34,7 @@ export default function StrategyHeader({ name, ID, result, resultOpen, setNameTo
     return (
         <div className="text-gray-800 pt-3 px-3 flex justify-between items-center">
             <h4 className='font-bold tracking-tight pb-1 text-3xl'>
-                {name}
+                {nameToDisplay}
             </h4>
             <div className="flex pl-4 gap-2">
 
@@ -50,7 +47,7 @@ export default function StrategyHeader({ name, ID, result, resultOpen, setNameTo
                     <DeleteModal
                         onSuccess={onSuccessfulDeletion}
                         onFailure={() => setIsDeleteModalOpen(false)}
-                        id={ID} />
+                        id={selectedStrategy} />
                 }
 
                 <button className='pl-3 hover:text-purple-500 duration-700' title='Rename Strategy'
@@ -62,8 +59,8 @@ export default function StrategyHeader({ name, ID, result, resultOpen, setNameTo
                     <RenameModal
                         onSuccess={onSuccessfulRename}
                         onFailure={() => setIsRenameModalOpen(false)}
-                        id={ID}
-                        currName={name} />
+                        id={selectedStrategy}
+                        currName={nameToDisplay} />
                 }
 
                 {(user?.subscriptionStatus != "active") &&

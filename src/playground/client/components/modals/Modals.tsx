@@ -7,7 +7,7 @@ import {
     getStrategies,
 } from 'wasp/client/operations';
 import { TiDelete } from "react-icons/ti";
-import { validateNewName } from './modalHelpers';
+import { validateNewName } from '../../scripts/modalHelpers';
 import { starterCode } from './starterTemplate';
 
 interface RenameModalProps {
