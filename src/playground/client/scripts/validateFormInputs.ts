@@ -1,13 +1,9 @@
-interface ValidateFormProps {
-    symbol: string;
-    startDate: string;
-    endDate: string;
-    intval: string;
-}
+function validateFormInputs({formInputs}: any) {
 
-function validateFormInputs({ symbol, startDate, endDate, intval }: ValidateFormProps) {
+    const { symbol, startDate, endDate, intval, timeOfDay } = formInputs;
+
     // Check for missing inputs
-    if (!startDate || !endDate || !symbol || !intval) {
+    if (!startDate || !endDate || !symbol || !intval || !timeOfDay) {
         throw new Error("Missing input entries. Please provide 'symbol', 'startDate', 'endDate', and 'intval'.");
     }
 
@@ -30,10 +26,14 @@ function validateFormInputs({ symbol, startDate, endDate, intval }: ValidateForm
 
     // Define allowed interval values
     const allowedIntervals = ['1m', '5m', '15m', '30m', '1h', '1d', '1w', '1m', '1y'];
-
-    // Check if intval is one of the allowed values
     if (!allowedIntervals.includes(intval)) {
         throw new Error(`Invalid interval. Allowed values are: ${allowedIntervals.join(", ")}.`);
+    }
+
+    // allowed timeOfDay
+    const allowedTimeOfDay = ['open', 'close', 'high', 'low'];
+    if (!allowedTimeOfDay.includes(timeOfDay)) {
+        throw new Error(`Invalid executution time. Allowed values are: ${allowedTimeOfDay.join(", ")}.`)
     }
 
     // Check if start date and end date are within a reasonable range (e.g., within the last 20 years)

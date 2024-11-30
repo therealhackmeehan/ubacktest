@@ -4,17 +4,17 @@ import main_py from "./main_py";
 interface DataProps {
     data: any;
     code: string;
+    timeOfDay: string;
 }
 
 function generateRandomKey(): string {
     return Math.random().toString(36).substring(2, 8) + Math.random().toString(36).substring(2, 8);
 }
 
-
-async function runPythonCode({ data, code }: DataProps) {
+async function runPythonCode({ data, code, timeOfDay }: DataProps) {
     // Generate unique markers for parsing the output
     const uniqueKey = generateRandomKey();
-    const mainFileContent = main_py({ data, uniqueKey, colToTest: 'close' });
+    const mainFileContent = main_py({ data, uniqueKey, colToTest: timeOfDay });
 
     // Prepare the request payload
     const payload = {

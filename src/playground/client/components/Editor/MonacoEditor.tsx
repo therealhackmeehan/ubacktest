@@ -60,7 +60,7 @@ function MonacoEditor({ code, setCode, ID }: MEditorProps) {
                     <FiSave size='1.6rem' className="pr-2" /> save
                 </button>
             </div>
-            <Editor className="invert" height="90vh" defaultLanguage='python' theme="vs-dark" value={code} onChange={handleEditorChange} options={editorOpts}
+            <Editor className="invert" height="85vh" defaultLanguage='python' theme="vs-dark" value={code} onChange={handleEditorChange} options={editorOpts}
                 loading={(<div className="text-white font-2xl tracking-tight">Loading...</div>)} />
         </>
     )

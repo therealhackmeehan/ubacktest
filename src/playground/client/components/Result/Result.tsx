@@ -2,23 +2,28 @@ import ResultHeader from "./ResultHeader";
 import LinePlot from "./LinePlot";
 import MainStatistics from "./MainStatistics";
 import DataTable from "./DataTable";
+import { FormInputProps } from "../Editor/Dashboard";
 
-interface resultProps {
+interface ResultProps {
     stockData: any;
-    symbol: string;
+    formInputs: FormInputProps;
+    strategyResultIsConnectedTo: string;
+    selectedStrategy: string;
 }
 
-export default function Result({ stockData, symbol }: resultProps) {
+export default function Result({ stockData, formInputs, strategyResultIsConnectedTo, selectedStrategy }: ResultProps) {
 
-    if (!stockData) {
+    if ((!stockData) || (strategyResultIsConnectedTo !== selectedStrategy)) {
         return (
-            <div className="border-2 p-4 border-black font-extrabold mt-12 justify-self-center blur-sm text-5xl text-slate-800/30 tracking-tight">No Results to Display</div>
+            <div className="border-2 p-4 border-black font-extrabold mt-12 justify-self-center blur-sm text-5xl text-slate-800/30 tracking-tight">
+                No Results to Display for This Strategy
+            </div>
         )
     }
 
     return (
         <>
-            <ResultHeader symbol={symbol} />
+            <ResultHeader symbol={formInputs.symbol} />
             <div className="grid grid-cols-4 p-5">
                 <div className="col-span-3">
                     <LinePlot stockData={stockData} />
