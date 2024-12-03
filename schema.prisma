@@ -37,8 +37,10 @@ model Strategy {
   user                      User            @relation(fields: [userId], references: [id])
   userId                    String
 
-  name                      String          @unique
-  code                      String?         // user pythonic code          
+  name                      String
+  code                      String?         // user pythonic code   
+  
+  @@unique([userId, name]) // compound unique constraint       
 }
 
 model DailyStats {

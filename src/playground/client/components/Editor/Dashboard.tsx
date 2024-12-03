@@ -14,7 +14,7 @@ export interface FormInputProps {
     endDate: string;
     intval: string;
     timeOfDay: string;
-    warmup: number;
+    costPerTrade: number;
 }
 
 function Dashboard({ selectedStrategy, codeToDisplay, setCodeToDisplay }: DashboardProps) {
@@ -27,9 +27,9 @@ function Dashboard({ selectedStrategy, codeToDisplay, setCodeToDisplay }: Dashbo
         symbol: 'SPY',
         startDate: '2020-02-02',
         endDate: '2020-05-02',
-        intval: '1d',
+        intval: '5d',
         timeOfDay: 'close',
-        warmup: 0
+        costPerTrade: 0,
     });
 
     const [userStdout, setUserStdout] = useState<string>('');

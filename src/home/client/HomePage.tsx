@@ -6,8 +6,8 @@ import {
 } from 'wasp/client/operations';
 
 import { StrategyDropDownContents } from './components/HomePageDD';
-import { NewProjectModal } from '../../playground/client/components/Modals/Modals';
 import { IoMdAddCircleOutline } from "react-icons/io";
+import NewProjectModal from '../../playground/client/components/Modals/NewProjectModal';
 
 export default function HomePage() {
 

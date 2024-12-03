@@ -25,7 +25,7 @@ function validateFormInputs({formInputs}: any) {
     }
 
     // Define allowed interval values
-    const allowedIntervals = ['1m', '5m', '15m', '30m', '1h', '1d', '1w', '1m', '1y'];
+    const allowedIntervals = ['1d', '5d', '1mo', '3mo', '6mo', '1y', '2y', '5y', 'ytd', 'max'];
     if (!allowedIntervals.includes(intval)) {
         throw new Error(`Invalid interval. Allowed values are: ${allowedIntervals.join(", ")}.`);
     }

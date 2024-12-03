@@ -7,7 +7,7 @@ interface MainProps {
 export default function main_py({ data, uniqueKey, colToTest }: MainProps): string {
 
     const m =
-        `# main.py
+`# main.py
 
 from strategy import strategy
 import json
@@ -32,9 +32,9 @@ if 'portfolio' in df.columns:
     raise Exception("Sorry, you cannot have a column named portfolio, as that is reserved for analysis on our end")
 
 if 'returns' in df.columns:
-    raise Exception("Sorry, you cannot have a column named portfolio, as that is reserved for analysis on our end")
+    raise Exception("Sorry, you cannot have a column named returns, as that is reserved for analysis on our end")
 
-if any(df.columns.duplicated()):
+if (df.columns == 'signal').sum() > 1:
     raise Exception("There are two or more 'signal' columns in the table.")
 
 if df['signal'].empty:
@@ -49,10 +49,22 @@ if not df.index.is_unique:
 if df.shape[0] != initHeight:
     raise Exception("The height of the dataframe has changed upon applying your strategy.")
 
-df['returns'] = df['signal'] * df['${colToTest}'].pct_change()
-df['returns'] = df['returns'].shift(-1)
-df['returns'].fillna(0, inplace=True)
-df['portfolio'] = df['${colToTest}'].iloc[0] * (1 + df['returns'].cumsum())
+df['returns'] = df['${colToTest}'].pct_change().shift(-1)
+df.at[df.index[-1], 'returns'] = 0
+df['returns'] = df['returns']*df['signal']
+
+if df['returns'].isnull().any():
+    raise Exception("The calculated returns contain NaN values.")
+
+df['portfolio'] = df['${colToTest}'].iloc[0] * (1 + df['returns']).cumprod()
+
+if df['portfolio'].isnull().any():
+    raise Exception("The calculated portfolio contains NaN values.")
+
+if (df['portfolio'] < 0).any():
+    raise Exception("Your portfolio contains negative values, which means something has gone wrong.")
+
+df[['signal', 'returns', 'portfolio']] = df[['signal', 'returns', 'portfolio']].round(3)
 dfToReturn = df[['signal', 'returns', 'portfolio']].to_dict('list')
 
 print("${uniqueKey}START${uniqueKey}" + json.dumps(dfToReturn) + "${uniqueKey}END${uniqueKey}")`;

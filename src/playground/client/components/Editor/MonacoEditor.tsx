@@ -40,7 +40,7 @@ function MonacoEditor({ code, setCode, ID }: MEditorProps) {
 
     return (
         <>
-            <div className="flex gap-x-4 justify-center border-b-2 border-black">
+            <div className="flex gap-x-4 px-2 justify-between border-b-2 border-black">
                 <div className="flex text-xs gap-x-2">
                     <button className='flex gap-x-1 p-1 hover:bg-slate-100 hover:font-bold items-center text-center text-gray-800 tracking-tight'>
                         <FaChevronDown />Examples
@@ -52,13 +52,29 @@ function MonacoEditor({ code, setCode, ID }: MEditorProps) {
                         <FaChevronDown />Libraries Included
                     </button>
                 </div>
-                <button
-                    type='button'
-                    onClick={saveCodeToDB} // Keep the existing button functionality
-                    className='flex p-1 hover:bg-slate-100 hover:font-bold text-center text-gray-800 tracking-tight'
-                >
-                    <FiSave size='1.6rem' className="pr-2" /> save
-                </button>
+                <div className='flex gap-x-2'>
+                    <button
+                        type='button'
+                        onClick={saveCodeToDB} // Keep the existing button functionality
+                        className='flex p-1 hover:bg-slate-100 hover:font-bold text-center text-gray-800 tracking-tight'
+                    >
+                        <FiSave size='1.6rem' className="pr-2" /> save
+                    </button>
+                    <button
+                        type='button'
+                        onClick={saveCodeToDB} // Keep the existing button functionality
+                        className='flex p-1 hover:bg-slate-100 hover:font-bold text-center text-gray-800 tracking-tight'
+                    >
+                        <FiSave size='1.6rem' className="pr-2" /> download
+                    </button>
+                    <button
+                        type='button'
+                        onClick={saveCodeToDB} // Keep the existing button functionality
+                        className='flex p-1 hover:bg-slate-100 hover:font-bold text-center text-gray-800 tracking-tight'
+                    >
+                        <FiSave size='1.6rem' className="pr-2" /> upload
+                    </button>
+                </div>
             </div>
             <Editor className="invert" height="85vh" defaultLanguage='python' theme="vs-dark" value={code} onChange={handleEditorChange} options={editorOpts}
                 loading={(<div className="text-white font-2xl tracking-tight">Loading...</div>)} />

@@ -21,7 +21,7 @@ async function getStockData({ symbol, startDate, endDate, intval }: stockDataPro
     if (!response.ok) {
         throw new HttpError(
             503, // Service Unavailable
-            `Unable to connect to retrieve stock data: ${response.statusText}`
+            `Unable to find or access that stock. Please try again with another (or make sure that the company went public prior to the start date of the backtest).\n\n\n Status Text: '${response.statusText}'`
         );
     }
 

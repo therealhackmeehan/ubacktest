@@ -1,8 +1,4 @@
-interface CodeProps {
-    code: string;
-}
-
-function validatePythonCode({ code }: CodeProps): void {
+function validatePythonCode({ code }: {code : string}): void {
     const errorHelper =
         " You must define a function named strategy with one input, data, and return one output, data. All functions should contain the following: \n\n def strategy(data):\n # some code of yours... \n\t\treturn data";
 
