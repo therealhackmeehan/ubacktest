@@ -20,6 +20,8 @@ export default function InputForm({ formInputs, setFormInputs, run }: InputFormS
         }));
     };
 
+    const inputFormCss = 'text-xs text-gray-600 rounded-md border border-gray-200 shadow-md focus:outline-none focus:border-transparent focus:shadow-none duration-200 ease-in-out hover:shadow-none';
+
     return (
         <div className='z-40 flex border-2 border-black flex-col shadow-lg justify-between rounded-lg fixed right-0 h-2/3 bg-white my-16 mr-12 p-6'>
             <div className="space-y-3 overflow-auto px-1">
@@ -34,7 +36,7 @@ export default function InputForm({ formInputs, setFormInputs, run }: InputFormS
                         type='text'
                         maxLength={5}
                         minLength={1}
-                        className='text-xs text-gray-600 rounded-md border border-gray-200 shadow-md focus:outline-none focus:border-transparent focus:shadow-none duration-200 ease-in-out hover:shadow-none'
+                        className={inputFormCss}
                         value={formInputs.symbol}
                         onChange={handleChange}
                         name="symbol"
@@ -46,7 +48,7 @@ export default function InputForm({ formInputs, setFormInputs, run }: InputFormS
                     </div>
                     <input
                         type='date'
-                        className='text-xs text-gray-600 rounded-md border border-gray-200 shadow-md focus:outline-none focus:border-transparent focus:shadow-none duration-200 ease-in-out hover:shadow-none'
+                        className={inputFormCss}
                         value={formInputs.startDate}
                         onChange={handleChange}
                         name="startDate"
@@ -58,7 +60,7 @@ export default function InputForm({ formInputs, setFormInputs, run }: InputFormS
                     </div>
                     <input
                         type='date'
-                        className='text-xs text-gray-600 rounded-md border border-gray-200 shadow-md focus:outline-none focus:border-transparent focus:shadow-none duration-200 ease-in-out hover:shadow-none'
+                        className={inputFormCss}
                         value={formInputs.endDate}
                         onChange={handleChange}
                         name="endDate"
@@ -70,7 +72,7 @@ export default function InputForm({ formInputs, setFormInputs, run }: InputFormS
                     </div>
                     <input
                         type='text'
-                        className='text-xs text-gray-600 rounded-md border border-gray-200 shadow-md focus:outline-none focus:border-transparent focus:shadow-none duration-200 ease-in-out hover:shadow-none'
+                        className={inputFormCss}
                         value={formInputs.intval}
                         onChange={handleChange}
                         name="intval"
@@ -90,7 +92,7 @@ export default function InputForm({ formInputs, setFormInputs, run }: InputFormS
                             </div>
                             <input
                                 type='text'
-                                className='text-xs text-gray-600 rounded-md border border-gray-200 shadow-md focus:outline-none focus:border-transparent focus:shadow-none duration-200 ease-in-out hover:shadow-none'
+                                className={inputFormCss}
                                 value={formInputs.timeOfDay}
                                 onChange={handleChange}
                                 name="timeOfDay"
@@ -101,16 +103,21 @@ export default function InputForm({ formInputs, setFormInputs, run }: InputFormS
                             <div className="tracking-tight text-xs font-bold">
                                 Cost Per Trade
                             </div>
-                            <input
-                                type='number'
-                                step={.1}
-                                min={0}
-                                max={100}
-                                className='text-xs text-gray-600 rounded-md border border-gray-200 shadow-md focus:outline-none focus:border-transparent focus:shadow-none duration-200 ease-in-out hover:shadow-none'
-                                value={formInputs.costPerTrade}
-                                onChange={handleChange}
-                                name="costPerTrade"
-                            />
+                            <div className="flex items-center gap-x-1">
+                                <input
+                                    type='number'
+                                    step={1}
+                                    min={0}
+                                    max={100}
+                                    className={inputFormCss}
+                                    value={formInputs.costPerTrade}
+                                    onChange={handleChange}
+                                    name="costPerTrade"
+                                />
+                                <div className="font-extralight">
+                                    %
+                                </div>
+                            </div>
                         </div>
                     </div>
                 }

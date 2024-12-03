@@ -17,6 +17,11 @@ export interface FormInputProps {
     costPerTrade: number;
 }
 
+export interface stdProps {
+    out: string;
+    err: string;
+}
+
 function Dashboard({ selectedStrategy, codeToDisplay, setCodeToDisplay }: DashboardProps) {
 
     const [resultOpen, setResultOpen] = useState<boolean>(false);
@@ -32,8 +37,10 @@ function Dashboard({ selectedStrategy, codeToDisplay, setCodeToDisplay }: Dashbo
         costPerTrade: 0,
     });
 
-    const [userStdout, setUserStdout] = useState<string>('');
-    const [userStderr, setUserStderr] = useState<string>('');
+    const [std, setStd] = useState<stdProps>({
+        out: '',
+        err: '',
+    });
 
     return (
         <>
@@ -65,10 +72,8 @@ function Dashboard({ selectedStrategy, codeToDisplay, setCodeToDisplay }: Dashbo
                     formInputs={formInputs}
                     setFormInputs={setFormInputs}
                     setStrategyResultIsConnectedTo={setStrategyResultIsConnectedTo}
-                    userStdout={userStdout}
-                    userStderr={userStderr}
-                    setUserStdout={setUserStdout}
-                    setUserStderr={setUserStderr}
+                    std={std}
+                    setStd={setStd}
                 />
             )}
         </>

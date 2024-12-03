@@ -8,6 +8,7 @@ import validateFormInputs from "../../scripts/validateFormInputs";
 import validatePythonCode from "../../scripts/validatePythonCode";
 
 import { type FormInputProps } from "./Dashboard";
+import { type stdProps } from "./Dashboard";
 
 interface EditorProps {
     codeToDisplay: string;
@@ -18,13 +19,11 @@ interface EditorProps {
     setResultOpen: (value: boolean) => void;
     setFormInputs: (value: any) => void;
     setStrategyResultIsConnectedTo: (value: string) => void;
-    userStdout: string;
-    userStderr: string;
-    setUserStdout: (value: string) => void;
-    setUserStderr: (value: string) => void;
+    std: stdProps;
+    setStd: (value: any) => void;
 }
 
-function Editor({ codeToDisplay, selectedStrategy, formInputs, setCodeToDisplay, setResult, setResultOpen, setFormInputs, setStrategyResultIsConnectedTo, userStdout, userStderr, setUserStdout, setUserStderr }: EditorProps) {
+function Editor({ codeToDisplay, selectedStrategy, formInputs, setCodeToDisplay, setResult, setResultOpen, setFormInputs, setStrategyResultIsConnectedTo, std, setStd }: EditorProps) {
 
     const [errorModalMessage, setErrorModalMessage] = useState<string>('');
     const [loading, setLoading] = useState<boolean>(false);
@@ -54,6 +53,20 @@ function Editor({ codeToDisplay, selectedStrategy, formInputs, setCodeToDisplay,
         }
     }
 
+    function setUserStderr(value: string): void {
+        setStd((prevState: stdProps) => ({
+            ...prevState,
+            err: value,
+        }))
+    };
+
+    function setUserStdout(value: string): void {
+        setStd((prevState: stdProps) => ({
+            ...prevState,
+            out: value,
+        }))
+    };
+
     // Helper Functions
     function setInitialState() {
         setUserStderr('');
@@ -77,7 +90,7 @@ function Editor({ codeToDisplay, selectedStrategy, formInputs, setCodeToDisplay,
     return (
         <div className="h-full">
 
-            <InputForm formInputs={formInputs} setFormInputs={setFormInputs} run={run}/>
+            <InputForm formInputs={formInputs} setFormInputs={setFormInputs} run={run} />
 
             {loading &&
                 <div className="fixed inset-0 flex items-center justify-center z-50">
@@ -93,7 +106,7 @@ function Editor({ codeToDisplay, selectedStrategy, formInputs, setCodeToDisplay,
                 ID={selectedStrategy}
             />
 
-            <DebugConsole userStdout={userStdout} userStderr={userStderr} />
+            <DebugConsole userStdout={std.out} userStderr={std.err} />
 
         </div>
     )

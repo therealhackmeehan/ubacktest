@@ -41,17 +41,6 @@ function MonacoEditor({ code, setCode, ID }: MEditorProps) {
     return (
         <>
             <div className="flex gap-x-4 px-2 justify-between border-b-2 border-black">
-                <div className="flex text-xs gap-x-2">
-                    <button className='flex gap-x-1 p-1 hover:bg-slate-100 hover:font-bold items-center text-center text-gray-800 tracking-tight'>
-                        <FaChevronDown />Examples
-                    </button>
-                    <button className='flex gap-x-1 p-1 hover:bg-slate-100 hover:font-bold items-center text-center text-gray-800 tracking-tight'>
-                        <FaChevronDown />Ask AI for Help
-                    </button>
-                    <button className='flex gap-x-1 p-1 hover:bg-slate-100 hover:font-bold items-center text-center text-gray-800 tracking-tight'>
-                        <FaChevronDown />Libraries Included
-                    </button>
-                </div>
                 <div className='flex gap-x-2'>
                     <button
                         type='button'
@@ -73,6 +62,17 @@ function MonacoEditor({ code, setCode, ID }: MEditorProps) {
                         className='flex p-1 hover:bg-slate-100 hover:font-bold text-center text-gray-800 tracking-tight'
                     >
                         <FiSave size='1.6rem' className="pr-2" /> upload
+                    </button>
+                </div>
+                <div className="flex text-xs gap-x-2">
+                    <button className='flex gap-x-1 p-1 hover:bg-slate-100 hover:font-bold items-center text-center text-gray-800 tracking-tight'>
+                        <FaChevronDown />Examples
+                    </button>
+                    <button className='flex gap-x-1 p-1 hover:bg-slate-100 hover:font-bold items-center text-center text-gray-800 tracking-tight'>
+                        <FaChevronDown />Ask AI for Help
+                    </button>
+                    <button className='flex gap-x-1 p-1 hover:bg-slate-100 hover:font-bold items-center text-center text-gray-800 tracking-tight'>
+                        <FaChevronDown />Libraries Included
                     </button>
                 </div>
             </div>
