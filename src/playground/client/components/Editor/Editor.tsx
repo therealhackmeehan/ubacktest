@@ -6,9 +6,9 @@ import InputForm from "./InputForm";
 import { runStrategy, charge, updateStrategy } from "wasp/client/operations";
 import validateFormInputs from "../../scripts/validateFormInputs";
 import validatePythonCode from "../../scripts/validatePythonCode";
-
 import { type FormInputProps } from "./Dashboard";
 import { type stdProps } from "./Dashboard";
+import LoadingScreen from "./LoadingScreen";
 
 interface EditorProps {
     codeToDisplay: string;
@@ -92,11 +92,7 @@ function Editor({ codeToDisplay, selectedStrategy, formInputs, setCodeToDisplay,
 
             <InputForm formInputs={formInputs} setFormInputs={setFormInputs} run={run} />
 
-            {loading &&
-                <div className="fixed inset-0 flex items-center justify-center z-50">
-                    <div className="absolute inset-0 bg-slate-800 opacity-50"></div>
-                    <div className="border-gray-300 h-20 w-20 animate-spin rounded-full border-8 border-t-gray-600"></div>
-                </div>}
+            {loading && <LoadingScreen />}
 
             {errorModalMessage && <ErrorModal onClose={() => setErrorModalMessage('')} msg={errorModalMessage} />}
 
