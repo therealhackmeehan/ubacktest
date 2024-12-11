@@ -12,11 +12,12 @@ import { DocsUrl, BlogUrl } from '../../shared/common';
 import DarkModeSwitcher from './DarkModeSwitcher';
 
 const navigation = [
-  { name: 'Home', href: routes.HomePageRoute.build() },
-  { name: 'Editor', href: routes.PlaygroundRoute.build() },
+  { name: 'Strategy Editor', href: routes.PlaygroundRoute.build() },
+
+  { name: 'My Strategies', href: routes.HomePageRoute.build() },
+  { name: 'My Results', href: routes.ResultsRoute.build() },
   { name: 'Pricing', href: routes.PricingPageRoute.build() },
   { name: 'Documentation', href: DocsUrl },
-  { name: 'Blog', href: BlogUrl },
 ];
 
 const NavLogo = () => <img className='h-8 w-8' src={logo} alt='Your SaaS App' />;

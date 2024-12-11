@@ -27,6 +27,7 @@ model User {
 
   contactFormMessages       ContactFormMessage[]
   strategies                Strategy[]
+  results                   Result[]
 }
 
 model Strategy {
@@ -39,8 +40,27 @@ model Strategy {
 
   name                      String
   code                      String?         // user pythonic code   
+
+  results                   Result[]
   
   @@unique([userId, name]) // compound unique constraint       
+}
+
+model Result {
+  id                        String        @id @default(uuid())
+  createdAt                 DateTime      @default(now())
+
+  user                      User          @relation(fields: [userId], references: [id])
+  userId                    String
+
+  name                      String
+  code                      String
+  fromStrategy              Strategy      @relation(fields: [fromStrategyID], references: [id])   
+  fromStrategyID            String 
+
+  data                      Json
+
+  @@unique([userId, name])
 }
 
 model DailyStats {

@@ -27,7 +27,7 @@ export default function Layout() {
                 if (savedValue) {
                     setSelectedStrategy(savedValue);
                     localStorage.setItem('projectToLoad', ''); // Clear local storage once data is loaded
-                } else if (strategies.length > 0) {
+                } else if (strategies) {
                     setSelectedStrategy(strategies[0].id)
                 } else {
                     setSelectedStrategy('')

@@ -18,7 +18,7 @@ export default function DeleteModal({ onSuccess, onFailure, id }: DeleteModalPro
             await deleteStrategy({ id });
             const strategies = await getStrategies();
 
-            if (strategies.length > 0) {
+            if (strategies) {
                 onSuccess(strategies[0].id);
             } else {
                 onSuccess('');

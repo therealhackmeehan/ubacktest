@@ -16,66 +16,113 @@ type FileCreationInfo = {
 };
 
 export const createStrategy: CreateStrategy<FileCreationInfo, Strategy> = async ({ name, code }, context) => {
-  if (!context.user) throw new HttpError(401);
+  if (!context.user) {
+    throw new HttpError(401);
+  }
+
+  const existingStrategy = await context.entities.Strategy.findFirst({
+    where: {
+      name,
+      user: { id: context.user.id },
+    },
+  });
+
+  if (existingStrategy) {
+    throw new HttpError(400, "A strategy with this name already exists.");
+  }
 
   return await context.entities.Strategy.create({
-    data: { name, code, user: { connect: { id: context.user.id } }, },
+    data: {
+      name,
+      code,
+      user: { connect: { id: context.user.id } },
+    },
   });
 };
 
-export const getStrategies: GetStrategies<void, Strategy[]> = async (_args, context) => {
-  if (!context.user) throw new HttpError(401);
+export const getStrategies: GetStrategies<void, Strategy[] | null> = async (_args, context) => {
+  if (!context.user) {
+    throw new HttpError(401);
+  }
 
-  return context.entities.Strategy.findMany({
-    where: { user: { id: context.user.id, }, },
-    orderBy: { updatedAt: 'desc', },
+  const strategies = await context.entities.Strategy.findMany({
+    where: { user: { id: context.user.id } },
+    orderBy: { updatedAt: 'desc' },
   });
+
+  return strategies.length > 0 ? strategies : null;
 };
 
-//to come: getSpecificStrategy
-export const getSpecificStrategy: GetSpecificStrategy<Pick<Strategy, 'id'>, Strategy> = async ({ id }, context) => {
-  if (!context.user) throw new HttpError(401);
+export const getSpecificStrategy: GetSpecificStrategy<Pick<Strategy, 'id'>, Strategy | null> = async ({ id }, context) => {
+  if (!context.user) {
+    throw new HttpError(401);
+  }
 
-  return await context.entities.Strategy.findUnique({
-    where: { id, },
+  const strategy = await context.entities.Strategy.findUnique({
+    where: { id },
   });
+
+  return strategy || null;
 };
+
 
 export const deleteStrategy: DeleteStrategy<Pick<Strategy, 'id'>, Strategy> = async ({ id }, context) => {
-  if (!context.user) throw new HttpError(401);
+  if (!context.user) {
+    throw new HttpError(401);
+  }
 
   return await context.entities.Strategy.delete({
-    where: { id, },
+    where: { id },
   });
 };
 
 export const renameStrategy: RenameStrategy<Partial<Strategy>, Strategy> = async ({ id, name }, context) => {
-  if (!context.user) throw new HttpError(401);
+  if (!context.user) {
+    throw new HttpError(401);
+  }
+
+  if (name) {
+    const existingStrategy = await context.entities.Strategy.findFirst({
+      where: {
+        name,
+        user: { id: context.user.id },
+      },
+    });
+
+    if (existingStrategy) {
+      throw new HttpError(400, "A strategy with this name already exists.");
+    }
+  }
 
   return await context.entities.Strategy.update({
-    where: { id, },
-    data: { name, },
+    where: { id },
+    data: { name },
   });
 };
 
 export const updateStrategy: UpdateStrategy<Partial<Strategy>, Strategy> = async ({ id, code }, context) => {
-  if (!context.user) throw new HttpError(401);
+  if (!context.user) {
+    throw new HttpError(401);
+  }
 
   return await context.entities.Strategy.update({
-    where: { id, },
-    data: { code, },
+    where: { id },
+    data: { code },
   });
 };
 
 export const charge: Charge<void, void> = async (_args, context) => {
-
-  if (!context.user) throw new HttpError(401);
-  if (context.user.isAdmin) return;
+  if (!context.user) {
+    throw new HttpError(401);
+  }
+  if (context.user.isAdmin) {
+    return;
+  }
 
   if (context.user.credits) {
     await context.entities.User.update({
       where: { id: context.user.id },
-      data: { credits: { increment: 1, }, }, // for now increment while testing
+      data: { credits: { increment: 1 } }, // for now increment while testing
     });
   }
-}
+};

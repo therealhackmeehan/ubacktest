@@ -28,7 +28,7 @@ export const runStrategy: RunStrategy<any, BacktestResultProps> = async ({ formI
 
     //STEP 1 - GET STOCK DATA
     const rawStockData = await getStockData({ symbol, startDate, endDate, intval });
-    const data = validateStockData({ stockData: rawStockData });
+    const data = validateStockData({ stockData: rawStockData, timeOfDay: timeOfDay });
 
     // STEP 2 - RUN PYTHON CODE (w/ above stock data)
     return await runPythonCode({ data, code, timeOfDay });

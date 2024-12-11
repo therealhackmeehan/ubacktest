@@ -96,23 +96,53 @@ page LandingPage {
 }
 
 
-//#region home page
+//region home page
 route HomePageRoute { path: "/home", to: HomePage }
 page HomePage {
   authRequired: true,
   component: import HomePage from "@src/home/client/HomePage"
 }
-//#endregion
+//endregion
 
-//#region playground
+//region playground
 route PlaygroundRoute { path: "/editor", to: PlaygroundPage }
 page PlaygroundPage {
   authRequired: true,
   component: import Layout from "@src/playground/client/layout"
 }
+//endregion
 
+//region results
+route ResultsRoute { path: "/results", to: ResultsPage }
+page ResultsPage {
+  authRequired: true,
+  component: import ResultsPage from "@src/results/client/ResultsPage"
+}
+//endregion
 
-//#region strategy-related actions
+//region result-related actions
+action createResult {
+  fn: import { createResult } from "@src/results/server/operations",
+  entities: [Result] 
+}
+
+action renameResult {
+  fn: import { renameResult } from "@src/results/server/operations",
+  entities: [Result] 
+}
+
+action deleteResult {
+  fn: import { deleteResult } from "@src/results/server/operations",
+  entities: [Result] 
+}
+
+query getResults {
+  fn: import { getResults } from "@src/results/server/operations",
+  entities: [Result] 
+}
+//endregion
+
+//region strategy-related actions
 action createStrategy {
   fn: import { createStrategy } from "@src/playground/server/operations",
   entities: [Strategy]
@@ -137,8 +167,7 @@ query getSpecificStrategy {
   fn: import { getSpecificStrategy } from "@src/playground/server/operations",
   entities: [Strategy]
 }
-//#end strategy-related actions
-
+//end strategy-related actions
 
 // The big action -> run strategy and initiate a backend process
 query runStrategy {
@@ -153,7 +182,7 @@ action charge {
 // end runStrategy
 
 
-//#region Auth Pages
+//region Auth Pages
 route LoginRoute { path: "/login", to: LoginPage }
 page LoginPage {
   component: import Login from "@src/auth/LoginPage"
@@ -178,9 +207,9 @@ route EmailVerificationRoute { path: "/email-verification", to: EmailVerificatio
 page EmailVerificationPage {
   component: import { EmailVerificationPage } from "@src/auth/email-and-pass/EmailVerificationPage",
 }
-//#endregion
+//endregion
 
-//#region User
+//region User
 route AccountRoute { path: "/account", to: AccountPage }
 page AccountPage {
   authRequired: true,
@@ -201,9 +230,9 @@ action updateUserById {
   fn: import { updateUserById } from "@src/user/operations",
   entities: [User]
 }
-//#endregion
+//endregion
 
-//#region Payment
+//region Payment
 route PricingPageRoute { path: "/pricing", to: PricingPage }
 page PricingPage {
   component: import PricingPage from "@src/payment/PricingPage"
@@ -231,9 +260,9 @@ api paymentsWebhook {
   middlewareConfigFn: import { paymentsMiddlewareConfigFn } from "@src/payment/webhook",
   httpRoute: (POST, "/payments-webhook")
 }
-//#endregion
+//endregion
 
-//#region Analytics
+//region Analytics
 query getDailyStats {
   fn: import { getDailyStats } from "@src/analytics/operations",
   entities: [User, DailyStats]
@@ -250,9 +279,9 @@ job dailyStatsJob {
   },
   entities: [User, DailyStats, Logs, PageViewSource]
 }
-//#endregion
+//endregion
 
-//#region Admin Dashboard
+//region Admin Dashboard
 route AdminRoute { path: "/admin", to: AnalyticsDashboardPage }
 page AnalyticsDashboardPage {
   authRequired: true,
@@ -306,9 +335,9 @@ page AdminUIButtonsPage {
   authRequired: true,
   component: import AdminUI from "@src/admin/elements/ui-elements/ButtonsPage"
 }
-//#endregion
+//endregion
 
-//#region Contact Form Messages
+//region Contact Form Messages
 // TODO: 
 // add functionality to allow users to send messages to admin
 // and make them accessible via the admin dashboard
@@ -317,9 +346,9 @@ page AdminMessagesPage {
   authRequired: true,
   component: import AdminMessages from "@src/messages/MessagesPage"
 }
-//#endregion
+//endregion
 
-//#region Newsletter
+//region Newsletter
 job sendNewsletter {
   executor: PgBoss,
   perform: {
@@ -330,4 +359,4 @@ job sendNewsletter {
   },
   entities: [User]
 }
-//#endregion
+//endregion

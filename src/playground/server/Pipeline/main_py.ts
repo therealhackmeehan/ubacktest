@@ -56,7 +56,9 @@ df['returns'] = df['returns']*df['signal']
 if df['returns'].isnull().any():
     raise Exception("The calculated returns contain NaN values.")
 
-df['portfolio'] = df['${colToTest}'].iloc[0] * (1 + df['returns']).cumprod()
+df['portfolio'] = (1 + df['returns']).cumprod()
+df['portfolio'] = pd.concat([pd.Series([1]), df['portfolio']]).iloc[:-1].reset_index(drop=True)
+df['returns'] = pd.concat([pd.Series([0]), df['returns']]).iloc[:-1].reset_index(drop=True)
 
 if df['portfolio'].isnull().any():
     raise Exception("The calculated portfolio contains NaN values.")

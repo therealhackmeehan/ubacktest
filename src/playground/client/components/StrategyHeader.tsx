@@ -39,7 +39,7 @@ export default function StrategyHeader({ nameToDisplay, selectedStrategy, setNam
             </h4>
             <div className="flex pl-4 gap-2">
 
-                <button className='hover:text-purple-500 duration-700' title='Delete Strategy'
+                <button className='hover:text-slate-500 duration-700' title='Delete Strategy'
                     onClick={() => setIsDeleteModalOpen(true)}>
                     <MdDeleteOutline size='1.4rem' />
                 </button>
@@ -51,7 +51,7 @@ export default function StrategyHeader({ nameToDisplay, selectedStrategy, setNam
                         id={selectedStrategy} />
                 }
 
-                <button className='pl-3 hover:text-purple-500 duration-700' title='Rename Strategy'
+                <button className='pl-3 hover:text-slate-500 duration-700' title='Rename Strategy'
                     onClick={() => setIsRenameModalOpen(true)}>
                     <MdOutlineEdit size='1.4rem' />
                 </button>
@@ -65,7 +65,7 @@ export default function StrategyHeader({ nameToDisplay, selectedStrategy, setNam
                 }
 
                 {(user?.subscriptionStatus != "active") &&
-                    <button className="place-self-center pl-3 font-bold hover:rotate-3 duration-700 hover:text-purple-900"
+                    <button className="place-self-center pl-3 font-bold hover:rotate-3 duration-700 hover:text-slate-900"
                         onClick={goToPricingPage}>{user?.credits}
                         <span className="text-xs font-extralight"> tests remaining</span>
                     </button>}
