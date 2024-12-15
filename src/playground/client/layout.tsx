@@ -46,7 +46,7 @@ export default function Layout() {
         const strategy = await getSpecificStrategy({ id: selectedValue });
         if (strategy) {
             setNameToDisplay(strategy.name);
-            setCodeToDisplay(strategy.code);
+            setCodeToDisplay(strategy.code || '');
         }
     }
 

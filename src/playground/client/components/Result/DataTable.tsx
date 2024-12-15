@@ -67,7 +67,7 @@ export default function DataTable({ stockData }: any) {
                     <TableHead column="date" label="Date" handleSort={handleSort} />
                     <TableHead column="signal" label="Buy/Short/Hold Signal" handleSort={handleSort} />
                     <TableHead column="portfolio" label="Portfolio Value" handleSort={handleSort} />
-                    <TableHead column="returns" label="Strategy Return" handleSort={handleSort} />
+                    <TableHead column="returns" label="Period Return" handleSort={handleSort} />
                 </tr>
             </thead>
             <tbody className="text-sm text-gray-700 lowercase bg-white">
@@ -100,8 +100,11 @@ export default function DataTable({ stockData }: any) {
                                                         : "strong buy"}
                                 )</span>
                         </td>
-
-                        <td>${sortedData.portfolio[index].toFixed(2)}</td>
+                        <td className="group">
+                            $
+                            <span className="group-hover:hidden">{sortedData.portfolio[index].toFixed(2)}</span>
+                            <span className="hidden group-hover:inline">{sortedData.portfolio[index].toFixed(4)}</span>
+                        </td>
                         {index == 0 ? <td className="text-lg tracking-tight">na.</td> :
                             <td
                                 className="text-lg tracking-tight"

@@ -13,8 +13,8 @@ import {
 ChartJS.register(CategoryScale, LinearScale, BarElement, Title, Tooltip, Legend);
 
 interface RatiosBarChartProps {
-    sortino: number | null;
-    sharpe: number | null;
+    sortino: string | null;
+    sharpe: string | null;
 }
 
 export default function RatiosBarChart({ sortino, sharpe }: RatiosBarChartProps) {
@@ -34,7 +34,7 @@ export default function RatiosBarChart({ sortino, sharpe }: RatiosBarChartProps)
                     "rgba(0, 0, 0, 1)",
                     "rgba(0, 0, 0, 1)",
                 ],
-                borderWidth: 3,
+                borderWidth: 1,
             },
         ],
     };

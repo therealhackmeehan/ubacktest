@@ -59,6 +59,7 @@ model Result {
   fromStrategyID            String 
 
   data                      Json
+  formInputs                Json
 
   @@unique([userId, name])
 }

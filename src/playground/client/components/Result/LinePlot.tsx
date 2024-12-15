@@ -26,7 +26,7 @@ ChartJS.register(
 export default function LinePlot({ stockData }: any) {
 
     const [chartData, setChartData] = useState<any | null>(null);
-    const [plotShowing, setPlotShowing] = useState<boolean>(false);
+    const [plotShowing, setPlotShowing] = useState<boolean>(true);
 
     useEffect(() => {
         const dates = stockData.timestamp.map((timestamp: number) =>
@@ -62,7 +62,7 @@ export default function LinePlot({ stockData }: any) {
                     data: stockData.signal,
                     borderColor: 'rgba(235, 0, 0, 1)',
                     backgroundColor: 'rgba(235, 198, 134, 0.2)',
-                    fill: false,
+                    fill: true,
                 }
             ],
         };

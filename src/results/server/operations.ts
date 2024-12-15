@@ -11,10 +11,11 @@ type ResultCreationInfo = {
     name: string;
     code: string;
     data: any;
+    formInputs: any;
     strategyId: string;
 };
 
-export const createResult: CreateResult<ResultCreationInfo, Result> = async ({ name, code, data, strategyId }, context) => {
+export const createResult: CreateResult<ResultCreationInfo, Result> = async ({ name, code, data, formInputs, strategyId }, context) => {
     if (!context.user) {
         throw new HttpError(401);
     }
@@ -35,6 +36,7 @@ export const createResult: CreateResult<ResultCreationInfo, Result> = async ({ n
             name,
             code,
             data,
+            formInputs,
             user: {
                 connect: { id: context.user.id },
             },

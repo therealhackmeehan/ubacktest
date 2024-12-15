@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Bar } from "react-chartjs-2";
 import {
     Chart as ChartJS,
@@ -13,48 +13,56 @@ import {
 // Register chart components
 ChartJS.register(CategoryScale, LinearScale, BarElement, Title, Tooltip, Legend);
 
-interface DistributionOfReturnsProps {
-    stockDataReturns: number[];
-}
-
-export default function DistributionOfReturns({ stockDataReturns }: DistributionOfReturnsProps) {
+export default function DistributionOfReturns({ stockDataReturns }: { stockDataReturns: number[] }) {
     const [useLogScale, setUseLogScale] = useState(false);
-
-    // Process data into bins for histogram
-    const binCount = 10; // Number of bins
-    const minReturn = Math.min(...stockDataReturns);
-    const maxReturn = Math.max(...stockDataReturns);
-    const binWidth = (maxReturn - minReturn) / binCount;
-
-    const bins = Array(binCount).fill(0); // Array to hold bin frequencies
-    stockDataReturns.forEach((value) => {
-        const binIndex = Math.min(
-            Math.floor((value - minReturn) / binWidth),
-            binCount - 1 // Ensure max values fall into the last bin
-        );
-        bins[binIndex]++;
+    const [returnsChartData, setReturnsChartData] = useState<any>({
+        labels: [],
+        datasets: [],
     });
 
-    // Generate labels for bins
-    const binLabels = bins.map((_, index) => {
-        const start = minReturn + index * binWidth;
-        const end = start + binWidth;
-        return `${start.toFixed(2)} - ${end.toFixed(2)}`;
-    });
+    useEffect(() => {
+        const processedReturns = useLogScale
+            ? stockDataReturns.map((value) => Math.log(Math.abs(value) + 1) * Math.sign(value))
+            : stockDataReturns;
 
-    // Chart data
-    const chartData = {
-        labels: binLabels,
-        datasets: [
-            {
-                label: "Frequency",
-                data: bins,
-                backgroundColor: "rgba(20, 40, 80, 0.3)",
-                borderColor: "rgba(0, 0, 0, 1)",
-                borderWidth: 3,
-            },
-        ],
-    };
+        // Process data into bins for histogram
+        const binCount = 10 + Math.round(stockDataReturns.length/10); // Number of bins
+        const minReturn = Math.min(...processedReturns);
+        const maxReturn = Math.max(...processedReturns);
+        const binWidth = (maxReturn - minReturn) / binCount;
+
+        const bins = Array(binCount).fill(0); // Array to hold bin frequencies
+        processedReturns.forEach((value) => {
+            const binIndex = Math.min(
+                Math.floor((value - minReturn) / binWidth),
+                binCount - 1 // Ensure max values fall into the last bin
+            );
+            bins[binIndex]++;
+        });
+
+        // Generate labels for bins
+        const binLabels = bins.map((_, index) => {
+            const start = minReturn + index * binWidth;
+            const end = start + binWidth;
+            return `${(100*start).toFixed()} - ${(100*end).toFixed()}%`;
+        });
+
+        // Chart data
+        const chartData = {
+            labels: binLabels,
+            datasets: [
+                {
+                    label: "Frequency",
+                    data: bins,
+                    backgroundColor: "rgba(20, 40, 80, 0.3)",
+                    borderColor: "rgba(0, 0, 0, 1)",
+                    borderWidth: 1,
+                },
+            ],
+        };
+
+        setReturnsChartData(chartData);
+    }, [useLogScale, stockDataReturns]);
 
     // Chart options
     const options = {
@@ -71,13 +79,13 @@ export default function DistributionOfReturns({ stockDataReturns }: Distribution
             <div className="flex justify-between">
                 <div className="text-lg tracking-tight font-bold">Distribution of Returns</div>
                 <button
-                    className="rounded-md bg-white border-2 border-black text-sm p-2"
+                    className="rounded-md bg-white border-2 border-black text-xs p-1"
                     onClick={() => setUseLogScale(!useLogScale)}
                 >
                     {useLogScale ? "Switch to Linear Distribution" : "Switch to Log Distribution"}
                 </button>
             </div>
-            <Bar data={chartData} options={options} />
+            <Bar data={returnsChartData} options={options} />
         </div>
     );
 }

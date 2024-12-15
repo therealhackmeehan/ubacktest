@@ -11,7 +11,7 @@ export default function ResultsPage() {
             <h4 className='my-2 font-bold tracking-tight text-gray-900 sm:text-3xl text-xl dark:text-white'>
                 My <span className='text-slate-500'>Saved Results</span>
             </h4>
-            <div className='border-b-2 w-5/6 border-slate-400'></div>
+            <div className='border-b-2 w-full border-slate-400'></div>
             <div className="mt-12">
                 {isResultsLoading ? (
                     <div className="text-2xl">Loading...</div>
