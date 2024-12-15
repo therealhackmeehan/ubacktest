@@ -62,19 +62,19 @@ export default function ResultPanel({ selectedStrategy, formInputs, stockData, a
     const stats: StatProps = calculateStats({ stockData });
 
     return (
-        <>
+        <div id='pdfToSave'>
             <div id='mainResultDisplay' className='items-center flex p-2 justify-between border-b-2 border-black'>
                 <h4 className="tracking-tight text-xl font-extrabold text-center">
                     Stock Data and Simulated Backtest Result for {formInputs.symbol}
                 </h4>
-                <ResultButtonGroup saveResult={saveResult} abilityToSaveNew={abilityToSaveNew}/>
+                <ResultButtonGroup saveResult={saveResult} abilityToSaveNew={abilityToSaveNew} />
             </div>
 
             <FormInputHeader formInputs={formInputs} />
 
             <LinePlot stockData={stockData} />
 
-            <div id='pdfToSave' className="grid grid-cols-4 border-black border-y-2 max-h-132.5 overflow-y-auto">
+            <div className="grid grid-cols-4 border-black border-y-2 max-h-132.5 overflow-y-auto">
                 <MainStatistics stats={stats} />
                 <DataTable stockData={stockData} />
                 <button
@@ -97,6 +97,6 @@ export default function ResultPanel({ selectedStrategy, formInputs, stockData, a
                 </button >
                 <ResultButtonGroup saveResult={saveResult} abilityToSaveNew={abilityToSaveNew}/>
             </div>
-        </>
+        </div>
     )
 }

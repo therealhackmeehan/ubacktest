@@ -17,8 +17,8 @@ export default function NewResultModal({ onSuccess, onFailure }: NewProjectModal
         try {
             validateNewName(newResultName);
             onSuccess(newResultName);
-            alert('Success! Find the result in my saved results!')
             onFailure();
+            alert('Success! Find the result in my saved results!')
         } catch (error: any) {
             setErrMsg(error.message);
         }

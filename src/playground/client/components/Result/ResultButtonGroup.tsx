@@ -14,99 +14,70 @@ export default function ResultButtonGroup({ saveResult, abilityToSaveNew }: Resu
 
     const [newResultModalOpen, setNewProjectModalOpen] = useState<boolean>(false);
     const [loading, setLoading] = useState<boolean>(false);
-
-    const pdfSaveHelper = async () => {
-
-        const content = document.getElementById("pdfToSave"); // ID of the element you want to capture
-        if (content) {
-            // Use html2canvas to capture the HTML element
-            const canvas = await html2canvas(content, {
-                scale: 2, // Higher scale for better quality
-                useCORS: true, // Enable if you have images with cross-origin issues
-            });
-
-            const imageData = canvas.toDataURL("image/png"); // Convert canvas to image
-
-            const pdf = new jsPDF("p", "mm", "a4"); // Create a new PDF (portrait, mm units, A4 size)
-
-            const pageWidth = pdf.internal.pageSize.getWidth();
-            const pageHeight = pdf.internal.pageSize.getHeight();
-            const imageWidth = canvas.width / 2; // Divide by scale factor (2 in this case)
-            const imageHeight = canvas.height / 2;
-
-            if (imageHeight > pageHeight) {
-                // If the content overflows, add multiple pages
-                let remainingHeight = imageHeight;
-                let position = 0;
-
-                while (remainingHeight > 0) {
-                    pdf.addImage(imageData, "PNG", 0, position, pageWidth, pageHeight);
-                    remainingHeight -= pageHeight;
-                    position += pageHeight;
-
-                    if (remainingHeight > 0) {
-                        pdf.addPage(); // Add a new page for remaining content
-                    }
-                }
-            } else {
-                // Add single-page content
-                pdf.addImage(imageData, "PNG", 0, 0, pageWidth, (imageHeight / imageWidth) * pageWidth);
-            }
-
-            pdf.save("myResult.pdf"); // Save the PDF with a file name
+    const convertHtmlToCanvas = async (elementId: string) => {
+        const content = document.getElementById(elementId);
+        if (!content) {
+            throw new Error(`Element with ID '${elementId}' not found.`);
         }
 
+        return await html2canvas(content, {
+            scale: 2, // Higher scale for better quality
+            useCORS: true, // Enable for cross-origin images
+        });
+    };
+
+    const pdfSaveHelper = async () => {
+        const canvas = await convertHtmlToCanvas("pdfToSave");
+        const imageData = canvas.toDataURL("image/png"); // Convert canvas to image
+
+        const pdf = new jsPDF("p", "mm", "a4"); // Create a new PDF (portrait, mm units, A4 size)
+        const pageWidth = pdf.internal.pageSize.getWidth();
+        const imageWidth = canvas.width / 2; // Divide by scale factor (2 in this case)
+        const imageHeight = canvas.height / 2;
+
+        pdf.addImage(imageData, "PNG", 0, 0, pageWidth, (imageHeight / imageWidth) * pageWidth);
+        pdf.save("myResult.pdf"); // Save the PDF with a file name
     };
 
     const saveAsPDF = async () => {
-
         setLoading(true);
-
         try {
-            await pdfSaveHelper()
+            await pdfSaveHelper();
         } catch (error: any) {
-            alert(error.msg)
+            alert(error.message || "Failed to save PDF.");
+        } finally {
+            setLoading(false);
         }
-
-        setLoading(false)
-    }
+    };
 
     const loadEmailHelper = async () => {
-        const content = document.getElementById("pdfToSave"); // ID of the element to capture
+        const canvas = await convertHtmlToCanvas("pdfToSave");
+        const imageData = canvas.toDataURL("image/png"); // Convert canvas to Base64
 
-        if (content) {
-            const canvas = await html2canvas(content, {
-                scale: 2, // Higher scale for better quality
-                useCORS: true, // Enable if cross-origin images are used
-            });
+        // Example Email Setup
+        const subject = encodeURIComponent("Check out my trading strategy!");
+        const body = encodeURIComponent(
+            `Hello,\n\nPlease find the chart below:\n\n` +
+            `<img src="${imageData}" alt="Charts" />\n\n` +
+            `Best regards,\nYour Name`
+        );
+        const mailtoLink = `mailto:?subject=${subject}&body=${body}`;
 
-            const imageData = canvas.toDataURL("image/png"); // Convert canvas to Base64
-
-            // Example Email Setup
-            const subject = encodeURIComponent("Check out my charts!");
-            const body = encodeURIComponent(
-                `Hello,\n\nPlease find the chart below:\n\n` +
-                `<img src="${imageData}" alt="Charts" />\n\n` +
-                `Best regards,\nYour Name`
-            );
-            const mailtoLink = `mailto:?subject=${subject}&body=${body}`;
-
-            // Open the default email client with the prefilled email
-            window.location.href = mailtoLink;
-        }
-    }
+        // Open the default email client with the prefilled email
+        window.location.href = mailtoLink;
+    };
 
     const loadEmail = async () => {
         setLoading(true);
-
         try {
             await loadEmailHelper();
         } catch (error: any) {
-            alert(error.msg)
+            alert(error.message || "Failed to load email.");
+        } finally {
+            setLoading(false);
         }
+    };
 
-        setLoading(false);
-    }
 
     return (
         <div className='flex justify-between'>
@@ -137,13 +108,6 @@ export default function ResultButtonGroup({ saveResult, abilityToSaveNew }: Resu
             <button className='flex gap-x-2 items-center p-2 m-1 tracking-tight bg-slate-700 hover:bg-slate-900 rounded-md text-white font-extralight'
                 onClick={loadEmail}>
                 <FiShare /> share
-            </button>
-
-            <button className='p-2 m-1 tracking-tight bg-slate-800 hover:bg-slate-900 rounded-md text-white font-light'>
-                Implement With Real Money
-                <span className="pl-1 text-xs font-extrabold tracking-tight uppercase align-top">
-                    (Beta)
-                </span>
             </button>
         </div>)
 }

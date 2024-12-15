@@ -1,4 +1,4 @@
-export const script = 
+export const buyAndHold = 
 `def strategy(data):
 
     data['signal'] = 1

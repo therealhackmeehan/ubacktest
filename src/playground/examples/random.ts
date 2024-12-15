@@ -1,4 +1,4 @@
-export const script = 
+export const random = 
 `import numpy as np
 
 def strategy(data):
