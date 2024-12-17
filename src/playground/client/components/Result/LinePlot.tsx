@@ -37,14 +37,15 @@ export default function LinePlot({ stockData }: any) {
                 {
                     label: 'My Strategy',
                     data: stockData.portfolio,
-                    borderColor: 'rgba(235, 198, 134, 1)',
-                    pointRadius: 3,
+                    borderColor: 'rgba(255, 0, 100, 1)',
+                    backgroundColor: 'rgba(255, 0, 100, 1)',
+                    pointRadius: 0,
                     yAxisID: 'y1',
                 },
                 {
                     label: 'Open',
                     data: stockData.open,
-                    borderColor: 'rgba(123, 50, 168, .5)',
+                    borderColor: 'rgba(123, 50, 168, 1)',
                     pointRadius: 0,
                     borderDash: [4, 1],
                     tension: .05,
@@ -54,7 +55,7 @@ export default function LinePlot({ stockData }: any) {
                 {
                     label: 'Close',
                     data: stockData.close,
-                    borderColor: 'rgba(70, 15, 105, .5)',
+                    borderColor: 'rgba(70, 15, 105, 1)',
                     pointRadius: 0,
                     borderDash: [4, 1],
                     tension: .05,
@@ -63,7 +64,8 @@ export default function LinePlot({ stockData }: any) {
                 {
                     label: 'Buy/Sell Signal',
                     data: stockData.signal,
-                    borderColor: 'rgba(235, 0, 0, .8)',
+                    borderColor: 'rgba(0, 155, 255, 1)',
+                    backgroundColor: 'rgba(0, 155, 255, 1)',
                     stepped: true,
                     pointRadius: 0,
                     borderWidth: 1,
@@ -114,7 +116,7 @@ export default function LinePlot({ stockData }: any) {
                         size: 14,
                         weight: 'bolder' as const,
                     },
-                    color: 'rgb(200,100,100,.8)',
+                    color: 'rgba(0, 155, 255, 1)',
                 },
                 suggestedMin: -1.1,
                 suggestedMax: 1.1,
@@ -141,10 +143,7 @@ export default function LinePlot({ stockData }: any) {
     }
 
     return (
-        <div className='col-span-3'>
-            <div className="text-xl font-bold text-end mb-2 p-2 bg-slate-100">
-                Simulated Growth of $1
-            </div>
+        <div className='col-span-3 border-r-2 border-black bg-slate-50'>
             <div className='font-extralight tracking-tight p-2'>
                 See
                 <span className='text-lg font-bold mx-2 italic'>

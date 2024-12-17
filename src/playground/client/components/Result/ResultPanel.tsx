@@ -64,15 +64,19 @@ export default function ResultPanel({ selectedStrategy, formInputs, stockData, a
     return (
         <div id='pdfToSave'>
             <div id='mainResultDisplay' className='items-center flex p-2 justify-between border-b-2 border-black'>
-                <h4 className="tracking-tight text-xl font-extrabold text-center">
-                    Stock Data and Simulated Backtest Result for {formInputs.symbol}
+                <h4 className="tracking-tight text-xl text-slate-700 font-extrabold text-center">
+                    Stock Data and Simulated Backtest Result for
+                    <span className="mx-2 text-black text-2xl">
+                        {formInputs.symbol}
+                    </span>
                 </h4>
                 <ResultButtonGroup saveResult={saveResult} abilityToSaveNew={abilityToSaveNew} />
             </div>
 
-            <FormInputHeader formInputs={formInputs} />
-
-            <LinePlot stockData={stockData} />
+            <div className="grid grid-cols-4 m-16 border-black rounded-sm border-2">
+                <LinePlot stockData={stockData} />
+                <FormInputHeader formInputs={formInputs} />
+            </div>
 
             <div className="grid grid-cols-4 border-black border-y-2 max-h-132.5 overflow-y-auto">
                 <MainStatistics stats={stats} />
@@ -95,7 +99,7 @@ export default function ResultPanel({ selectedStrategy, formInputs, stockData, a
                     onClick={() => document.getElementById('mainResultDisplay')?.scrollIntoView({ behavior: 'smooth' })}>
                     back to top <FiArrowUp />
                 </button >
-                <ResultButtonGroup saveResult={saveResult} abilityToSaveNew={abilityToSaveNew}/>
+                <ResultButtonGroup saveResult={saveResult} abilityToSaveNew={abilityToSaveNew} />
             </div>
         </div>
     )
