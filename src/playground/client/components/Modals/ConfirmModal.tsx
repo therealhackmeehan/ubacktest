@@ -1,3 +1,5 @@
+import useEnterKey from "../../../../client/hooks/useEnterKey";
+
 interface ConfirmModalProps {
     msg: string;
     onConfirm: () => void;
@@ -5,6 +7,8 @@ interface ConfirmModalProps {
 }
 
 export default function ConfirmModal({ msg, onConfirm, onCancel}: ConfirmModalProps) {
+
+    useEnterKey(onConfirm);
 
     return (
         <div className="fixed inset-0 flex items-center justify-center z-50">

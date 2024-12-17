@@ -7,13 +7,15 @@ import LoadingScreen from "../Editor/LoadingScreen";
 
 interface ResultButtonGroupProps {
     saveResult: (name: string) => Promise<void>;
-    abilityToSaveNew: boolean
+    abilityToSaveNew: boolean;
+    symbol: string;
 }
 
-export default function ResultButtonGroup({ saveResult, abilityToSaveNew }: ResultButtonGroupProps) {
+export default function ResultButtonGroup({ saveResult, abilityToSaveNew, symbol }: ResultButtonGroupProps) {
 
-    const [newResultModalOpen, setNewProjectModalOpen] = useState<boolean>(false);
+    const [newResultModalOpen, setNewResultModalOpen] = useState<boolean>(false);
     const [loading, setLoading] = useState<boolean>(false);
+    
     const convertHtmlToCanvas = async (elementId: string) => {
         const content = document.getElementById(elementId);
         if (!content) {
@@ -78,14 +80,13 @@ export default function ResultButtonGroup({ saveResult, abilityToSaveNew }: Resu
         }
     };
 
-
     return (
         <div className='flex justify-between'>
 
             {abilityToSaveNew &&
                 <>
                     <button className='flex gap-x-1 items-center p-2 m-1 tracking-tight bg-slate-500 hover:bg-slate-900 rounded-md text-white font-extralight'
-                        onClick={() => setNewProjectModalOpen(true)}>
+                        onClick={() => setNewResultModalOpen(true)}>
                         <FiSave />
                         save to my results
                     </button>
@@ -97,7 +98,8 @@ export default function ResultButtonGroup({ saveResult, abilityToSaveNew }: Resu
 
             {newResultModalOpen &&
                 <NewResultModal onSuccess={saveResult}
-                    onFailure={() => setNewProjectModalOpen(false)} />
+                    closeModal={() => setNewResultModalOpen(false)} 
+                    symbol={symbol}/>
             }
 
             <button className='flex gap-x-2 items-center p-2 m-1 tracking-tight bg-slate-600 hover:bg-slate-900 rounded-md text-white font-extralight'

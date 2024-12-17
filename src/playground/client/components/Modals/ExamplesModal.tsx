@@ -7,7 +7,7 @@ interface ExamplesModalProps {
 }
 
 export default function ExamplesModal({ onSuccess, closeModal }: ExamplesModalProps) {
-
+    
     return (
         <div className="fixed inset-0 flex items-center justify-center z-50">
             <div className="bg-gray-800 w-full opacity-50 fixed inset-0"></div>
@@ -21,8 +21,8 @@ export default function ExamplesModal({ onSuccess, closeModal }: ExamplesModalPr
 
                 <div className='h-72'>
                     {examples.map((example, index) => (
-                        <div>
-                            <button key={index}
+                        <div key={index}>
+                            <button
                                 className="overflow-y-auto p-1 my-1 text-sm w-full rounded-lg bg-slate-100 hover:bg-slate-200 hover:-translate-x-1 duration-500"
                                 onClick={() => onSuccess(example.script)}>
                                 {example.name}

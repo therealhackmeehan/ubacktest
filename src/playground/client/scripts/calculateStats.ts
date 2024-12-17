@@ -43,23 +43,17 @@ export default function calculateStats({ stockData }: { stockData: any }): StatP
     let peak = stockData.portfolio[0];
     let maxDrawdown = 0;
 
-    let buyPrice = null;
+    let buyPrice = stockData.portfolio[0];
 
     for (let i = 1; i < length; i++) {
         if (stockData.signal[i] !== stockData.signal[i - 1]) {
             numberOfTrades++;
 
-            if (stockData.signal[i] === 1 && buyPrice === null) {
-                buyPrice = stockData.portfolio[i];
+            if (stockData.portfolio[i] > buyPrice) {
+                numberOfProfitableTrades++;
             }
 
-            if (stockData.signal[i] === 0 && buyPrice !== null) {
-                const profitLoss = (stockData.portfolio[i] - buyPrice) / buyPrice;
-                if (profitLoss > 0) {
-                    numberOfProfitableTrades++;
-                }
-                buyPrice = null;
-            }
+            buyPrice = stockData.portfolio[i];
         }
 
         if (stockData.portfolio[i] > peak) {

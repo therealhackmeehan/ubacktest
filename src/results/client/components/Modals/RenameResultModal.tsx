@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { renameResult } from 'wasp/client/operations';
 import { TiDelete } from "react-icons/ti";
 import { validateNewName } from '../../../../playground/client/scripts/modalHelpers';
+import useEnterKey from '../../../../client/hooks/useEnterKey';
 
 interface RenameModalProps {
     closeModal: () => void;
@@ -14,7 +15,7 @@ export default function RenameResultModal({ closeModal, id, currResultName }: Re
     const [newName, setNewName] = useState<string>(currResultName);
     const [errMsg, setErrMsg] = useState<string>('');
 
-    const handleRename = async () => {
+    const handleResultRename = async () => {
         setErrMsg('');
         try {
             validateNewName(newName);
@@ -24,6 +25,8 @@ export default function RenameResultModal({ closeModal, id, currResultName }: Re
             setErrMsg(error.message);
         }
     };
+
+    useEnterKey(handleResultRename);
 
     return (
         <div className="fixed inset-0 flex items-center justify-center z-50">
@@ -52,7 +55,7 @@ export default function RenameResultModal({ closeModal, id, currResultName }: Re
                     </button>
                     <button
                         className="bg-slate-500 text-white p-2 rounded hover:bg-slate-700"
-                        onClick={handleRename}
+                        onClick={handleResultRename}
                     >
                         Confirm
                     </button>

@@ -70,7 +70,7 @@ export default function ResultPanel({ selectedStrategy, formInputs, stockData, a
                         {formInputs.symbol}
                     </span>
                 </h4>
-                <ResultButtonGroup saveResult={saveResult} abilityToSaveNew={abilityToSaveNew} />
+                <ResultButtonGroup saveResult={saveResult} abilityToSaveNew={abilityToSaveNew} symbol={formInputs.symbol} />
             </div>
 
             <div className="grid grid-cols-4 m-16 border-black rounded-sm border-2">
@@ -99,7 +99,7 @@ export default function ResultPanel({ selectedStrategy, formInputs, stockData, a
                     onClick={() => document.getElementById('mainResultDisplay')?.scrollIntoView({ behavior: 'smooth' })}>
                     back to top <FiArrowUp />
                 </button >
-                <ResultButtonGroup saveResult={saveResult} abilityToSaveNew={abilityToSaveNew} />
+                <ResultButtonGroup saveResult={saveResult} abilityToSaveNew={abilityToSaveNew} symbol={formInputs.symbol} />
             </div>
         </div>
     )

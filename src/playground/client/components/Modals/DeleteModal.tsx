@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { deleteStrategy, getStrategies } from 'wasp/client/operations';
 import { TiDelete } from "react-icons/ti";
+import useEnterKey from '../../../../client/hooks/useEnterKey';
 
 interface DeleteModalProps {
     onSuccess: (value: string) => void;
@@ -27,6 +28,8 @@ export default function DeleteModal({ onSuccess, onFailure, id }: DeleteModalPro
             setErrMsg(error.message);
         }
     };
+
+    useEnterKey(handleStrategyDelete);
 
     return (
         <div className="fixed inset-0 flex items-center justify-center z-50">

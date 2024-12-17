@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { renameStrategy } from 'wasp/client/operations';
 import { TiDelete } from "react-icons/ti";
 import { validateNewName } from '../../scripts/modalHelpers';
+import useEnterKey from '../../../../client/hooks/useEnterKey';
 
 interface RenameModalProps {
     onSuccess: (newName: string) => void;
@@ -25,6 +26,8 @@ export default function RenameModal({ onSuccess, onFailure, id, currName }: Rena
             setErrMsg(error.message);
         }
     };
+
+    useEnterKey(handleRename);
 
     return (
         <div className="fixed inset-0 flex items-center justify-center z-50">

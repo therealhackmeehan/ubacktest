@@ -3,6 +3,7 @@ import { createStrategy } from 'wasp/client/operations';
 import { TiDelete } from "react-icons/ti";
 import { validateNewName } from '../../scripts/modalHelpers';
 import { starterCode } from './starterTemplate';
+import useEnterKey from '../../../../client/hooks/useEnterKey';
 
 interface NewProjectModalProps {
     onSuccess: (id: string) => void;
@@ -24,6 +25,8 @@ export default function NewProjectModal({ onSuccess, onFailure }: NewProjectModa
             setErrMsg(error.message);
         }
     };
+
+    useEnterKey(handleNewProject);
 
     return (
         <div className="fixed inset-0 flex items-center justify-center z-50">

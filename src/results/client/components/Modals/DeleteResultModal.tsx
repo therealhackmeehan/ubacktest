@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { deleteResult } from 'wasp/client/operations';
 import { TiDelete } from "react-icons/ti";
+import useEnterKey from '../../../../client/hooks/useEnterKey';
 
 interface DeleteResultModalProps {
     closeModal: () => void;
@@ -20,6 +21,8 @@ export default function DeleteResultModal({ closeModal, id }: DeleteResultModalP
             setErrMsg(error.message);
         }
     };
+
+    useEnterKey(handleResultDelete);
 
     return (
         <div className="fixed inset-0 flex items-center justify-center z-50">
