@@ -32,13 +32,13 @@ export default function ResultButtonGroup({ saveResult, abilityToSaveNew, symbol
         const canvas = await convertHtmlToCanvas("pdfToSave");
         const imageData = canvas.toDataURL("image/png"); // Convert canvas to image
 
-        const pdf = new jsPDF("p", "mm", "a4"); // Create a new PDF (portrait, mm units, A4 size)
+        const pdf = new jsPDF("l", "mm", "a4"); // Create a new PDF (portrait, mm units, A4 size)
         const pageWidth = pdf.internal.pageSize.getWidth();
-        const imageWidth = canvas.width / 2; // Divide by scale factor (2 in this case)
-        const imageHeight = canvas.height / 2;
+        const imageWidth = canvas.width; // Divide by scale factor (2 in this case)
+        const imageHeight = canvas.height;
 
         pdf.addImage(imageData, "PNG", 0, 0, pageWidth, (imageHeight / imageWidth) * pageWidth);
-        pdf.save("myResult.pdf"); // Save the PDF with a file name
+        pdf.save("result_" + symbol + '.pdf'); // Save the PDF with a file name
     };
 
     const saveAsPDF = async () => {

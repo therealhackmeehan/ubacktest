@@ -13,6 +13,9 @@ export default function ResultDropDown({ result }: { result: Result }) {
 
     useEffect(() => {
         const fetchStrategyName = async () => {
+            if (!result.fromStrategyID) {
+                setStrategyName('deleted');
+            } 
             const sName = await getSpecificStrategy({ id: result.fromStrategyID });
             if (sName) {
                 setStrategyName(sName.name);

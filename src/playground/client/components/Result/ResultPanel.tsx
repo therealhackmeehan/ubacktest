@@ -62,7 +62,7 @@ export default function ResultPanel({ selectedStrategy, formInputs, stockData, a
     const stats: StatProps = calculateStats({ stockData });
 
     return (
-        <div id='pdfToSave'>
+        <>
             <div id='mainResultDisplay' className='items-center flex p-2 justify-between border-b-2 border-black'>
                 <h4 className="tracking-tight text-xl text-slate-700 font-extrabold text-center">
                     Stock Data and Simulated Backtest Result for
@@ -73,22 +73,23 @@ export default function ResultPanel({ selectedStrategy, formInputs, stockData, a
                 <ResultButtonGroup saveResult={saveResult} abilityToSaveNew={abilityToSaveNew} symbol={formInputs.symbol} />
             </div>
 
-            <div className="grid grid-cols-4 m-16 border-black rounded-sm border-2">
-                <LinePlot stockData={stockData} />
-                <FormInputHeader formInputs={formInputs} />
-            </div>
+            <div id='pdfToSave'>
+                <div className="grid grid-cols-4 m-16 border-black rounded-sm border-2">
+                    <LinePlot stockData={stockData} />
+                    <FormInputHeader formInputs={formInputs} />
+                </div>
 
-            <div className="grid grid-cols-4 border-black border-y-2 max-h-132.5 overflow-y-auto">
-                <MainStatistics stats={stats} />
-                <DataTable stockData={stockData} />
-                <button
-                    className="border-t-2 col-span-4 border-black p-2 text-sm bg-white font-light hover:font-bold hover:bg-slate-200"
-                    onClick={downloadCSV} // Trigger the download on click
-                >
-                    Download Data as .csv
-                </button>
+                <div className="grid grid-cols-4 border-black border-y-2 max-h-132.5 overflow-y-auto">
+                    <MainStatistics stats={stats} />
+                    <DataTable stockData={stockData} />
+                    <button
+                        className="border-t-2 col-span-4 border-black p-2 text-sm bg-white font-light hover:font-bold hover:bg-slate-200"
+                        onClick={downloadCSV} // Trigger the download on click
+                    >
+                        Download Data as .csv
+                    </button>
+                </div>
             </div>
-
             <div className="grid grid-cols-4 p-2 border-black border-b-2 bg-slate-100">
                 <DistributionOfReturns stockDataReturns={stockData.returns} />
                 <RatiosBarChart sharpe={stats.sharpeRatio} sortino={stats.sortinoRatio} />
@@ -101,6 +102,6 @@ export default function ResultPanel({ selectedStrategy, formInputs, stockData, a
                 </button >
                 <ResultButtonGroup saveResult={saveResult} abilityToSaveNew={abilityToSaveNew} symbol={formInputs.symbol} />
             </div>
-        </div>
+        </>
     )
 }
