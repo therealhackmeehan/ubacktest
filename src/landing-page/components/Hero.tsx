@@ -3,7 +3,8 @@ import { DocsUrl } from '../../shared/common';
 
 export default function Hero() {
   return (
-    <div className='relative pt-14 w-full '>
+    <div className='relative max-w-7xl mx-auto'>
+      
       <div
         className='absolute top-0 right-0 -z-10 transform-gpu overflow-hidden w-full blur-3xl sm:top-0 '
         aria-hidden='true'
@@ -26,6 +27,7 @@ export default function Hero() {
           }}
         />
       </div>
+
       <div className='py-24 sm:py-32'>
         <div className='mx-auto max-w-8xl px-6 lg:px-8'>
           <div className='lg:mb-18 mx-auto max-w-3xl text-center'>

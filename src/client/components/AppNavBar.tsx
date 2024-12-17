@@ -11,14 +11,16 @@ import { UserMenuItems } from '../../user/UserMenuItems';
 import { DocsUrl, BlogUrl } from '../../shared/common';
 import DarkModeSwitcher from './DarkModeSwitcher';
 
-const navigation = [
+const mainNavigation = [
   { name: 'Strategy Editor', href: routes.PlaygroundRoute.build() },
-
   { name: 'My Strategies', href: routes.HomePageRoute.build() },
   { name: 'My Results', href: routes.ResultsRoute.build() },
-  { name: 'Pricing', href: routes.PricingPageRoute.build() },
-  { name: 'Documentation', href: DocsUrl },
 ];
+
+const subNavigation = [
+  { name: 'Documentation', href: DocsUrl },
+  { name: 'Pricing', href: routes.PricingPageRoute.build() },
+]
 
 const NavLogo = () => <img className='h-8 w-8' src={logo} alt='Your SaaS App' />;
 
@@ -27,7 +29,7 @@ export default function AppNavBar() {
 
   const { data: user, isLoading: isUserLoading } = useAuth();
   return (
-    <header className='z-50 bg-white bg-opacity-50 backdrop-blur-lg backdrop-filter dark:border dark:border-gray-100/10 dark:bg-boxdark-2'>
+    <header className='bg-white bg-opacity-50 backdrop-blur-lg backdrop-filter dark:border dark:border-gray-100/10 dark:bg-boxdark-2'>
       <nav className='flex items-center justify-between p-6 lg:px-8' aria-label='Global'>
         <div className='flex lg:flex-1'>
           <a href='/' className='-m-1.5 p-1.5'>
@@ -45,11 +47,23 @@ export default function AppNavBar() {
           </button>
         </div>
         <div className='hidden lg:flex lg:gap-x-12'>
-          {navigation.map((item) => (
+          {mainNavigation.map((item) => (
             <a
               key={item.name}
               href={item.href}
               className='text-sm font-semibold leading-6 text-gray-900 duration-300 ease-in-out hover:text-slate-500 dark:text-white'
+            >
+              {item.name}
+            </a>
+          ))}
+        </div>
+        <div className='hidden lg:flex mx-12 border-r-2 py-4 border-black/80'></div>
+        <div className='hidden lg:flex lg:gap-x-12 lg:mr-4'>
+          {subNavigation.map((item) => (
+            <a
+              key={item.name}
+              href={item.href}
+              className='text-sm leading-6 text-gray-900 duration-300 ease-in-out hover:text-slate-500 dark:text-white'
             >
               {item.name}
             </a>
@@ -93,7 +107,19 @@ export default function AppNavBar() {
           <div className='mt-6 flow-root'>
             <div className='-my-6 divide-y divide-gray-500/10'>
               <div className='space-y-2 py-6'>
-                {navigation.map((item) => (
+                {mainNavigation.map((item) => (
+                  <a
+                    key={item.name}
+                    href={item.href}
+                    onClick={() => setMobileMenuOpen(false)}
+                    className='-mx-3 block rounded-lg px-3 py-2 text-base font-semibold leading-7 text-gray-900 hover:bg-gray-50 dark:text-white hover:dark:bg-boxdark-2'
+                  >
+                    {item.name}
+                  </a>
+                ))}
+              </div>
+              <div className='space-y-2 scale-90 py-6'>
+                {subNavigation.map((item) => (
                   <a
                     key={item.name}
                     href={item.href}

@@ -20,7 +20,7 @@ function StrategyBrowser({ selectedStrategy, setSelectedStrategy, strategies, is
     }
 
     return (
-        <div className="overflow-y-auto h-full col-span-1 bg-gray-50 border-r-2 border-black">
+        <div className="overflow-y-auto overflow-x-auto h-full col-span-1 bg-gray-50 border-r-2 border-black">
 
             {isStrategiesLoading && (
                 <div className="text-xl font-extrabold p-4 text-white">Loading...</div>

@@ -1,10 +1,8 @@
 import {
   features,
-  navigation,
   faqs,
   testimonials
 } from './contentSections';
-import Header from './components/Header';
 import Hero from './components/Hero';
 import Clients from './components/Clients';
 import Features from './components/Features';
@@ -14,8 +12,6 @@ import FAQ from './components/FAQ';
 export default function LandingPage() {
   return (
     <div className='bg-white dark:text-white dark:bg-boxdark-2'>
-      <Header navigation={navigation} />
-
       <main className='isolate dark:bg-boxdark-2'>
         <Hero />
         <Clients />

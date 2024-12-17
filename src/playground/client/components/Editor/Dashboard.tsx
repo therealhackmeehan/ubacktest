@@ -46,7 +46,7 @@ function Dashboard({ selectedStrategy, codeToDisplay, setCodeToDisplay }: Dashbo
         <>
             <button
                 className={`w-full duration-700 ease-in-out py-1 px-12 
-                            font-extrabold text-sm hover:scale-110 
+                            hover:font-extrabold
                             tracking-tight bg-slate-200 text-slate-800
                             ${resultOpen && 'bg-slate-700 text-white'}`}
 

@@ -15,10 +15,6 @@ export default function App() {
   const location = useLocation();
   const { data: user } = useAuth();
 
-  const shouldDisplayAppNavBar = useMemo(() => {
-    return location.pathname !== '/' && location.pathname !== '/login' && location.pathname !== '/signup';
-  }, [location]);
-
   const shouldDisplayFooter = useMemo(() => {
     return location.pathname !== '/editor';
   }, [location]);
@@ -54,7 +50,7 @@ export default function App() {
           <Outlet />
         ) : (
           <>
-            {shouldDisplayAppNavBar && <AppNavBar />}
+              <AppNavBar />
               <Outlet />
           </>
         )}

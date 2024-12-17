@@ -18,7 +18,7 @@ export default function HomePage() {
     const [newProjectModalOpen, setNewProjectModalOpen] = useState<boolean>(false);
 
     return (
-        <div className='mt-12 mx-12 max-w-7xl xl:mx-auto'>
+        <div className='mt-16 max-w-7xl mx-auto'>
             <div className='flex justify-between'>
                 <h4 className='my-2 font-bold tracking-tight text-gray-900 sm:text-3xl text-xl dark:text-white'>
                     My <span className='text-slate-500'>Strategies</span>

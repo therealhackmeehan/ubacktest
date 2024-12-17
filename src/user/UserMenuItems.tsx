@@ -1,7 +1,6 @@
 import { Link } from 'wasp/client/router';
 import { type User } from 'wasp/entities';
 import { logout } from 'wasp/client/auth';
-import { MdOutlineSpaceDashboard } from 'react-icons/md';
 import { TfiDashboard } from 'react-icons/tfi';
 import { cn } from '../client/cn';
 

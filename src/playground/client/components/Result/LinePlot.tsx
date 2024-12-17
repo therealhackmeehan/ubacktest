@@ -113,7 +113,6 @@ export default function LinePlot({ stockData }: any) {
                         return '' as const;
                     },
                     font: {
-                        size: 14,
                         weight: 'bolder' as const,
                     },
                     color: 'rgba(0, 155, 255, 1)',

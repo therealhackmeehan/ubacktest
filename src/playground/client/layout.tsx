@@ -64,7 +64,7 @@ export default function Layout() {
                     strategies={strategies}
                     isStrategiesLoading={isStrategiesLoading} />
 
-                <div className="col-span-5 h-full overflow-y-auto overflow-x-hidden">
+                <div className="col-span-5 h-full overflow-x-hidden overflow-y-auto">
                     {selectedStrategy ? (
                         <>
                             <StrategyHeader

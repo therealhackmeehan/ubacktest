@@ -88,7 +88,7 @@ function Editor({ codeToDisplay, selectedStrategy, formInputs, setCodeToDisplay,
     }
 
     return (
-        <div className="h-full">
+        <>
 
             <InputForm formInputs={formInputs} setFormInputs={setFormInputs} run={run} />
 
@@ -104,7 +104,7 @@ function Editor({ codeToDisplay, selectedStrategy, formInputs, setCodeToDisplay,
 
             <DebugConsole userStdout={std.out} userStderr={std.err} />
 
-        </div>
+        </>
     )
 }
 
