@@ -11,7 +11,6 @@ import {
     Tooltip,
     Legend
 } from 'chart.js';
-import { FiArrowDown, FiArrowUp } from 'react-icons/fi';
 
 ChartJS.register(
     CategoryScale,
@@ -26,55 +25,113 @@ ChartJS.register(
 export default function LinePlot({ stockData }: any) {
 
     const [chartData, setChartData] = useState<any | null>(null);
-    const [plotShowing, setPlotShowing] = useState<boolean>(true);
 
     useEffect(() => {
         const dates = stockData.timestamp.map((timestamp: number) =>
             new Date(timestamp * 1000).toLocaleDateString()
         );
 
-        const newData = {
+        const chartData = {
             labels: dates,
             datasets: [
                 {
                     label: 'My Strategy',
                     data: stockData.portfolio,
                     borderColor: 'rgba(235, 198, 134, 1)',
-                    backgroundColor: 'rgba(235, 198, 134, 0.2)',
-                    fill: false,
+                    pointRadius: 3,
+                    yAxisID: 'y1',
                 },
                 {
                     label: 'Open',
                     data: stockData.open,
-                    borderColor: 'rgba(123, 50, 168, 1)',
-                    backgroundColor: 'rgba(123, 50, 168, 0.2)',
-                    fill: false,
+                    borderColor: 'rgba(123, 50, 168, .5)',
+                    pointRadius: 0,
+                    borderDash: [4, 1],
+                    tension: .05,
+                    hidden: true,
+                    yAxisID: 'y1',
                 },
                 {
                     label: 'Close',
                     data: stockData.close,
-                    borderColor: 'rgba(70, 15, 105, 1)',
-                    backgroundColor: 'rgba(70, 15, 105, 0.2)',
-                    fill: false,
+                    borderColor: 'rgba(70, 15, 105, .5)',
+                    pointRadius: 0,
+                    borderDash: [4, 1],
+                    tension: .05,
+                    yAxisID: 'y1',
                 },
                 {
                     label: 'Buy/Sell Signal',
                     data: stockData.signal,
-                    borderColor: 'rgba(235, 0, 0, 1)',
-                    backgroundColor: 'rgba(235, 198, 134, 0.2)',
-                    fill: true,
-                }
+                    borderColor: 'rgba(235, 0, 0, .8)',
+                    stepped: true,
+                    pointRadius: 0,
+                    borderWidth: 1,
+                    yAxisID: 'y2',
+                },
             ],
         };
 
-        setChartData(newData);
+        setChartData(chartData);
     }, [stockData]);
 
     const options = {
         responsive: true,
+        layout: {
+            padding: 20,
+        },
         plugins: {
             legend: {
                 position: 'top' as const,
+            },
+        },
+        scales: {
+            x: {
+                grid: {
+                    drawOnChartArea: false,
+                },
+            },
+            y2: {
+                type: 'linear' as const,
+                display: true,
+                position: 'right' as const,
+                label: 'Position',
+                grid: {
+                    drawOnChartArea: false,
+                },
+                ticks: {
+                    callback: function (val: string | number) {
+                        if (val === -1) {
+                            return 'Short' as const;
+                        } else if (val === 0) {
+                            return 'No Position' as const;
+                        } else if (val === 1) {
+                            return 'Buy' as const;
+                        }
+                        return '' as const;
+                    },
+                    font: {
+                        size: 14,
+                        weight: 'bolder' as const,
+                    },
+                    color: 'rgb(200,100,100,.8)',
+                },
+                suggestedMin: -1.1,
+                suggestedMax: 1.1,
+            },
+            y1: {
+                type: 'linear' as const,
+                display: true,
+                grid: {
+                    color: 'rgba(100,100,100,.1)',
+                    lineWidth: 2,
+                },
+                ticks: {
+                    // callback: function (val: number) {
+                    //     const toReturn = '$' + val.toFixed(2);
+                    //     return toReturn;
+                    // },
+                },
             },
         },
     };
@@ -84,27 +141,18 @@ export default function LinePlot({ stockData }: any) {
     }
 
     return (
-        <div className='mx-12 rounded-lg border-black border-2 my-8 p-4'>
-            <div className="font-bold tracking-tight text-xl text-center p-2 my-2 rounded-md bg-slate-100">
+        <div className='col-span-3'>
+            <div className="text-xl font-bold text-end mb-2 p-2 bg-slate-100">
                 Simulated Growth of $1
             </div>
-            <div className='flex justify-between'>
-                <div className='font-extralight tracking-tight'>
-                    See
-                    <span className='text-lg font-bold mx-2 italic'>
-                        how your strategy performed
-                    </span> vs. a "buy and hold strategy" for the same stock.
-                </div>
-                <button className='hover:scale-125 duration-200 p-2 rounded-lg bg-slate-100'
-                    onClick={() => setPlotShowing(!plotShowing)}>
-                    {plotShowing ?
-                        <FiArrowUp /> :
-                        <div className='flex items-center text-xs gap-x-2'>expand
-                            <FiArrowDown />
-                        </div>}
-                </button>
+            <div className='font-extralight tracking-tight p-2'>
+                See
+                <span className='text-lg font-bold mx-2 italic'>
+                    how your strategy performed
+                </span> alongside the stocks's price.
             </div>
-            {plotShowing && <Line className="m-2 p-2 col-span-2" data={chartData} options={options} />}
+
+            <Line data={chartData} options={options} />
         </div>
     )
 }
