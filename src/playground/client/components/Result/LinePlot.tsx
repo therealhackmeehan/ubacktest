@@ -31,7 +31,7 @@ export default function LinePlot({ stockData }: any) {
             new Date(timestamp * 1000).toLocaleDateString()
         );
 
-        const chartData = {
+        let chartData = {
             labels: dates,
             datasets: [
                 {
@@ -71,8 +71,22 @@ export default function LinePlot({ stockData }: any) {
                     borderWidth: 1,
                     yAxisID: 'y2',
                 },
+                {
+                    label: 'My Strategy (w trading costs)',
+                    data: stockData.portfolioValuesWithCosts,
+                    borderColor: 'rgba(255, 0, 100, 0.6)',
+                    backgroundColor: 'rgba(255, 0, 100, 0.6)',
+                    hidden: true,
+                    pointRadius: 0,
+                    yAxisID: 'y1',
+                },
             ],
         };
+
+        // Conditionally add the "My Strategy (w trading costs)" dataset
+        if (!stockData.portfolioValuesWithCosts) {
+            chartData.datasets.pop();
+        }
 
         setChartData(chartData);
     }, [stockData]);
@@ -126,12 +140,6 @@ export default function LinePlot({ stockData }: any) {
                 grid: {
                     color: 'rgba(100,100,100,.1)',
                     lineWidth: 2,
-                },
-                ticks: {
-                    // callback: function (val: number) {
-                    //     const toReturn = '$' + val.toFixed(2);
-                    //     return toReturn;
-                    // },
                 },
             },
         },

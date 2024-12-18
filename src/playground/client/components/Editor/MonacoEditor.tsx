@@ -42,6 +42,7 @@ function MonacoEditor({ code, setCode, ID }: MEditorProps) {
     };
 
     const saveCodeToDB = async () => {
+        console.log('lol')
         if (isSavingRef.current) return; // Block if already saving
         isSavingRef.current = true; // Mark as saving
         setButtonText("saving...");
@@ -52,7 +53,21 @@ function MonacoEditor({ code, setCode, ID }: MEditorProps) {
             console.log("saved!");
 
             // Text animation effect
-            const textSequence = ["sav", "sa", "s", "sa", "sav", "save", "saved", "saved.", "saved..", "saved...", "saved..", "saved.", "saved"];
+            const textSequence = [
+                "sav", 
+                "sa", 
+                "s", 
+                "sa", 
+                "sav", 
+                "save", 
+                "saved",
+                "saved.", 
+                "saved..", 
+                "saved...", 
+                "saved..", 
+                "saved.", 
+                "saved"
+            ];
             textSequence.forEach((text, index) => {
                 setTimeout(() => setButtonText(text), index * 100);
             });

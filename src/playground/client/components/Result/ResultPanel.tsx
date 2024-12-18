@@ -9,6 +9,7 @@ import ResultButtonGroup from "./ResultButtonGroup"
 import { FormInputProps } from "../Editor/Dashboard"
 import calculateStats, { StatProps } from "../../scripts/calculateStats"
 import { createResult, getSpecificStrategy } from "wasp/client/operations"
+import calculatePortfolioWithCosts from '../../scripts/calculatePortfolioWithCosts';
 
 interface ResultPanelProps {
     selectedStrategy: string;
@@ -60,6 +61,9 @@ export default function ResultPanel({ selectedStrategy, formInputs, stockData, a
     }
 
     const stats: StatProps = calculateStats({ stockData });
+    stockData.portfolioValuesWithCosts = formInputs.costPerTrade === 0
+        ? null
+        : calculatePortfolioWithCosts(stockData, formInputs.costPerTrade);
 
     return (
         <>

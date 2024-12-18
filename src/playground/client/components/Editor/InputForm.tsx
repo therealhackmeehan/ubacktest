@@ -12,7 +12,7 @@ export default function InputForm({ formInputs, setFormInputs, run }: InputFormS
 
     const [displayAdvancedOptions, setDisplayAdvancedOptions] = useState<boolean>(false);
 
-    const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const handleChange = (event: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
         const { name, value } = event.target;
         setFormInputs((prevInputs: FormInputProps) => ({
             ...prevInputs,
@@ -23,7 +23,7 @@ export default function InputForm({ formInputs, setFormInputs, run }: InputFormS
     const inputFormCss = 'text-xs text-gray-600 rounded-md border border-gray-200 shadow-md focus:outline-none focus:border-transparent focus:shadow-none duration-200 ease-in-out hover:shadow-none';
 
     return (
-        <div className='z-40 flex border-2 border-black flex-col shadow-lg justify-between rounded-lg fixed right-0 h-2/3 bg-white my-16 mr-12 p-6'>
+        <div className='z-10 flex border-2 border-black flex-col shadow-lg justify-between rounded-lg fixed right-0 h-2/3 w-1/5 bg-white my-16 mr-12 p-6'>
             <div className="space-y-3 overflow-auto px-1">
                 <div className="text-lg text-gray-800 tracking-tight font-extrabold text-end">
                     <span className="text-sm font-light">the</span> Backtest Engine
@@ -70,13 +70,23 @@ export default function InputForm({ formInputs, setFormInputs, run }: InputFormS
                     <div className="tracking-tight text-xs font-bold">
                         Trading Frequency
                     </div>
-                    <input
-                        type='text'
+                    <select
                         className={inputFormCss}
                         value={formInputs.intval}
                         onChange={handleChange}
                         name="intval"
-                    />
+                    >
+                        <option value="1d">1d</option>
+                        <option value="5d">5d</option>
+                        <option value="1mo">1mo</option>
+                        <option value="3mo">3mo</option>
+                        <option value="6mo">6mo</option>
+                        <option value="1y">1y</option>
+                        <option value="2y">2y</option>
+                        <option value="5y">5y</option>
+                        <option value="ytd">ytd</option>
+                        <option value="max">max</option>
+                    </select>
                 </div>
                 <button className="flex hover:font-bold items-center justify-self-center text-xs"
                     onClick={() => setDisplayAdvancedOptions(!displayAdvancedOptions)}>
@@ -90,13 +100,17 @@ export default function InputForm({ formInputs, setFormInputs, run }: InputFormS
                             <div className="tracking-tight text-xs font-bold">
                                 Execute Trade @
                             </div>
-                            <input
-                                type='text'
+                            <select
                                 className={inputFormCss}
                                 value={formInputs.timeOfDay}
                                 onChange={handleChange}
                                 name="timeOfDay"
-                            />
+                            >
+                                <option value="close">close</option>
+                                <option value="open">open</option>
+                                <option value="high">high</option>
+                                <option value="low">low</option>
+                            </select>
                         </div>
 
                         <div className='flex items-center justify-between gap-3'>
