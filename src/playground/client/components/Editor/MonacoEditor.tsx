@@ -124,7 +124,7 @@ function MonacoEditor({ code, setCode, ID }: MEditorProps) {
                     <MdLaunch />Examples
                 </button>
             </div>
-            <Editor className="invert" height="80vh" defaultLanguage='python' theme="vs-dark" value={code} onChange={handleEditorChange} options={editorOpts}
+            <Editor className="invert hue-rotate-180" height="80vh" defaultLanguage='python' theme="vs-dark" value={code} onChange={handleEditorChange} options={editorOpts}
                 loading={(<div className="text-white font-2xl tracking-tight">Loading...</div>)} />
 
             {examplesModalOpen &&

@@ -47,8 +47,10 @@ function Dashboard({ selectedStrategy, codeToDisplay, setCodeToDisplay }: Dashbo
             <button
                 className={`w-full duration-700 ease-in-out py-1 px-12 
                             hover:font-extrabold
-                            tracking-tight bg-slate-200 text-slate-800
-                            ${resultOpen && 'bg-slate-700 text-white'}`}
+                            tracking-tight 
+                            ${resultOpen ?
+                        'bg-slate-700 text-white' :
+                        'bg-slate-200 text-sky-800'}`}
 
                 onClick={() => setResultOpen(!resultOpen)}
             >

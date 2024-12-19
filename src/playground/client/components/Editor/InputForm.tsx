@@ -25,8 +25,8 @@ export default function InputForm({ formInputs, setFormInputs, run }: InputFormS
     return (
         <div className='z-10 flex border-2 border-black flex-col shadow-lg justify-between rounded-lg fixed right-0 h-2/3 w-1/5 bg-white my-16 mr-12 p-6'>
             <div className="space-y-3 overflow-auto px-1">
-                <div className="text-lg text-gray-800 tracking-tight font-extrabold text-end">
-                    <span className="text-sm font-light">the</span> Backtest Engine
+                <div className="text-lg text-slate-800 tracking-tight font-extrabold text-end">
+                    <span className="text-sm font-light text-sky-600">the</span> Backtest Engine
                 </div>
                 <div className='flex items-center justify-between gap-3'>
                     <div className="tracking-tight text-xs font-bold">
@@ -88,14 +88,14 @@ export default function InputForm({ formInputs, setFormInputs, run }: InputFormS
                         <option value="max">max</option>
                     </select>
                 </div>
-                <button className="flex hover:font-bold items-center justify-self-center text-xs"
+                <button className="flex hover:font-bold items-center justify-self-center text-xs text-sky-600"
                     onClick={() => setDisplayAdvancedOptions(!displayAdvancedOptions)}>
                     advanced options
                     {displayAdvancedOptions ? <FaCaretUp size="1rem" /> : <FaCaretDown size="1rem" />}
                 </button>
 
                 {displayAdvancedOptions &&
-                    <div className="space-y-1 border-2 border-slate-300 bg-slate-100 rounded-md p-2">
+                    <div className="space-y-1 border-2 border-slate-300 bg-sky-50 rounded-md p-2">
                         <div className='flex items-center justify-between gap-3'>
                             <div className="tracking-tight text-xs font-bold">
                                 Execute Trade @
@@ -137,7 +137,7 @@ export default function InputForm({ formInputs, setFormInputs, run }: InputFormS
                 }
             </div>
             <button onClick={run}
-                className="bg-gray-100 justify-self-center w-full text-xl font-extrabold tracking-tight border-2 border-gray-800 rounded-lg hover:bg-green-200"
+                className="bg-gray-100 justify-self-center w-full text-xl font-extrabold tracking-tight border-2 border-gray-800 rounded-lg hover:bg-sky-100"
             >
                 GO
             </button>

@@ -100,7 +100,7 @@ page LandingPage {
 route HomePageRoute { path: "/home", to: HomePage }
 page HomePage {
   authRequired: true,
-  component: import HomePage from "@src/home/client/HomePage"
+  component: import HomePage from "@src/home/HomePage"
 }
 //endregion
 

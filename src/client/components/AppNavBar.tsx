@@ -33,7 +33,7 @@ export default function AppNavBar() {
       <nav className='flex items-center justify-between p-6 lg:px-8' aria-label='Global'>
         <div className='flex lg:flex-1'>
           <a href='/' className='-m-1.5 p-1.5'>
-            <img className='h-8 w-8 invert grayscale' src={logo} alt='My SaaS App' />
+            <img className='h-8 w-8 invert -hue-rotate-15 saturate-50' src={logo} alt='My SaaS App' />
           </a>
         </div>
         <div className='flex lg:hidden'>
@@ -63,7 +63,7 @@ export default function AppNavBar() {
             <a
               key={item.name}
               href={item.href}
-              className='text-sm leading-6 text-gray-900 duration-300 ease-in-out hover:text-slate-500 dark:text-white'
+              className='text-sm leading-6 text-sky-600 duration-300 ease-in-out hover:text-slate-500 dark:text-white'
             >
               {item.name}
             </a>
