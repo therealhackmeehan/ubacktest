@@ -10,16 +10,31 @@ import { getSpecificStrategy } from 'wasp/client/operations';
 export default function ResultDropDown({ result }: { result: Result }) {
 
     const [strategyName, setStrategyName] = useState<string>('...');
+    const [ret, setRet] = useState<string>('N/A')
 
     useEffect(() => {
         const fetchStrategyName = async () => {
+
+            const data: any = result.data;
+            if (data && data.length > 2) {
+                const first = data.portfolio[0];
+                const last = data.portfolio[data.portfolio.length - 1];
+                const retToSet = 100 * ((last - first) / first);
+                if (retToSet) {
+                    setRet(retToSet.toFixed(2) + '%');
+                }
+            }
+
             if (!result.fromStrategyID) {
                 setStrategyName('deleted');
-            } 
+                return;
+            }
+
             const sName = await getSpecificStrategy({ id: result.fromStrategyID });
             if (sName) {
                 setStrategyName(sName.name);
             }
+
         };
 
         fetchStrategyName();
@@ -44,8 +59,6 @@ export default function ResultDropDown({ result }: { result: Result }) {
 
     const [renameResultModalOpen, setRenameResultModalOpen] = useState<boolean>(false);
     const [deleteResultModalOpen, setDeleteResultModalOpen] = useState<boolean>(false);
-
-    useEffect
 
     return (
         <>
@@ -74,6 +87,11 @@ export default function ResultDropDown({ result }: { result: Result }) {
                     <div className='font-mono text-xs'>
                         saved: {result.createdAt.toLocaleDateString()}
                     </div>
+
+                    <div className='text-xs border-l-2 border-black/40 ml-2 px-2'>
+                        p/l: <span className='text-lg'>{ret}</span>
+                    </div>
+
                 </div>
             </div>
 

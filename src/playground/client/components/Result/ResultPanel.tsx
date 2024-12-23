@@ -12,7 +12,7 @@ import { createResult, getSpecificStrategy } from "wasp/client/operations"
 import calculatePortfolioWithCosts from '../../scripts/calculatePortfolioWithCosts';
 
 interface ResultPanelProps {
-    selectedStrategy: string;
+    selectedStrategy: string | null;
     formInputs: FormInputProps;
     stockData: any;
     abilityToSaveNew: boolean;
@@ -46,6 +46,8 @@ export default function ResultPanel({ selectedStrategy, formInputs, stockData, a
     };
 
     async function saveResult(name: string) {
+        if (!selectedStrategy) return;
+
         const connectedStrat = await getSpecificStrategy({ id: selectedStrategy });
         if (!connectedStrat?.code) {
             throw new Error('No strategy with that result.');
