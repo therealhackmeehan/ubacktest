@@ -7,9 +7,9 @@ const footerInfo = {
     { name: 'Blog', href: BlogUrl },
   ],
   company: [
-    { name: 'About', href: 'https://wasp-lang.dev' },
-    { name: 'Privacy', href: '#' },
-    { name: 'Terms of Service', href: '#' },
+    { name: 'About', href: routes.AboutRoute.build()},
+    { name: 'Privacy', href: routes.PrivacyRoute.build()},
+    { name: 'Terms of Service', href: routes.TOSRoute.build()},
   ],
 };
 

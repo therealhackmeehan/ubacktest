@@ -80,7 +80,7 @@ export default function ResultPanel({ selectedStrategy, formInputs, stockData, a
             </div>
 
             <div id='pdfToSave'>
-                <div className="grid grid-cols-4 m-16 border-black rounded-sm border-2">
+                <div className="grid grid-cols-4 m-8 border-black rounded-sm border-2">
                     <LinePlot stockData={stockData} />
                     <FormInputHeader formInputs={formInputs} />
                 </div>

@@ -17,6 +17,9 @@ export default function Layout() {
     const { data: strategies, isLoading: isStrategiesLoading } = useQuery(getStrategies);
     const hasLoadedInitial = useRef(false); // To track whether we've already loaded the data
 
+    // browser is expanded or not
+    const [isExpanded, setIsExpanded] = useState<boolean>(true);
+
     useEffect(() => {
         const loadInitialData = async () => {
 
@@ -58,13 +61,13 @@ export default function Layout() {
         <>
             <div className='grid-cols-6 grid h-[92vh] border-black border-t-2'>
 
-                <StrategyBrowser
+                {isExpanded && <StrategyBrowser
                     selectedStrategy={selectedStrategy}
                     setSelectedStrategy={setSelectedStrategy}
                     strategies={strategies}
-                    isStrategiesLoading={isStrategiesLoading} />
+                    isStrategiesLoading={isStrategiesLoading} />}
 
-                <div className="col-span-5 h-full overflow-x-hidden overflow-y-auto">
+                <div className={`${isExpanded ? 'col-span-5' : 'col-span-6'} h-full overflow-x-hidden overflow-y-auto`}>
                     {selectedStrategy ? (
                         <>
                             <StrategyHeader

@@ -48,7 +48,7 @@ export function StrategyDropDown({ strategy }: { strategy: Strategy }) {
         <li key={strategy.id} ref={ref}
             className={`border-t-2 border-gray-100 p-3 transition-all duration-[500ms] ${inView
                 ? "translate-x-0"
-                : "opacity-0 blur-lg -translate-x-[20%]"}`} >
+                : "opacity-0 blur-lg -translate-x-[2%]"}`} >
             <div className='flex justify-between'>
                 <div className='flex gap-x-2 items-center'>
                     <div className="hover:cursor-pointer hover:text-gray-500"

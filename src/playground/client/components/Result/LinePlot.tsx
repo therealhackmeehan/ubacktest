@@ -151,13 +151,6 @@ export default function LinePlot({ stockData }: any) {
 
     return (
         <div className='col-span-3 border-r-2 border-black bg-slate-50'>
-            <div className='font-extralight tracking-tight p-2'>
-                See
-                <span className='text-lg font-bold mx-2 italic'>
-                    how your strategy performed
-                </span> alongside the stocks's price.
-            </div>
-
             <Line data={chartData} options={options} />
         </div>
     )
