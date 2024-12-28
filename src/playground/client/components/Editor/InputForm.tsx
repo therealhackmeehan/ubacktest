@@ -1,6 +1,6 @@
 import { FaCaretDown, FaCaretUp } from "react-icons/fa";
 import { useState } from "react";
-import { FormInputProps } from "./Dashboard";
+import { FormInputProps } from "../../../../shared/sharedTypes";
 
 interface InputFormSubcomponentProps {
     formInputs: FormInputProps;
@@ -120,7 +120,7 @@ export default function InputForm({ formInputs, setFormInputs, run }: InputFormS
                             <div className="flex items-center gap-x-1">
                                 <input
                                     type='number'
-                                    step={1}
+                                    step={.01}
                                     min={0}
                                     max={100}
                                     className={inputFormCss}

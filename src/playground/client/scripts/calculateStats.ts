@@ -2,6 +2,7 @@
 
 export interface StatProps {
     pl: string | null;
+    plWCosts: string | null;
     annualizedPl: string | null;
     numTrades: number;
     numProfTrades: number;
@@ -29,6 +30,9 @@ export default function calculateStats({ stockData }: { stockData: any }): StatP
     // Calculate total profit/loss
     const totalPL = (stockData.portfolio[length] - stockData.portfolio[0]) / stockData.portfolio[0];
     const formattedTotalPL = totalPL !== null ? (100 * totalPL).toFixed(2) + '%' : null;
+
+    const totalPLWCosts = (stockData.portfolioWithCosts[length] - stockData.portfolioWithCosts[0]) / stockData.portfolio[0];
+    const formattedTotalPLWCosts = totalPLWCosts !== null ? (100 * totalPLWCosts).toFixed(2) + '%' : null;
 
     // Convert Unix timestamps to JavaScript Date objects
     const firstDate = new Date(stockData.timestamp[0] * 1000).getTime();
@@ -94,6 +98,7 @@ export default function calculateStats({ stockData }: { stockData: any }): StatP
 
     return {
         pl: formattedTotalPL,
+        plWCosts: formattedTotalPLWCosts,
         annualizedPl: formattedAnnualizedPL,
         numTrades: numberOfTrades,
         numProfTrades: numberOfProfitableTrades,

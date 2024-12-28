@@ -169,7 +169,7 @@ query getSpecificStrategy {
 
 // The big action -> run strategy and initiate a backend process
 query runStrategy {
-  fn: import { runStrategy } from "@src/playground/server/Pipeline/Pipeline",
+  fn: import { runStrategy } from "@src/playground/server/runStrategy",
   entities: [User]
 }
 

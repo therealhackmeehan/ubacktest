@@ -3,7 +3,7 @@ import { FiDelete, FiBookOpen } from 'react-icons/fi';
 import { MdOutlineEdit, MdDeleteOutline } from 'react-icons/md';
 import { type Result } from 'wasp/entities';
 import ResultPanel from '../../../playground/client/components/Result/ResultPanel';
-import { FormInputProps } from '../../../playground/client/components/Editor/Dashboard';
+import { FormInputProps } from '../../../shared/sharedTypes';
 import RenameResultModal from './Modals/RenameResultModal';
 import DeleteResultModal from './Modals/DeleteResultModal';
 import { getSpecificStrategy } from 'wasp/client/operations';

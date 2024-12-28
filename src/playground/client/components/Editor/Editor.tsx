@@ -6,7 +6,7 @@ import InputForm from "./InputForm";
 import { runStrategy, charge, updateStrategy } from "wasp/client/operations";
 import validateFormInputs from "../../scripts/validateFormInputs";
 import validatePythonCode from "../../scripts/validatePythonCode";
-import { type FormInputProps } from "./Dashboard";
+import { FormInputProps } from "../../../../shared/sharedTypes";
 import { type stdProps } from "./Dashboard";
 import LoadingScreen from "./LoadingScreen";
 
@@ -37,7 +37,12 @@ function Editor({ codeToDisplay, selectedStrategy, formInputs, setCodeToDisplay,
             const { data, debugOutput, stderr } = await runStrategy({ formInputs: formInputs, code: codeToDisplay });
             handleDebugOutput(debugOutput, stderr);
 
-            const existsData = data?.portfolio && data?.signal && data?.returns;
+            const existsData = // should be sufficient check to continue forward
+                data.portfolio.length > 0 && 
+                data.portfolioWithCosts.length > 0 && 
+                data.signal.length > 0 && 
+                data.returns.length > 0;
+
             if (existsData) {
                 setResult(data);
                 setResultOpen(true);

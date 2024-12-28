@@ -22,7 +22,12 @@ ChartJS.register(
     Legend
 );
 
-export default function LinePlot({ stockData }: any) {
+interface LinePlotProps {
+    stockData: any;
+    costPerTrade: number;
+}
+
+export default function LinePlot({ stockData, costPerTrade }: LinePlotProps) {
 
     const [chartData, setChartData] = useState<any | null>(null);
 
@@ -72,8 +77,8 @@ export default function LinePlot({ stockData }: any) {
                     yAxisID: 'y2',
                 },
                 {
-                    label: 'My Strategy (w trading costs)',
-                    data: stockData.portfolioValuesWithCosts,
+                    label: 'My Strategy (w/ trading costs)',
+                    data: stockData.portfolioWithCosts,
                     borderColor: 'rgba(255, 0, 100, 0.6)',
                     backgroundColor: 'rgba(255, 0, 100, 0.6)',
                     hidden: true,
@@ -84,7 +89,7 @@ export default function LinePlot({ stockData }: any) {
         };
 
         // Conditionally add the "My Strategy (w trading costs)" dataset
-        if (!stockData.portfolioValuesWithCosts) {
+        if (costPerTrade === 0) {
             chartData.datasets.pop();
         }
 
@@ -95,6 +100,10 @@ export default function LinePlot({ stockData }: any) {
         responsive: true,
         layout: {
             padding: 20,
+        },
+        interaction: {
+            intersect: false,
+            mode: 'index' as const,
         },
         plugins: {
             legend: {
@@ -150,7 +159,7 @@ export default function LinePlot({ stockData }: any) {
     }
 
     return (
-        <div className='col-span-3 border-r-2 border-black bg-slate-50'>
+        <div className='col-span-3 bg-slate-50'>
             <Line data={chartData} options={options} />
         </div>
     )

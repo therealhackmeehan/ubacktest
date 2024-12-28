@@ -1,5 +1,5 @@
-import { FormInputProps } from "../Editor/Dashboard";
 import ResultPanel from "./ResultPanel";
+import { FormInputProps } from "../../../../shared/sharedTypes";
 
 interface ResultProps {
     stockData: any;

@@ -105,7 +105,7 @@ export default function DataTable({ stockData }: any) {
                             <span className="group-hover:hidden">{sortedData.portfolio[index].toFixed(2)}</span>
                             <span className="hidden group-hover:inline">{sortedData.portfolio[index].toFixed(4)}</span>
                         </td>
-                        {index == 0 ? <td></td> :
+                        {index == 0 ? <td className="text-lg">...</td> :
                             <td
                                 className="text-lg tracking-tight"
                                 style={{

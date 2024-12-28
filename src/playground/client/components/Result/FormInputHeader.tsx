@@ -1,4 +1,4 @@
-import { FormInputProps } from "../Editor/Dashboard";
+import { FormInputProps } from "../../../../shared/sharedTypes";
 
 function FormInputHeader({ formInputs }: { formInputs: FormInputProps }) {
 

@@ -8,6 +8,7 @@ export default function MainStatistics({ stats }: { stats: StatProps }) {
                 Stats
             </div>
             <Stat text={'profit/loss'} stat={stats.pl} />
+            {(stats.pl !== stats.plWCosts) && <Stat text={'profit/loss (w/ trading costs)'} stat={stats.plWCosts} />}
             <Stat text={'approx. annualized profit/loss'} stat={stats.annualizedPl} />
             <Stat text={'number of trades'} stat={stats.numTrades} />
             <Stat text={'number of profitable trades'} stat={stats.numProfTrades} />

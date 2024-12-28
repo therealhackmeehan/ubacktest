@@ -1,0 +1,24 @@
+export interface StockDataProps {
+    timestamp: number[];
+    open: number[];
+    close: number[];
+    high: number[];
+    low: number[];
+
+    signal: number[];
+    returns: number[];
+
+    sp: number[];
+
+    portfolio: number[];
+    portfolioWithCosts: number[];
+}
+
+export interface FormInputProps {
+    symbol: string;
+    startDate: string;
+    endDate: string;
+    intval: string;
+    timeOfDay: "open" | "close" | "high" | "low";
+    costPerTrade: number;
+}

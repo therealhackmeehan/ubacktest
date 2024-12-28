@@ -6,10 +6,9 @@ import DistributionOfReturns from "./DistributionOfReturns"
 import RatiosBarChart from "./RatiosBarChart"
 import { FiArrowUp } from "react-icons/fi"
 import ResultButtonGroup from "./ResultButtonGroup"
-import { FormInputProps } from "../Editor/Dashboard"
+import { FormInputProps } from "../../../../shared/sharedTypes"
 import calculateStats, { StatProps } from "../../scripts/calculateStats"
 import { createResult, getSpecificStrategy } from "wasp/client/operations"
-import calculatePortfolioWithCosts from '../../scripts/calculatePortfolioWithCosts';
 
 interface ResultPanelProps {
     selectedStrategy: string | null;
@@ -63,9 +62,6 @@ export default function ResultPanel({ selectedStrategy, formInputs, stockData, a
     }
 
     const stats: StatProps = calculateStats({ stockData });
-    stockData.portfolioValuesWithCosts = formInputs.costPerTrade === 0
-        ? null
-        : calculatePortfolioWithCosts(stockData, formInputs.costPerTrade);
 
     return (
         <>
@@ -80,10 +76,14 @@ export default function ResultPanel({ selectedStrategy, formInputs, stockData, a
             </div>
 
             <div id='pdfToSave'>
-                <div className="grid grid-cols-4 m-8 border-black rounded-sm border-2">
-                    <LinePlot stockData={stockData} />
-                    <FormInputHeader formInputs={formInputs} />
+                <div className="m-8">
+                    <div className="m-1 text-xl tracking-tight text-slate-400 hover:text-slate-800 font-bold">Hypothetical Growth of $1</div>
+                    <div className="grid grid-cols-4 rounded-sm border-2 border-slate-300">
+                        <LinePlot stockData={stockData} costPerTrade={formInputs.costPerTrade} />
+                        <FormInputHeader formInputs={formInputs} />
+                    </div>
                 </div>
+
 
                 <div className="grid grid-cols-4 border-black border-y-2 max-h-132.5 overflow-y-auto">
                     <MainStatistics stats={stats} />

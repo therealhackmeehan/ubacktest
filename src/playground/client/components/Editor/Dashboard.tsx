@@ -1,20 +1,12 @@
 import { useState } from "react";
 import Editor from "./Editor";
 import Result from "../Result/Result";
+import { FormInputProps } from "../../../../shared/sharedTypes";
 
 interface DashboardProps {
     selectedStrategy: string;
     codeToDisplay: string;
     setCodeToDisplay: (value: string) => void;
-}
-
-export interface FormInputProps {
-    symbol: string;
-    startDate: string;
-    endDate: string;
-    intval: string;
-    timeOfDay: string;
-    costPerTrade: number;
 }
 
 export interface stdProps {
@@ -29,7 +21,7 @@ function Dashboard({ selectedStrategy, codeToDisplay, setCodeToDisplay }: Dashbo
     const [strategyResultIsConnectedTo, setStrategyResultIsConnectedTo] = useState<string>('');
 
     const [formInputs, setFormInputs] = useState<FormInputProps>({
-        symbol: 'SPY',
+        symbol: 'aapl',
         startDate: '2020-02-02',
         endDate: '2020-05-02',
         intval: '5d',

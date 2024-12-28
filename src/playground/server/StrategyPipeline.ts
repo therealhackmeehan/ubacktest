@@ -1,0 +1,314 @@
+import { StockDataProps, FormInputProps } from "../../shared/sharedTypes";
+import { HttpError } from "wasp/server";
+
+class StrategyPipeline {
+
+    private formInputs: FormInputProps;
+    private code: string;
+
+    private stockDataFromAPI: any = null;
+    private data: StockDataProps = {
+        timestamp: [],
+        open: [],
+        close: [],
+        high: [],
+        low: [],
+        sp: [],
+        portfolio: [],
+        portfolioWithCosts: [],
+        signal: [],
+        returns: [],
+    };
+
+    private stderr: string = '';
+    private stdout: string = '';
+
+    constructor(formInputs: FormInputProps, code: string) {
+        this.formInputs = formInputs;
+        this.code = code;
+    }
+
+    public async go() {
+
+        this.stockDataFromAPI = await this.getStrategyStockData();
+
+        await this.runPythonCode();
+
+        if (this.stderr) { // return early with stderr
+            return {
+                data: this.data,
+                stderr: this.stderr,
+                debugOutput: this.stdout,
+            }
+        }
+
+        await this.addSPData();
+        this.calculatePortfolio();
+
+        return {
+            data: this.data,
+            stderr: this.stderr,
+            debugOutput: this.stdout,
+        }
+    }
+
+    private calculatePortfolio() {
+        this.data.portfolio[0] = 1;
+        this.data.portfolioWithCosts[0] = 1;
+        this.data.returns[0] = 0;
+
+        const timeOfDayKey: 'open' | 'close' | 'high' | 'low' = this.formInputs.timeOfDay;
+        for (let i = 1; i < this.data.timestamp.length; i++) {
+            const curr = this.data[timeOfDayKey][i];
+            const prev = this.data[timeOfDayKey][i - 1];
+
+            const prevSignal = this.data.signal[i - 1];
+            const prevPrevSignal = i === 1 ? 0 : this.data.signal[i - 2];
+
+            const ret = (curr - prev) / prev;
+            const curvedRet = ret * prevSignal;
+            this.data.returns[i] = curvedRet;
+
+            // Update portfolio without costs
+            this.data.portfolio[i] = this.data.portfolio[i - 1] * (1 + curvedRet);
+            if (this.data.portfolio[i] < 0) {
+                this.data.portfolio[i] = 0;
+            }
+
+            // Calculate trade costs
+            const tradeValue = Math.abs(prevSignal - prevPrevSignal) * this.data.portfolioWithCosts[i - 1];
+            const tradeCost = tradeValue * this.formInputs.costPerTrade;
+
+            // Update portfolio with costs
+            this.data.portfolioWithCosts[i] = this.data.portfolioWithCosts[i - 1] * (1 + curvedRet) - tradeCost/100;
+
+            // Prevent portfolio from going negative
+            if (this.data.portfolioWithCosts[i] < 0) {
+                this.data.portfolioWithCosts[i] = 0;
+            }
+        }
+    }
+
+    private async runPythonCode() {
+        // Generate unique markers for parsing the output
+        const uniqueKey = this.generateRandomKey();
+        const mainFileContent = this.main_py(uniqueKey);
+
+        // Prepare the request payload
+        const payload = {
+            language: "python",
+            version: "3.10.0",
+            files: [
+                { name: "main.py", content: mainFileContent },
+                { name: "strategy.py", content: this.code },
+            ],
+        };
+
+        // Make the API call to execute the Python code
+        const response = await fetch('https://emkc.org/api/v2/piston/execute', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(payload),
+        });
+
+        if (!response.ok) {
+            throw new HttpError(503, 'Failed to connect and run python code. Try again.');
+        }
+
+        // Parse the response
+        const { run } = await response.json();
+        console.log(run);
+
+        const { stderr = '', stdout = '', signal } = run;
+
+        // Handle resource-limit termination
+        if (signal === "SIGKILL" && !stderr && !stdout) {
+            throw new HttpError(
+                500,
+                "SIGKILL: Your program was terminated because it exceeded resource limits."
+            );
+        }
+
+        // Append warning if `main.py` errors are present
+        const updatedStderr = stderr.includes('main.py')
+            ? `Note: Errors related to "main.py" may be disregarded, as it serves as the processing function orchestrating the test.\n\n${stderr}`
+            : stderr;
+
+        // Extract data from the Python output
+        const parsedData = this.parsePythonOutput(stdout, uniqueKey);
+        if (parsedData) Object.assign(this.data, parsedData);
+
+        this.stdout = parsedData ? this.stripDebugOutput(stdout, uniqueKey) : stdout
+        this.stderr = updatedStderr;
+    }
+
+    private async addSPData() {
+
+        let spResult = await this.stockAPIHelper('spy');
+        spResult = this.validateStockDataFromAPI(spResult);
+
+        const stockStamp = this.stockDataFromAPI.timestamp;
+        const spStamp = spResult.timestamp;
+
+        if (StrategyPipeline.arraysAreEqual(stockStamp, spStamp)) {
+            this.data.sp = spResult[this.formInputs.timeOfDay];
+        }
+    }
+
+    private static arraysAreEqual<T>(arr1: T[], arr2: T[]): boolean {
+        // Check if the arrays are the same length
+        if (arr1.length !== arr2.length) {
+            return false;
+        }
+    
+        // Compare each element
+        for (let i = 0; i < arr1.length; i++) {
+            if (arr1[i] !== arr2[i]) {
+                return false;
+            }
+        }
+    
+        return true;
+    }
+
+    private parsePythonOutput(stdout: string, uniqueKey: string) {
+        const regex = new RegExp(`${uniqueKey}START${uniqueKey}(.*?)${uniqueKey}END${uniqueKey}`, "s");
+        const match = stdout.match(regex);
+        return match ? JSON.parse(match[1]) : null;
+    }
+
+    private stripDebugOutput(stdout: string, uniqueKey: string) {
+        const regex = new RegExp(`${uniqueKey}START${uniqueKey}(.*?)${uniqueKey}END${uniqueKey}`, "s");
+        return stdout.replace(regex, '').trim();
+    }
+
+    private generateRandomKey(): string {
+        return Math.random().toString(36).substring(2, 8) + Math.random().toString(36).substring(2, 8);
+    }
+
+    private async getStrategyStockData() {
+        const tempAPIResult = await this.stockAPIHelper(this.formInputs.symbol);
+        const normalizedData = this.validateStockDataFromAPI(tempAPIResult);
+
+        this.data.open = normalizedData.open;
+        this.data.close = normalizedData.close;
+        this.data.high = normalizedData.high;
+        this.data.low = normalizedData.low;
+        this.data.timestamp = normalizedData.timestamp;
+
+        return normalizedData;
+    }
+
+    private async stockAPIHelper(symbol: string) {
+        const url =
+            `https://query1.finance.yahoo.com/v8/finance/chart/${symbol}?period1=${new Date(this.formInputs.startDate).getTime() / 1000}&period2=${new Date(this.formInputs.endDate).getTime() / 1000}&interval=${this.formInputs.intval}`;
+
+        const response = await fetch(url, {
+            method: 'GET',
+            headers: {
+                'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36',
+                'Accept': 'application/json'
+            }
+        });
+
+        if (!response.ok) {
+            throw new HttpError(
+                503, // Service Unavailable
+                `Unable to find or access ${symbol}. Please try again with another (or make sure that the company went public prior to the start date of the backtest).\n\n\n Status Text: '${response.statusText}'`
+            );
+        }
+
+        return await response.json();
+    }
+
+    private validateStockDataFromAPI(tempAPIResult: any) {
+        const errMsg = tempAPIResult.chart?.error;
+        if (errMsg) throw new HttpError(500, `Stock data retrieval failed or was not found: \n\n\nError Message: '${errMsg}'`);
+
+        const result = tempAPIResult.chart.result?.[0];
+        const quote = result?.indicators?.quote?.[0];
+
+        const closePrices = quote?.close;
+        const highPrices = quote?.high;
+        const lowPrices = quote?.low;
+        const openPrices = quote?.open;
+        const timestamps = result?.timestamp;
+
+        // Validation checks
+        if (!closePrices) throw new HttpError(400, "Although it appears this stock exists, no data was found. Try another stock or adjust the timeframe.");
+        if (!Array.isArray(closePrices) || closePrices.length < 5)
+            throw new HttpError(400, "Less than 5 data points available for a backtest.");
+        if (!closePrices.every((price) => typeof price === "number" && !isNaN(price)))
+            throw new HttpError(400, "Invalid data detected in close prices.");
+        if (!Array.isArray(timestamps) || timestamps.length !== closePrices.length)
+            throw new HttpError(500, "Mismatch between timestamps and close prices.");
+
+        if (!Array.isArray(highPrices) || !Array.isArray(lowPrices) || !Array.isArray(openPrices))
+            throw new HttpError(500, "Invalid structure for high, low, or open data. Expected arrays.");
+        if (highPrices.length !== closePrices.length || lowPrices.length !== closePrices.length || openPrices.length !== closePrices.length)
+            throw new HttpError(500, "Mismatch in data length for high, low, open, and close arrays.");
+
+        // Normalize data by dividing by the first price
+        const firstPrice = quote?.[this.formInputs.timeOfDay][0];
+        if (!firstPrice || typeof firstPrice !== "number" || isNaN(firstPrice))
+            throw new HttpError(500, "First close price is invalid. Cannot normalize data.");
+
+        const normalizedQuote = {
+            high: highPrices.map((price) => price / firstPrice),
+            low: lowPrices.map((price) => price / firstPrice),
+            open: openPrices.map((price) => price / firstPrice),
+            close: closePrices.map((price) => price / firstPrice),
+            timestamp: timestamps,
+        };
+
+        return normalizedQuote;
+    }
+
+    private main_py(uniqueKey: string): string {
+
+        const m =
+
+`# main.py
+
+from strategy import strategy
+import json
+import pandas as pd
+
+jsonCodeUnformatted = '${JSON.stringify(this.stockDataFromAPI)}'
+jsonCodeFormatted = json.loads(jsonCodeUnformatted)
+
+df = pd.DataFrame(jsonCodeFormatted)
+initHeight = df.shape[0]
+
+df = strategy(df)
+
+if not isinstance(df, pd.DataFrame):
+    raise Exception("You must return a dataframe from your strategy.")
+
+df.columns = df.columns.str.lower()
+
+if 'signal' not in df.columns:
+    raise Exception("There is no 'signal' column in the table.")
+
+if (df.columns == 'signal').sum() > 1:
+    raise Exception("There are two or more 'signal' columns in the table.")
+
+if df['signal'].empty:
+    raise Exception("'signal' column is empty.")
+
+if not df.index.is_unique:
+    raise Exception("Table index is not unique.")
+
+if df.shape[0] != initHeight:
+    raise Exception("The height of the dataframe has changed upon applying your strategy.")
+
+df['signal'].fillna(0, inplace=True)
+dfToReturn = df[['signal']].round(3).to_dict('list')
+
+print("${uniqueKey}START${uniqueKey}" + json.dumps(dfToReturn) + "${uniqueKey}END${uniqueKey}")`;
+
+        return m;
+    }
+}
+
+export default StrategyPipeline;

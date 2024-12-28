@@ -116,6 +116,7 @@ export const charge: Charge<void, void> = async (_args, context) => {
     throw new HttpError(401);
   }
   if (context.user.isAdmin) {
+    console.log('Avoiding charge as admin.');
     return;
   }
 

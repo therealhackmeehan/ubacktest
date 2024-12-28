@@ -42,7 +42,6 @@ function MonacoEditor({ code, setCode, ID }: MEditorProps) {
     };
 
     const saveCodeToDB = async () => {
-        console.log('lol')
         if (isSavingRef.current) return; // Block if already saving
         isSavingRef.current = true; // Mark as saving
         setButtonText("saving...");
