@@ -17,7 +17,7 @@ interface RatiosBarChartProps {
     sharpe: string | null;
 }
 
-export default function RatiosBarChart({ sortino, sharpe }: RatiosBarChartProps) {
+function RatiosBarChart({ sortino, sharpe }: RatiosBarChartProps) {
     // Chart data
 
     const chartData = {
@@ -76,3 +76,5 @@ export default function RatiosBarChart({ sortino, sharpe }: RatiosBarChartProps)
         </div>
     );
 }
+
+export default RatiosBarChart;

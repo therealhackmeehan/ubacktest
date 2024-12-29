@@ -6,7 +6,7 @@ import InputForm from "./InputForm";
 import { runStrategy, charge, updateStrategy } from "wasp/client/operations";
 import validateFormInputs from "../../scripts/validateFormInputs";
 import validatePythonCode from "../../scripts/validatePythonCode";
-import { FormInputProps } from "../../../../shared/sharedTypes";
+import { FormInputProps, StrategyResultProps } from "../../../../shared/sharedTypes";
 import { type stdProps } from "./Dashboard";
 import LoadingScreen from "./LoadingScreen";
 
@@ -15,7 +15,7 @@ interface EditorProps {
     selectedStrategy: string;
     formInputs: FormInputProps;
     setCodeToDisplay: (value: string) => void;
-    setResult: (value: any) => void;
+    setStrategyResult: (value: StrategyResultProps | null) => void;
     setResultOpen: (value: boolean) => void;
     setFormInputs: (value: any) => void;
     setStrategyResultIsConnectedTo: (value: string) => void;
@@ -23,7 +23,7 @@ interface EditorProps {
     setStd: (value: any) => void;
 }
 
-function Editor({ codeToDisplay, selectedStrategy, formInputs, setCodeToDisplay, setResult, setResultOpen, setFormInputs, setStrategyResultIsConnectedTo, std, setStd }: EditorProps) {
+function Editor({ codeToDisplay, selectedStrategy, formInputs, setCodeToDisplay, setStrategyResult, setResultOpen, setFormInputs, setStrategyResultIsConnectedTo, std, setStd }: EditorProps) {
 
     const [errorModalMessage, setErrorModalMessage] = useState<string>('');
     const [loading, setLoading] = useState<boolean>(false);
@@ -34,22 +34,24 @@ function Editor({ codeToDisplay, selectedStrategy, formInputs, setCodeToDisplay,
         try {
             handlePreRunValidations();
 
-            const { data, debugOutput, stderr } = await runStrategy({ formInputs: formInputs, code: codeToDisplay });
+            const { strategyResult, debugOutput, stderr, warning } = await runStrategy({ formInputs: formInputs, code: codeToDisplay });
+
             handleDebugOutput(debugOutput, stderr);
+            if (stderr) return;
 
             const existsData = // should be sufficient check to continue forward
-                data.portfolio.length > 0 && 
-                data.portfolioWithCosts.length > 0 && 
-                data.signal.length > 0 && 
-                data.returns.length > 0;
+                strategyResult.portfolio.length > 0 &&
+                strategyResult.portfolioWithCosts.length > 0 &&
+                strategyResult.signal.length > 0 &&
+                strategyResult.returns.length > 0;
 
             if (existsData) {
-                setResult(data);
+                setStrategyResult(strategyResult);
                 setResultOpen(true);
                 setStrategyResultIsConnectedTo(selectedStrategy);
                 charge(); // Deduct a credit
-            } else if (!stderr) {
-                throw new Error('Something went wrong. No stderr was reported but also no data was returned.');
+            } else {
+                throw new Error("Something went wrong.");
             }
         } catch (error: any) {
             setErrorModalMessage(error.message);
@@ -76,7 +78,7 @@ function Editor({ codeToDisplay, selectedStrategy, formInputs, setCodeToDisplay,
     function setInitialState() {
         setUserStderr('');
         setUserStdout('');
-        setResult(null);
+        setStrategyResult(null);
         setErrorModalMessage('');
         setLoading(true);
     }
@@ -99,7 +101,7 @@ function Editor({ codeToDisplay, selectedStrategy, formInputs, setCodeToDisplay,
 
             {loading && <LoadingScreen />}
 
-            {errorModalMessage && <ErrorModal onClose={() => setErrorModalMessage('')} msg={errorModalMessage} />}
+            {errorModalMessage && <ErrorModal closeModal={() => setErrorModalMessage('')} msg={errorModalMessage} />}
 
             <MonacoEditor
                 code={codeToDisplay}

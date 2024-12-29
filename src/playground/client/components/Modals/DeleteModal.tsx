@@ -5,12 +5,12 @@ import useEnterKey from '../../../../client/hooks/useEnterKey';
 
 interface DeleteModalProps {
     onSuccess: (value: string) => void;
-    onFailure: () => void;
+    closeModal: () => void;
     id: string;
 }
 
-export default function DeleteModal({ onSuccess, onFailure, id }: DeleteModalProps) {
-
+export default function DeleteModal({ onSuccess, closeModal, id }: DeleteModalProps) {
+    
     const [errMsg, setErrMsg] = useState('');
 
     const handleStrategyDelete = async () => {
@@ -37,14 +37,14 @@ export default function DeleteModal({ onSuccess, onFailure, id }: DeleteModalPro
             <div className="bg-white p-6 w-1/3 rounded-lg shadow-lg z-10">
                 <div className='flex justify-between'>
                     <h2 className="text-base text-slate-500 font-semibold">Are you sure you'd like to delete your <span className="text-slate-800">strategy</span>?</h2>
-                    <button onClick={onFailure}>
+                    <button onClick={closeModal}>
                         <TiDelete size='1.8rem' className='hover:rotate-6 text-gray-900 hover:scale-110' />
                     </button>
                 </div>
                 <div className="flex justify-between mt-4">
                     <button
                         className="bg-gray-500 text-white p-2 rounded hover:bg-gray-700"
-                        onClick={onFailure}
+                        onClick={closeModal}
                     >
                         Cancel
                     </button>

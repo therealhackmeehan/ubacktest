@@ -3,7 +3,7 @@ import { FiDelete, FiBookOpen } from 'react-icons/fi';
 import { MdOutlineEdit, MdDeleteOutline } from 'react-icons/md';
 import { type Result } from 'wasp/entities';
 import ResultPanel from '../../../playground/client/components/Result/ResultPanel';
-import { FormInputProps } from '../../../shared/sharedTypes';
+import { FormInputProps, StrategyResultProps } from '../../../shared/sharedTypes';
 import RenameResultModal from './Modals/RenameResultModal';
 import DeleteResultModal from './Modals/DeleteResultModal';
 import { getSpecificStrategy } from 'wasp/client/operations';
@@ -73,7 +73,7 @@ export default function ResultDropDown({ result }: { result: Result }) {
                         profit/loss: <span className='text-lg'>{ret}</span>
                     </div>
                     <div className='p-1'>
-                        <SmallPlot data={result.data} />
+                        <SmallPlot data={result.data as unknown as StrategyResultProps} />
                     </div>
                     <div className='text-slate-400 text-xs'>
                         from strategy:
@@ -109,7 +109,7 @@ export default function ResultDropDown({ result }: { result: Result }) {
                             close
                             <FiDelete />
                         </button>
-                        <ResultPanel stockData={result.data} formInputs={formInputs} selectedStrategy={result.fromStrategyID} abilityToSaveNew={false} />
+                        <ResultPanel strategyResult={result.data as unknown as StrategyResultProps} formInputs={formInputs} selectedStrategy={result.fromStrategyID} abilityToSaveNew={false} />
                         <div onClick={handleCopyToClipboard}>
                             <textarea className='w-full bg-slate-100 p-4 rounded-lg h-72 font-mono text-xs border-white border-1 resize-none hover:bg-slate-200'
                                 value={result.code} readOnly />

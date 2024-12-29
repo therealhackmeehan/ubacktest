@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { TiDelete } from "react-icons/ti";
-import { validateNewName } from '../../scripts/modalHelpers';
+import { validateNewName } from '../../../../playground/client/scripts/modalHelpers';
 import useEnterKey from '../../../../client/hooks/useEnterKey';
 
 interface NewProjectModalProps {

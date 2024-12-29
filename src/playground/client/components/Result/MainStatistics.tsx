@@ -1,6 +1,6 @@
 import { StatProps } from "../../scripts/calculateStats";
 
-export default function MainStatistics({ stats }: { stats: StatProps }) {
+function MainStatistics({ stats }: { stats: StatProps }) {
 
     return (
         <div className="p-8 border-r-2 border-black col-span-1 bg-slate-100">
@@ -39,3 +39,5 @@ function Stat({ text, stat }: StatItemProps) {
         </div>
     )
 }
+
+export default MainStatistics;

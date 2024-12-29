@@ -1,4 +1,4 @@
-export interface StockDataProps {
+export interface StrategyResultProps {
     timestamp: number[];
     open: number[];
     close: number[];

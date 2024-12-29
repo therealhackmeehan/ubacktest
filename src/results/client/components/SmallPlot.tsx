@@ -1,7 +1,8 @@
 import React from 'react';
+import { StrategyResultProps } from '../../../shared/sharedTypes';
 
 type PlotProps = {
-    data: any;
+    data: StrategyResultProps;
     width?: number;
     height?: number;
 };

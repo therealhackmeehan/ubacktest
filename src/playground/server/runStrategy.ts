@@ -1,14 +1,16 @@
 import StrategyPipeline from "./StrategyPipeline";
 import type { RunStrategy } from "wasp/server/operations";
 import { HttpError } from "wasp/server";
+import { StrategyResultProps } from "../../shared/sharedTypes";
 
 type BacktestResultProps = {
-    data: any;
+    strategyResult: StrategyResultProps;
     debugOutput: string;
     stderr: string;
+    warning: string;
 };
 
-export const runStrategy: RunStrategy<any, BacktestResultProps> = async ({ formInputs, code }, context) => {
+export const runStrategy: RunStrategy<any, any> = async ({ formInputs, code }, context) => {
     if (!context.user) throw new HttpError(401);
 
     if (!context.user.credits && context.user.subscriptionPlan !== "active" && !context.user.isAdmin) {
@@ -16,6 +18,6 @@ export const runStrategy: RunStrategy<any, BacktestResultProps> = async ({ formI
     }
 
     const strategyInstance = new StrategyPipeline(formInputs, code);
-    return strategyInstance.go();
+    return await strategyInstance.go();
 
 };

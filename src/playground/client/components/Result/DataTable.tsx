@@ -1,9 +1,10 @@
 import { useState } from "react";
 import { MdSort } from "react-icons/md";
+import { StrategyResultProps } from "../../../../shared/sharedTypes";
 
-export default function DataTable({ stockData }: any) {
+function DataTable({ strategyResult }: { strategyResult: StrategyResultProps }) {
     // State for sorted data and sorting configuration
-    const [sortedData, setSortedData] = useState(stockData);
+    const [sortedData, setSortedData] = useState<any>(strategyResult);
     const [sortConfig, setSortConfig] = useState<{ key: string; direction: "asc" | "desc" } | null>(null);
 
     // Sorting function
@@ -138,3 +139,5 @@ const TableHead = ({ column, label, handleSort }: TableHeadProps) => (
         <MdSort className="absolute opacity-0 group-hover:opacity-100 duration-700" />
     </th>
 );
+
+export default DataTable;

@@ -8,7 +8,7 @@ interface InputFormSubcomponentProps {
     run: (value: any) => Promise<void>;
 }
 
-export default function InputForm({ formInputs, setFormInputs, run }: InputFormSubcomponentProps) {
+function InputForm({ formInputs, setFormInputs, run }: InputFormSubcomponentProps) {
 
     const [displayAdvancedOptions, setDisplayAdvancedOptions] = useState<boolean>(false);
 
@@ -145,3 +145,5 @@ export default function InputForm({ formInputs, setFormInputs, run }: InputFormS
 
     )
 }
+
+export default InputForm;

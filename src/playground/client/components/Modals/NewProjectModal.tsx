@@ -7,10 +7,10 @@ import useEnterKey from '../../../../client/hooks/useEnterKey';
 
 interface NewProjectModalProps {
     onSuccess: (id: string) => void;
-    onFailure: () => void;
+    closeModal: () => void;
 }
 
-export default function NewProjectModal({ onSuccess, onFailure }: NewProjectModalProps) {
+export default function NewProjectModal({ onSuccess, closeModal }: NewProjectModalProps) {
 
     const [newProjectName, setNewProjectName] = useState<string>('');
     const [errMsg, setErrMsg] = useState<string>('');
@@ -34,7 +34,7 @@ export default function NewProjectModal({ onSuccess, onFailure }: NewProjectModa
             <div className="bg-white p-6 w-1/3 rounded-lg shadow-lg z-10">
                 <div className='flex justify-between'>
                     <h2 className="text-base text-slate-500 font-semibold">Create New <span className="text-slate-800">Strategy</span></h2>
-                    <button onClick={onFailure}>
+                    <button onClick={closeModal}>
                         <TiDelete size='1.8rem' className='hover:rotate-6 text-gray-900 hover:scale-110' />
                     </button>
                 </div>
@@ -49,7 +49,7 @@ export default function NewProjectModal({ onSuccess, onFailure }: NewProjectModa
                 <div className="flex justify-between mt-4">
                     <button
                         className="bg-gray-500 text-white p-2 rounded hover:bg-gray-700"
-                        onClick={onFailure}
+                        onClick={closeModal}
                     >
                         Cancel
                     </button>

@@ -60,7 +60,7 @@ function StrategyBrowser({ selectedStrategy, setSelectedStrategy, strategies, is
 
                 {newProjectModalOpen && <NewProjectModal
                     onSuccess={onSuccessfulNewProject}
-                    onFailure={() => setNewProjectModalOpen(false)}
+                    closeModal={() => setNewProjectModalOpen(false)}
                 />}
 
             </ul>

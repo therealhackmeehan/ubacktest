@@ -47,7 +47,7 @@ export default function StrategyHeader({ nameToDisplay, selectedStrategy, setNam
                 {isRenameModalOpen &&
                     <RenameModal
                         onSuccess={onSuccessfulRename}
-                        onFailure={() => setIsRenameModalOpen(false)}
+                        closeModal={() => setIsRenameModalOpen(false)}
                         id={selectedStrategy}
                         currName={nameToDisplay} />
                 }
@@ -64,7 +64,7 @@ export default function StrategyHeader({ nameToDisplay, selectedStrategy, setNam
                 {isDeleteModalOpen &&
                     <DeleteModal
                         onSuccess={onSuccessfulDeletion}
-                        onFailure={() => setIsDeleteModalOpen(false)}
+                        closeModal={() => setIsDeleteModalOpen(false)}
                         id={selectedStrategy} />
                 }
 

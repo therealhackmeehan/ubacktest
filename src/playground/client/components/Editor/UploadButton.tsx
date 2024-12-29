@@ -3,11 +3,7 @@ import { useState } from "react";
 import ConfirmModal from "../Modals/ConfirmModal";
 import ErrorModal from "../Modals/ErrorModal";
 
-interface UploadButtonProps {
-    setCode: (value: string) => void;
-}
-
-function UploadButton({ setCode }: UploadButtonProps) {
+function UploadButton(setCode: (value: string) => void) {
 
     const [errMsg, setErrMsg] = useState<string>('');
     const [confirmModalOpen, setConfirmModalOpen] = useState<boolean>(false);
@@ -39,12 +35,12 @@ function UploadButton({ setCode }: UploadButtonProps) {
 
     return (
         <>
-            {errMsg && <ErrorModal msg={errMsg} onClose={() => setErrMsg('')} />}
+            {errMsg && <ErrorModal msg={errMsg} closeModal={() => setErrMsg('')} />}
 
             {confirmModalOpen && (
                 <ConfirmModal
                     msg={confirmModalMessage}
-                    onCancel={() => setConfirmModalOpen(false)}
+                    closeModal={() => setConfirmModalOpen(false)}
                     onConfirm={upload}
                 />
             )}

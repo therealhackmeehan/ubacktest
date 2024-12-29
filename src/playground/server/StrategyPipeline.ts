@@ -1,4 +1,4 @@
-import { StockDataProps, FormInputProps } from "../../shared/sharedTypes";
+import { StrategyResultProps, FormInputProps } from "../../shared/sharedTypes";
 import { HttpError } from "wasp/server";
 
 class StrategyPipeline {
@@ -6,8 +6,7 @@ class StrategyPipeline {
     private formInputs: FormInputProps;
     private code: string;
 
-    private stockDataFromAPI: any = null;
-    private data: StockDataProps = {
+    private strategyResult: StrategyResultProps = {
         timestamp: [],
         open: [],
         close: [],
@@ -22,6 +21,7 @@ class StrategyPipeline {
 
     private stderr: string = '';
     private stdout: string = '';
+    private warning: string = '';
 
     constructor(formInputs: FormInputProps, code: string) {
         this.formInputs = formInputs;
@@ -29,70 +29,77 @@ class StrategyPipeline {
     }
 
     public async go() {
+        const initialAPIResult = await this.getStrategyStockData();
+        await this.runPythonCode(initialAPIResult);
 
-        this.stockDataFromAPI = await this.getStrategyStockData();
-
-        await this.runPythonCode();
-
-        if (this.stderr) { // return early with stderr
-            return {
-                data: this.data,
-                stderr: this.stderr,
-                debugOutput: this.stdout,
-            }
-        }
+        if (this.stderr) return this.sendJSONtoFrontend();
 
         await this.addSPData();
+
         this.calculatePortfolio();
 
+        return this.sendJSONtoFrontend();
+    }
+
+    private sendJSONtoFrontend() {
         return {
-            data: this.data,
-            stderr: this.stderr,
+            strategyResult: this.strategyResult,
             debugOutput: this.stdout,
+            stderr: this.stderr,
+            warning: this.warning,
         }
     }
 
     private calculatePortfolio() {
-        this.data.portfolio[0] = 1;
-        this.data.portfolioWithCosts[0] = 1;
-        this.data.returns[0] = 0;
+        this.strategyResult.portfolio[0] = 1;
+        this.strategyResult.portfolioWithCosts[0] = 1;
+        this.strategyResult.returns[0] = 0;
 
         const timeOfDayKey: 'open' | 'close' | 'high' | 'low' = this.formInputs.timeOfDay;
-        for (let i = 1; i < this.data.timestamp.length; i++) {
-            const curr = this.data[timeOfDayKey][i];
-            const prev = this.data[timeOfDayKey][i - 1];
+        for (let i = 1; i < this.strategyResult.timestamp.length; i++) {
+            const curr = this.strategyResult[timeOfDayKey][i];
+            const prev = this.strategyResult[timeOfDayKey][i - 1];
 
-            const prevSignal = this.data.signal[i - 1];
-            const prevPrevSignal = i === 1 ? 0 : this.data.signal[i - 2];
+            const prevSignal = this.strategyResult.signal[i - 1];
+            const prevPrevSignal = i === 1 ? 0 : this.strategyResult.signal[i - 2];
 
             const ret = (curr - prev) / prev;
             const curvedRet = ret * prevSignal;
-            this.data.returns[i] = curvedRet;
+            this.strategyResult.returns[i] = curvedRet;
 
             // Update portfolio without costs
-            this.data.portfolio[i] = this.data.portfolio[i - 1] * (1 + curvedRet);
-            if (this.data.portfolio[i] < 0) {
-                this.data.portfolio[i] = 0;
+            this.strategyResult.portfolio[i] = this.strategyResult.portfolio[i - 1] * (1 + curvedRet);
+            if (this.strategyResult.portfolio[i] < 0) {
+                this.strategyResult.portfolio[i] = 0;
             }
 
             // Calculate trade costs
-            const tradeValue = Math.abs(prevSignal - prevPrevSignal) * this.data.portfolioWithCosts[i - 1];
+            const tradeValue = Math.abs(prevSignal - prevPrevSignal) * this.strategyResult.portfolioWithCosts[i - 1];
             const tradeCost = tradeValue * this.formInputs.costPerTrade;
 
             // Update portfolio with costs
-            this.data.portfolioWithCosts[i] = this.data.portfolioWithCosts[i - 1] * (1 + curvedRet) - tradeCost/100;
+            this.strategyResult.portfolioWithCosts[i] = this.strategyResult.portfolioWithCosts[i - 1] * (1 + curvedRet) - tradeCost / 100;
 
             // Prevent portfolio from going negative
-            if (this.data.portfolioWithCosts[i] < 0) {
-                this.data.portfolioWithCosts[i] = 0;
+            if (this.strategyResult.portfolioWithCosts[i] < 0) {
+                this.strategyResult.portfolioWithCosts[i] = 0;
             }
         }
     }
 
-    private async runPythonCode() {
+    private async runPythonCode(initialAPIResult: any) {
         // Generate unique markers for parsing the output
         const uniqueKey = this.generateRandomKey();
-        const mainFileContent = this.main_py(uniqueKey);
+
+        // send only H/L/O/C/Timestamp
+        const toEmbedInMain = {
+            timestamp: initialAPIResult.timestamp,
+            high: initialAPIResult.high,
+            low: initialAPIResult.low,
+            open: initialAPIResult.open,
+            close: initialAPIResult.close,
+        }
+        const mainFileContent = StrategyPipeline.main_py(uniqueKey, toEmbedInMain);
 
         // Prepare the request payload
         const payload = {
@@ -136,7 +143,7 @@ class StrategyPipeline {
 
         // Extract data from the Python output
         const parsedData = this.parsePythonOutput(stdout, uniqueKey);
-        if (parsedData) Object.assign(this.data, parsedData);
+        if (parsedData) Object.assign(this.strategyResult, parsedData);
 
         this.stdout = parsedData ? this.stripDebugOutput(stdout, uniqueKey) : stdout
         this.stderr = updatedStderr;
@@ -147,11 +154,11 @@ class StrategyPipeline {
         let spResult = await this.stockAPIHelper('spy');
         spResult = this.validateStockDataFromAPI(spResult);
 
-        const stockStamp = this.stockDataFromAPI.timestamp;
+        const stockStamp = this.strategyResult.timestamp;
         const spStamp = spResult.timestamp;
 
         if (StrategyPipeline.arraysAreEqual(stockStamp, spStamp)) {
-            this.data.sp = spResult[this.formInputs.timeOfDay];
+            this.strategyResult.sp = spResult[this.formInputs.timeOfDay];
         }
     }
 
@@ -160,14 +167,14 @@ class StrategyPipeline {
         if (arr1.length !== arr2.length) {
             return false;
         }
-    
+
         // Compare each element
         for (let i = 0; i < arr1.length; i++) {
             if (arr1[i] !== arr2[i]) {
                 return false;
             }
         }
-    
+
         return true;
     }
 
@@ -190,11 +197,11 @@ class StrategyPipeline {
         const tempAPIResult = await this.stockAPIHelper(this.formInputs.symbol);
         const normalizedData = this.validateStockDataFromAPI(tempAPIResult);
 
-        this.data.open = normalizedData.open;
-        this.data.close = normalizedData.close;
-        this.data.high = normalizedData.high;
-        this.data.low = normalizedData.low;
-        this.data.timestamp = normalizedData.timestamp;
+        this.strategyResult.open = normalizedData.open;
+        this.strategyResult.close = normalizedData.close;
+        this.strategyResult.high = normalizedData.high;
+        this.strategyResult.low = normalizedData.low;
+        this.strategyResult.timestamp = normalizedData.timestamp;
 
         return normalizedData;
     }
@@ -264,17 +271,17 @@ class StrategyPipeline {
         return normalizedQuote;
     }
 
-    private main_py(uniqueKey: string): string {
+    private static main_py(uniqueKey: string, toEmbedInMain: any): string {
 
         const m =
 
-`# main.py
+            `# main.py
 
 from strategy import strategy
 import json
 import pandas as pd
 
-jsonCodeUnformatted = '${JSON.stringify(this.stockDataFromAPI)}'
+jsonCodeUnformatted = '${JSON.stringify(toEmbedInMain)}'
 jsonCodeFormatted = json.loads(jsonCodeUnformatted)
 
 df = pd.DataFrame(jsonCodeFormatted)

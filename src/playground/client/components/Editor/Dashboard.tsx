@@ -1,7 +1,7 @@
 import { useState } from "react";
 import Editor from "./Editor";
 import Result from "../Result/Result";
-import { FormInputProps } from "../../../../shared/sharedTypes";
+import { FormInputProps, StrategyResultProps } from "../../../../shared/sharedTypes";
 
 interface DashboardProps {
     selectedStrategy: string;
@@ -17,7 +17,7 @@ export interface stdProps {
 function Dashboard({ selectedStrategy, codeToDisplay, setCodeToDisplay }: DashboardProps) {
 
     const [resultOpen, setResultOpen] = useState<boolean>(false);
-    const [result, setResult] = useState<any>();
+    const [strategyResult, setStrategyResult] = useState<StrategyResultProps | null>(null);
     const [strategyResultIsConnectedTo, setStrategyResultIsConnectedTo] = useState<string>('');
 
     const [formInputs, setFormInputs] = useState<FormInputProps>({
@@ -51,7 +51,7 @@ function Dashboard({ selectedStrategy, codeToDisplay, setCodeToDisplay }: Dashbo
 
             {resultOpen ? (
                 <Result
-                    stockData={result}
+                    strategyResult={strategyResult}
                     formInputs={formInputs}
                     strategyResultIsConnectedTo={strategyResultIsConnectedTo}
                     selectedStrategy={selectedStrategy}
@@ -61,7 +61,7 @@ function Dashboard({ selectedStrategy, codeToDisplay, setCodeToDisplay }: Dashbo
                     codeToDisplay={codeToDisplay}
                     selectedStrategy={selectedStrategy}
                     setCodeToDisplay={setCodeToDisplay}
-                    setResult={setResult}
+                    setStrategyResult={setStrategyResult}
                     setResultOpen={setResultOpen}
                     formInputs={formInputs}
                     setFormInputs={setFormInputs}

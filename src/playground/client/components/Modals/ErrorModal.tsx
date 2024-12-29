@@ -2,13 +2,13 @@ import { TiDelete } from "react-icons/ti";
 import useEnterKey from "../../../../client/hooks/useEnterKey";
 
 interface ErrorModalProps {
-    onClose: () => void;
+    closeModal: () => void;
     msg: string;
 }
 
-export default function ErrorModal({ onClose, msg }: ErrorModalProps) {
+export default function ErrorModal({ closeModal, msg }: ErrorModalProps) {
 
-    useEnterKey(onClose);
+    useEnterKey(closeModal);
 
     return (
         <div className="fixed inset-0 flex items-center justify-center z-50">
@@ -18,7 +18,7 @@ export default function ErrorModal({ onClose, msg }: ErrorModalProps) {
                     <div className='p-3 tracking-tight font-bold text-gray-800'>
                         We've Encountered an Error...
                     </div>
-                    <button onClick={onClose}>
+                    <button onClick={closeModal}>
                         <TiDelete size='1.8rem' className='hover:rotate-6 text-gray-900 hover:scale-110' />
                     </button>
                 </div>
@@ -27,7 +27,7 @@ export default function ErrorModal({ onClose, msg }: ErrorModalProps) {
                 <div className="flex justify-between mt-4 gap-x-3">
                     <button
                         className="bg-slate-500 w-full text-white p-2 rounded hover:bg-slate-700"
-                        onClick={onClose}
+                        onClick={closeModal}
                     >
                         OK
                     </button>

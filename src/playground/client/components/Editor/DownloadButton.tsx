@@ -1,11 +1,7 @@
 import { useEffect, useRef } from "react";
 import { FiDownload } from "react-icons/fi";
 
-interface DownloadButtonProps {
-    code: string;
-}
-
-function DownloadButton({ code }: DownloadButtonProps) {
+function DownloadButton(code: string) {
     const linkRef = useRef<HTMLAnchorElement>(null);
 
     useEffect(() => {

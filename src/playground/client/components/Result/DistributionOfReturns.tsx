@@ -26,7 +26,7 @@ export default function DistributionOfReturns({ stockDataReturns }: { stockDataR
             : stockDataReturns;
 
         // Process data into bins for histogram
-        const binCount = 10 + Math.round(stockDataReturns.length/10); // Number of bins
+        const binCount = 10 + Math.round(stockDataReturns.length / 10); // Number of bins
         const minReturn = Math.min(...processedReturns);
         const maxReturn = Math.max(...processedReturns);
         const binWidth = (maxReturn - minReturn) / binCount;
@@ -44,7 +44,7 @@ export default function DistributionOfReturns({ stockDataReturns }: { stockDataR
         const binLabels = bins.map((_, index) => {
             const start = minReturn + index * binWidth;
             const end = start + binWidth;
-            return `${(100*start).toFixed()} - ${(100*end).toFixed()}%`;
+            return `${(100 * start).toFixed()} - ${(100 * end).toFixed()}%`;
         });
 
         // Chart data

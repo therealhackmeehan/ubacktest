@@ -1,4 +1,4 @@
-
+import { StrategyResultProps } from "../../../shared/sharedTypes";
 
 export interface StatProps {
     pl: string | null;
@@ -13,30 +13,19 @@ export interface StatProps {
     maxGain: string | null;
 }
 
-// export interface stockDataProps {
-//     close: number[],
-//     high: number[],
-//     low: number[],
-//     open: number[],
-//     portfolio: number[],
-//     returns: number[],
-//     signal: number[],
-//     timestamp: number[],
-// }
-
-export default function calculateStats({ stockData }: { stockData: any }): StatProps {
-    const length = stockData.portfolio.length - 1;
+export default function calculateStats(strategyResult: StrategyResultProps): StatProps {
+    const length = strategyResult.portfolio.length - 1;
 
     // Calculate total profit/loss
-    const totalPL = (stockData.portfolio[length] - stockData.portfolio[0]) / stockData.portfolio[0];
+    const totalPL = (strategyResult.portfolio[length] - strategyResult.portfolio[0]) / strategyResult.portfolio[0];
     const formattedTotalPL = totalPL !== null ? (100 * totalPL).toFixed(2) + '%' : null;
 
-    const totalPLWCosts = (stockData.portfolioWithCosts[length] - stockData.portfolioWithCosts[0]) / stockData.portfolio[0];
+    const totalPLWCosts = (strategyResult.portfolioWithCosts[length] - strategyResult.portfolioWithCosts[0]) / strategyResult.portfolio[0];
     const formattedTotalPLWCosts = totalPLWCosts !== null ? (100 * totalPLWCosts).toFixed(2) + '%' : null;
 
     // Convert Unix timestamps to JavaScript Date objects
-    const firstDate = new Date(stockData.timestamp[0] * 1000).getTime();
-    const lastDate = new Date(stockData.timestamp[length] * 1000).getTime();
+    const firstDate = new Date(strategyResult.timestamp[0] * 1000).getTime();
+    const lastDate = new Date(strategyResult.timestamp[length] * 1000).getTime();
 
     const numberOfDays = (lastDate - firstDate) / (1000 * 60 * 60 * 24);
     const annualizedPL = ((1 + totalPL) ** (365 / numberOfDays)) - 1;
@@ -44,36 +33,36 @@ export default function calculateStats({ stockData }: { stockData: any }): StatP
 
     let numberOfTrades = 1;
     let numberOfProfitableTrades = 0;
-    let peak = stockData.portfolio[0];
+    let peak = strategyResult.portfolio[0];
     let maxDrawdown = 0;
 
-    let buyPrice = stockData.portfolio[0];
+    let buyPrice = strategyResult.portfolio[0];
 
     for (let i = 1; i < length; i++) {
-        if (stockData.signal[i] !== stockData.signal[i - 1]) {
+        if (strategyResult.signal[i] !== strategyResult.signal[i - 1]) {
             numberOfTrades++;
 
-            if (stockData.portfolio[i] > buyPrice) {
+            if (strategyResult.portfolio[i] > buyPrice) {
                 numberOfProfitableTrades++;
             }
 
-            buyPrice = stockData.portfolio[i];
+            buyPrice = strategyResult.portfolio[i];
         }
 
-        if (stockData.portfolio[i] > peak) {
-            peak = stockData.portfolio[i];
+        if (strategyResult.portfolio[i] > peak) {
+            peak = strategyResult.portfolio[i];
         }
 
-        const drawdown = (peak - stockData.portfolio[i]) / peak;
+        const drawdown = (peak - strategyResult.portfolio[i]) / peak;
         maxDrawdown = Math.max(maxDrawdown, drawdown);
     }
 
     const formattedMaxDrawdown = maxDrawdown !== null ? (maxDrawdown * 100).toFixed(2) + '%' : null;
 
-    const maxGain = Math.max.apply(Math, stockData.portfolio) - 1;
+    const maxGain = Math.max.apply(Math, strategyResult.portfolio) - 1;
     const formattedMaxGain = maxGain !== null ? (maxGain * 100).toFixed(2) + '%' : null;
 
-    const returns = stockData.returns;
+    const returns = strategyResult.returns;
 
     const averageReturn = returns.reduce((sum: number, ret: number) => sum + ret, 0) / returns.length;
 

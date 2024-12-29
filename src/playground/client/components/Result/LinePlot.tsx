@@ -11,6 +11,7 @@ import {
     Tooltip,
     Legend
 } from 'chart.js';
+import { StrategyResultProps } from '../../../../shared/sharedTypes';
 
 ChartJS.register(
     CategoryScale,
@@ -23,16 +24,16 @@ ChartJS.register(
 );
 
 interface LinePlotProps {
-    stockData: any;
+    strategyResult: StrategyResultProps;
     costPerTrade: number;
 }
 
-export default function LinePlot({ stockData, costPerTrade }: LinePlotProps) {
+function LinePlot({ strategyResult, costPerTrade }: LinePlotProps) {
 
     const [chartData, setChartData] = useState<any | null>(null);
 
     useEffect(() => {
-        const dates = stockData.timestamp.map((timestamp: number) =>
+        const dates = strategyResult.timestamp.map((timestamp: number) =>
             new Date(timestamp * 1000).toLocaleDateString()
         );
 
@@ -41,7 +42,7 @@ export default function LinePlot({ stockData, costPerTrade }: LinePlotProps) {
             datasets: [
                 {
                     label: 'My Strategy',
-                    data: stockData.portfolio,
+                    data: strategyResult.portfolio,
                     borderColor: 'rgba(255, 0, 100, 1)',
                     backgroundColor: 'rgba(255, 0, 100, 1)',
                     pointRadius: 0,
@@ -49,7 +50,7 @@ export default function LinePlot({ stockData, costPerTrade }: LinePlotProps) {
                 },
                 {
                     label: 'Open',
-                    data: stockData.open,
+                    data: strategyResult.open,
                     borderColor: 'rgba(123, 50, 168, 1)',
                     pointRadius: 0,
                     borderDash: [4, 1],
@@ -59,7 +60,7 @@ export default function LinePlot({ stockData, costPerTrade }: LinePlotProps) {
                 },
                 {
                     label: 'Close',
-                    data: stockData.close,
+                    data: strategyResult.close,
                     borderColor: 'rgba(70, 15, 105, 1)',
                     pointRadius: 0,
                     borderDash: [4, 1],
@@ -68,7 +69,7 @@ export default function LinePlot({ stockData, costPerTrade }: LinePlotProps) {
                 },
                 {
                     label: 'Buy/Sell Signal',
-                    data: stockData.signal,
+                    data: strategyResult.signal,
                     borderColor: 'rgba(0, 155, 255, 1)',
                     backgroundColor: 'rgba(0, 155, 255, 1)',
                     stepped: true,
@@ -78,7 +79,7 @@ export default function LinePlot({ stockData, costPerTrade }: LinePlotProps) {
                 },
                 {
                     label: 'My Strategy (w/ trading costs)',
-                    data: stockData.portfolioWithCosts,
+                    data: strategyResult.portfolioWithCosts,
                     borderColor: 'rgba(255, 0, 100, 0.6)',
                     backgroundColor: 'rgba(255, 0, 100, 0.6)',
                     hidden: true,
@@ -94,7 +95,7 @@ export default function LinePlot({ stockData, costPerTrade }: LinePlotProps) {
         }
 
         setChartData(chartData);
-    }, [stockData]);
+    }, [strategyResult]);
 
     const options = {
         responsive: true,
@@ -164,3 +165,5 @@ export default function LinePlot({ stockData, costPerTrade }: LinePlotProps) {
         </div>
     )
 }
+
+export default LinePlot;

@@ -6,29 +6,30 @@ import DistributionOfReturns from "./DistributionOfReturns"
 import RatiosBarChart from "./RatiosBarChart"
 import { FiArrowUp } from "react-icons/fi"
 import ResultButtonGroup from "./ResultButtonGroup"
-import { FormInputProps } from "../../../../shared/sharedTypes"
+import { FormInputProps, StrategyResultProps } from "../../../../shared/sharedTypes"
 import calculateStats, { StatProps } from "../../scripts/calculateStats"
 import { createResult, getSpecificStrategy } from "wasp/client/operations"
+import SPChart from "./SPChart"
 
 interface ResultPanelProps {
     selectedStrategy: string | null;
     formInputs: FormInputProps;
-    stockData: any;
+    strategyResult: StrategyResultProps;
     abilityToSaveNew: boolean;
 }
 
-export default function ResultPanel({ selectedStrategy, formInputs, stockData, abilityToSaveNew }: ResultPanelProps) {
+function ResultPanel({ selectedStrategy, formInputs, strategyResult, abilityToSaveNew }: ResultPanelProps) {
 
     const downloadCSV = () => {
-        if (!stockData) return;
+        if (!strategyResult) return;
 
         // Get the headers (labels)
-        const headers = Object.keys(stockData);
+        const headers = Object.keys(strategyResult) as string[];
 
         // Create rows by combining data from each key (label)
-        const rowCount = stockData[headers[0]].length; // Get the number of rows based on the first label's length
+        const rowCount = strategyResult[headers[0]].length; // Get the number of rows based on the first label's length
         const rows = Array.from({ length: rowCount }, (_, rowIndex) =>
-            headers.map((header) => stockData[header][rowIndex]).join(',')
+            headers.map((header) => strategyResult[header][rowIndex]).join(',')
         );
 
         // Add the headers to the beginning of the CSV text
@@ -52,20 +53,20 @@ export default function ResultPanel({ selectedStrategy, formInputs, stockData, a
             throw new Error('No strategy with that result.');
         }
 
-        createResult({
+        await createResult({
             name: name,
             code: connectedStrat.code,
             formInputs: formInputs,
-            data: stockData,
+            data: strategyResult,
             strategyId: selectedStrategy
         })
     }
 
-    const stats: StatProps = calculateStats({ stockData });
+    const stats: StatProps = calculateStats(strategyResult);
 
     return (
         <>
-            <div id='mainResultDisplay' className='items-center flex p-2 justify-between border-b-2 border-black'>
+            <div id='topOfResultPanel' className='items-center flex p-2 justify-between border-b-2 border-black'>
                 <h4 className="tracking-tight text-xl text-slate-700 font-extrabold text-center">
                     Stock Data and Simulated Backtest Result for
                     <span className="mx-2 text-black text-2xl">
@@ -79,15 +80,14 @@ export default function ResultPanel({ selectedStrategy, formInputs, stockData, a
                 <div className="m-8">
                     <div className="m-1 text-xl tracking-tight text-slate-400 hover:text-slate-800 font-bold">Hypothetical Growth of $1</div>
                     <div className="grid grid-cols-4 rounded-sm border-2 border-slate-300">
-                        <LinePlot stockData={stockData} costPerTrade={formInputs.costPerTrade} />
+                        <LinePlot strategyResult={strategyResult} costPerTrade={formInputs.costPerTrade} />
                         <FormInputHeader formInputs={formInputs} />
                     </div>
                 </div>
 
-
                 <div className="grid grid-cols-4 border-black border-y-2 max-h-132.5 overflow-y-auto">
                     <MainStatistics stats={stats} />
-                    <DataTable stockData={stockData} />
+                    <DataTable strategyResult={strategyResult} />
                     <button
                         className="border-t-2 col-span-4 border-black p-2 text-sm bg-white font-light hover:font-bold hover:bg-slate-200"
                         onClick={downloadCSV} // Trigger the download on click
@@ -96,14 +96,24 @@ export default function ResultPanel({ selectedStrategy, formInputs, stockData, a
                     </button>
                 </div>
             </div>
+
             <div className="grid grid-cols-4 p-2 border-black border-b-2 bg-slate-100">
-                <DistributionOfReturns stockDataReturns={stockData.returns} />
+                <DistributionOfReturns stockDataReturns={strategyResult.returns} />
                 <RatiosBarChart sharpe={stats.sharpeRatio} sortino={stats.sortinoRatio} />
             </div>
 
+            {strategyResult.sp.length > 0 &&
+                <div className="m-8">
+                    <div className="m-1 text-xl tracking-tight text-slate-400 hover:text-slate-800 font-bold">Did You Beat the S&P 500?</div>
+                    <div className="rounded-sm border-2 border-slate-300 bg-slate-50">
+                        <SPChart strategyResult={strategyResult} />
+                    </div>
+                </div>
+            }
+
             <div className="flex justify-between m-2 pb-8">
                 <button className="flex p-2 rounded-md hover:bg-slate-100"
-                    onClick={() => document.getElementById('mainResultDisplay')?.scrollIntoView({ behavior: 'smooth' })}>
+                    onClick={() => document.getElementById('topOfResultPanel')?.scrollIntoView({ behavior: 'smooth' })}>
                     back to top <FiArrowUp />
                 </button >
                 <ResultButtonGroup saveResult={saveResult} abilityToSaveNew={abilityToSaveNew} symbol={formInputs.symbol} />
@@ -111,3 +121,5 @@ export default function ResultPanel({ selectedStrategy, formInputs, stockData, a
         </>
     )
 }
+
+export default ResultPanel;

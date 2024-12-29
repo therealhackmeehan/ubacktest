@@ -76,7 +76,7 @@ export function StrategyDropDown({ strategy }: { strategy: Strategy }) {
 
                     {isRenameModalOpen && <RenameModal
                         onSuccess={() => setIsRenameModalOpen(false)}
-                        onFailure={() => setIsRenameModalOpen(false)}
+                        closeModal={() => setIsRenameModalOpen(false)}
                         id={strategy.id}
                         currName={strategy.name} />}
 
@@ -87,7 +87,7 @@ export function StrategyDropDown({ strategy }: { strategy: Strategy }) {
 
                     {isDeleteModalOpen && <DeleteModal
                         onSuccess={() => setIsDeleteModalOpen(false)}
-                        onFailure={() => setIsDeleteModalOpen(false)}
+                        closeModal={() => setIsDeleteModalOpen(false)}
                         id={strategy.id} />}
 
                     <div className='font-light text-slate-400 text-xs dark:text-white px-2'>

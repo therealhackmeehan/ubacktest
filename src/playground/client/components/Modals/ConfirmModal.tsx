@@ -3,10 +3,10 @@ import useEnterKey from "../../../../client/hooks/useEnterKey";
 interface ConfirmModalProps {
     msg: string;
     onConfirm: () => void;
-    onCancel: () => void;
+    closeModal: () => void;
 }
 
-export default function ConfirmModal({ msg, onConfirm, onCancel}: ConfirmModalProps) {
+export default function ConfirmModal({ msg, onConfirm, closeModal}: ConfirmModalProps) {
 
     useEnterKey(onConfirm);
 
@@ -20,7 +20,7 @@ export default function ConfirmModal({ msg, onConfirm, onCancel}: ConfirmModalPr
                 <div className="flex justify-between mt-4">
                     <button
                         className="bg-gray-500 text-white p-2 rounded hover:bg-gray-700"
-                        onClick={onCancel}
+                        onClick={closeModal}
                     >
                         Cancel
                     </button>
