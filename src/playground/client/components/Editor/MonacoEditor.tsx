@@ -105,7 +105,7 @@ function MonacoEditor({ code, setCode, ID }: MEditorProps) {
 
     return (
         <>
-            {errMsg && <ErrorModal msg={errMsg} onClose={() => setErrMsg('')} />}
+            {errMsg && <ErrorModal msg={errMsg} closeModal={() => setErrMsg('')} />}
 
             <div className="flex text-xs justify-start border-b-2 border-black">
                 <button

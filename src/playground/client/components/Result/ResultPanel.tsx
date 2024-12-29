@@ -103,7 +103,7 @@ function ResultPanel({ selectedStrategy, formInputs, strategyResult, abilityToSa
             </div>
 
             {strategyResult.sp.length > 0 &&
-                <div className="m-8">
+                <div className="my-8 mx-36">
                     <div className="m-1 text-xl tracking-tight text-slate-400 hover:text-slate-800 font-bold">Did You Beat the S&P 500?</div>
                     <div className="rounded-sm border-2 border-slate-300 bg-slate-50">
                         <SPChart strategyResult={strategyResult} />

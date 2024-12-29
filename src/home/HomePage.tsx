@@ -33,7 +33,7 @@ export default function HomePage() {
 
             {newProjectModalOpen && <NewProjectModal
                 onSuccess={() => setNewProjectModalOpen(false)}
-                onFailure={() => setNewProjectModalOpen(false)}
+                closeModal={() => setNewProjectModalOpen(false)}
             />}
 
             <div className="mt-12">

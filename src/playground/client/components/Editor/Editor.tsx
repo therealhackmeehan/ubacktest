@@ -34,7 +34,12 @@ function Editor({ codeToDisplay, selectedStrategy, formInputs, setCodeToDisplay,
         try {
             handlePreRunValidations();
 
-            const { strategyResult, debugOutput, stderr, warning } = await runStrategy({ formInputs: formInputs, code: codeToDisplay });
+            const {
+                strategyResult,
+                debugOutput,
+                stderr,
+                warning
+            } = await runStrategy({ formInputs: formInputs, code: codeToDisplay });
 
             handleDebugOutput(debugOutput, stderr);
             if (stderr) return;

@@ -3,7 +3,7 @@ import { useState } from "react";
 import ConfirmModal from "../Modals/ConfirmModal";
 import ErrorModal from "../Modals/ErrorModal";
 
-function UploadButton(setCode: (value: string) => void) {
+function UploadButton({ setCode }: { setCode: (value: string) => void }) {
 
     const [errMsg, setErrMsg] = useState<string>('');
     const [confirmModalOpen, setConfirmModalOpen] = useState<boolean>(false);

@@ -43,7 +43,7 @@ function SPChart({ strategyResult }: { strategyResult: StrategyResultProps }) {
                     pointRadius: 0,
                 },
                 {
-                    label: 'S&P',
+                    label: 'S&P 500 Index',
                     data: strategyResult.sp,
                     borderColor: 'rgba(123, 50, 168, 1)',
                     pointRadius: 0,
@@ -65,15 +65,10 @@ function SPChart({ strategyResult }: { strategyResult: StrategyResultProps }) {
         },
         plugins: {
             legend: {
-                position: 'left' as const,
+                position: 'right' as const,
             },
         },
         scales: {
-            x: {
-                grid: {
-                    drawOnChartArea: false,
-                },
-            },
             y: {
                 type: 'linear' as const,
                 display: true,
