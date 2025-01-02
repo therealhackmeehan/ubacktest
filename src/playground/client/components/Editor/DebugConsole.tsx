@@ -12,16 +12,15 @@ function DebugConsole({ userStdout, userStderr }: DebugConsoleProps) {
     return (
         <>
             {(userStdout || userStderr) &&
-                <div className="z-40 p-4 m-4 resize-x max-w-5xl min-w-2 absolute bottom-0 rounded-lg overflow-auto text-sm tracking-tight border-2 bg-gray-50">
-
+                <div className="z-40 p-4 m-4 resize-x max-w-5xl min-w-2 absolute bottom-0 rounded-lg overflow-auto border-2 bg-gray-50 text-sm tracking-tight">
                     Output Console
+                    <button className="p-1 m-2 bg-slate-400 hover:bg-slate-500 rounded-lg text-xs text-white"
+                        onClick={() => setIsMaximized(!isMaximized)}>
+                        show
+                        {isMaximized ? ' less' : ' more'}
+                    </button>
                     <div className="border-b border-2 mb-2"></div>
                     <div className="gap-x-3 grid grid-cols-4">
-                        <button className="p-2 bg-black text-white"
-                            onClick={() => setIsMaximized(!isMaximized)}>
-                            show
-                            {isMaximized ? 'less' : 'more'}
-                        </button>
                         {isMaximized &&
                             <>
                                 <div className="col-span-2">

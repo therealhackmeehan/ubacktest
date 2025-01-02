@@ -7,10 +7,10 @@ type BacktestResultProps = {
     strategyResult: StrategyResultProps;
     debugOutput: string;
     stderr: string;
-    warning: string;
+    warning: string[];
 };
 
-export const runStrategy: RunStrategy<any, any> = async ({ formInputs, code }, context) => {
+export const runStrategy: RunStrategy<any, any> = async ({ formInputs, code }, context): Promise<BacktestResultProps> => {
     if (!context.user) throw new HttpError(401);
 
     if (!context.user.credits && context.user.subscriptionPlan !== "active" && !context.user.isAdmin) {
@@ -18,6 +18,6 @@ export const runStrategy: RunStrategy<any, any> = async ({ formInputs, code }, c
     }
 
     const strategyInstance = new StrategyPipeline(formInputs, code);
-    return await strategyInstance.go();
+    return await strategyInstance.run();
 
 };

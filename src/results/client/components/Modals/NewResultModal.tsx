@@ -22,7 +22,7 @@ export default function NewResultModal({ onSuccess, closeModal, symbol }: NewPro
         setErrMsg('');
         try {
             validateNewName(newResultName);
-            onSuccess(newResultName);
+            await onSuccess(newResultName);
             closeModal();
             alert('Success! Find the result in my saved results!')
         } catch (error: any) {

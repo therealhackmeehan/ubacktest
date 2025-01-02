@@ -73,7 +73,7 @@ function SPChart({ strategyResult }: { strategyResult: StrategyResultProps }) {
                 type: 'linear' as const,
                 display: true,
                 grid: {
-                    color: 'rgba(100,100,100,.1)',
+                    color: ({ tick }) => tick.value == 1 ? 'rgba(100,100,100,.5)' : 'rgba(100,100,100,.05)',
                     lineWidth: 2,
                 },
             },

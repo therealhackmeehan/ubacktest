@@ -69,7 +69,7 @@ function ResultPanel({ selectedStrategy, formInputs, strategyResult, abilityToSa
             <div id='topOfResultPanel' className='items-center flex p-2 justify-between border-b-2 border-black'>
                 <h4 className="tracking-tight text-xl text-slate-700 font-extrabold text-center">
                     Stock Data and Simulated Backtest Result for
-                    <span className="mx-2 text-black text-2xl">
+                    <span className="mx-2 text-slate-500 underline uppercase text-2xl">
                         {formInputs.symbol}
                     </span>
                 </h4>

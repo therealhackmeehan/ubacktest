@@ -1,17 +1,27 @@
 import { StrategyResultProps, FormInputProps } from "../../shared/sharedTypes";
 import { HttpError } from "wasp/server";
 
+/*
+    Main backend endpoint for processing of the stock trading strategy.
+    Will search for data and apply the strategy.
+
+    Returns some debug output, any warnings to display, and the JSON data
+    describing the result of the strategy.
+*/
+
 class StrategyPipeline {
 
     private formInputs: FormInputProps;
     private code: string;
 
+    // initialize the JSON result with empty arrays
     private strategyResult: StrategyResultProps = {
         timestamp: [],
         open: [],
         close: [],
         high: [],
         low: [],
+        volume: [],
         sp: [],
         portfolio: [],
         portfolioWithCosts: [],
@@ -21,25 +31,26 @@ class StrategyPipeline {
 
     private stderr: string = '';
     private stdout: string = '';
-    private warning: string = '';
+    private warning: string[] = [];
 
     constructor(formInputs: FormInputProps, code: string) {
         this.formInputs = formInputs;
         this.code = code;
     }
 
-    public async go() {
-        const initialAPIResult = await this.getStrategyStockData();
-        await this.runPythonCode(initialAPIResult);
+    /////////////////////////________________________________________
+    public async run() {
+        await this.getStrategyStockData();
+        await this.runPythonCode();
 
         if (this.stderr) return this.sendJSONtoFrontend();
 
         await this.addSPData();
-
         this.calculatePortfolio();
 
         return this.sendJSONtoFrontend();
     }
+    /////////////////////////________________________________________
 
     private sendJSONtoFrontend() {
         return {
@@ -47,6 +58,85 @@ class StrategyPipeline {
             debugOutput: this.stdout,
             stderr: this.stderr,
             warning: this.warning,
+        }
+    }
+
+    private async getStrategyStockData() {
+        const tempAPIResult = await this.stockAPIHelper(this.formInputs.symbol);
+        const normalizedData = this.validateStockDataFromAPI(tempAPIResult);
+
+        // Assign all normalized data fields to strategyResult in one step
+        this.strategyResult = {
+            ...this.strategyResult,
+            ...normalizedData,
+        };
+    }
+
+    private async runPythonCode() {
+        // Generate unique markers for parsing the output
+        const uniqueKey = this.generateRandomKey();
+
+        // Extract necessary fields from strategyResult
+        const { timestamp, volume, high, low, open, close } = this.strategyResult;
+        const toEmbedInMain = { timestamp, volume, high, low, open, close };
+        const mainFileContent = StrategyPipeline.main_py(uniqueKey, toEmbedInMain);
+
+        // Prepare the request payload
+        const payload = {
+            language: "python",
+            version: "3.10.0",
+            files: [
+                { name: "main.py", content: mainFileContent },
+                { name: "strategy.py", content: this.code },
+            ],
+        };
+
+        // Make the API call to execute the Python code
+        const response = await fetch('https://emkc.org/api/v2/piston/execute', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(payload),
+        });
+
+        if (!response.ok) {
+            throw new HttpError(503, 'Failed to connect to the web and run python code. Try again.');
+        }
+
+        // Parse the response
+        const { run } = await response.json();
+        console.log(run);
+
+        const { stderr = '', stdout = '', signal } = run;
+
+        // Handle resource-limit termination
+        if (signal === "SIGKILL" && !stderr && !stdout) {
+            throw new HttpError(
+                500,
+                "SIGKILL: Your program was terminated because it exceeded resource limits."
+            );
+        }
+
+        // Append warning if `main.py` errors are present
+        this.stderr = stderr.includes('main.py')
+            ? `Note: Errors originating in "main.py" may be disregarded, as it serves as the processing function orchestrating the test.\n\n${stderr}`
+            : stderr;
+
+        // Extract data from the Python output
+        const parsedData = this.parsePythonOutput(stdout, uniqueKey);
+        if (parsedData) Object.assign(this.strategyResult, parsedData);
+        this.stdout = parsedData ? this.stripDebugOutput(stdout, uniqueKey) : stdout
+    }
+
+    private async addSPData() {
+
+        let spResult = await this.stockAPIHelper('spy');
+        spResult = this.validateStockDataFromAPI(spResult);
+
+        const stockStamp = this.strategyResult.timestamp;
+        const spStamp = spResult.timestamp;
+
+        if (StrategyPipeline.arraysAreEqual(stockStamp, spStamp)) {
+            this.strategyResult.sp = spResult[this.formInputs.timeOfDay];
         }
     }
 
@@ -87,81 +177,8 @@ class StrategyPipeline {
         }
     }
 
-    private async runPythonCode(initialAPIResult: any) {
-        // Generate unique markers for parsing the output
-        const uniqueKey = this.generateRandomKey();
 
-        // send only H/L/O/C/Timestamp
-        const toEmbedInMain = {
-            timestamp: initialAPIResult.timestamp,
-            high: initialAPIResult.high,
-            low: initialAPIResult.low,
-            open: initialAPIResult.open,
-            close: initialAPIResult.close,
-        }
-        const mainFileContent = StrategyPipeline.main_py(uniqueKey, toEmbedInMain);
-
-        // Prepare the request payload
-        const payload = {
-            language: "python",
-            version: "3.10.0",
-            files: [
-                { name: "main.py", content: mainFileContent },
-                { name: "strategy.py", content: this.code },
-            ],
-        };
-
-        // Make the API call to execute the Python code
-        const response = await fetch('https://emkc.org/api/v2/piston/execute', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify(payload),
-        });
-
-        if (!response.ok) {
-            throw new HttpError(503, 'Failed to connect and run python code. Try again.');
-        }
-
-        // Parse the response
-        const { run } = await response.json();
-        console.log(run);
-
-        const { stderr = '', stdout = '', signal } = run;
-
-        // Handle resource-limit termination
-        if (signal === "SIGKILL" && !stderr && !stdout) {
-            throw new HttpError(
-                500,
-                "SIGKILL: Your program was terminated because it exceeded resource limits."
-            );
-        }
-
-        // Append warning if `main.py` errors are present
-        const updatedStderr = stderr.includes('main.py')
-            ? `Note: Errors related to "main.py" may be disregarded, as it serves as the processing function orchestrating the test.\n\n${stderr}`
-            : stderr;
-
-        // Extract data from the Python output
-        const parsedData = this.parsePythonOutput(stdout, uniqueKey);
-        if (parsedData) Object.assign(this.strategyResult, parsedData);
-
-        this.stdout = parsedData ? this.stripDebugOutput(stdout, uniqueKey) : stdout
-        this.stderr = updatedStderr;
-    }
-
-    private async addSPData() {
-
-        let spResult = await this.stockAPIHelper('spy');
-        spResult = this.validateStockDataFromAPI(spResult);
-
-        const stockStamp = this.strategyResult.timestamp;
-        const spStamp = spResult.timestamp;
-
-        if (StrategyPipeline.arraysAreEqual(stockStamp, spStamp)) {
-            this.strategyResult.sp = spResult[this.formInputs.timeOfDay];
-        }
-    }
-
+    /// helper functions
     private static arraysAreEqual<T>(arr1: T[], arr2: T[]): boolean {
         // Check if the arrays are the same length
         if (arr1.length !== arr2.length) {
@@ -193,22 +210,15 @@ class StrategyPipeline {
         return Math.random().toString(36).substring(2, 8) + Math.random().toString(36).substring(2, 8);
     }
 
-    private async getStrategyStockData() {
-        const tempAPIResult = await this.stockAPIHelper(this.formInputs.symbol);
-        const normalizedData = this.validateStockDataFromAPI(tempAPIResult);
-
-        this.strategyResult.open = normalizedData.open;
-        this.strategyResult.close = normalizedData.close;
-        this.strategyResult.high = normalizedData.high;
-        this.strategyResult.low = normalizedData.low;
-        this.strategyResult.timestamp = normalizedData.timestamp;
-
-        return normalizedData;
-    }
-
     private async stockAPIHelper(symbol: string) {
-        const url =
-            `https://query1.finance.yahoo.com/v8/finance/chart/${symbol}?period1=${new Date(this.formInputs.startDate).getTime() / 1000}&period2=${new Date(this.formInputs.endDate).getTime() / 1000}&interval=${this.formInputs.intval}`;
+
+        const baseUrl = 'https://query1.finance.yahoo.com/v8/finance/chart/';
+        const symbolPath = `${symbol}`;
+        const period1 = `period1=${new Date(this.formInputs.startDate).getTime() / 1000}`;
+        const period2 = `period2=${new Date(this.formInputs.endDate).getTime() / 1000}`;
+        const interval = `interval=${this.formInputs.intval}`;
+
+        const url = `${baseUrl}${symbolPath}?${period1}&${period2}&${interval}`;
 
         const response = await fetch(url, {
             method: 'GET',
@@ -240,6 +250,7 @@ class StrategyPipeline {
         const lowPrices = quote?.low;
         const openPrices = quote?.open;
         const timestamps = result?.timestamp;
+        const volumes = quote?.volume;
 
         // Validation checks
         if (!closePrices) throw new HttpError(400, "Although it appears this stock exists, no data was found. Try another stock or adjust the timeframe.");
@@ -250,21 +261,49 @@ class StrategyPipeline {
         if (!Array.isArray(timestamps) || timestamps.length !== closePrices.length)
             throw new HttpError(500, "Mismatch between timestamps and close prices.");
 
-        if (!Array.isArray(highPrices) || !Array.isArray(lowPrices) || !Array.isArray(openPrices))
+        if (!Array.isArray(highPrices) || !Array.isArray(lowPrices) || !Array.isArray(openPrices) || !Array.isArray(volumes))
             throw new HttpError(500, "Invalid structure for high, low, or open data. Expected arrays.");
         if (highPrices.length !== closePrices.length || lowPrices.length !== closePrices.length || openPrices.length !== closePrices.length)
             throw new HttpError(500, "Mismatch in data length for high, low, open, and close arrays.");
+
+        // Check for missing data based on user-selected dates
+        const startInput = new Date(this.formInputs.startDate).getDay();
+        const endInput = new Date(this.formInputs.endDate).getDay();
+
+        const startInData = new Date(timestamps[0]).getDay();
+        const endInData = new Date(timestamps[timestamps.length - 1]).getDay();
+        const isFrequentTrading = this.formInputs.intval === '1d' || this.formInputs.intval === '5d';
+
+        if (isFrequentTrading && (Math.abs(startInData - startInput) > 7 || Math.abs(endInData - endInput) > 7)) {
+            const missingDataMsg =
+                'There appears to be a significant discrepancy between the available data and your selected start and end dates. ' +
+                'This may indicate that the stock’s data is incomplete due to an IPO occurring after the specified start date, ' +
+                'or the stock was delisted during the selected timeframe. Please review the date range and stock availability.';
+
+            this.warning.push(missingDataMsg);
+        }
+
+        // Check for low trading volume
+        if (volumes.some(val => val < 1000)) {
+            const lowVolumeMsg =
+                'The selected stock exhibits low trading volume, which may result in increased price volatility and unpredictable behavior. ' +
+                'Exercise caution when testing your strategy with this stock.';
+
+            this.warning.push(lowVolumeMsg);
+        }
 
         // Normalize data by dividing by the first price
         const firstPrice = quote?.[this.formInputs.timeOfDay][0];
         if (!firstPrice || typeof firstPrice !== "number" || isNaN(firstPrice))
             throw new HttpError(500, "First close price is invalid. Cannot normalize data.");
 
+        const normalizedPrices = (prices: number[]) => prices.map(price => price / firstPrice);
         const normalizedQuote = {
-            high: highPrices.map((price) => price / firstPrice),
-            low: lowPrices.map((price) => price / firstPrice),
-            open: openPrices.map((price) => price / firstPrice),
-            close: closePrices.map((price) => price / firstPrice),
+            high: normalizedPrices(highPrices),
+            low: normalizedPrices(lowPrices),
+            open: normalizedPrices(openPrices),
+            close: normalizedPrices(closePrices),
+            volume: volumes,
             timestamp: timestamps,
         };
 

@@ -4,6 +4,7 @@ export interface StrategyResultProps {
     close: number[];
     high: number[];
     low: number[];
+    volume: number[];
 
     signal: number[];
     returns: number[];
