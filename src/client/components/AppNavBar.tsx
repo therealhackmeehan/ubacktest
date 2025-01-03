@@ -15,6 +15,7 @@ const mainNavigation = [
   { name: 'Strategy Editor', href: routes.PlaygroundRoute.build() },
   { name: 'My Strategies', href: routes.HomePageRoute.build() },
   { name: 'My Results', href: routes.ResultsRoute.build() },
+  { name: 'Use Real Money', href: routes.DeployRoute.build() },
 ];
 
 const subNavigation = [

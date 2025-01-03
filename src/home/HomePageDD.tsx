@@ -6,13 +6,8 @@ import DeleteModal from "../playground/client/components/Modals/DeleteModal";
 import { MdDeleteOutline, MdOutlineEdit } from "react-icons/md";
 import { FaRegEdit, FaChevronRight, FaChevronDown } from "react-icons/fa";
 import { Editor } from "@monaco-editor/react";
-import { useInView } from "react-intersection-observer";
 
 export function StrategyDropDown({ strategy }: { strategy: Strategy }) {
-
-    const { ref, inView } = useInView({
-        threshold: .1,
-    });
 
     // keep track of each dropdown's expansion
     const [isExpanded, setIsExpanded] = useState(false);
@@ -45,10 +40,8 @@ export function StrategyDropDown({ strategy }: { strategy: Strategy }) {
     }
 
     return (
-        <li key={strategy.id} ref={ref}
-            className={`border-t-2 border-gray-100 p-3 transition-all duration-[500ms] ${inView
-                ? "translate-x-0"
-                : "opacity-0 blur-lg -translate-x-[2%]"}`} >
+        <li key={strategy.id}
+            className='border-t-2 border-gray-100 p-3 transition-all duration-[500ms]'>
             <div className='flex justify-between'>
                 <div className='flex gap-x-2 items-center'>
                     <div className="hover:cursor-pointer hover:text-gray-500"

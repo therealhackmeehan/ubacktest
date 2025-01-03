@@ -16,7 +16,7 @@ export default function App() {
   const { data: user } = useAuth();
 
   const shouldDisplayFooter = useMemo(() => {
-    return location.pathname !== '/editor';
+    return !((location.pathname === '/editor') || (location.pathname === '/deploy'));
   }, [location]);
 
   const isAdminDashboard = useMemo(() => {

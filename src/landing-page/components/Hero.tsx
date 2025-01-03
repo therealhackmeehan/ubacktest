@@ -34,6 +34,11 @@ export default function Hero() {
             <h1 className='text-4xl font-bold text-gray-900 sm:text-6xl dark:text-white'>
               Some <span className='italic'>cool</span> words about your product
             </h1>
+            <h1 className='text-5xl p-12 font-bold text-gray-900 sm:text-6xl dark:text-white'>
+              ENKOAD.
+              trdinglab.com
+              algotrdr.com
+            </h1>
             <p className='mt-6 mx-auto max-w-2xl text-lg leading-8 text-gray-600 dark:text-white'>
               With some more exciting words about your product!
             </p>

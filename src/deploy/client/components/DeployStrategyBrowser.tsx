@@ -1,35 +1,24 @@
-import type { Strategy } from "wasp/entities";
-import { useState } from "react";
-import { FaPlus } from "react-icons/fa";
-import NewProjectModal from "./Modals/NewProjectModal";
+import { useQuery } from "wasp/client/operations";
+import { getStrategies } from "wasp/client/operations";
 
-export interface StrategyBrowserProps {
+interface DeployStrategyBrowserProps {
     selectedStrategy: string;
     setSelectedStrategy: (value: string) => void;
-    strategies: Strategy[];
-    isStrategiesLoading: boolean;
 }
 
-function StrategyBrowser({ selectedStrategy, setSelectedStrategy, strategies, isStrategiesLoading }: StrategyBrowserProps) {
+export default function DeployStrategyBrowser({ selectedStrategy, setSelectedStrategy }: DeployStrategyBrowserProps) {
 
-    const [newProjectModalOpen, setNewProjectModalOpen] = useState<boolean>(false);
-
-    function onSuccessfulNewProject(id: string) {
-        setSelectedStrategy(id);
-        setNewProjectModalOpen(false);
-    }
+    const { data: strategies, isLoading: isStrategiesLoading } = useQuery(getStrategies);
 
     return (
-        <div className="overflow-y-auto overflow-x-auto h-full col-span-1 bg-gray-50 border-r-2 border-black">
-
+        <div className="col-span-2 h-full bg-slate-100 overflow-auto">
+            <div className="text-center font-bold text-sm tracking-tight p-2">My Strategies</div>
             {isStrategiesLoading && (
                 <div className="text-xl font-extrabold p-4 text-white">Loading...</div>
             )}
 
             <ul>
-
                 {strategies &&
-
                     (<>
                         {strategies.map((strategy) => (
                             <li
@@ -51,22 +40,8 @@ function StrategyBrowser({ selectedStrategy, setSelectedStrategy, strategies, is
                             </li>
                         ))}
                     </>)}
-
-                <button className='justify-between items-center gap-x-2 border-2 flex bg-sky-100 border-sky-700 rounded-lg px-8 mt-4 mb-12 justify-self-center hover:bg-gray-200/40'
-                    onClick={() => setNewProjectModalOpen(true)}>
-                    <span className='font-bold text-sky-600 text-lg'>new</span>
-                    <FaPlus className="text-sky-800"/>
-                </button>
-
-                {newProjectModalOpen && <NewProjectModal
-                    onSuccess={onSuccessfulNewProject}
-                    closeModal={() => setNewProjectModalOpen(false)}
-                />}
-
             </ul>
         </div>
 
     )
 }
-
-export default StrategyBrowser;

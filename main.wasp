@@ -118,6 +118,15 @@ page ResultsPage {
 }
 //endregion
 
+//region deploy
+route DeployRoute { path: "/deploy", to: DeployPage }
+page DeployPage {
+  authRequired: true,
+  component: import DeployPage from "@src/deploy/client/DeployPage"
+}
+
+//end region
+
 //region result-related actions
 action createResult {
   fn: import { createResult } from "@src/results/server/operations",
@@ -179,6 +188,9 @@ action charge {
 }
 // end runStrategy
 
+// region deploy
+
+// end region deploy
 
 //region Auth Pages
 route LoginRoute { path: "/login", to: LoginPage }
