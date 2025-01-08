@@ -8,6 +8,7 @@ import {
 import { StrategyDropDown } from './HomePageDD';
 import { IoMdAddCircleOutline } from "react-icons/io";
 import NewProjectModal from '../playground/client/components/modals/NewProjectModal';
+import ContentWrapper from '../client/components/ContentWrapper';
 
 export default function HomePage() {
 
@@ -18,7 +19,7 @@ export default function HomePage() {
     const [newProjectModalOpen, setNewProjectModalOpen] = useState<boolean>(false);
 
     return (
-        <div className='mt-16 max-w-7xl mx-auto'>
+        <ContentWrapper>
             <div className='flex justify-between'>
                 <h4 className='my-2 font-bold tracking-tight text-gray-900 sm:text-3xl text-xl dark:text-white'>
                     My <span className='text-sky-600'>Strategies</span>
@@ -49,7 +50,6 @@ export default function HomePage() {
                     <div>No strategies found. Create one now!</div>
                 )}
             </div>
-
-        </div>
+        </ContentWrapper>
     );
 }

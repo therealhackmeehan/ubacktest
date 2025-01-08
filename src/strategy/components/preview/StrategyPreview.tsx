@@ -1,0 +1,49 @@
+import { type Strategy } from "wasp/entities"
+import { routes } from 'wasp/client/router';
+import { FaRegEdit } from "react-icons/fa";
+import { Editor } from "@monaco-editor/react";
+
+function StrategyPreview({ strategy }: { strategy: Strategy }) {
+
+    const handleToLocalStorage = async (id: string) => {
+        try {
+            localStorage.setItem('projectToLoad', id);
+        } catch (error) {
+            console.log(error);
+        } finally {
+            window.location.href = routes.EditorRoute.build();
+        }
+    }
+
+    const miniEditorOpts = {
+        readOnly: true,
+        domReadOnly: true,
+        selectionHighlight: false,
+        lineHeight: 18,
+        fontSize: 11,
+        padding: {
+            top: 12,
+            bottom: 0
+        }
+    }
+
+    return (
+        <div className="m-3">
+            <Editor
+                className="invert hue-rotate-180"
+                options={miniEditorOpts}
+                height="15vh"
+                defaultLanguage='python'
+                theme="vs-dark"
+                value={strategy.code || 'No code found for this strategy.'}
+                loading={(<div className="text-white font-2xl tracking-tight">Loading...</div>)}
+            />
+            <button className='w-full flex justify-center gap-x-2 p-1 my-2 text-sm rounded-md bg-slate-100 hover:bg-slate-200 duration-700'
+                onClick={() => handleToLocalStorage(strategy.id)}>
+                <FaRegEdit /> edit this strategy in the editor
+            </button>
+        </div>
+    )
+}
+
+export default StrategyPreview;

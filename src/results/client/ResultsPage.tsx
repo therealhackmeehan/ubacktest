@@ -1,13 +1,14 @@
 import { type Result } from 'wasp/entities';
 import ResultDropDown from "./components/ResultsPageDD";
 import { getResults, useQuery } from "wasp/client/operations"
+import ContentWrapper from '../../client/components/ContentWrapper';
 
 export default function ResultsPage() {
 
     const { data: results, isLoading: isResultsLoading } = useQuery(getResults);
 
     return (
-        <div className='mt-16 max-w-7xl mx-auto'>
+        <ContentWrapper>
             <h4 className='my-2 font-bold tracking-tight text-gray-900 sm:text-3xl text-xl dark:text-white'>
                 My <span className='text-sky-600'>Saved Results</span>
             </h4>
@@ -25,8 +26,7 @@ export default function ResultsPage() {
                     <div>No results found. Create one by running a strategy.</div>
                 )}
             </div>
-
-        </div>
+        </ContentWrapper>
     )
 
 }

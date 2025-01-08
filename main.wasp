@@ -88,62 +88,70 @@ app OpenSaaS {
   },
 }
 
+// MY ROUTES
 route LandingPageRoute { path: "/", to: LandingPage }
 page LandingPage {
   component: import LandingPage from "@src/landing-page/LandingPage"
 }
-
-//region home page
 route HomePageRoute { path: "/home", to: HomePage }
 page HomePage {
   authRequired: true,
   component: import HomePage from "@src/home/HomePage"
 }
-//endregion
-
-//region playground
 route EditorRoute { path: "/editor", to: EditorPage }
 page EditorPage {
   authRequired: true,
   component: import EditorLayout from "@src/playground/client/EditorLayout"
 }
-//endregion
-
-//region results
 route ResultsRoute { path: "/results", to: ResultsPage }
 page ResultsPage {
   authRequired: true,
   component: import ResultsPage from "@src/results/client/ResultsPage"
 }
-//endregion
-
-//region deploy
 route DeployRoute { path: "/deploy", to: DeployPage }
 page DeployPage {
   authRequired: true,
   component: import DeployPage from "@src/deploy/client/DeployPage"
 }
-//end region
+route StrategyRoute { path: "/strategy/:id", to: StrategyPage }
+page StrategyPage {
+  authRequired: true,
+  component: import StrategyPage from "@src/strategy/StrategyPage"
+}
+route TOSRoute { path: "/tos", to: TOSPage }
+page TOSPage {
+  component: import TOS from "@src/legal/termsOfService/TOS"
+}
+route PrivacyRoute { path: "/privacy", to: PrivacyPage }
+page PrivacyPage {
+  component: import TOS from "@src/legal/privacy/Privacy"
+}
+route AboutRoute { path: "/about", to: AboutPage }
+page AboutPage {
+  component: import About from "@src/about/About"
+}
+// END MY ROUTES
 
 //region result-related actions
 action createResult {
   fn: import { createResult } from "@src/results/server/operations",
   entities: [Result] 
 }
-
 action renameResult {
   fn: import { renameResult } from "@src/results/server/operations",
   entities: [Result] 
 }
-
 action deleteResult {
   fn: import { deleteResult } from "@src/results/server/operations",
   entities: [Result] 
 }
-
 query getResults {
   fn: import { getResults } from "@src/results/server/operations",
   entities: [Result] 
+}
+query getResultsForStrategy {
+  fn: import { getResultsForStrategy } from "@src/results/server/operations",
+  entities: [Result]
 }
 //endregion
 
@@ -371,21 +379,3 @@ job sendNewsletter {
   entities: [User]
 }
 //endregion
-
-
-// thankless administrative stuff
-route TOSRoute { path: "/tos", to: TOSPage }
-page TOSPage {
-  component: import TOS from "@src/legal/termsOfService/TOS"
-}
-
-route PrivacyRoute { path: "/privacy", to: PrivacyPage }
-page PrivacyPage {
-  component: import TOS from "@src/legal/privacy/Privacy"
-}
-
-route AboutRoute { path: "/about", to: AboutPage }
-page AboutPage {
-  component: import About from "@src/about/About"
-}
-// endregion

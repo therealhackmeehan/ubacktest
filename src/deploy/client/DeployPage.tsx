@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import DeployStrategyBrowser from "./components/DeployStrategyBrowser";
 import { getSpecificStrategy } from "wasp/client/operations";
 import DeployEditor from "./components/DeployEditor";
+import ContentWrapper from "../../client/components/ContentWrapper";
 
 export default function DeployPage() {
 
@@ -21,7 +22,7 @@ export default function DeployPage() {
     }, [selectedStrategy]);
 
     return (
-        <div className='mt-8 mx-12'>
+        <ContentWrapper>
             <h4 className='my-2 rounded-full font-bold tracking-tight text-gray-900 sm:text-3xl text-xl dark:text-white'>
                 Bring Your Strategy <span className='text-sky-600'>To Market</span>
             </h4>
@@ -35,7 +36,7 @@ export default function DeployPage() {
                 <DeployStrategyBrowser selectedStrategy={selectedStrategy} setSelectedStrategy={setSelectedStrategy} />
                 <DeployEditor codeToDisplay={codeToDisplay} />
             </div>
-        </div>
+        </ContentWrapper>
     )
 
 }

@@ -5,6 +5,7 @@ import {
     type RenameResult,
     type DeleteResult,
     type GetResults,
+    type GetResultsForStrategy,
 } from "wasp/server/operations";
 
 type ResultCreationInfo = {
@@ -65,6 +66,19 @@ export const getResults: GetResults<void, Result[] | null> = async (_args, conte
 
     return results.length > 0 ? results : null;
 };
+
+export const getResultsForStrategy: GetResultsForStrategy<Pick<Result, "fromStrategyID">, Result[] | null> = async ({ fromStrategyID }, context) => {
+    if (!context.user) {
+        throw new HttpError(401)
+    }
+
+    return await context.entities.Result.findMany({
+        where: {
+            fromStrategyID,
+            user: { id: context.user.id },
+        },
+    });
+}
 
 export const deleteResult: DeleteResult<Pick<Result, "id">, Result> = async ({ id }, context) => {
     if (!context.user) {

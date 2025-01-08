@@ -1,7 +1,9 @@
+import ContentWrapper from "../../client/components/ContentWrapper"
+
 export default function Privacy() {
 
     return (
-        <div className='mt-16 max-w-7xl mx-auto bg-slate-100 rounded-lg p-4'>
+        <ContentWrapper>
             <h4 className='my-2 font-bold tracking-tight text-gray-900 sm:text-3xl text-xl dark:text-white'>
                 Privacy Policy
             </h4>
@@ -85,6 +87,6 @@ export default function Privacy() {
                     </ul>
                 </p>
             </div>
-        </div>
+        </ContentWrapper>
     )
 }

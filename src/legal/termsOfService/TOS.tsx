@@ -1,6 +1,8 @@
+import ContentWrapper from "../../client/components/ContentWrapper"
+
 export default function TOS() {
     return (
-        <div className='mt-16 max-w-7xl mx-auto bg-sky-50 rounded-lg p-4'>
+        <ContentWrapper>
             <h4 className='my-2 font-bold tracking-tight text-gray-900 sm:text-3xl text-xl dark:text-white'>
                 Terms of Service
             </h4>
@@ -85,6 +87,6 @@ export default function TOS() {
                     </ul>
                 </p>
             </div>
-        </div>
+        </ContentWrapper>
     )
 }
