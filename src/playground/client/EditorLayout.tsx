@@ -2,9 +2,9 @@ import StrategyBrowser from "./components/StrategyBrowser"
 import { useState, useEffect, useRef } from "react"
 import { getSpecificStrategy, getStrategies, useQuery } from "wasp/client/operations"
 import StrategyHeader from "./components/StrategyHeader"
-import Dashboard from "./components/Editor/Dashboard"
+import StrategyEditor from "./components/StrategyEditor"
 
-export default function Layout() {
+export default function EditorLayout() {
 
     // strategy to focus in on or display
     const [selectedStrategy, setSelectedStrategy] = useState<string>('');
@@ -19,6 +19,8 @@ export default function Layout() {
 
     // browser is expanded or not
     const [isExpanded, setIsExpanded] = useState<boolean>(true);
+
+    // consider useContxt for access to selectedStrategy
 
     useEffect(() => {
         const loadInitialData = async () => {
@@ -76,7 +78,7 @@ export default function Layout() {
                                 setNameToDisplay={setNameToDisplay}
                                 setSelectedStrategy={setSelectedStrategy} />
 
-                            <Dashboard
+                            <StrategyEditor
                                 codeToDisplay={codeToDisplay}
                                 selectedStrategy={selectedStrategy}
                                 setCodeToDisplay={setCodeToDisplay}

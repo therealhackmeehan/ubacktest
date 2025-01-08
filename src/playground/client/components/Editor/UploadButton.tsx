@@ -1,7 +1,7 @@
 import { FiUpload } from "react-icons/fi";
 import { useState } from "react";
-import ConfirmModal from "../Modals/ConfirmModal";
-import ErrorModal from "../Modals/ErrorModal";
+import ConfirmModal from "../modals/ConfirmModal";
+import ErrorModal from "../modals/ErrorModal";
 
 function UploadButton({ setCode }: { setCode: (value: string) => void }) {
 

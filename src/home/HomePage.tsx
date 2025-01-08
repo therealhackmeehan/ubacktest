@@ -7,7 +7,7 @@ import {
 
 import { StrategyDropDown } from './HomePageDD';
 import { IoMdAddCircleOutline } from "react-icons/io";
-import NewProjectModal from '../playground/client/components/Modals/NewProjectModal';
+import NewProjectModal from '../playground/client/components/modals/NewProjectModal';
 
 export default function HomePage() {
 

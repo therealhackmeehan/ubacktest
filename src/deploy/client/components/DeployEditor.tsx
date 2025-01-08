@@ -1,6 +1,7 @@
 import { Editor } from "@monaco-editor/react";
 import { useState } from "react";
 import WarningModal from "./WarningModal";
+import { runCodeGeneration } from "wasp/client/operations";
 
 export default function DeployEditor({ codeToDisplay }: { codeToDisplay: string }) {
 
@@ -28,6 +29,12 @@ export default function DeployEditor({ codeToDisplay }: { codeToDisplay: string 
         )
     }
 
+    async function testDeploy() {
+        console.log('about to run code gen')
+        const c = await runCodeGeneration(codeToDisplay);
+        console.log(c)
+    }
+
     return (
         <div className="col-span-10 h-full overflow-clip group relative">
             <Editor
@@ -39,8 +46,12 @@ export default function DeployEditor({ codeToDisplay }: { codeToDisplay: string 
                 loading={(<div className="text-white font-2xl tracking-tight">Loading...</div>)}
             />
             <button className="opacity-0 italic group-hover:opacity-90 duration-700 m-auto absolute inset-0 flex items-center justify-center text-white font-extrabold text-xl tracking-tight"
-                    onClick={() => setWarningModalOpen(true)}>
+                onClick={testDeploy}>
                 Let's go!
+            </button>
+            <button className="bg-white text-black m-8"
+                onClick={testDeploy}>
+                Click here to test
             </button>
 
             {

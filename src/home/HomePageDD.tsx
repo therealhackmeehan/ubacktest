@@ -1,8 +1,8 @@
 import { useState } from "react";
 import { type Strategy } from "wasp/entities"
 import { routes } from 'wasp/client/router';
-import RenameModal from "../playground/client/components/Modals/RenameModal";
-import DeleteModal from "../playground/client/components/Modals/DeleteModal";
+import RenameModal from "../playground/client/components/modals/RenameModal";
+import DeleteModal from "../playground/client/components/modals/DeleteModal";
 import { MdDeleteOutline, MdOutlineEdit } from "react-icons/md";
 import { FaRegEdit, FaChevronRight, FaChevronDown } from "react-icons/fa";
 import { Editor } from "@monaco-editor/react";
@@ -23,7 +23,7 @@ export function StrategyDropDown({ strategy }: { strategy: Strategy }) {
         } catch (error) {
             console.log(error);
         } finally {
-            window.location.href = routes.PlaygroundRoute.build();
+            window.location.href = routes.EditorRoute.build();
         }
     }
 

@@ -12,10 +12,10 @@ import { DocsUrl, BlogUrl } from '../../shared/common';
 import DarkModeSwitcher from './DarkModeSwitcher';
 
 const mainNavigation = [
-  { name: 'Strategy Editor', href: routes.PlaygroundRoute.build() },
+  { name: 'Strategy Editor', href: routes.EditorRoute.build() },
   { name: 'My Strategies', href: routes.HomePageRoute.build() },
   { name: 'My Results', href: routes.ResultsRoute.build() },
-  { name: 'Use Real Money', href: routes.DeployRoute.build() },
+  // { name: 'Use Real Money', href: routes.DeployRoute.build() }, keep this hidden while in devel
 ];
 
 const subNavigation = [

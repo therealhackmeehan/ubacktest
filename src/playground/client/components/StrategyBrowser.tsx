@@ -1,7 +1,7 @@
 import type { Strategy } from "wasp/entities";
 import { useState } from "react";
 import { FaPlus } from "react-icons/fa";
-import NewProjectModal from "./Modals/NewProjectModal";
+import NewProjectModal from "./modals/NewProjectModal";
 
 export interface StrategyBrowserProps {
     selectedStrategy: string;

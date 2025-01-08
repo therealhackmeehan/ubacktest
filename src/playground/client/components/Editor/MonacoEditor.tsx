@@ -3,9 +3,9 @@ import { FiSave } from "react-icons/fi";
 import { updateStrategy } from "wasp/client/operations";
 import DownloadButton from "./DownloadButton";
 import UploadButton from "./UploadButton";
-import ErrorModal from "../Modals/ErrorModal";
+import ErrorModal from "../modals/ErrorModal";
 import { useState, useEffect, useRef } from "react";
-import ExamplesModal from "../Modals/ExamplesModal";
+import ExamplesModal from "../modals/ExamplesModal";
 import { MdLaunch } from "react-icons/md";
 
 interface MEditorProps {

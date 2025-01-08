@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react';
 import { FiDelete, FiBookOpen } from 'react-icons/fi';
 import { MdOutlineEdit, MdDeleteOutline } from 'react-icons/md';
 import { type Result } from 'wasp/entities';
-import ResultPanel from '../../../playground/client/components/Result/ResultPanel';
+import ResultPanel from '../../../playground/client/components/result/Result';
 import { FormInputProps, StrategyResultProps } from '../../../shared/sharedTypes';
 import RenameResultModal from './Modals/RenameResultModal';
 import DeleteResultModal from './Modals/DeleteResultModal';

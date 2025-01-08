@@ -1,7 +1,7 @@
 import { useState } from "react";
-import Editor from "./Editor";
-import Result from "../Result/Result";
-import { FormInputProps, StrategyResultProps } from "../../../../shared/sharedTypes";
+import Editor from "./editor/Editor";
+import ResultLayout from "./result/ResultLayout";
+import { FormInputProps, StrategyResultProps } from "../../../shared/sharedTypes";
 
 interface DashboardProps {
     selectedStrategy: string;
@@ -14,20 +14,22 @@ export interface stdProps {
     err: string;
 }
 
-function Dashboard({ selectedStrategy, codeToDisplay, setCodeToDisplay }: DashboardProps) {
+export const initFormInputs: FormInputProps = {
+    symbol: 'aapl',
+    startDate: '2020-02-02',
+    endDate: '2020-05-02',
+    intval: '5d',
+    timeOfDay: 'close',
+    costPerTrade: 0,
+}
+
+function StrategyEditor({ selectedStrategy, codeToDisplay, setCodeToDisplay }: DashboardProps) {
 
     const [resultOpen, setResultOpen] = useState<boolean>(false);
     const [strategyResult, setStrategyResult] = useState<StrategyResultProps | null>(null);
     const [strategyResultIsConnectedTo, setStrategyResultIsConnectedTo] = useState<string>('');
 
-    const [formInputs, setFormInputs] = useState<FormInputProps>({
-        symbol: 'aapl',
-        startDate: '2020-02-02',
-        endDate: '2020-05-02',
-        intval: '5d',
-        timeOfDay: 'close',
-        costPerTrade: 0,
-    });
+    const [formInputs, setFormInputs] = useState<FormInputProps>(initFormInputs);
 
     const [std, setStd] = useState<stdProps>({
         out: '',
@@ -50,7 +52,7 @@ function Dashboard({ selectedStrategy, codeToDisplay, setCodeToDisplay }: Dashbo
             </button>
 
             {resultOpen ? (
-                <Result
+                <ResultLayout
                     strategyResult={strategyResult}
                     formInputs={formInputs}
                     strategyResultIsConnectedTo={strategyResultIsConnectedTo}
@@ -74,4 +76,4 @@ function Dashboard({ selectedStrategy, codeToDisplay, setCodeToDisplay }: Dashbo
     )
 }
 
-export default Dashboard;
+export default StrategyEditor;

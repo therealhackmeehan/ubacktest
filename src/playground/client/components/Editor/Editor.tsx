@@ -1,14 +1,14 @@
 import { useState } from "react"
 import MonacoEditor from "./MonacoEditor";
-import ErrorModal from "../Modals/ErrorModal";
+import ErrorModal from "../modals/ErrorModal";
 import DebugConsole from "./DebugConsole";
 import InputForm from "./InputForm";
 import { runStrategy, charge, updateStrategy } from "wasp/client/operations";
 import validateFormInputs from "../../scripts/validateFormInputs";
 import validatePythonCode from "../../scripts/validatePythonCode";
 import { FormInputProps, StrategyResultProps } from "../../../../shared/sharedTypes";
-import { type stdProps } from "./Dashboard";
-import LoadingScreen from "./LoadingScreen";
+import { type stdProps } from "../StrategyEditor";
+import LoadingScreen from "../../../../client/components/LoadingScreen";
 
 interface EditorProps {
     codeToDisplay: string;

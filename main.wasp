@@ -93,7 +93,6 @@ page LandingPage {
   component: import LandingPage from "@src/landing-page/LandingPage"
 }
 
-
 //region home page
 route HomePageRoute { path: "/home", to: HomePage }
 page HomePage {
@@ -103,10 +102,10 @@ page HomePage {
 //endregion
 
 //region playground
-route PlaygroundRoute { path: "/editor", to: PlaygroundPage }
-page PlaygroundPage {
+route EditorRoute { path: "/editor", to: EditorPage }
+page EditorPage {
   authRequired: true,
-  component: import Layout from "@src/playground/client/layout"
+  component: import EditorLayout from "@src/playground/client/EditorLayout"
 }
 //endregion
 
@@ -124,7 +123,6 @@ page DeployPage {
   authRequired: true,
   component: import DeployPage from "@src/deploy/client/DeployPage"
 }
-
 //end region
 
 //region result-related actions
@@ -189,7 +187,10 @@ action charge {
 // end runStrategy
 
 // region deploy
-
+query runCodeGeneration {
+  fn: import { runCodeGeneration } from "@src/deploy/server/runCodeGeneration",
+  entities: [User]
+}
 // end region deploy
 
 //region Auth Pages
