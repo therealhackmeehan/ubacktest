@@ -108,11 +108,6 @@ page ResultsPage {
   authRequired: true,
   component: import ResultsPage from "@src/results/client/ResultsPage"
 }
-route DeployRoute { path: "/deploy", to: DeployPage }
-page DeployPage {
-  authRequired: true,
-  component: import DeployPage from "@src/deploy/client/DeployPage"
-}
 route StrategyRoute { path: "/strategy/:id", to: StrategyPage }
 page StrategyPage {
   authRequired: true,
@@ -187,19 +182,11 @@ query runStrategy {
   fn: import { runStrategy } from "@src/playground/server/runStrategy",
   entities: [User]
 }
-
 action charge {
   fn: import { charge } from "@src/playground/server/operations",
   entities: [User]
 }
 // end runStrategy
-
-// region deploy
-query runCodeGeneration {
-  fn: import { runCodeGeneration } from "@src/deploy/server/runCodeGeneration",
-  entities: [User]
-}
-// end region deploy
 
 //region Auth Pages
 route LoginRoute { path: "/login", to: LoginPage }
