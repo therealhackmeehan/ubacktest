@@ -18,22 +18,19 @@ function StrategyResults({ id }: { id: string }) {
     }, [id]);
 
     return (
-        <>
-        <div>
-            results attached to this strategy
+        <div className="my-12">
+            <div className="text-xl font-extrabold my-2">Saved <span className="text-sky-600">Results</span> 
+                <span className="text-lg font-light"> from {id}</span></div>
+            {results && results.length > 0 ? (
+                <ul>
+                    {results.map((result: Result) => (
+                        <ResultDropDown key={result.id} result={result} />
+                    ))}
+                </ul>
+            ) : (
+                <div className="text-center">No results found. Create one by running a strategy and saving the result.</div>
+            )}
         </div>
-            <div className="mt-12">
-                {results && results.length > 0 ? (
-                    <ul>
-                        {results.map((result: Result) => (
-                            <ResultDropDown key={result.id} result={result} />
-                        ))}
-                    </ul>
-                ) : (
-                    <div>No results found. Create one by running a strategy.</div>
-                )}
-            </div>
-        </>
     )
 }
 
