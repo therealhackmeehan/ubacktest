@@ -2,16 +2,15 @@ import { useEffect, useState } from 'react';
 import { FiDelete, FiBookOpen } from 'react-icons/fi';
 import { MdOutlineEdit, MdDeleteOutline } from 'react-icons/md';
 import { type Result } from 'wasp/entities';
-import ResultPanel from '../../../playground/client/components/result/Result';
-import { FormInputProps, StrategyResultProps } from '../../../shared/sharedTypes';
-import RenameResultModal from './Modals/RenameResultModal';
-import DeleteResultModal from './Modals/DeleteResultModal';
+import ResultPanel from '../../../../playground/client/components/result/Result';
+import { FormInputProps, StrategyResultProps } from '../../../../shared/sharedTypes';
+import RenameResultModal from './modals/RenameResultModal';
+import DeleteResultModal from './modals/DeleteResultModal';
 import { getSpecificStrategy } from 'wasp/client/operations';
 import SmallPlot from './SmallPlot';
 
-export default function ResultDropDown({ result }: { result: Result }) {
+export default function ResultListItem({ result }: { result: Result }) {
 
-    const [strategyName, setStrategyName] = useState<string>('...');
     const [ret, setRet] = useState<string>('N/A');
 
     useEffect(() => {
@@ -25,16 +24,6 @@ export default function ResultDropDown({ result }: { result: Result }) {
                 if (retToSet) {
                     setRet(retToSet.toFixed(2) + '%');
                 }
-            }
-
-            if (!result.fromStrategyID) {
-                setStrategyName('(deleted)');
-                return;
-            }
-
-            const sName = await getSpecificStrategy({ id: result.fromStrategyID });
-            if (sName) {
-                setStrategyName(sName.name);
             }
 
         };
@@ -64,7 +53,7 @@ export default function ResultDropDown({ result }: { result: Result }) {
 
     return (
         <>
-            <div className='flex justify-between m-4 items-center p-2 rounded-lg bg-slate-100 border-slate-200 border-2 hover:shadow-lg duration-700'>
+            <div className='flex justify-between my-3 mx-1 items-center p-2 rounded-lg bg-slate-100 border-slate-200 border-2 hover:shadow-lg duration-700'>
                 <div className='flex justify-between gap-x-3'>
                     <div className='tracking-tight text-xl font-semibold'>
                         {result.name}
@@ -74,10 +63,6 @@ export default function ResultDropDown({ result }: { result: Result }) {
                     </div>
                     <div className='p-1'>
                         <SmallPlot data={result.data as unknown as StrategyResultProps} />
-                    </div>
-                    <div className='text-slate-400 text-xs'>
-                        from strategy:
-                        <span className='font-mono mx-1'>{strategyName}</span>
                     </div>
                 </div>
                 <div className='flex justify-between gap-x-2 items-center'>

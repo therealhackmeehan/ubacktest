@@ -1,8 +1,8 @@
 import { useState } from 'react';
 import { deleteResult } from 'wasp/client/operations';
 import { TiDelete } from "react-icons/ti";
-import useEnterKey from '../../../../client/hooks/useEnterKey';
-import ModalLayout from '../../../../client/components/ModalLayout';
+import useEnterKey from '../../../../../client/hooks/useEnterKey';
+import ModalLayout from '../../../../../client/components/ModalLayout';
 
 interface DeleteResultModalProps {
     closeModal: () => void;

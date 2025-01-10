@@ -7,7 +7,7 @@ function StrategyCodeGen({ code }: { code: string | null }) {
     const [symbol, setSymbol] = useState<string>('AAPL');
 
     return (
-        <div className="my-12">
+        <div className="mt-12">
             <div className="my-2 text-xl text-slate-800 tracking-tight font-extrabold">
                 <span className="text-sky-600">Deploy this Strategy</span> with Real or Paper Money
             </div>
@@ -30,7 +30,7 @@ function StrategyCodeGen({ code }: { code: string | null }) {
                         <option value="ytd">ytd</option>
                         <option value="max">max</option>
                     </select>
-                    <div>Stock To Include</div>
+                    <div>Stock To Trade</div>
                     <input
                         className="rounded-lg"
                         type='text'
@@ -47,7 +47,7 @@ function StrategyCodeGen({ code }: { code: string | null }) {
                         <option value="false">false</option>
                     </select>
                 </div>
-                <button className="bg-white border-2 border-black rounded-md p-2 hover:bg-green-700 hover:text-white shadow-sm">
+                <button className="bg-white border-2 border-black rounded-md p-2 bg-green-100 hover:bg-green-700 hover:text-white shadow-sm">
                     Generate Code
                 </button>
             </div>
@@ -68,7 +68,7 @@ function StrategyCodeGen({ code }: { code: string | null }) {
                     </button>
                 </div>
                 {!generatedCode &&
-                    <div className="py-24 text-center font-light tracking-tight text-black/40 bg-slate-50">
+                    <div className="py-48 text-center font-light tracking-tight text-black/40 bg-slate-50">
                         Generated Code Will Appear Here.
                     </div>
                 }

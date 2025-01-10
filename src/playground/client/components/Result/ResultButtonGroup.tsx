@@ -1,6 +1,6 @@
 import { useState } from "react"
 import { FiSave, FiShare, FiDownload } from "react-icons/fi"
-import NewResultModal from "../../../../results/client/components/Modals/NewResultModal";
+import NewResultModal from "../modals/NewResultModal";
 import html2canvas from "html2canvas";
 import { jsPDF } from "jspdf";
 import LoadingScreen from "../../../../client/components/LoadingScreen";

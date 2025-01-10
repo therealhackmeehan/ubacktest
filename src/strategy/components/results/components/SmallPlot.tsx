@@ -1,5 +1,5 @@
 import React from 'react';
-import { StrategyResultProps } from '../../../shared/sharedTypes';
+import { StrategyResultProps } from '../../../../shared/sharedTypes';
 
 type PlotProps = {
     data: StrategyResultProps;

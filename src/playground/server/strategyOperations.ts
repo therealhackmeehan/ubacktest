@@ -8,7 +8,10 @@ import {
   type RenameStrategy,
   type GetSpecificStrategy,
   type Charge,
+  type RunStrategy,
 } from 'wasp/server/operations';
+import { StrategyResultProps } from '../../shared/sharedTypes';
+import StrategyPipeline from './StrategyPipeline';
 
 type FileCreationInfo = {
   name: string;
@@ -109,6 +112,25 @@ export const updateStrategy: UpdateStrategy<Partial<Strategy>, Strategy> = async
     where: { id },
     data: { code },
   });
+};
+
+interface BacktestResultProps {
+  strategyResult: StrategyResultProps;
+  debugOutput: string;
+  stderr: string;
+  warning: string[];
+};
+
+export const runStrategy: RunStrategy<any, any> = async ({ formInputs, code }, context): Promise<BacktestResultProps> => {
+  if (!context.user) throw new HttpError(401);
+
+  if (!context.user.credits && context.user.subscriptionPlan !== "active" && !context.user.isAdmin) {
+      throw new HttpError(402, "You must add more credits or purchase an basic monthy subscription to use this software.");
+  }
+
+  const strategyInstance = new StrategyPipeline(formInputs, code);
+  return await strategyInstance.run();
+
 };
 
 export const charge: Charge<void, void> = async (_args, context) => {

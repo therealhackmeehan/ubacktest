@@ -40,6 +40,7 @@ export default function DeleteModal({ onSuccess, closeModal, id }: DeleteModalPr
                     <TiDelete size='1.8rem' className='hover:rotate-6 text-gray-900 hover:scale-110' />
                 </button>
             </div>
+            <div className="py-4 text-center italic text-red-900">please NOTE that this will also delete this strategy's saved results.</div>
             <div className="flex justify-between mt-4">
                 <button
                     className="bg-gray-500 text-white p-2 rounded hover:bg-gray-700"

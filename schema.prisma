@@ -55,7 +55,7 @@ model Result {
 
   name                      String
   code                      String
-  fromStrategy              Strategy?     @relation(fields: [fromStrategyID], references: [id], onDelete: SetNull)   
+  fromStrategy              Strategy?     @relation(fields: [fromStrategyID], references: [id], onDelete: Cascade)   
   fromStrategyID            String? 
 
   data                      Json

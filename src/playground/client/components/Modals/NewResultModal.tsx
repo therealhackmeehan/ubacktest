@@ -1,47 +1,51 @@
 import { useState } from 'react';
-import { renameResult } from 'wasp/client/operations';
-import { TiDelete } from "react-icons/ti";
-import { validateNewName } from '../../../../playground/client/scripts/modalHelpers';
+import { validateNewName } from '../../scripts/modalHelpers';
 import useEnterKey from '../../../../client/hooks/useEnterKey';
 import ModalLayout from '../../../../client/components/ModalLayout';
+import { TiDelete } from 'react-icons/ti';
 
-interface RenameModalProps {
+interface NewProjectModalProps {
+    onSuccess: (name: string) => Promise<void>;
     closeModal: () => void;
-    id: string;
-    currResultName: string;
+    symbol: string,
 }
 
-export default function RenameResultModal({ closeModal, id, currResultName }: RenameModalProps) {
+export default function NewResultModal({ onSuccess, closeModal, symbol }: NewProjectModalProps) {
 
-    const [newName, setNewName] = useState<string>(currResultName);
+    const currDate = new Date();
+    const currDateString: string = currDate.toLocaleDateString().replaceAll('/', '_')
+    const fullPlaceholderName = symbol + '_result_' + currDateString;
+
+    const [newResultName, setNewResultName] = useState<string>(fullPlaceholderName);
     const [errMsg, setErrMsg] = useState<string>('');
 
-    const handleResultRename = async () => {
+    const handleNewResult = async () => {
         setErrMsg('');
         try {
-            validateNewName(newName);
-            await renameResult({ id, name: newName });
+            validateNewName(newResultName);
+            await onSuccess(newResultName);
             closeModal();
+            alert('Success! Find the result in my saved results!')
         } catch (error: any) {
             setErrMsg(error.message);
         }
     };
 
-    useEnterKey(handleResultRename);
+    useEnterKey(handleNewResult);
 
     return (
         <ModalLayout>
             <div className='flex justify-between'>
-                <h2 className="text-base text-slate-500 font-semibold">Rename Your <span className="text-slate-800">Saved Result</span></h2>
+                <h2 className="text-base text-slate-500 font-semibold">Save Result <span className="text-slate-800">To My Results</span></h2>
                 <button onClick={closeModal}>
                     <TiDelete size='1.8rem' className='hover:rotate-6 text-gray-900 hover:scale-110' />
                 </button>
             </div>
             <input
                 type="text"
-                placeholder="Enter new name"
-                value={newName}
-                onChange={(e) => setNewName(e.target.value)}
+                placeholder="Enter result name"
+                value={newResultName}
+                onChange={(e) => setNewResultName(e.target.value)}
                 className="border p-2 rounded w-full mt-4"
                 autoFocus
             />
@@ -54,7 +58,7 @@ export default function RenameResultModal({ closeModal, id, currResultName }: Re
                 </button>
                 <button
                     className="bg-slate-500 text-white p-2 rounded hover:bg-slate-700"
-                    onClick={handleResultRename}
+                    onClick={handleNewResult}
                 >
                     Confirm
                 </button>

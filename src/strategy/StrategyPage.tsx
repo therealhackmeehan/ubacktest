@@ -51,18 +51,18 @@ function StrategyPage() {
     }, [user, id]);
 
     if (error) {
-        return <div>{error}</div>;
+        return <ContentWrapper>{error}</ContentWrapper>;
     }
 
     if (!strategy) {
-        return <div>Loading...</div>;
+        return <ContentWrapper>Loading...</ContentWrapper>;
     }
 
     return (
         <ContentWrapper>
             <StrategyOverview strategy={strategy} />
             <StrategyPreview strategy={strategy} />
-            <StrategyResults id={strategy.id} />
+            <StrategyResults id={strategy.id} name={strategy.name}/>
             <StrategyCodeGen code={strategy.code} />
         </ContentWrapper>
     );
