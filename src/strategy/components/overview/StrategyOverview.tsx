@@ -1,8 +1,8 @@
 import { Strategy } from "wasp/entities";
-import { routes } from 'wasp/client/router';
+import { Link, routes } from 'wasp/client/router';
 import RenameModal from "../../../playground/client/components/modals/RenameModal";
 import DeleteModal from "../../../playground/client/components/modals/DeleteModal";
-import { MdDeleteOutline, MdOutlineEdit } from "react-icons/md";
+import { MdArrowBack, MdDeleteOutline, MdOutlineEdit } from "react-icons/md";
 import { useState } from "react";
 
 function StrategyOverview({ strategy }: { strategy: Strategy }) {
@@ -24,7 +24,11 @@ function StrategyOverview({ strategy }: { strategy: Strategy }) {
 
     return (
         <>
-            <div className="flex justify-around items-end m-2">
+            <Link className="p-1 mx-1 mb-10 items-center flex gap-x-1 hover:underline hover:bg-slate-50 rounded-lg"
+                to={"/home"}>
+                <MdArrowBack /> back to strategies
+            </Link>
+            <div className="flex justify-between items-end m-2">
                 <div className="text-6xl tracking-tight font-bold">
                     <span className="text-sm mr-3 text-sky-600">strategy</span>{nameToDisplay}<span className="text-sky-600">.</span>
                 </div>

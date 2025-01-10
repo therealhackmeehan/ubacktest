@@ -12,13 +12,13 @@ import { DocsUrl, BlogUrl } from '../../shared/common';
 import DarkModeSwitcher from './DarkModeSwitcher';
 
 const mainNavigation = [
-  { name: 'Strategy Editor', href: routes.EditorRoute.build() },
-  { name: 'My Strategies', href: routes.HomePageRoute.build() },
+  { name: 'Strategy Editor', to: "/editor" },
+  { name: 'My Strategies', to: "/home" },
 ];
 
 const subNavigation = [
-  { name: 'Documentation', href: DocsUrl },
-  { name: 'Pricing', href: routes.PricingPageRoute.build() },
+  { name: 'Documentation', to: DocsUrl },
+  { name: 'Pricing', to: "/pricing" },
 ]
 
 const NavLogo = () => <img className='h-8 w-8' src={logo} alt='Your SaaS App' />;
@@ -31,9 +31,9 @@ export default function AppNavBar() {
     <header className='bg-white bg-opacity-50 backdrop-blur-lg backdrop-filter dark:border dark:border-gray-100/10 dark:bg-boxdark-2'>
       <nav className='flex items-center justify-between p-6 lg:px-8' aria-label='Global'>
         <div className='flex lg:flex-1'>
-          <a href='/' className='-m-1.5 p-1.5'>
+          <Link to='/' className='-m-1.5 p-1.5'>
             <img className='h-8 w-8 invert -hue-rotate-15 saturate-50' src={logo} alt='My SaaS App' />
-          </a>
+          </Link>
         </div>
         <div className='flex lg:hidden'>
           <button
@@ -46,27 +46,33 @@ export default function AppNavBar() {
           </button>
         </div>
         <div className='hidden lg:flex lg:gap-x-12'>
-          {mainNavigation.map((item) => (
-            <a
-              key={item.name}
-              href={item.href}
-              className='text-sm font-semibold leading-6 text-gray-900 duration-300 ease-in-out hover:text-slate-500 dark:text-white'
-            >
-              {item.name}
-            </a>
-          ))}
+          <Link
+            to={"/editor"}
+            className='text-sm font-semibold leading-6 text-gray-900 duration-300 ease-in-out hover:text-slate-500 dark:text-white'
+          >
+            Strategy Editor
+          </Link>
+          <Link
+            to={"/home"}
+            className='text-sm font-semibold leading-6 text-gray-900 duration-300 ease-in-out hover:text-slate-500 dark:text-white'
+          >
+            My Strategies
+          </Link>
         </div>
         <div className='hidden lg:flex mx-12 border-r-2 py-4 border-black/80'></div>
         <div className='hidden lg:flex lg:gap-x-12 lg:mr-4'>
-          {subNavigation.map((item) => (
-            <a
-              key={item.name}
-              href={item.href}
-              className='text-sm leading-6 text-sky-600 duration-300 ease-in-out hover:text-slate-500 dark:text-white'
-            >
-              {item.name}
-            </a>
-          ))}
+          <Link
+            to={"/home"}
+            className='text-sm leading-6 text-sky-600 duration-300 ease-in-out hover:text-slate-500 dark:text-white'
+          >
+            Documentation
+          </Link>
+          <Link
+            to={"/pricing"}
+            className='text-sm leading-6 text-sky-600 duration-300 ease-in-out hover:text-slate-500 dark:text-white'
+          >
+            Pricing
+          </Link>
         </div>
         <div className='hidden lg:flex lg:flex-1 gap-3 justify-end items-center'>
           <ul className='flex justify-center items-center gap-2 sm:gap-4'>
@@ -107,26 +113,26 @@ export default function AppNavBar() {
             <div className='-my-6 divide-y divide-gray-500/10'>
               <div className='space-y-2 py-6'>
                 {mainNavigation.map((item) => (
-                  <a
+                  <Link
                     key={item.name}
-                    href={item.href}
+                    to={item.to}
                     onClick={() => setMobileMenuOpen(false)}
                     className='-mx-3 block rounded-lg px-3 py-2 text-base font-semibold leading-7 text-gray-900 hover:bg-gray-50 dark:text-white hover:dark:bg-boxdark-2'
                   >
                     {item.name}
-                  </a>
+                  </Link>
                 ))}
               </div>
               <div className='space-y-2 scale-90 py-6'>
                 {subNavigation.map((item) => (
-                  <a
+                  <Link
                     key={item.name}
-                    href={item.href}
+                    to={item.to}
                     onClick={() => setMobileMenuOpen(false)}
                     className='-mx-3 block rounded-lg px-3 py-2 text-base font-semibold leading-7 text-gray-900 hover:bg-gray-50 dark:text-white hover:dark:bg-boxdark-2'
                   >
                     {item.name}
-                  </a>
+                  </Link>
                 ))}
               </div>
               <div className='py-6'>

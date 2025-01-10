@@ -7,7 +7,7 @@ function StrategyCodeGen({ code }: { code: string | null }) {
     const [symbol, setSymbol] = useState<string>('AAPL');
 
     return (
-        <div className="mt-12">
+        <div className="mt-18">
             <div className="my-2 text-xl text-slate-800 tracking-tight font-extrabold">
                 <span className="text-sky-600">Deploy this Strategy</span> with Real or Paper Money
             </div>
@@ -47,7 +47,7 @@ function StrategyCodeGen({ code }: { code: string | null }) {
                         <option value="false">false</option>
                     </select>
                 </div>
-                <button className="bg-white border-2 border-black rounded-md p-2 bg-green-100 hover:bg-green-700 hover:text-white shadow-sm">
+                <button className="border-2 border-black rounded-md p-2 bg-green-100 hover:bg-green-700 hover:text-white shadow-sm">
                     Generate Code
                 </button>
             </div>

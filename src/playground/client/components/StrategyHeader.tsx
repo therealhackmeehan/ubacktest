@@ -3,7 +3,7 @@ import DeleteModal from "./modals/DeleteModal";
 import RenameModal from "./modals/RenameModal";
 import { MdDeleteOutline, MdOutlineEdit } from "react-icons/md";
 import { useAuth } from "wasp/client/auth";
-import { routes } from "wasp/client/router";
+import { routes, Link } from "wasp/client/router";
 
 interface StrategyHeaderProps {
     nameToDisplay: string;
@@ -36,9 +36,14 @@ export default function StrategyHeader({ nameToDisplay, selectedStrategy, setNam
         <div className="text-gray-800 pt-3 px-3 mx-1 flex justify-between items-center">
 
             <div className="flex gap-1">
-                <h4 className='font-bold tracking-tight pb-1 text-3xl'>
+                <Link
+                    title='go to strategy page'
+                    className="font-bold tracking-tight pb-1 text-3xl hover:text-slate-500"
+                    key={selectedStrategy}
+                    to="/strategy/:id"
+                    params={{ id: selectedStrategy }}>
                     {nameToDisplay}
-                </h4>
+                </Link>
                 <button className='pl-3 hover:text-slate-500 text-sky-600 duration-700' title='Rename Strategy'
                     onClick={() => setIsRenameModalOpen(true)}>
                     <MdOutlineEdit size='1.4rem' />
@@ -75,7 +80,7 @@ export default function StrategyHeader({ nameToDisplay, selectedStrategy, setNam
                     </button>}
 
             </div>
-            
+
         </div>
     )
 }

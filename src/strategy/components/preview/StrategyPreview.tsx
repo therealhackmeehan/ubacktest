@@ -28,7 +28,7 @@ function StrategyPreview({ strategy }: { strategy: Strategy }) {
     }
 
     return (
-        <div className="my-12">
+        <div className="my-18">
             <div className="my-2 text-xl tracking-tight font-extrabold text-black">Code <span className="text-sky-600">Preview</span></div>
             <Editor
                 className="invert hue-rotate-180 hover:hue-rotate-15"

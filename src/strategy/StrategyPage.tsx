@@ -3,12 +3,14 @@ import { getSpecificStrategy } from "wasp/client/operations";
 import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import { useAuth } from "wasp/client/auth";
+import { Link, routes } from "wasp/client/router"
 
 import StrategyOverview from "./components/overview/StrategyOverview";
 import StrategyPreview from "./components/preview/StrategyPreview";
 import StrategyResults from "./components/results/StrategyResults";
 import StrategyCodeGen from "./components/codegen/StrategyCodeGen";
 import ContentWrapper from "../client/components/ContentWrapper";
+import LoadingScreen from "../client/components/LoadingScreen";
 
 function StrategyPage() {
     const { id } = useParams<'id'>();
@@ -51,18 +53,28 @@ function StrategyPage() {
     }, [user, id]);
 
     if (error) {
-        return <ContentWrapper>{error}</ContentWrapper>;
+        return <ContentWrapper>
+            <div className="mt-18 py-24 px-2 font-bold tracking-tight text-center text-2xl rounded-md bg-slate-100">
+                <div className="font-light">You've stumbled into an error...</div>
+                {error}.
+            </div>
+            <div className="text-center my-6">
+                <Link className="underline" to="/home">
+                    Go back to my strategies.
+                </Link>
+            </div>
+        </ContentWrapper>;
     }
 
     if (!strategy) {
-        return <ContentWrapper>Loading...</ContentWrapper>;
+        return <LoadingScreen />;
     }
 
     return (
         <ContentWrapper>
             <StrategyOverview strategy={strategy} />
             <StrategyPreview strategy={strategy} />
-            <StrategyResults id={strategy.id} name={strategy.name}/>
+            <StrategyResults id={strategy.id} />
             <StrategyCodeGen code={strategy.code} />
         </ContentWrapper>
     );
