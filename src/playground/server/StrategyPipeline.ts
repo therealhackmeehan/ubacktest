@@ -79,7 +79,7 @@ class StrategyPipeline {
         // Extract necessary fields from strategyResult
         const { timestamp, volume, high, low, open, close } = this.strategyResult;
         const toEmbedInMain = { timestamp, volume, high, low, open, close };
-        const mainFileContent = StrategyPipeline.main_py(uniqueKey, toEmbedInMain);
+        const mainFileContent = StrategyPipeline.main_py(this.code, uniqueKey, toEmbedInMain);
 
         // Prepare the request payload
         const payload = {
@@ -87,7 +87,6 @@ class StrategyPipeline {
             version: "3.10.0",
             files: [
                 { name: "main.py", content: mainFileContent },
-                { name: "strategy.py", content: this.code },
             ],
         };
 
@@ -116,10 +115,7 @@ class StrategyPipeline {
             );
         }
 
-        // Append warning if `main.py` errors are present
-        this.stderr = stderr.includes('main.py')
-            ? `Note: Errors originating in "main.py" may be disregarded, as it serves as the processing function orchestrating the test.\n\n${stderr}`
-            : stderr;
+        this.stderr = stderr;
 
         // Extract data from the Python output
         const parsedData = this.parsePythonOutput(stdout, uniqueKey);
@@ -310,13 +306,12 @@ class StrategyPipeline {
         return normalizedQuote;
     }
 
-    private static main_py(uniqueKey: string, toEmbedInMain: any): string {
+    private static main_py(code: string, uniqueKey: string, toEmbedInMain: any): string {
 
         const m =
 
-            `# main.py
+`${code}
 
-from strategy import strategy
 import json
 import pandas as pd
 
@@ -352,6 +347,8 @@ df['signal'].fillna(0, inplace=True)
 dfToReturn = df[['signal']].round(3).to_dict('list')
 
 print("${uniqueKey}START${uniqueKey}" + json.dumps(dfToReturn) + "${uniqueKey}END${uniqueKey}")`;
+
+        console.log(m); 
 
         return m;
     }

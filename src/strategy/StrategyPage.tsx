@@ -1,9 +1,7 @@
-import type { Strategy } from "wasp/entities";
 import { getSpecificStrategy } from "wasp/client/operations";
-import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
-import { useAuth } from "wasp/client/auth";
-import { Link, routes } from "wasp/client/router"
+import { Link } from "wasp/client/router"
+import { useQuery } from "wasp/client/operations";
 
 import StrategyOverview from "./components/overview/StrategyOverview";
 import StrategyPreview from "./components/preview/StrategyPreview";
@@ -14,49 +12,17 @@ import LoadingScreen from "../client/components/LoadingScreen";
 
 function StrategyPage() {
     const { id } = useParams<'id'>();
-    const { data: user } = useAuth();
-    const [strategy, setStrategy] = useState<Strategy | null>(null);
-    const [error, setError] = useState<string | null>(null);
+    const { data: strategy, isLoading: isStrategyLoading, error: getStrategyError } = useQuery(getSpecificStrategy, {
+        id: id
+    });
 
-    useEffect(() => {
-        if (!user) {
-            setError('Unauthorized access');
-            return;
-        }
+    if (isStrategyLoading) return <LoadingScreen />
 
-        const fetchStrategy = async () => {
-            try {
-                if (!id) {
-                    setError('No strategy ID provided');
-                    return;
-                }
-
-                const s = await getSpecificStrategy({ id: id });
-
-                if (!s) {
-                    setError('That strategy could not be found');
-                    return;
-                }
-
-                if (s.userId !== user.id) {
-                    setError('You dont have permission to access this strategy');
-                    return;
-                }
-
-                setStrategy(s);
-            } catch (err) {
-                setError('An error occurred while fetching the strategy');
-            }
-        };
-
-        fetchStrategy();
-    }, [user, id]);
-
-    if (error) {
+    if (!strategy || getStrategyError) {
         return <ContentWrapper>
             <div className="mt-18 py-24 px-2 font-bold tracking-tight text-center text-2xl rounded-md bg-slate-100">
                 <div className="font-light">You've stumbled into an error...</div>
-                {error}.
+                This likely means that the strategy doesn't exist or you don't have access to this strategy.
             </div>
             <div className="text-center my-6">
                 <Link className="underline" to="/home">
@@ -71,12 +37,16 @@ function StrategyPage() {
     }
 
     return (
-        <ContentWrapper>
-            <StrategyOverview strategy={strategy} />
-            <StrategyPreview strategy={strategy} />
-            <StrategyResults id={strategy.id} />
-            <StrategyCodeGen code={strategy.code} />
-        </ContentWrapper>
+        <div className="bg-gradient-to-b from-sky-100">
+            <div className="mx-auto max-w-7xl">
+                <div className="mx-4 p-8">
+                    <StrategyOverview strategy={strategy} />
+                    <StrategyPreview strategy={strategy} />
+                    <StrategyResults strategy={strategy} />
+                    <StrategyCodeGen code={strategy.code} />
+                </div>
+            </div>
+        </div>
     );
 }
 

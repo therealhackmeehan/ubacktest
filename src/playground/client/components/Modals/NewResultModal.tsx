@@ -25,7 +25,7 @@ export default function NewResultModal({ onSuccess, closeModal, symbol }: NewPro
             validateNewName(newResultName);
             await onSuccess(newResultName);
             closeModal();
-            alert('Success! Find the result in my saved results!')
+            alert('Success! You can find this result saved under its parent strategy.');
         } catch (error: any) {
             setErrMsg(error.message);
         }

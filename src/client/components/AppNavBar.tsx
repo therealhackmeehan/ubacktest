@@ -112,28 +112,36 @@ export default function AppNavBar() {
           <div className='mt-6 flow-root'>
             <div className='-my-6 divide-y divide-gray-500/10'>
               <div className='space-y-2 py-6'>
-                {mainNavigation.map((item) => (
-                  <Link
-                    key={item.name}
-                    to={item.to}
-                    onClick={() => setMobileMenuOpen(false)}
-                    className='-mx-3 block rounded-lg px-3 py-2 text-base font-semibold leading-7 text-gray-900 hover:bg-gray-50 dark:text-white hover:dark:bg-boxdark-2'
-                  >
-                    {item.name}
-                  </Link>
-                ))}
+                <Link
+                  to={"/editor"}
+                  onClick={() => setMobileMenuOpen(false)}
+                  className='-mx-3 block rounded-lg px-3 py-2 text-base font-semibold leading-7 text-gray-900 hover:bg-gray-50 dark:text-white hover:dark:bg-boxdark-2'
+                >
+                  Strategy Editor
+                </Link>
+                <Link
+                  to={"/home"}
+                  onClick={() => setMobileMenuOpen(false)}
+                  className='-mx-3 block rounded-lg px-3 py-2 text-base font-semibold leading-7 text-gray-900 hover:bg-gray-50 dark:text-white hover:dark:bg-boxdark-2'
+                >
+                  My Strategies
+                </Link>
               </div>
               <div className='space-y-2 scale-90 py-6'>
-                {subNavigation.map((item) => (
-                  <Link
-                    key={item.name}
-                    to={item.to}
-                    onClick={() => setMobileMenuOpen(false)}
-                    className='-mx-3 block rounded-lg px-3 py-2 text-base font-semibold leading-7 text-gray-900 hover:bg-gray-50 dark:text-white hover:dark:bg-boxdark-2'
-                  >
-                    {item.name}
-                  </Link>
-                ))}
+                <Link
+                  to={"/pricing"}
+                  onClick={() => setMobileMenuOpen(false)}
+                  className='-mx-3 block rounded-lg px-3 py-2 text-base font-semibold leading-7 text-gray-900 hover:bg-gray-50 dark:text-white hover:dark:bg-boxdark-2'
+                >
+                  Pricing
+                </Link>
+                <Link
+                  to={"/home"}
+                  onClick={() => setMobileMenuOpen(false)}
+                  className='-mx-3 block rounded-lg px-3 py-2 text-base font-semibold leading-7 text-gray-900 hover:bg-gray-50 dark:text-white hover:dark:bg-boxdark-2'
+                >
+                  Documentation
+                </Link>
               </div>
               <div className='py-6'>
                 {isUserLoading ? null : !user ? (

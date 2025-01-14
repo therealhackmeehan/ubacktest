@@ -23,8 +23,8 @@ function StrategyOverview({ strategy }: { strategy: Strategy }) {
     }
 
     return (
-        <>
-            <Link className="p-1 mx-1 mb-10 items-center flex gap-x-1 hover:underline hover:bg-slate-50 rounded-lg"
+        <div className="rounded-lg bg-slate-100 p-4 shadow-lg border-2 border-black hover:shadow-xl hover:translate-x-1 duration-1000">
+            <Link className="p-1 mx-1 items-center flex gap-x-1 hover:underline hover:bg-slate-50 rounded-lg"
                 to={"/home"}>
                 <MdArrowBack /> back to strategies
             </Link>
@@ -65,7 +65,7 @@ function StrategyOverview({ strategy }: { strategy: Strategy }) {
                 </div>
             </div>
             <div className="border-2 border-slate-200 my-2"></div>
-        </>
+        </div>
     )
 }
 

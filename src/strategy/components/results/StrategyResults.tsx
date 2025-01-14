@@ -1,27 +1,27 @@
-import { Result } from "wasp/entities";
+import { Result, Strategy } from "wasp/entities";
 import { useState, useEffect } from "react";
 import { getResultsForStrategy } from "wasp/client/operations";
 import ResultListItem from "./components/ResultListItem";
 
-function StrategyResults({ id }: {id: string}) {
+function StrategyResults({ strategy }: { strategy: Strategy }) {
     const [results, setResults] = useState<Result[] | null>(null);
     const [showAll, setShowAll] = useState(false);
 
     useEffect(() => {
         const fetchResults = async () => {
-            const r = await getResultsForStrategy({ fromStrategyID: id });
+            const r = await getResultsForStrategy({ fromStrategyID: strategy.id });
             setResults(r);
         };
 
         fetchResults();
-    }, [id]);
+    }, [strategy]);
 
     const toggleShowAll = () => setShowAll((prev) => !prev);
 
     return (
-        <div className="my-18">
+        <div className="my-10 bg-white rounded-lg p-4 shadow-lg border-2 border-black hover:translate-x-1 hover:shadow-xl duration-1000">
             <div className="text-xl font-extrabold my-2">
-                Saved Results from <span className="text-sky-600 italic font-normal">this Strategy</span>
+                Saved Results from <span className="text-sky-600 italic font-normal">{strategy.name}</span>
             </div>
             {results && results.length > 0 ? (
                 <>
