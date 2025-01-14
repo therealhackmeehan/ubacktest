@@ -28,7 +28,7 @@ function StrategyPreview({ strategy }: { strategy: Strategy }) {
     }
 
     return (
-        <div className="my-10 p-4 rounded-lg bg-white shadow-lg border-2 border-black hover:translate-x-1 hover:shadow-xl duration-1000">
+        <div className="my-10 p-4 rounded-lg bg-white shadow-lg border-2 border-black duration-1000">
             <div className="my-2 text-xl tracking-tight font-extrabold text-black">Code <span className="text-sky-600">Preview</span></div>
             <Editor
                 className="invert hue-rotate-180 hover:hue-rotate-15"
@@ -39,7 +39,7 @@ function StrategyPreview({ strategy }: { strategy: Strategy }) {
                 value={strategy.code || 'No code found for this strategy.'}
                 loading={(<div className="text-white font-2xl tracking-tight">Loading...</div>)}
             />
-            <button className='w-full flex justify-center gap-x-2 p-1 my-2 text-sm rounded-md bg-slate-100 hover:bg-slate-200 duration-700'
+            <button className='w-full flex justify-center gap-x-2 p-1 rounded-b-md bg-slate-600 text-white hover:bg-slate-200 hover:text-black duration-700'
                 onClick={() => handleToLocalStorage(strategy.id)}>
                 <FaRegEdit /> edit this strategy in the editor
             </button>

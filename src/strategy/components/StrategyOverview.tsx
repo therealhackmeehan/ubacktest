@@ -23,8 +23,8 @@ function StrategyOverview({ strategy }: { strategy: Strategy }) {
     }
 
     return (
-        <div className="rounded-lg bg-slate-100 p-4 shadow-lg border-2 border-black hover:shadow-xl hover:translate-x-1 duration-1000">
-            <Link className="p-1 mx-1 items-center flex gap-x-1 hover:underline hover:bg-slate-50 rounded-lg"
+        <div className="p-4">
+            <Link className="p-t1 pb-8 mx-1 items-center flex gap-x-1 hover:underline hover:bg-slate-50 rounded-lg"
                 to={"/home"}>
                 <MdArrowBack /> back to strategies
             </Link>
@@ -37,6 +37,7 @@ function StrategyOverview({ strategy }: { strategy: Strategy }) {
                     <button className='hover:text-slate-500' onClick={() => setRenameModalOpen(true)}>
                         <MdOutlineEdit size='2rem' />
                     </button>
+
                     {renameModalOpen &&
                         <RenameModal
                             currName={nameToDisplay}
@@ -47,7 +48,9 @@ function StrategyOverview({ strategy }: { strategy: Strategy }) {
 
                     <button className='hover:text-slate-500' onClick={() => setDeleteModalOpen(true)}>
                         <MdDeleteOutline size='2rem' />
-                    </button>                    {deleteModalOpen &&
+                    </button>
+
+                    {deleteModalOpen &&
                         <DeleteModal
                             id={strategy.id}
                             closeModal={() => setDeleteModalOpen(false)}
@@ -64,7 +67,6 @@ function StrategyOverview({ strategy }: { strategy: Strategy }) {
                     </div>
                 </div>
             </div>
-            <div className="border-2 border-slate-200 my-2"></div>
         </div>
     )
 }

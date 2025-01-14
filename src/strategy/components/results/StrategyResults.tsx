@@ -19,7 +19,7 @@ function StrategyResults({ strategy }: { strategy: Strategy }) {
     const toggleShowAll = () => setShowAll((prev) => !prev);
 
     return (
-        <div className="my-10 bg-white rounded-lg p-4 shadow-lg border-2 border-black hover:translate-x-1 hover:shadow-xl duration-1000">
+        <div className="my-10 bg-white rounded-lg p-4 shadow-lg border-2 border-black duration-1000">
             <div className="text-xl font-extrabold my-2">
                 Saved Results from <span className="text-sky-600 italic font-normal">{strategy.name}</span>
             </div>

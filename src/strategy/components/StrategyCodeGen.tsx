@@ -7,7 +7,7 @@ function StrategyCodeGen({ code }: { code: string | null }) {
     const [symbol, setSymbol] = useState<string>('AAPL');
 
     return (
-        <div className="mt-10 p-4 rounded-lg bg-slate-100 shadow-lg border-2 border-black hover:shadow-xl hover:translate-x-1 duration-1000">
+        <div className="mt-10 p-4 rounded-lg bg-slate-100 shadow-lg border-2 border-black duration-1000">
             <div className="my-2 text-xl text-slate-800 tracking-tight font-extrabold">
                 <span className="text-sky-600">Deploy this Strategy</span> with Real or Paper Money
             </div>
@@ -52,18 +52,18 @@ function StrategyCodeGen({ code }: { code: string | null }) {
                 </button>
             </div>
 
-            <div className="mt-2 border-2 border-slate-400">
-                <div className="flex text-xs justify-start border-b-2 border-black">
+            <div className="mt-2 border-2 border-slate-800">
+                <div className="flex text-xs justify-start bg-slate-600">
                     <button
                         type='button'
                         onClick={() => (console.log())} // Keep the existing button functionality
-                        className="flex px-3 py-1 items-center text-center tracking-tight text-gray-800 hover:bg-slate-100 hover:font-bold"
+                        className="flex px-3 py-1 items-center text-center tracking-tight text-white hover:bg-slate-800 hover:font-bold"
                     > download
                     </button>
                     <button
                         type='button'
                         onClick={() => (console.log())} // Keep the existing button functionality
-                        className="flex px-3 py-1 items-center text-center tracking-tight text-gray-800 hover:bg-slate-100 hover:font-bold"
+                        className="flex px-3 py-1 items-center text-center tracking-tight text-white hover:bg-slate-800 hover:font-bold"
                     > copy
                     </button>
                 </div>
