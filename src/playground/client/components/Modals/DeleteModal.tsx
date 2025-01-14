@@ -3,9 +3,10 @@ import { deleteStrategy, getStrategies } from 'wasp/client/operations';
 import { TiDelete } from "react-icons/ti";
 import useEnterKey from '../../../../client/hooks/useEnterKey';
 import ModalLayout from '../../../../client/components/ModalLayout';
+import { Strategy } from 'wasp/entities';
 
 interface DeleteModalProps {
-    onSuccess: (value: string) => void;
+    onSuccess: (s: Strategy | null) => void;
     closeModal: () => void;
     id: string;
 }
@@ -21,9 +22,9 @@ export default function DeleteModal({ onSuccess, closeModal, id }: DeleteModalPr
             const strategies = await getStrategies();
 
             if (strategies) {
-                onSuccess(strategies[0].id);
+                onSuccess(strategies[0]);
             } else {
-                onSuccess('');
+                onSuccess(null);
             }
         } catch (error: any) {
             setErrMsg(error.message);

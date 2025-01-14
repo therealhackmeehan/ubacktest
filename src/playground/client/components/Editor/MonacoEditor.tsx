@@ -4,15 +4,10 @@ import { updateStrategy } from "wasp/client/operations";
 import DownloadButton from "./DownloadButton";
 import UploadButton from "./UploadButton";
 import ErrorModal from "../modals/ErrorModal";
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect, useRef, useContext } from "react";
 import ExamplesModal from "../modals/ExamplesModal";
 import { MdLaunch } from "react-icons/md";
-
-interface MEditorProps {
-    code: string;
-    setCode: (value: string) => void;
-    ID: string;
-}
+import { StrategyContext } from "../../EditorPage";
 
 const editorOpts = {
     minimap: {
@@ -26,8 +21,15 @@ const editorOpts = {
     }
 }
 
-function MonacoEditor({ code, setCode, ID }: MEditorProps) {
+interface MonacoEditorProps {
+    codeToDisplay: string;
+    setCodeToDisplay: (value: string) => void;
+}
 
+function MonacoEditor({codeToDisplay, setCodeToDisplay}: MonacoEditorProps) {
+
+    const { selectedStrategy } = useContext(StrategyContext);
+    
     const [errMsg, setErrMsg] = useState<string>('');
     const [buttonText, setButtonText] = useState<string>('save');
     const [saving, setSaving] = useState<boolean>(false);
@@ -37,7 +39,7 @@ function MonacoEditor({ code, setCode, ID }: MEditorProps) {
 
     const handleEditorChange = (value: string | undefined) => {
         if (value !== undefined) {
-            setCode(value);
+            setCodeToDisplay(value);
         }
     };
 
@@ -48,7 +50,7 @@ function MonacoEditor({ code, setCode, ID }: MEditorProps) {
         setSaving(true);
 
         try {
-            await updateStrategy({ id: ID, code: code });
+            await updateStrategy({ id: selectedStrategy.id, code: codeToDisplay });
             console.log("saved!");
 
             // Text animation effect
@@ -96,10 +98,10 @@ function MonacoEditor({ code, setCode, ID }: MEditorProps) {
 
         window.addEventListener('keydown', handleKeyDown);
         return () => window.removeEventListener('keydown', handleKeyDown);
-    }, [code]); // Reattach listener if `code` changes
+    }, [codeToDisplay]); // Reattach listener if `code` changes
 
     function onSuccess(code: string) {
-        setCode(code);
+        setCodeToDisplay(code);
         setExamplesModalOpen(false);
     }
 
@@ -116,14 +118,14 @@ function MonacoEditor({ code, setCode, ID }: MEditorProps) {
                 >
                     <FiSave size='1.2rem' className="pr-1" /> {buttonText}
                 </button>
-                <DownloadButton code={code} />
-                <UploadButton setCode={setCode} />
+                <DownloadButton code={codeToDisplay} />
+                <UploadButton setCode={setCodeToDisplay} />
                 <button className='border-l-2 border-black flex gap-x-1 px-3 py-1 hover:bg-slate-100 hover:font-bold items-center text-center text-gray-800 tracking-tight'
                     onClick={() => setExamplesModalOpen(true)}>
                     <MdLaunch />Examples
                 </button>
             </div>
-            <Editor className="invert hue-rotate-180" height="80vh" defaultLanguage='python' theme="vs-dark" value={code} onChange={handleEditorChange} options={editorOpts}
+            <Editor className="invert hue-rotate-180" height="80vh" defaultLanguage='python' theme="vs-dark" value={selectedStrategy.code} onChange={handleEditorChange} options={editorOpts}
                 loading={(<div className="text-white font-2xl tracking-tight">Loading...</div>)} />
 
             {examplesModalOpen &&

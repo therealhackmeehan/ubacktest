@@ -1,5 +1,4 @@
-import { FormInputProps } from "../../../../shared/sharedTypes";
-import { StrategyResultProps } from "../../../../shared/sharedTypes";
+import { FormInputProps, StrategyResultProps } from "../../../../shared/sharedTypes";
 import Result from "./Result";
 
 interface ResultProps {

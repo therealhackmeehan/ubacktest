@@ -1,4 +1,4 @@
-import { useState } from "react"
+import { useState, useContext, useEffect } from "react"
 import MonacoEditor from "./MonacoEditor";
 import ErrorModal from "../modals/ErrorModal";
 import DebugConsole from "./DebugConsole";
@@ -9,12 +9,10 @@ import validatePythonCode from "../../scripts/validatePythonCode";
 import { FormInputProps, StrategyResultProps } from "../../../../shared/sharedTypes";
 import { type stdProps } from "../StrategyEditor";
 import LoadingScreen from "../../../../client/components/LoadingScreen";
+import { StrategyContext } from "../../EditorPage";
 
 interface EditorProps {
-    codeToDisplay: string;
-    selectedStrategy: string;
     formInputs: FormInputProps;
-    setCodeToDisplay: (value: string) => void;
     setStrategyResult: (value: StrategyResultProps | null) => void;
     setResultOpen: (value: boolean) => void;
     setFormInputs: (value: any) => void;
@@ -23,7 +21,16 @@ interface EditorProps {
     setStd: (value: any) => void;
 }
 
-function Editor({ codeToDisplay, selectedStrategy, formInputs, setCodeToDisplay, setStrategyResult, setResultOpen, setFormInputs, setStrategyResultIsConnectedTo, std, setStd }: EditorProps) {
+function Editor({ formInputs, setStrategyResult, setResultOpen, setFormInputs, setStrategyResultIsConnectedTo, std, setStd }: EditorProps) {
+
+    const { selectedStrategy } = useContext(StrategyContext);
+    const [codeToDisplay, setCodeToDisplay] = useState<string>(selectedStrategy.code);
+
+    useEffect(() => {
+        if (selectedStrategy) {
+            setCodeToDisplay(selectedStrategy.code);
+        }
+    }, [selectedStrategy]);
 
     const [errorModalMessage, setErrorModalMessage] = useState<string>('');
     const [loading, setLoading] = useState<boolean>(false);
@@ -53,7 +60,7 @@ function Editor({ codeToDisplay, selectedStrategy, formInputs, setCodeToDisplay,
             if (existsData) {
                 setStrategyResult(strategyResult);
                 setResultOpen(true);
-                setStrategyResultIsConnectedTo(selectedStrategy);
+                setStrategyResultIsConnectedTo(selectedStrategy.id);
                 charge(); // Deduct a credit
             } else {
                 throw new Error("Something went wrong.");
@@ -89,7 +96,7 @@ function Editor({ codeToDisplay, selectedStrategy, formInputs, setCodeToDisplay,
     }
 
     function handlePreRunValidations() {
-        updateStrategy({ id: selectedStrategy, code: codeToDisplay });
+        updateStrategy({ id: selectedStrategy.id, code: codeToDisplay });
         validateFormInputs({ formInputs });
         validatePythonCode({ code: codeToDisplay });
     }
@@ -108,11 +115,7 @@ function Editor({ codeToDisplay, selectedStrategy, formInputs, setCodeToDisplay,
 
             {errorModalMessage && <ErrorModal closeModal={() => setErrorModalMessage('')} msg={errorModalMessage} />}
 
-            <MonacoEditor
-                code={codeToDisplay}
-                setCode={setCodeToDisplay}
-                ID={selectedStrategy}
-            />
+            <MonacoEditor codeToDisplay={codeToDisplay} setCodeToDisplay={setCodeToDisplay} />
 
             <DebugConsole userStdout={std.out} userStderr={std.err} />
 

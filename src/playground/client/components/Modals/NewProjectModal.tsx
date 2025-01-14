@@ -5,9 +5,10 @@ import { validateNewName } from '../../scripts/modalHelpers';
 import { starterCode } from './starterTemplate';
 import useEnterKey from '../../../../client/hooks/useEnterKey';
 import ModalLayout from '../../../../client/components/ModalLayout';
+import { Strategy } from 'wasp/entities';
 
 interface NewProjectModalProps {
-    onSuccess: (id: string) => void;
+    onSuccess: (s: Strategy) => void;
     closeModal: () => void;
 }
 
@@ -20,8 +21,8 @@ export default function NewProjectModal({ onSuccess, closeModal }: NewProjectMod
         setErrMsg('');
         try {
             validateNewName(newProjectName);
-            const newID = await createStrategy({ name: newProjectName, code: starterCode });
-            onSuccess(newID.id);
+            const newStrat = await createStrategy({ name: newProjectName, code: starterCode });
+            onSuccess(newStrat);
         } catch (error: any) {
             setErrMsg(error.message);
         }

@@ -4,9 +4,9 @@ import { FaPlus } from "react-icons/fa";
 import NewProjectModal from "./modals/NewProjectModal";
 
 export interface StrategyBrowserProps {
-    selectedStrategy: string;
-    setSelectedStrategy: (value: string) => void;
-    strategies: Strategy[];
+    selectedStrategy: Strategy | null;
+    setSelectedStrategy: (value: Strategy) => void;
+    strategies: Strategy[] | null | undefined;
     isStrategiesLoading: boolean;
 }
 
@@ -14,36 +14,34 @@ function StrategyBrowser({ selectedStrategy, setSelectedStrategy, strategies, is
 
     const [newProjectModalOpen, setNewProjectModalOpen] = useState<boolean>(false);
 
-    function onSuccessfulNewProject(id: string) {
-        setSelectedStrategy(id);
+    function onSuccessfulNewProject(s: Strategy) {
+        setSelectedStrategy(s);
         setNewProjectModalOpen(false);
     }
 
     return (
-        <div className="overflow-y-auto overflow-x-auto h-full col-span-1 bg-gray-50 border-r-2 border-black">
+        <>
 
             {isStrategiesLoading && (
                 <div className="text-xl font-extrabold p-4 text-white">Loading...</div>
             )}
 
             <ul>
-
-                {strategies &&
-
+                {(strategies && strategies !== undefined && selectedStrategy) &&
                     (<>
                         {strategies.map((strategy) => (
                             <li
                                 key={strategy.id}
-                                className={`flex pl-2 pb-1 pr-2 ${strategy.id === selectedStrategy ? "bg-sky-100" : "hover:bg-sky-100"
+                                className={`flex pl-2 pb-1 pr-2 ${strategy.id === selectedStrategy.id ? "bg-sky-100" : "hover:bg-sky-100"
                                     }`}
                             >
                                 <button
                                     type="button"
-                                    onClick={() => setSelectedStrategy(strategy.id)}
+                                    onClick={() => setSelectedStrategy(strategy)}
                                     className="flex pt-1 w-full tracking-tight text-sm font-light"
                                 >
                                     {strategy.name}
-                                    {(strategy.id === selectedStrategy) &&
+                                    {(strategy.id === selectedStrategy.id) &&
                                         (<div className="pl-2 text-end font-mono items-center opacity-30">
                                             {`${strategy.updatedAt.toLocaleDateString()}`}
                                         </div>)}
@@ -64,7 +62,7 @@ function StrategyBrowser({ selectedStrategy, setSelectedStrategy, strategies, is
                 />}
 
             </ul>
-        </div>
+        </>
 
     )
 }

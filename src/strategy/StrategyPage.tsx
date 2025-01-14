@@ -3,10 +3,10 @@ import { useParams } from "react-router-dom";
 import { Link } from "wasp/client/router"
 import { useQuery } from "wasp/client/operations";
 
-import StrategyOverview from "./components/overview/StrategyOverview";
-import StrategyPreview from "./components/preview/StrategyPreview";
+import StrategyOverview from "./components/StrategyOverview";
+import StrategyPreview from "./components/StrategyPreview";
 import StrategyResults from "./components/results/StrategyResults";
-import StrategyCodeGen from "./components/codegen/StrategyCodeGen";
+import StrategyCodeGen from "./components/StrategyCodeGen";
 import ContentWrapper from "../client/components/ContentWrapper";
 import LoadingScreen from "../client/components/LoadingScreen";
 
@@ -37,7 +37,7 @@ function StrategyPage() {
     }
 
     return (
-        <div className="bg-gradient-to-b from-sky-100">
+        <div className="bg-gradient-to-b from-slate-200 border-t-2 border-black">
             <div className="mx-auto max-w-7xl">
                 <div className="mx-4 p-8">
                     <StrategyOverview strategy={strategy} />

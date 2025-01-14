@@ -1,25 +1,29 @@
-import { useState } from "react";
-import DeleteModal from "./modals/DeleteModal";
-import RenameModal from "./modals/RenameModal";
+import { useState, useContext, useEffect } from "react";
+import DeleteModal from "../modals/DeleteModal";
+import RenameModal from "../modals/RenameModal";
 import { MdDeleteOutline, MdOutlineEdit } from "react-icons/md";
 import { useAuth } from "wasp/client/auth";
-import { routes, Link } from "wasp/client/router";
+import { Link } from "wasp/client/router";
+import { StrategyContext } from "../../EditorPage";
+import { Strategy } from "wasp/entities";
 
-interface StrategyHeaderProps {
-    nameToDisplay: string;
-    selectedStrategy: string;
-    setNameToDisplay: (value: string) => void;
-    setSelectedStrategy: (value: string) => void;
-}
+export default function StrategyHeader() {
 
-export default function StrategyHeader({ nameToDisplay, selectedStrategy, setNameToDisplay, setSelectedStrategy }: StrategyHeaderProps) {
+    const { selectedStrategy, setSelectedStrategy } = useContext(StrategyContext);
     const { data: user } = useAuth();
 
+    const [nameToDisplay, setNameToDisplay] = useState<string>(selectedStrategy.name)
     const [isDeleteModalOpen, setIsDeleteModalOpen] = useState<boolean>(false);
     const [isRenameModalOpen, setIsRenameModalOpen] = useState<boolean>(false);
 
-    function onSuccessfulDeletion(id: string) {
-        setSelectedStrategy(id);
+    useEffect(() => {
+        if (selectedStrategy) {
+            setNameToDisplay(selectedStrategy.name);
+        }
+    }, [selectedStrategy]);
+
+    function onSuccessfulDeletion(s: Strategy | null) {
+        setSelectedStrategy(s);
         setIsDeleteModalOpen(false);
     }
 
@@ -28,20 +32,16 @@ export default function StrategyHeader({ nameToDisplay, selectedStrategy, setNam
         setIsRenameModalOpen(false);
     }
 
-    function goToPricingPage() {
-        window.location.href = routes.PricingPageRoute.build();
-    }
-
     return (
-        <div className="text-gray-800 pt-3 px-3 mx-1 flex justify-between items-center">
+        <div className="text-gray-800 pt-3 py-2 px-3 flex justify-between items-center">
 
             <div className="flex gap-1">
                 <Link
                     title='go to strategy page'
                     className="font-bold tracking-tight pb-1 text-3xl hover:text-slate-500"
-                    key={selectedStrategy}
+                    key={selectedStrategy.id}
                     to="/strategy/:id"
-                    params={{ id: selectedStrategy }}>
+                    params={{ id: selectedStrategy.id }}>
                     {nameToDisplay}
                 </Link>
                 <button className='pl-3 hover:text-slate-500 text-sky-600 duration-700' title='Rename Strategy'
@@ -53,7 +53,7 @@ export default function StrategyHeader({ nameToDisplay, selectedStrategy, setNam
                     <RenameModal
                         onSuccess={onSuccessfulRename}
                         closeModal={() => setIsRenameModalOpen(false)}
-                        id={selectedStrategy}
+                        id={selectedStrategy.id}
                         currName={nameToDisplay} />
                 }
 
@@ -70,14 +70,14 @@ export default function StrategyHeader({ nameToDisplay, selectedStrategy, setNam
                     <DeleteModal
                         onSuccess={onSuccessfulDeletion}
                         closeModal={() => setIsDeleteModalOpen(false)}
-                        id={selectedStrategy} />
+                        id={selectedStrategy.id} />
                 }
 
                 {(user?.subscriptionStatus != "active") &&
-                    <button className="place-self-center pl-3 font-bold hover:rotate-3 duration-700 hover:text-slate-900"
-                        onClick={goToPricingPage}>{user?.credits}
+                    <Link className="place-self-center pl-3 font-bold hover:rotate-3 duration-700 hover:text-slate-900"
+                        to={"/pricing"}>{user?.credits}
                         <span className="text-xs font-extralight"> tests remaining</span>
-                    </button>}
+                    </Link>}
 
             </div>
 

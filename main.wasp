@@ -101,7 +101,7 @@ page HomePage {
 route EditorRoute { path: "/editor", to: EditorPage }
 page EditorPage {
   authRequired: true,
-  component: import EditorLayout from "@src/playground/client/EditorLayout"
+  component: import EditorPage from "@src/playground/client/EditorPage"
 }
 route StrategyRoute { path: "/strategy/:id", to: StrategyPage }
 page StrategyPage {

@@ -1,13 +1,9 @@
-import { useState } from "react";
+import { useState, useContext } from "react";
 import Editor from "./editor/Editor";
 import ResultLayout from "./result/ResultLayout";
 import { FormInputProps, StrategyResultProps } from "../../../shared/sharedTypes";
-
-interface DashboardProps {
-    selectedStrategy: string;
-    codeToDisplay: string;
-    setCodeToDisplay: (value: string) => void;
-}
+import { StrategyContext } from "../EditorPage";
+import StrategyHeader from "./editor/StrategyHeader";
 
 export interface stdProps {
     out: string;
@@ -23,14 +19,14 @@ export const initFormInputs: FormInputProps = {
     costPerTrade: 0,
 }
 
-function StrategyEditor({ selectedStrategy, codeToDisplay, setCodeToDisplay }: DashboardProps) {
+function StrategyEditor() {
+
+    const { selectedStrategy } = useContext(StrategyContext);
 
     const [resultOpen, setResultOpen] = useState<boolean>(false);
     const [strategyResult, setStrategyResult] = useState<StrategyResultProps | null>(null);
     const [strategyResultIsConnectedTo, setStrategyResultIsConnectedTo] = useState<string>('');
-
     const [formInputs, setFormInputs] = useState<FormInputProps>(initFormInputs);
-
     const [std, setStd] = useState<stdProps>({
         out: '',
         err: '',
@@ -38,6 +34,8 @@ function StrategyEditor({ selectedStrategy, codeToDisplay, setCodeToDisplay }: D
 
     return (
         <>
+            <StrategyHeader />
+
             <button
                 className={`w-full duration-700 ease-in-out py-1 px-12 
                             hover:font-extrabold
@@ -56,13 +54,10 @@ function StrategyEditor({ selectedStrategy, codeToDisplay, setCodeToDisplay }: D
                     strategyResult={strategyResult}
                     formInputs={formInputs}
                     strategyResultIsConnectedTo={strategyResultIsConnectedTo}
-                    selectedStrategy={selectedStrategy}
+                    selectedStrategy={selectedStrategy.id}
                 />
             ) : (
                 <Editor
-                    codeToDisplay={codeToDisplay}
-                    selectedStrategy={selectedStrategy}
-                    setCodeToDisplay={setCodeToDisplay}
                     setStrategyResult={setStrategyResult}
                     setResultOpen={setResultOpen}
                     formInputs={formInputs}

@@ -7,7 +7,7 @@ function StrategyCodeGen({ code }: { code: string | null }) {
     const [symbol, setSymbol] = useState<string>('AAPL');
 
     return (
-        <div className="mt-10 p-4 rounded-lg bg-sky-100 shadow-lg border-2 border-black hover:shadow-xl hover:translate-x-1 duration-1000">
+        <div className="mt-10 p-4 rounded-lg bg-slate-100 shadow-lg border-2 border-black hover:shadow-xl hover:translate-x-1 duration-1000">
             <div className="my-2 text-xl text-slate-800 tracking-tight font-extrabold">
                 <span className="text-sky-600">Deploy this Strategy</span> with Real or Paper Money
             </div>
