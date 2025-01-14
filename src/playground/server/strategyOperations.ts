@@ -49,7 +49,9 @@ export const getStrategies: GetStrategies<void, Strategy[] | null> = async (_arg
   }
 
   const strategies = await context.entities.Strategy.findMany({
-    where: { user: { id: context.user.id } },
+    where: {
+      user: { id: context.user.id },
+    },
     orderBy: { updatedAt: 'desc' },
   });
 
@@ -62,7 +64,10 @@ export const getSpecificStrategy: GetSpecificStrategy<Pick<Strategy, 'id'>, Stra
   }
 
   const strategy = await context.entities.Strategy.findUnique({
-    where: { id },
+    where: {
+      id,
+      user: { id: context.user.id }
+    },
   });
 
   return strategy || null;
@@ -75,7 +80,10 @@ export const deleteStrategy: DeleteStrategy<Pick<Strategy, 'id'>, Strategy> = as
   }
 
   return await context.entities.Strategy.delete({
-    where: { id },
+    where: {
+      id,
+      user: { id: context.user.id }
+    },
   });
 };
 
@@ -98,7 +106,10 @@ export const renameStrategy: RenameStrategy<Partial<Strategy>, Strategy> = async
   }
 
   return await context.entities.Strategy.update({
-    where: { id },
+    where: {
+      id,
+      user: { id: context.user.id }
+    },
     data: { name },
   });
 };
@@ -109,7 +120,10 @@ export const updateStrategy: UpdateStrategy<Partial<Strategy>, Strategy> = async
   }
 
   return await context.entities.Strategy.update({
-    where: { id },
+    where: {
+      id,
+      user: { id: context.user.id }
+    },
     data: { code },
   });
 };
@@ -125,7 +139,7 @@ export const runStrategy: RunStrategy<any, any> = async ({ formInputs, code }, c
   if (!context.user) throw new HttpError(401);
 
   if (!context.user.credits && context.user.subscriptionPlan !== "active" && !context.user.isAdmin) {
-      throw new HttpError(402, "You must add more credits or purchase an basic monthy subscription to use this software.");
+    throw new HttpError(402, "You must add more credits or purchase an basic monthy subscription to use this software.");
   }
 
   const strategyInstance = new StrategyPipeline(formInputs, code);

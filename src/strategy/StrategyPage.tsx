@@ -18,10 +18,10 @@ function StrategyPage() {
 
     if (isStrategyLoading) return <LoadingScreen />
 
-    if (!strategy || getStrategyError) {
+    if (!strategy || getStrategyError || !id) {
         return <ContentWrapper>
             <div className="mt-18 py-24 px-2 font-bold tracking-tight text-center text-2xl rounded-md bg-slate-100">
-                <div className="font-light">You've stumbled into an error...</div>
+                <div className="font-light m-1">You've stumbled into an error...</div>
                 This likely means that the strategy doesn't exist or you don't have access to this strategy.
             </div>
             <div className="text-center my-6">

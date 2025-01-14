@@ -17,9 +17,6 @@ export default function EditorLayout() {
     const { data: strategies, isLoading: isStrategiesLoading } = useQuery(getStrategies);
     const hasLoadedInitial = useRef(false); // To track whether we've already loaded the data
 
-    // browser is expanded or not
-    const [isExpanded, setIsExpanded] = useState<boolean>(true);
-
     // consider useContxt for access to selectedStrategy
 
     useEffect(() => {
@@ -63,13 +60,13 @@ export default function EditorLayout() {
         <>
             <div className='grid-cols-6 grid h-[92vh] border-black border-t-2'>
 
-                {isExpanded && <StrategyBrowser
+                <StrategyBrowser
                     selectedStrategy={selectedStrategy}
                     setSelectedStrategy={setSelectedStrategy}
                     strategies={strategies}
-                    isStrategiesLoading={isStrategiesLoading} />}
+                    isStrategiesLoading={isStrategiesLoading} />
 
-                <div className={`${isExpanded ? 'col-span-5' : 'col-span-6'} h-full overflow-x-hidden overflow-y-auto`}>
+                <div className='col-span-5 h-full overflow-x-hidden overflow-y-auto'>
                     {selectedStrategy ? (
                         <>
                             <StrategyHeader
@@ -85,7 +82,9 @@ export default function EditorLayout() {
                             />
                         </>
                     ) : (
-                        <div className="border-2 p-4 border-black font-extrabold mt-12 justify-self-center blur-sm text-5xl text-slate-800/30 tracking-tight">No Strategies Exist (yet)</div>
+                        <div className="border-2 p-4 border-black font-extrabold mt-12 justify-self-center blur-sm text-5xl text-slate-800/30 tracking-tight">
+                            No Strategies Exist (yet)
+                        </div>
                     )}
                 </div>
 

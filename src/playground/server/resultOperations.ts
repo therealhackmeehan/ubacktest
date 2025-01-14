@@ -55,9 +55,7 @@ export const getResults: GetResults<void, Result[] | null> = async (_args, conte
 
     const results = await context.entities.Result.findMany({
         where: {
-            user: {
-                id: context.user.id,
-            },
+            user: { id: context.user.id },
         },
         orderBy: {
             createdAt: "desc",
@@ -88,6 +86,7 @@ export const deleteResult: DeleteResult<Pick<Result, "id">, Result> = async ({ i
     return await context.entities.Result.delete({
         where: {
             id,
+            user: { id: context.user.id },
         },
     });
 };
