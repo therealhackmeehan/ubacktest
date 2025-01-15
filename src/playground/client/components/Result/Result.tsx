@@ -10,6 +10,7 @@ import { FormInputProps, StrategyResultProps } from "../../../../shared/sharedTy
 import calculateStats, { StatProps } from "../../scripts/calculateStats"
 import { createResult, getSpecificStrategy } from "wasp/client/operations"
 import SPChart from "./SPChart"
+import ContentWrapper from "../../../../client/components/ContentWrapper"
 
 interface ResultPanelProps {
     selectedStrategy: string | null;
@@ -65,7 +66,7 @@ function Result({ selectedStrategy, formInputs, strategyResult, abilityToSaveNew
     const stats: StatProps = calculateStats(strategyResult);
 
     return (
-        <>
+        <ContentWrapper>
             <div id='topOfResultPanel' className='items-center flex p-2 justify-between border-b-2 border-black'>
                 <h4 className="tracking-tight text-xl text-slate-700 font-extrabold text-center">
                     Stock Data and Simulated Backtest Result for
@@ -118,7 +119,7 @@ function Result({ selectedStrategy, formInputs, strategyResult, abilityToSaveNew
                 </button >
                 <ResultButtonGroup saveResult={saveResult} abilityToSaveNew={abilityToSaveNew} symbol={formInputs.symbol} />
             </div>
-        </>
+        </ContentWrapper>
     )
 }
 

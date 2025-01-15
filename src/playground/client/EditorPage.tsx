@@ -3,6 +3,7 @@ import StrategyBrowser from "./components/StrategyBrowser"
 import StrategyEditor from "./components/StrategyEditor"
 import { useState, useEffect, useRef, createContext } from "react"
 import { getSpecificStrategy, getStrategies, useQuery } from "wasp/client/operations"
+import { BsThreeDotsVertical } from "react-icons/bs";
 
 // store name and code in context instead of prop drilling 
 export interface StrategyContextProps {
@@ -26,11 +27,51 @@ export default function EditorPage() {
     const { data: strategies, isLoading: isStrategiesLoading } = useQuery(getStrategies);
     const hasLoadedInitial = useRef(false); // To track whether we've already loaded the data
 
+    const [minWidth, maxWidth, defaultWidth] = [100, 600, 300];
+    const [width, setWidth] = useState<number>(() => {
+        const savedWidth = localStorage.getItem("sidebarWidth");
+        return savedWidth ? JSON.parse(savedWidth) : defaultWidth;
+    });
+
+    const isResized = useRef(false);
+
+    useEffect(() => {
+        window.addEventListener("mousemove", (e) => {
+            document.body.style.userSelect = 'none'
+            if (!isResized.current) {
+                return;
+            }
+            
+            setWidth((previousWidth) => {
+                const newWidth = previousWidth + e.movementX / 2;
+
+                if (newWidth > maxWidth) return maxWidth;
+                if (newWidth < minWidth) {
+                    if (previousWidth > newWidth) return 0;
+                    if (previousWidth === 0) return newWidth;
+                }
+
+                return newWidth;
+            });
+        });
+
+        window.addEventListener("mouseup", () => {
+            isResized.current = false;
+            document.body.style.userSelect = '';
+        });
+    }, []);
+
+    useEffect(() => {
+        localStorage.setItem('sidebarWidth', JSON.stringify(width))
+    }, [width])
+
     useEffect(() => {
         const loadInitialData = async () => {
 
             if (!hasLoadedInitial.current && !isStrategiesLoading) {
                 hasLoadedInitial.current = true; // Mark the initial load as complete
+
+                // get project to edit from local storage
                 const savedValue = localStorage.getItem('projectToLoad');
 
                 if (savedValue) {
@@ -53,17 +94,25 @@ export default function EditorPage() {
 
     return (
 
-        <div className='grid-cols-12 grid h-[92vh] border-black border-t-2'>
+        <div className='w-full h-[92vh] grid grid-cols-[min-content_auto] border-t-2 border-black'>
 
-            <div className="col-span-2 h-full overflow-x-auto overflow-y-auto bg-gray-50 border-r-2 border-black">
-                <StrategyBrowser
-                    strategies={strategies}
-                    isStrategiesLoading={isStrategiesLoading}
-                    selectedStrategy={selectedStrategy}
-                    setSelectedStrategy={setSelectedStrategy} />
+            <div className="flex">
+                <div className="h-full overflow-x-auto bg-gray-50"
+                    style={{ width: `${width / 16}rem` }}>
+                    <StrategyBrowser
+                        strategies={strategies}
+                        isStrategiesLoading={isStrategiesLoading}
+                        selectedStrategy={selectedStrategy}
+                        setSelectedStrategy={setSelectedStrategy} />
+                </div>
+                <div className="w-3 cursor-col-resize border-r-2 border-black bg-slate-200"
+                    onMouseDown={() => { isResized.current = true }}
+                >
+                    <BsThreeDotsVertical className="justify-self-center h-full py-auto" />
+                </div>
             </div>
 
-            <div className='col-span-10 h-full overflow-x-hidden overflow-y-auto'>
+            <div className='h-full overflow-x-auto'>
                 {selectedStrategy ? (
                     <StrategyContext.Provider value={{ selectedStrategy, setSelectedStrategy }}>
                         <StrategyEditor />
@@ -73,7 +122,8 @@ export default function EditorPage() {
                 )}
             </div>
 
-        </div >
+        </div>
+
     )
 }
 

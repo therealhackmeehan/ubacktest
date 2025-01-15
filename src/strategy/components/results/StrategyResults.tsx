@@ -1,21 +1,15 @@
 import { Result, Strategy } from "wasp/entities";
-import { useState, useEffect } from "react";
-import { getResultsForStrategy } from "wasp/client/operations";
+import { useState } from "react";
+import { getResultsForStrategy, useQuery } from "wasp/client/operations";
 import ResultListItem from "./components/ResultListItem";
 
 function StrategyResults({ strategy }: { strategy: Strategy }) {
-    const [results, setResults] = useState<Result[] | null>(null);
+
+    const { data: results, isLoading: isResultsLoading } = useQuery(getResultsForStrategy, {
+        fromStrategyID: strategy.id
+    })
+
     const [showAll, setShowAll] = useState(false);
-
-    useEffect(() => {
-        const fetchResults = async () => {
-            const r = await getResultsForStrategy({ fromStrategyID: strategy.id });
-            setResults(r);
-        };
-
-        fetchResults();
-    }, [strategy]);
-
     const toggleShowAll = () => setShowAll((prev) => !prev);
 
     return (
@@ -23,7 +17,7 @@ function StrategyResults({ strategy }: { strategy: Strategy }) {
             <div className="text-xl font-extrabold my-2">
                 Saved Results from <span className="text-sky-600 italic font-normal">{strategy.name}</span>
             </div>
-            {results && results.length > 0 ? (
+            {(results && results.length > 0 && !isResultsLoading) ? (
                 <>
                     <ul>
                         {(showAll ? results : results.slice(0, 5)).map((result: Result) => (
