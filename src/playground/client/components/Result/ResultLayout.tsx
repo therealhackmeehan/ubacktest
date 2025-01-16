@@ -13,7 +13,7 @@ export default function ResultLayout({ strategyResult, formInputs, strategyResul
     if ((!strategyResult) || (strategyResultIsConnectedTo !== selectedStrategy)) {
         return (
             <div className="border-2 p-4 border-black font-extrabold mt-12 justify-self-center blur-sm text-5xl text-slate-800/30 tracking-tight">
-                No Results to Display for This Strategy
+                No Current Result to Display for This Strategy
             </div>
         );
     }

@@ -41,7 +41,7 @@ export default function EditorPage() {
             if (!isResized.current) {
                 return;
             }
-            
+
             setWidth((previousWidth) => {
                 const newWidth = previousWidth + e.movementX / 2;
 
@@ -106,7 +106,10 @@ export default function EditorPage() {
                         setSelectedStrategy={setSelectedStrategy} />
                 </div>
                 <div className="w-3 cursor-col-resize border-r-2 border-black bg-slate-200"
-                    onMouseDown={() => { isResized.current = true }}
+                    onMouseDown={() => {
+                        document.body.style.userSelect = 'none';
+                        isResized.current = true;
+                    }}
                 >
                     <BsThreeDotsVertical className="justify-self-center h-full py-auto" />
                 </div>

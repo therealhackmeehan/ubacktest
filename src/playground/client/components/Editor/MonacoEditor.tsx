@@ -125,7 +125,7 @@ function MonacoEditor({codeToDisplay, setCodeToDisplay}: MonacoEditorProps) {
                     <MdLaunch />Examples
                 </button>
             </div>
-            <Editor className="invert hue-rotate-180" height="80vh" defaultLanguage='python' theme="vs-dark" value={selectedStrategy.code} onChange={handleEditorChange} options={editorOpts}
+            <Editor className="invert hue-rotate-180" height="80vh" defaultLanguage='python' theme="vs-dark" value={codeToDisplay} onChange={handleEditorChange} options={editorOpts}
                 loading={(<div className="text-white font-2xl tracking-tight">Loading...</div>)} />
 
             {examplesModalOpen &&
