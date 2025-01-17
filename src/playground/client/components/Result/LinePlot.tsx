@@ -99,6 +99,7 @@ function LinePlot({ strategyResult, costPerTrade }: LinePlotProps) {
 
     const options = {
         responsive: true,
+        animation: false,
         layout: {
             padding: 20,
         },

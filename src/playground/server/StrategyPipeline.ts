@@ -81,40 +81,7 @@ class StrategyPipeline {
         const toEmbedInMain = { timestamp, volume, high, low, open, close };
         const mainFileContent = StrategyPipeline.main_py(this.code, uniqueKey, toEmbedInMain);
 
-        // Prepare the request payload
-        const payload = {
-            language: "python",
-            version: "3.10.0",
-            files: [
-                { name: "main.py", content: mainFileContent },
-            ],
-        };
-
-        // Make the API call to execute the Python code
-        const response = await fetch('https://emkc.org/api/v2/piston/execute', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify(payload),
-        });
-
-        if (!response.ok) {
-            throw new HttpError(503, 'Failed to connect to the web and run python code. Try again.');
-        }
-
-        // Parse the response
-        const { run } = await response.json();
-        console.log(run);
-
-        const { stderr = '', stdout = '', signal } = run;
-
-        // Handle resource-limit termination
-        if (signal === "SIGKILL" && !stderr && !stdout) {
-            throw new HttpError(
-                500,
-                "SIGKILL: Your program was terminated because it exceeded resource limits."
-            );
-        }
-
+        const { stdout, stderr } = await StrategyPipeline.judge0_post(mainFileContent);
         this.stderr = stderr;
 
         // Extract data from the Python output
@@ -306,6 +273,38 @@ class StrategyPipeline {
         return normalizedQuote;
     }
 
+    // static functions 
+    private static async judge0_post(mainFileContent: string) {
+
+        const url = 'https://judge0-extra-ce.p.rapidapi.com/submissions?base64_encoded=false&wait=true&fields=*';
+        const options = {
+            method: 'POST',
+            headers: {
+                'x-rapidapi-key': '905a4440e7msh3c6e0b9c3081a56p194864jsn3976205dc322',
+                'x-rapidapi-host': 'judge0-extra-ce.p.rapidapi.com',
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+                language_id: 25,
+                source_code: mainFileContent
+            })
+        };
+
+        const response = await fetch(url, options);
+        if (!response.ok) {
+            throw new HttpError(400, `In Executing Code, Unable to make that request: ${response.statusText}`);
+        }
+
+        const fullResult = await response.json();
+        console.log(fullResult)
+        let { stdout, stderr } = fullResult;
+
+        if (!stdout) stdout = '';
+        if (!stderr) stderr = '';
+
+        return { stdout, stderr };
+    }
+
     private static main_py(code: string, uniqueKey: string, toEmbedInMain: any): string {
 
         const m =
@@ -347,8 +346,6 @@ df['signal'].fillna(0, inplace=True)
 dfToReturn = df[['signal']].round(3).to_dict('list')
 
 print("${uniqueKey}START${uniqueKey}" + json.dumps(dfToReturn) + "${uniqueKey}END${uniqueKey}")`;
-
-        console.log(m); 
 
         return m;
     }

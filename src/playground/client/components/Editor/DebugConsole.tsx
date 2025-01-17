@@ -7,7 +7,7 @@ interface DebugConsoleProps {
 
 function DebugConsole({ userStdout, userStderr }: DebugConsoleProps) {
 
-    const [isMaximized, setIsMaximized] = useState<boolean>(false);
+    const [isMaximized, setIsMaximized] = useState<boolean>(true);
 
     return (
         <>
