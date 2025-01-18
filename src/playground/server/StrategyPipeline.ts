@@ -38,19 +38,20 @@ class StrategyPipeline {
         this.code = code;
     }
 
-    /////////////////////////________________________________________
+    //________________________________________
     public async run() {
-        await this.getStrategyStockData();
-        await this.runPythonCode();
+        await this.getStrategyStockData();                      // 1. get data from stock data API
+        await this.runPythonCode();                             // 2. run user-submitted python code
 
-        if (this.stderr) return this.sendJSONtoFrontend();
+        if (this.stderr) return this.sendJSONtoFrontend();      // 3. if stderr exists, we're done.
 
-        await this.addSPData();
-        this.calculatePortfolio();
+        await this.addSPData();                                 // 4. append SP data for comparison!
+        this.calculatePortfolio();                              // 5. calculate porfolio and success metrics
+        this.validatePortfolio();                               // 6. make sure the portfolio makes sense
 
-        return this.sendJSONtoFrontend();
+        return this.sendJSONtoFrontend();                       // 7. send back all our data to the frontend
     }
-    /////////////////////////________________________________________
+    //________________________________________
 
     private sendJSONtoFrontend() {
         return {
@@ -140,6 +141,42 @@ class StrategyPipeline {
         }
     }
 
+    private validatePortfolio() {
+        // Step 1: Verify that all necessary data arrays exist and have the same length
+        const requiredKeys: (keyof StrategyResultProps)[] = ['portfolio', 'portfolioWithCosts', 'signal', 'returns'];
+        const lengths = requiredKeys.map(key => this.strategyResult[key]?.length);
+        const allLengthsMatch = lengths.every(length => length === lengths[0]);
+
+        if (!allLengthsMatch || lengths.some(length => length === 0)) {
+            throw new HttpError(500, 'Your portfolio arrays are missing or mismatched in length.');
+        }
+
+        const allDataIsValid = requiredKeys.every(key =>
+            this.strategyResult[key].every(value => value !== null && value !== undefined && !Number.isNaN(value))
+        );
+        if (!allDataIsValid) {
+            throw new HttpError(500, 'Your portfolio contains invalid data (null, undefined, or NaN).');
+        }
+
+        const portfoliosNonNegative = this.strategyResult.portfolio.every(value => value >= 0) &&
+            this.strategyResult.portfolioWithCosts.every(value => value >= 0);
+        if (!portfoliosNonNegative) {
+            throw new HttpError(500, 'Your portfolio contains negative values, which is not allowed.');
+        }
+
+        const returnsWithinBounds = this.strategyResult.returns.every(value => value >= -1 && value <= 1);
+        if (!returnsWithinBounds) {
+            throw new HttpError(500, 'Your portfolio returns contain unrealistic values.');
+        }
+
+        const timestampsAreMonotonic = this.strategyResult.timestamp.every(
+            (value, index, array) => index === 0 || value > array[index - 1]
+        );
+
+        if (!timestampsAreMonotonic) {
+            throw new HttpError(500, 'Timestamps in your portfolio data are not in chronological order.');
+        }
+    }
 
     /// helper functions
     private static arraysAreEqual<T>(arr1: T[], arr2: T[]): boolean {
@@ -280,7 +317,7 @@ class StrategyPipeline {
         const options = {
             method: 'POST',
             headers: {
-                'x-rapidapi-key': '905a4440e7msh3c6e0b9c3081a56p194864jsn3976205dc322',
+                'x-rapidapi-key': process.env.JUDGE_APIKEY,
                 'x-rapidapi-host': 'judge0-extra-ce.p.rapidapi.com',
                 'Content-Type': 'application/json'
             },
@@ -292,13 +329,13 @@ class StrategyPipeline {
 
         const response = await fetch(url, options);
         if (!response.ok) {
-            throw new HttpError(400, `In Executing Code, Unable to make that request: ${response.statusText}`);
+            throw new HttpError(503, `In Executing Code, Unable to make that request: ${response.statusText}`);
         }
 
         const fullResult = await response.json();
         console.log(fullResult)
-        let { stdout, stderr } = fullResult;
 
+        let { stdout, stderr } = fullResult;
         if (!stdout) stdout = '';
         if (!stderr) stderr = '';
 
@@ -309,7 +346,7 @@ class StrategyPipeline {
 
         const m =
 
-`${code}
+            `${code}
 
 import json
 import pandas as pd

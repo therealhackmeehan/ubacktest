@@ -56,7 +56,9 @@ function SPChart({ strategyResult }: { strategyResult: StrategyResultProps }) {
 
     const options = {
         responsive: true,
-        animation: false,
+        animation: {
+            duration: 0,
+        },
         layout: {
             padding: 20,
         },

@@ -46,6 +46,7 @@ function LinePlot({ strategyResult, costPerTrade }: LinePlotProps) {
                     borderColor: 'rgba(255, 0, 100, 1)',
                     backgroundColor: 'rgba(255, 0, 100, 1)',
                     pointRadius: 0,
+                    borderWidth: 1,
                     yAxisID: 'y1',
                 },
                 {
@@ -53,6 +54,7 @@ function LinePlot({ strategyResult, costPerTrade }: LinePlotProps) {
                     data: strategyResult.open,
                     borderColor: 'rgba(123, 50, 168, 1)',
                     pointRadius: 0,
+                    borderWidth: 1,
                     borderDash: [4, 1],
                     tension: .05,
                     hidden: true,
@@ -63,6 +65,7 @@ function LinePlot({ strategyResult, costPerTrade }: LinePlotProps) {
                     data: strategyResult.close,
                     borderColor: 'rgba(70, 15, 105, 1)',
                     pointRadius: 0,
+                    borderWidth: 1,
                     borderDash: [4, 1],
                     tension: .05,
                     yAxisID: 'y1',
@@ -82,6 +85,7 @@ function LinePlot({ strategyResult, costPerTrade }: LinePlotProps) {
                     data: strategyResult.portfolioWithCosts,
                     borderColor: 'rgba(255, 0, 100, 0.6)',
                     backgroundColor: 'rgba(255, 0, 100, 0.6)',
+                    borderWidth: 1,
                     hidden: true,
                     pointRadius: 0,
                     yAxisID: 'y1',
@@ -99,7 +103,9 @@ function LinePlot({ strategyResult, costPerTrade }: LinePlotProps) {
 
     const options = {
         responsive: true,
-        animation: false,
+        animation: {
+            duration: 0,
+        },
         layout: {
             padding: 20,
         },
@@ -150,7 +156,7 @@ function LinePlot({ strategyResult, costPerTrade }: LinePlotProps) {
                 display: true,
                 grid: {
                     color: 'rgba(100,100,100,.1)',
-                    lineWidth: 2,
+                    lineWidth: 1,
                 },
             },
         },

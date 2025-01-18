@@ -62,8 +62,8 @@ function DataTable({ strategyResult }: { strategyResult: StrategyResultProps }) 
     };
 
     return (
-        <table className="m-4 col-span-3">
-            <thead className="sticky tracking-tight text-gray-700 bg-slate-200">
+        <table className="w-full">
+            <thead className="tracking-tight text-gray-700 bg-slate-200 sticky top-0">
                 <tr>
                     <TableHead column="date" label="Date" handleSort={handleSort} />
                     <TableHead column="signal" label="Buy/Short/Hold Signal" handleSort={handleSort} />
@@ -71,7 +71,7 @@ function DataTable({ strategyResult }: { strategyResult: StrategyResultProps }) 
                     <TableHead column="returns" label="Period Return" handleSort={handleSort} />
                 </tr>
             </thead>
-            <tbody className="text-sm text-gray-700 lowercase bg-white">
+            <tbody className="text-sm text-gray-700 lowercase bg-white overflow-y-auto">
                 {sortedData.timestamp.map((date: any, index: number) => (
                     <tr
                         className="text-center group border-b-2 border-slate-100 hover:font-bold hover:bg-slate-100 hover:-translate-x-2 duration-200"

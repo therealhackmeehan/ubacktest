@@ -88,22 +88,21 @@ export default function ResultListItem({ result }: { result: Result }) {
 
             {resultPanelOpen &&
                 <div className="fixed inset-0 flex items-center overflow-y-auto justify-center z-50">
-                    <div className="bg-white/70 w-full rounded-lg fixed inset-0"></div>
-                    <div className="p-4 w-5/6 h-5/6 z-10 rounded-lg bg-white border-black border-2 overflow-y-auto">
-                        <button onClick={() => setResultPanelOpen(false)} className='text-red-500 gap-x-1 hover:font-extrabold hover:text-red-400 font-bold text-lg justify-self-end flex items-center'>
+                    <div className="bg-black/70 w-full fixed inset-0"></div>
+                    <div className="p-8 w-11/12 h-5/6 z-10 rounded-lg bg-white border-black border-2 overflow-y-auto shadow-xl">
+                        <button onClick={() => setResultPanelOpen(false)} className='text-red-500 gap-x-1 hover:font-extrabold border-red-500 px-3 py-1 rounded-md border-2 mx-2 hover:text-red-400 hover:bg-red-100 font-bold text-lg justify-self-end flex items-center'>
                             close
-                            <FiDelete />
                         </button>
                         <ResultPanel strategyResult={result.data as unknown as StrategyResultProps} formInputs={formInputs} selectedStrategy={result.fromStrategyID} abilityToSaveNew={false} />
-                        <div onClick={handleCopyToClipboard}>
+                        <div onClick={handleCopyToClipboard} className='max-w-7xl mx-auto px-8'>
                             <textarea className='w-full bg-slate-100 p-4 rounded-lg h-72 font-mono text-xs border-white border-1 resize-none hover:bg-slate-200'
                                 value={result.code} readOnly />
                             <div className='text-xs text-center -translate-y-8'>
                                 click to copy
                             </div>
-                        </div>
-                        <div className='tracking-tight font-bold text-end text-slate-300 text-lg -translate-y-4'>
-                            Source Code
+                            <div className='tracking-tight font-bold text-end text-slate-300 text-lg -translate-y-4'>
+                                Source Code
+                            </div>
                         </div>
                     </div>
                 </div>

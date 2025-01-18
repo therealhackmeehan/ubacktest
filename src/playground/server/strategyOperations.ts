@@ -8,6 +8,7 @@ import {
   type RenameStrategy,
   type GetSpecificStrategy,
   type Charge,
+  type Uncharge,
   type RunStrategy,
 } from 'wasp/server/operations';
 import { StrategyResultProps } from '../../shared/sharedTypes';
@@ -160,6 +161,23 @@ export const charge: Charge<void, void> = async (_args, context) => {
     await context.entities.User.update({
       where: { id: context.user.id },
       data: { credits: { increment: 1 } }, // for now increment while testing
+    });
+  }
+};
+
+export const uncharge: Uncharge<void, void> = async (_args, context) => {
+  if (!context.user) {
+    throw new HttpError(401);
+  }
+  if (context.user.isAdmin) {
+    console.log('Avoiding uncharge charge as admin.');
+    return;
+  }
+
+  if (context.user.credits) {
+    await context.entities.User.update({
+      where: { id: context.user.id },
+      data: { credits: { decrement: 1 } }, // for now increment while testing
     });
   }
 };

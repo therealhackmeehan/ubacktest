@@ -3,7 +3,7 @@ import MonacoEditor from "./MonacoEditor";
 import ErrorModal from "../modals/ErrorModal";
 import DebugConsole from "./DebugConsole";
 import InputForm from "./InputForm";
-import { runStrategy, charge, updateStrategy } from "wasp/client/operations";
+import { runStrategy, charge, uncharge, updateStrategy } from "wasp/client/operations";
 import validateFormInputs from "../../scripts/validateFormInputs";
 import validatePythonCode from "../../scripts/validatePythonCode";
 import { FormInputProps, StrategyResultProps } from "../../../../shared/sharedTypes";
@@ -40,32 +40,23 @@ function Editor({ formInputs, setStrategyResult, setResultOpen, setFormInputs, s
 
         try {
             handlePreRunValidations();
+            charge();
 
-            const {
-                strategyResult,
-                debugOutput,
-                stderr,
-                warning
-            } = await runStrategy({ formInputs: formInputs, code: codeToDisplay });
+            const { strategyResult, stdout, stderr, warnings } =
+                await runStrategy({ formInputs: formInputs, code: codeToDisplay });
 
-            handleDebugOutput(debugOutput, stderr);
+            handleDebugOutput(stdout, stderr);
             if (stderr) return;
-
-            const existsData = // should be sufficient check to continue forward
-                strategyResult.portfolio.length > 0 &&
-                strategyResult.portfolioWithCosts.length > 0 &&
-                strategyResult.signal.length > 0 &&
-                strategyResult.returns.length > 0;
-
-            if (existsData) {
-                setStrategyResult(strategyResult);
-                setResultOpen(true);
-                setStrategyResultIsConnectedTo(selectedStrategy.id);
-                charge(); // Deduct a credit
-            } else {
-                throw new Error("Something went wrong.");
+            
+            if (warnings && warnings.length > 0) {
+                setErrorModalMessage(warnings.map((str: string) => `WARNING: ${str}`));
             }
+
+            setStrategyResult(strategyResult);
+            setResultOpen(true);
+            setStrategyResultIsConnectedTo(selectedStrategy.id);
         } catch (error: any) {
+            uncharge();
             setErrorModalMessage(error.message);
         } finally {
             setLoading(false);
@@ -101,8 +92,8 @@ function Editor({ formInputs, setStrategyResult, setResultOpen, setFormInputs, s
         validatePythonCode({ code: codeToDisplay });
     }
 
-    function handleDebugOutput(debugOutput: string, stderr: string) {
-        if (debugOutput) setUserStdout(debugOutput);
+    function handleDebugOutput(stdout: string, stderr: string) {
+        if (stdout) setUserStdout(stdout);
         if (stderr) setUserStderr(stderr);
     }
 

@@ -3,7 +3,7 @@ import { StatProps } from "../../scripts/calculateStats";
 function MainStatistics({ stats }: { stats: StatProps }) {
 
     return (
-        <div className="p-8 border-r-2 border-black col-span-1 bg-slate-100">
+        <div className="p-4 col-span-1 bg-slate-100 rounded-lg">
             <div className='font-extrabold mb-2 text-xl text-start tracking-tight p-2 rounded-lg border-black border-2 bg-white'>
                 Stats
             </div>

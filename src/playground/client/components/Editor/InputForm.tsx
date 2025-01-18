@@ -1,6 +1,7 @@
 import { FaCaretDown, FaCaretUp } from "react-icons/fa";
-import { useState } from "react";
+import React, { useState } from "react";
 import { FormInputProps } from "../../../../shared/sharedTypes";
+import stocks from './stocks.json';
 
 interface InputFormSubcomponentProps {
     formInputs: FormInputProps;
@@ -11,15 +12,42 @@ interface InputFormSubcomponentProps {
 function InputForm({ formInputs, setFormInputs, run }: InputFormSubcomponentProps) {
 
     const [displayAdvancedOptions, setDisplayAdvancedOptions] = useState<boolean>(false);
+    const [matches, setMatches] = useState<{ "ACT Symbol": string; "Company Name": string }[]>([]);
 
     const handleChange = (event: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
         const { name, value } = event.target;
+
+        // Update form inputs
         setFormInputs((prevInputs: FormInputProps) => ({
             ...prevInputs,
             [name]: value,
         }));
+
+        // Additional logic for "symbol" input field
+        if (name === "symbol") {
+            if (value.trim()) {
+                const filteredMatches = stocks
+                    .filter((stock) =>
+                        (stock["ACT Symbol"].toLowerCase().startsWith(value.toLowerCase()) ||
+                        stock["Company Name"].toLowerCase().startsWith(value.toLowerCase())) &&
+                        !stock["ACT Symbol"].includes('$')
+                    )
+                    .slice(0, 4);
+                setMatches(filteredMatches);
+            } else {
+                setMatches([]); // Clear matches if input is empty
+            }
+        }
     };
 
+    const handleSelect = (symbol: string) => {
+        // Update form inputs with selected symbol and clear matches
+        setFormInputs((prevInputs: FormInputProps) => ({
+            ...prevInputs,
+            symbol,
+        }));
+        setMatches([]);
+    };
     const inputFormCss = 'text-xs text-gray-600 rounded-md border border-gray-200 shadow-md focus:outline-none focus:border-transparent focus:shadow-none duration-200 ease-in-out hover:shadow-none';
 
     return (
@@ -40,8 +68,22 @@ function InputForm({ formInputs, setFormInputs, run }: InputFormSubcomponentProp
                         value={formInputs.symbol}
                         onChange={handleChange}
                         name="symbol"
+                        autoComplete="off"
                     />
                 </div>
+                {matches.length > 0 && (
+                    <ul className="text-xs z-10 bg-white border border-gray-300 rounded shadow-lg max-h-60 overflow-y-auto">
+                        {matches.map((match) => (
+                            <li
+                                key={match["ACT Symbol"]}
+                                onClick={() => handleSelect(match["ACT Symbol"])}
+                                className="p-2 hover:bg-gray-200 cursor-pointer"
+                            >
+                                {match["ACT Symbol"]} - <span className="font-extralight">{match["Company Name"]}</span>
+                            </li>
+                        ))}
+                    </ul>
+                )}
                 <div className='flex items-center justify-between gap-3'>
                     <div className="tracking-tight text-xs font-bold">
                         Start Date
