@@ -19,18 +19,13 @@ interface EditorProps {
     setStrategyResultIsConnectedTo: (value: string) => void;
     std: stdProps;
     setStd: (value: any) => void;
+    codeToDisplay: string;
+    setCodeToDisplay: (value: string) => void;
 }
 
-function Editor({ formInputs, setStrategyResult, setResultOpen, setFormInputs, setStrategyResultIsConnectedTo, std, setStd }: EditorProps) {
+function Editor({ formInputs, setStrategyResult, setResultOpen, setFormInputs, setStrategyResultIsConnectedTo, std, setStd, codeToDisplay, setCodeToDisplay }: EditorProps) {
 
     const { selectedStrategy } = useContext(StrategyContext);
-    const [codeToDisplay, setCodeToDisplay] = useState<string>(selectedStrategy.code);
-
-    useEffect(() => {
-        if (selectedStrategy) {
-            setCodeToDisplay(selectedStrategy.code);
-        }
-    }, [selectedStrategy]);
 
     const [errorModalMessage, setErrorModalMessage] = useState<string>('');
     const [loading, setLoading] = useState<boolean>(false);

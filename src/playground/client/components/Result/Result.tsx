@@ -25,7 +25,7 @@ function Result({ selectedStrategy, formInputs, strategyResult, abilityToSaveNew
         if (!strategyResult) return;
 
         // Get the headers (labels)
-        const headers = Object.keys(strategyResult) as string[];
+        const headers = Object.keys(strategyResult);
 
         // Create rows by combining data from each key (label)
         const rowCount = strategyResult[headers[0]].length; // Get the number of rows based on the first label's length

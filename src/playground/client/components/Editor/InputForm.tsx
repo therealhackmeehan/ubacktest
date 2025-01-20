@@ -30,7 +30,7 @@ function InputForm({ formInputs, setFormInputs, run }: InputFormSubcomponentProp
                 const filteredMatches = stocks
                     .filter((stock) =>
                         (stock["ACT Symbol"].toLowerCase().startsWith(value.toLowerCase()) ||
-                        stock["Company Name"].toLowerCase().startsWith(value.toLowerCase())) &&
+                            stock["Company Name"].toLowerCase().startsWith(value.toLowerCase())) &&
                         !stock["ACT Symbol"].includes('$')
                     )
                     .slice(0, 4);
@@ -120,16 +120,18 @@ function InputForm({ formInputs, setFormInputs, run }: InputFormSubcomponentProp
                         onChange={handleChange}
                         name="intval"
                     >
+                        <option value="1m">1m</option>
+                        <option value="2m">2m</option>
+                        <option value="5m">5m</option>
+                        <option value="15m">15m</option>
+                        <option value="30m">30m</option>
+                        <option value="1h">1h</option>
+                        <option value="90m">90m</option>
                         <option value="1d">1d</option>
                         <option value="5d">5d</option>
+                        <option value="1wk">1wk</option>
                         <option value="1mo">1mo</option>
                         <option value="3mo">3mo</option>
-                        <option value="6mo">6mo</option>
-                        <option value="1y">1y</option>
-                        <option value="2y">2y</option>
-                        <option value="5y">5y</option>
-                        <option value="ytd">ytd</option>
-                        <option value="max">max</option>
                     </select>
                 </div>
                 <button className="flex hover:font-bold items-center justify-self-center text-xs text-sky-600"

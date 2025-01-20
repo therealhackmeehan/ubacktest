@@ -25,7 +25,7 @@ function validateFormInputs({formInputs}: any) {
     }
 
     // Define allowed interval values
-    const allowedIntervals = ['1d', '5d', '1mo', '3mo', '6mo', '1y', '2y', '5y', 'ytd', 'max'];
+    const allowedIntervals = ['1m', '2m', '5m', '15m', '30m', '1h', '90m', '1d', '5d', '1wk', '1mo', '3mo'];
     if (!allowedIntervals.includes(intval)) {
         throw new Error(`Invalid interval. Allowed values are: ${allowedIntervals.join(", ")}.`);
     }
@@ -45,13 +45,13 @@ function validateFormInputs({formInputs}: any) {
     }
 
     // Check if start date and end date are at least 3 days apart
-    const start = new Date(startDate).getTime();
-    const end = new Date(endDate).getTime();
-    const differenceInDays = (end - start) / (1000 * 60 * 60 * 24); // Convert milliseconds to days
+    // const start = new Date(startDate).getTime();
+    // const end = new Date(endDate).getTime();
+    // const differenceInDays = (end - start) / (1000 * 60 * 60 * 24); // Convert milliseconds to days
 
-    if (differenceInDays < 3) {
-        throw new Error("Start date and end date must be at least 3 days apart.");
-    }
+    // if (differenceInDays < 3) {
+    //     throw new Error("Start date and end date must be at least 3 days apart.");
+    // }
 
     // Check if startDate and endDate are not in the future
     if (new Date(startDate) > today || new Date(endDate) > today) {

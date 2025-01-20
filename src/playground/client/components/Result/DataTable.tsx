@@ -55,11 +55,21 @@ function DataTable({ strategyResult }: { strategyResult: StrategyResultProps }) 
 
     // Function to interpolate color
     const getColor = (value: number) => {
-        const percentage = (value - minReturn) / (maxReturn - minReturn); // Normalize to [0, 1]
-        const red = Math.round(255 * (1 - percentage)); // More red for lower values
-        const green = Math.round(255 * percentage); // More green for higher values
-        return `rgba(${red}, ${green}, 0, 0.15)`; // Red to Green gradient
+        if (value >= 0) {
+            // Normalize positive values to [0, 1]
+            const maxPositive = Math.max(0, maxReturn); // Ensure maxPositive is non-negative
+            const percentage = maxPositive === 0 ? 0 : value / maxPositive; // Avoid division by zero
+            const green = Math.round(255 * percentage); // Scale green based on positive percentage
+            return `rgba(0, ${green}, 0, 0.15)`; // Shades of green
+        } else {
+            // Normalize negative values to [0, 1]
+            const minNegative = Math.min(0, minReturn); // Ensure minNegative is non-positive
+            const percentage = minNegative === 0 ? 0 : value / minNegative; // Avoid division by zero
+            const red = Math.round(255 * percentage); // Scale red based on negative percentage
+            return `rgba(${red}, 0, 0, 0.15)`; // Shades of red
+        }
     };
+
 
     return (
         <table className="w-full">

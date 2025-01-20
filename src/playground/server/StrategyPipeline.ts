@@ -220,6 +220,8 @@ class StrategyPipeline {
 
         const url = `${baseUrl}${symbolPath}?${period1}&${period2}&${interval}`;
 
+        console.log(url);
+
         const response = await fetch(url, {
             method: 'GET',
             headers: {
@@ -228,14 +230,17 @@ class StrategyPipeline {
             }
         });
 
-        if (!response.ok) {
+        const responseJson = await response.json();
+
+        if (!response.ok || responseJson.chart.error) {
+            const errMsg = responseJson.chart.error.description || '';
             throw new HttpError(
                 503, // Service Unavailable
-                `Unable to find or access ${symbol}. Please try again with another (or make sure that the company went public prior to the start date of the backtest).\n\n\n Status Text: '${response.statusText}'`
+                `Unable to find or access ${symbol} at that range. Please try again with another symbol (or make sure that the company went public prior to the start date of the backtest).\n\n\n Status Message: '${errMsg}'`
             );
         }
 
-        return await response.json();
+        return responseJson;
     }
 
     private validateStockDataFromAPI(tempAPIResult: any) {
@@ -256,11 +261,13 @@ class StrategyPipeline {
         if (!closePrices) throw new HttpError(400, "Although it appears this stock exists, no data was found. Try another stock or adjust the timeframe.");
         if (!Array.isArray(closePrices) || closePrices.length < 5)
             throw new HttpError(400, "Less than 5 data points available for a backtest.");
+
+        console.log(closePrices)
+
         if (!closePrices.every((price) => typeof price === "number" && !isNaN(price)))
             throw new HttpError(400, "Invalid data detected in close prices.");
         if (!Array.isArray(timestamps) || timestamps.length !== closePrices.length)
             throw new HttpError(500, "Mismatch between timestamps and close prices.");
-
         if (!Array.isArray(highPrices) || !Array.isArray(lowPrices) || !Array.isArray(openPrices) || !Array.isArray(volumes))
             throw new HttpError(500, "Invalid structure for high, low, or open data. Expected arrays.");
         if (highPrices.length !== closePrices.length || lowPrices.length !== closePrices.length || openPrices.length !== closePrices.length)
@@ -379,7 +386,7 @@ if not df.index.is_unique:
 if df.shape[0] != initHeight:
     raise Exception("The height of the dataframe has changed upon applying your strategy.")
 
-df['signal'].fillna(0, inplace=True)
+df['signal'] = df['signal'].fillna(method='ffill').fillna(0)
 dfToReturn = df[['signal']].round(3).to_dict('list')
 
 print("${uniqueKey}START${uniqueKey}" + json.dumps(dfToReturn) + "${uniqueKey}END${uniqueKey}")`;

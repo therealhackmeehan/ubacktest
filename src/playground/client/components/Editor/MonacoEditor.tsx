@@ -46,7 +46,7 @@ function MonacoEditor({ codeToDisplay, setCodeToDisplay }: MonacoEditorProps) {
             setCodeToDisplay(value);
         }
     };
-
+ 
     const saveCodeToDB = async () => {
         if (isSavingRef.current) return; // Block if already saving
         isSavingRef.current = true; // Mark as saving
