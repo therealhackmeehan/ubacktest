@@ -63,7 +63,7 @@ function DataTable({ strategyResult }: { strategyResult: StrategyResultProps }) 
 
     return (
         <table className="w-full">
-            <thead className="tracking-tight text-gray-700 bg-slate-200 sticky top-0">
+            <thead className="tracking-tight text-gray-700 bg-slate-200">
                 <tr>
                     <TableHead column="date" label="Date" handleSort={handleSort} />
                     <TableHead column="signal" label="Buy/Short/Hold Signal" handleSort={handleSort} />

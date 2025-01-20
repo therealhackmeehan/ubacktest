@@ -46,7 +46,7 @@ function LinePlot({ strategyResult, costPerTrade }: LinePlotProps) {
                     borderColor: 'rgba(255, 0, 100, 1)',
                     backgroundColor: 'rgba(255, 0, 100, 1)',
                     pointRadius: 0,
-                    borderWidth: 1,
+                    borderWidth: 2,
                     yAxisID: 'y1',
                 },
                 {
@@ -155,7 +155,7 @@ function LinePlot({ strategyResult, costPerTrade }: LinePlotProps) {
                 type: 'linear' as const,
                 display: true,
                 grid: {
-                    color: 'rgba(100,100,100,.1)',
+                    color: ({ tick }) => tick.value == 1 ? 'rgba(100,100,100,.5)' : 'rgba(100,100,100,.1)',
                     lineWidth: 1,
                 },
             },

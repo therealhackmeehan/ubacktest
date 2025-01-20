@@ -1,7 +1,8 @@
 import { FaCaretDown, FaCaretUp } from "react-icons/fa";
 import React, { useState } from "react";
 import { FormInputProps } from "../../../../shared/sharedTypes";
-import stocks from './stocks.json';
+import stocks from './stocks';
+import { IoMdReturnRight } from "react-icons/io";
 
 interface InputFormSubcomponentProps {
     formInputs: FormInputProps;
@@ -48,6 +49,7 @@ function InputForm({ formInputs, setFormInputs, run }: InputFormSubcomponentProp
         }));
         setMatches([]);
     };
+
     const inputFormCss = 'text-xs text-gray-600 rounded-md border border-gray-200 shadow-md focus:outline-none focus:border-transparent focus:shadow-none duration-200 ease-in-out hover:shadow-none';
 
     return (
@@ -179,9 +181,10 @@ function InputForm({ formInputs, setFormInputs, run }: InputFormSubcomponentProp
                 }
             </div>
             <button onClick={run}
-                className="bg-gray-100 justify-self-center w-full text-xl font-extrabold tracking-tight border-2 border-gray-800 rounded-lg hover:bg-sky-100"
+                className="gap-x-2 flex justify-center items-center bg-gray-100 justify-self-center w-full text-xl font-extrabold tracking-tight border-2 border-gray-800 rounded-lg hover:bg-sky-100"
             >
                 GO
+                <IoMdReturnRight />
             </button>
         </div>
 

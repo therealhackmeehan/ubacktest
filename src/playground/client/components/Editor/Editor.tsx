@@ -47,14 +47,15 @@ function Editor({ formInputs, setStrategyResult, setResultOpen, setFormInputs, s
 
             handleDebugOutput(stdout, stderr);
             if (stderr) return;
-            
-            if (warnings && warnings.length > 0) {
-                setErrorModalMessage(warnings.map((str: string) => `WARNING: ${str}`));
-            }
 
             setStrategyResult(strategyResult);
             setResultOpen(true);
             setStrategyResultIsConnectedTo(selectedStrategy.id);
+
+            if (warnings && warnings.length > 0) {
+                setErrorModalMessage(warnings.map((str: string) => `WARNING: ${str}`));
+            }
+
         } catch (error: any) {
             uncharge();
             setErrorModalMessage(error.message);

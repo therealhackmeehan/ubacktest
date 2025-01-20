@@ -8,6 +8,8 @@ import { useState, useEffect, useRef, useContext } from "react";
 import ExamplesModal from "../modals/ExamplesModal";
 import { MdLaunch } from "react-icons/md";
 import { StrategyContext } from "../../EditorPage";
+import { BsQuestionOctagon } from "react-icons/bs";
+import PackagesModal from "../modals/PackagesModal";
 
 const editorOpts = {
     minimap: {
@@ -26,15 +28,17 @@ interface MonacoEditorProps {
     setCodeToDisplay: (value: string) => void;
 }
 
-function MonacoEditor({codeToDisplay, setCodeToDisplay}: MonacoEditorProps) {
+function MonacoEditor({ codeToDisplay, setCodeToDisplay }: MonacoEditorProps) {
 
     const { selectedStrategy } = useContext(StrategyContext);
-    
+
     const [errMsg, setErrMsg] = useState<string>('');
     const [buttonText, setButtonText] = useState<string>('save');
     const [saving, setSaving] = useState<boolean>(false);
 
     const [examplesModalOpen, setExamplesModalOpen] = useState<boolean>(false);
+    const [packagesModalOpen, setPackagesModalOpen] = useState<boolean>(false);
+
     const isSavingRef = useRef(false); // Use a ref to track the saving state
 
     const handleEditorChange = (value: string | undefined) => {
@@ -55,18 +59,18 @@ function MonacoEditor({codeToDisplay, setCodeToDisplay}: MonacoEditorProps) {
 
             // Text animation effect
             const textSequence = [
-                "sav", 
-                "sa", 
-                "s", 
-                "sa", 
-                "sav", 
-                "save", 
+                "sav",
+                "sa",
+                "s",
+                "sa",
+                "sav",
+                "save",
                 "saved",
-                "saved.", 
-                "saved..", 
-                "saved...", 
-                "saved..", 
-                "saved.", 
+                "saved.",
+                "saved..",
+                "saved...",
+                "saved..",
+                "saved.",
                 "saved"
             ];
             textSequence.forEach((text, index) => {
@@ -121,12 +125,20 @@ function MonacoEditor({codeToDisplay, setCodeToDisplay}: MonacoEditorProps) {
                 <DownloadButton code={codeToDisplay} />
                 <UploadButton setCode={setCodeToDisplay} />
                 <button className='border-l-2 border-black flex gap-x-1 px-3 py-1 hover:bg-slate-100 hover:font-bold items-center text-center text-gray-800 tracking-tight'
+                    onClick={() => setPackagesModalOpen(true)}>
+                    <MdLaunch />Included Packages
+                </button>
+                <button className='border-l-2 border-black flex gap-x-1 px-3 py-1 hover:bg-slate-100 hover:font-bold items-center text-center text-gray-800 tracking-tight'
                     onClick={() => setExamplesModalOpen(true)}>
-                    <MdLaunch />Examples
+                    <BsQuestionOctagon />Examples
                 </button>
             </div>
             <Editor className="invert hue-rotate-180" height="80vh" defaultLanguage='python' theme="vs-dark" value={codeToDisplay} onChange={handleEditorChange} options={editorOpts}
                 loading={(<div className="text-white font-2xl tracking-tight">Loading...</div>)} />
+
+            {packagesModalOpen &&
+                <PackagesModal closeModal={() => setPackagesModalOpen(false)} />
+            }
 
             {examplesModalOpen &&
                 <ExamplesModal onSuccess={onSuccess} closeModal={() => setExamplesModalOpen(false)} />

@@ -21,7 +21,7 @@ export default function ErrorModal({ closeModal, msg }: ErrorModalProps) {
                     <TiDelete size='1.8rem' className='hover:rotate-6 text-gray-900 hover:scale-110' />
                 </button>
             </div>
-            <textarea rows={7} className='w-full border-0 border-transparent bg-gray-100 rounded-lg font-bold text-xs text-red-700 tracking-tight' readOnly={true} value={msg}>
+            <textarea rows={7} className='w-full border-0 border-transparent resize-none bg-white font-mono text-xs text-red-700' readOnly={true} value={msg}>
             </textarea>
             <div className="flex justify-between mt-4 gap-x-3">
                 <button

@@ -37,7 +37,6 @@ export default function EditorPage() {
 
     useEffect(() => {
         window.addEventListener("mousemove", (e) => {
-            document.body.style.userSelect = 'none'
             if (!isResized.current) {
                 return;
             }
@@ -57,7 +56,6 @@ export default function EditorPage() {
 
         window.addEventListener("mouseup", () => {
             isResized.current = false;
-            document.body.style.userSelect = '';
         });
     }, []);
 
@@ -107,7 +105,6 @@ export default function EditorPage() {
                 </div>
                 <div className="w-3 cursor-col-resize border-r-2 border-black bg-slate-200"
                     onMouseDown={() => {
-                        document.body.style.userSelect = 'none';
                         isResized.current = true;
                     }}
                 >
