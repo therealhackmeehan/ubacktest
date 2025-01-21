@@ -1,5 +1,6 @@
 import { Line } from 'react-chartjs-2';
 import { useState, useEffect } from 'react';
+import 'chartjs-adapter-date-fns';
 
 import {
     Chart as ChartJS,
@@ -9,7 +10,8 @@ import {
     LineElement,
     Title,
     Tooltip,
-    Legend
+    Legend,
+    TimeScale
 } from 'chart.js';
 import { StrategyResultProps } from '../../../../shared/sharedTypes';
 
@@ -20,7 +22,8 @@ ChartJS.register(
     LineElement,
     Title,
     Tooltip,
-    Legend
+    Legend,
+    TimeScale
 );
 
 function SPChart({ strategyResult }: { strategyResult: StrategyResultProps }) {
@@ -28,23 +31,25 @@ function SPChart({ strategyResult }: { strategyResult: StrategyResultProps }) {
     const [chartData, setChartData] = useState<any | null>(null);
 
     useEffect(() => {
-        const dates = strategyResult.timestamp.map((timestamp: number) =>
-            new Date(timestamp * 1000).toLocaleDateString()
-        );
-
         let chartData = {
-            labels: dates,
             datasets: [
                 {
                     label: 'My Strategy',
-                    data: strategyResult.portfolio,
+                    data: strategyResult.timestamp.map((timestamp: number, index: number) => ({
+                        x: new Date(timestamp * 1000), // Use Date object for x
+                        y: strategyResult.portfolio[index], // Corresponding y value
+                    })), 
                     borderColor: 'rgba(255, 0, 100, 1)',
                     backgroundColor: 'rgba(255, 0, 100, 1)',
-                    pointRadius: 0,
+                    pointRadius: 2,
+                    borderWidth: 2,
                 },
                 {
                     label: 'S&P 500 Index',
-                    data: strategyResult.sp,
+                    data: strategyResult.timestamp.map((timestamp: number, index: number) => ({
+                        x: new Date(timestamp * 1000), // Use Date object for x
+                        y: strategyResult.sp[index], // Corresponding y value
+                    })), 
                     borderColor: 'rgba(123, 50, 168, 1)',
                     pointRadius: 0,
                 },
@@ -79,6 +84,9 @@ function SPChart({ strategyResult }: { strategyResult: StrategyResultProps }) {
                     color: ({ tick }) => tick.value == 1 ? 'rgba(100,100,100,.5)' : 'rgba(100,100,100,.05)',
                     lineWidth: 2,
                 },
+            },
+            x: {
+                type: 'time' as const,
             },
         },
     };

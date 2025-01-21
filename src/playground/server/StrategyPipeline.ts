@@ -214,8 +214,8 @@ class StrategyPipeline {
 
         const baseUrl = 'https://query1.finance.yahoo.com/v8/finance/chart/';
         const symbolPath = `${symbol}`;
-        const period1 = `period1=${new Date(this.formInputs.startDate).getTime() / 1000}`;
-        const period2 = `period2=${new Date(this.formInputs.endDate).getTime() / 1000}`;
+        const period1 = `period1=${Math.floor(this.formInputs.startDate.getTime() / 1000)}`;
+        const period2 = `period2=${Math.floor(this.formInputs.endDate.getTime() / 1000)}`;
         const interval = `interval=${this.formInputs.intval}`;
 
         const url = `${baseUrl}${symbolPath}?${period1}&${period2}&${interval}`;
@@ -232,11 +232,11 @@ class StrategyPipeline {
 
         const responseJson = await response.json();
 
-        if (!response.ok || responseJson.chart.error) {
-            const errMsg = responseJson.chart.error.description || '';
+        if (!response.ok) {
+            const errMsg = responseJson.chart?.error.description;
             throw new HttpError(
                 503, // Service Unavailable
-                `Unable to find or access ${symbol} at that range. Please try again with another symbol (or make sure that the company went public prior to the start date of the backtest).\n\n\n Status Message: '${errMsg}'`
+                `Unable to find or access ${symbol} at that range. Please try again with another symbol (or make sure that the company went public prior to the start date of the backtest).\n\n\n Status Message: '${errMsg || 'none'}'`
             );
         }
 

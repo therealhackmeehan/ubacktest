@@ -17,8 +17,8 @@ export interface StrategyResultProps {
 
 export interface FormInputProps {
     symbol: string;
-    startDate: string;
-    endDate: string;
+    startDate: Date;
+    endDate: Date;
     intval: string;
     timeOfDay: "open" | "close" | "high" | "low";
     costPerTrade: number;

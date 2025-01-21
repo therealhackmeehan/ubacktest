@@ -91,9 +91,9 @@ function InputForm({ formInputs, setFormInputs, run }: InputFormSubcomponentProp
                         Start Date
                     </div>
                     <input
-                        type='date'
+                        type={`${(formInputs.intval == '1d')? 'date' : 'datetime-local'}`}
                         className={inputFormCss}
-                        value={formInputs.startDate}
+                        value={formInputs.startDate.toISOString().slice(0, 16)}
                         onChange={handleChange}
                         name="startDate"
                     />
@@ -103,9 +103,9 @@ function InputForm({ formInputs, setFormInputs, run }: InputFormSubcomponentProp
                         End Date
                     </div>
                     <input
-                        type='date'
+                        type='datetime-local'
                         className={inputFormCss}
-                        value={formInputs.endDate}
+                        value={formInputs.endDate.toISOString().slice(0, 16)}
                         onChange={handleChange}
                         name="endDate"
                     />

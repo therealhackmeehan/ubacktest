@@ -10,17 +10,16 @@ export interface stdProps {
     err: string;
 }
 
-const getDate = (monthsAgo: number): string => {
-    const date = new Date();
-    date.setMonth(date.getMonth() - monthsAgo);
-    return date.toISOString().split('T')[0]; // Format as 'YYYY-MM-DD'
-};
+function addMonths(date: Date, months: number): Date{
+    date.setMonth(date.getMonth() + months);
+    return date;
+  }
 
 const initFormInputs: FormInputProps = {
     symbol: 'aapl',
-    startDate: getDate(12), // 12 months ago
-    endDate: getDate(6), // 6 months ago
-    intval: '5d',
+    startDate: addMonths(new Date(), -12), // 12 months ago
+    endDate: addMonths(new Date(), -6), // 6 months ago
+    intval: '1d',
     timeOfDay: 'close',
     costPerTrade: 0,
 };

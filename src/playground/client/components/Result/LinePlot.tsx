@@ -1,5 +1,6 @@
 import { Line } from 'react-chartjs-2';
 import { useState, useEffect } from 'react';
+import 'chartjs-adapter-date-fns';
 
 import {
     Chart as ChartJS,
@@ -9,7 +10,8 @@ import {
     LineElement,
     Title,
     Tooltip,
-    Legend
+    Legend,
+    TimeScale
 } from 'chart.js';
 import { StrategyResultProps } from '../../../../shared/sharedTypes';
 
@@ -20,7 +22,8 @@ ChartJS.register(
     LineElement,
     Title,
     Tooltip,
-    Legend
+    Legend,
+    TimeScale
 );
 
 interface LinePlotProps {
@@ -33,46 +36,54 @@ function LinePlot({ strategyResult, costPerTrade }: LinePlotProps) {
     const [chartData, setChartData] = useState<any | null>(null);
 
     useEffect(() => {
-        const dates = strategyResult.timestamp.map((timestamp: number) =>
-            new Date(timestamp * 1000).toLocaleDateString()
-        );
 
-        let chartData = {
-            labels: dates,
+        const chartData = {
             datasets: [
                 {
                     label: 'My Strategy',
-                    data: strategyResult.portfolio,
+                    data: strategyResult.timestamp.map((timestamp: number, index: number) => ({
+                        x: new Date(timestamp * 1000), // Use Date object for x
+                        y: strategyResult.portfolio[index], // Corresponding y value
+                    })),
                     borderColor: 'rgba(255, 0, 100, 1)',
                     backgroundColor: 'rgba(255, 0, 100, 1)',
-                    pointRadius: 0,
+                    pointRadius: 1,
                     borderWidth: 2,
                     yAxisID: 'y1',
                 },
                 {
                     label: 'Open',
-                    data: strategyResult.open,
+                    data: strategyResult.timestamp.map((timestamp: number, index: number) => ({
+                        x: new Date(timestamp * 1000),
+                        y: strategyResult.open[index],
+                    })),
                     borderColor: 'rgba(123, 50, 168, 1)',
                     pointRadius: 0,
                     borderWidth: 1,
                     borderDash: [4, 1],
-                    tension: .05,
+                    tension: 0.05,
                     hidden: true,
                     yAxisID: 'y1',
                 },
                 {
                     label: 'Close',
-                    data: strategyResult.close,
+                    data: strategyResult.timestamp.map((timestamp: number, index: number) => ({
+                        x: new Date(timestamp * 1000),
+                        y: strategyResult.close[index],
+                    })),
                     borderColor: 'rgba(70, 15, 105, 1)',
                     pointRadius: 0,
                     borderWidth: 1,
                     borderDash: [4, 1],
-                    tension: .05,
+                    tension: 0.05,
                     yAxisID: 'y1',
                 },
                 {
                     label: 'Buy/Sell Signal',
-                    data: strategyResult.signal,
+                    data: strategyResult.timestamp.map((timestamp: number, index: number) => ({
+                        x: new Date(timestamp * 1000),
+                        y: strategyResult.signal[index],
+                    })),
                     borderColor: 'rgba(0, 155, 255, 1)',
                     backgroundColor: 'rgba(0, 155, 255, 1)',
                     stepped: true,
@@ -82,7 +93,10 @@ function LinePlot({ strategyResult, costPerTrade }: LinePlotProps) {
                 },
                 {
                     label: 'My Strategy (w/ trading costs)',
-                    data: strategyResult.portfolioWithCosts,
+                    data: strategyResult.timestamp.map((timestamp: number, index: number) => ({
+                        x: new Date(timestamp * 1000),
+                        y: strategyResult.portfolioWithCosts[index],
+                    })),
                     borderColor: 'rgba(255, 0, 100, 0.6)',
                     backgroundColor: 'rgba(255, 0, 100, 0.6)',
                     borderWidth: 1,
@@ -92,6 +106,7 @@ function LinePlot({ strategyResult, costPerTrade }: LinePlotProps) {
                 },
             ],
         };
+
 
         // Conditionally add the "My Strategy (w trading costs)" dataset
         if (costPerTrade === 0) {
@@ -120,6 +135,7 @@ function LinePlot({ strategyResult, costPerTrade }: LinePlotProps) {
         },
         scales: {
             x: {
+                type: 'time' as const,
                 grid: {
                     drawOnChartArea: false,
                 },
@@ -155,7 +171,7 @@ function LinePlot({ strategyResult, costPerTrade }: LinePlotProps) {
                 type: 'linear' as const,
                 display: true,
                 grid: {
-                    color: ( tick ) => tick.value == 1 ? 'rgba(100,100,100,.5)' : 'rgba(100,100,100,.1)',
+                    color: (tick) => tick.value == 1 ? 'rgba(100,100,100,.5)' : 'rgba(100,100,100,.1)',
                     lineWidth: 1,
                 },
             },

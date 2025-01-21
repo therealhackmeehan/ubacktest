@@ -88,7 +88,7 @@ function DataTable({ strategyResult }: { strategyResult: StrategyResultProps }) 
                         key={index}
                     >
                         <td className="font-bold">
-                            {new Date(date * 1000).toLocaleDateString()}
+                            {new Date(date * 1000).toLocaleString()}
                         </td>
 
                         <td className="font-bold">
