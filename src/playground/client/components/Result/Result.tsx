@@ -77,27 +77,29 @@ function Result({ selectedStrategy, formInputs, strategyResult, abilityToSaveNew
                 <ResultButtonGroup saveResult={saveResult} abilityToSaveNew={abilityToSaveNew} symbol={formInputs.symbol} />
             </div>
 
-            <div id='pdfToSave' className="m-8">
-                <div className="m-1 text-xl tracking-tight text-slate-400 hover:text-slate-800 font-bold">Hypothetical Growth of $1</div>
-                <div className="rounded-sm border-2 border-slate-300">
-                    <LinePlot strategyResult={strategyResult} costPerTrade={formInputs.costPerTrade} />
-                </div>
-                <FormInputHeader formInputs={formInputs} />
-            </div>
-
-            <div className="grid grid-cols-3 gap-x-6 justify-stretch m-8">
-                <MainStatistics stats={stats} />
-                <div className="col-span-2 bg-slate bg-slate-100 rounded-lg border-2 border-slate-400 max-h-132.5 overflow-y-auto">
-                    <div className="flex justify-between mx-2">
-                        <div className="text-xl font-mono text-black/60 p-3 text-end">Trade Log</div>
-                        <button
-                            className="text-sm m-3 p-2 border-2 border-black rounded-lg bg-white font-light hover:font-bold hover:bg-slate-200"
-                            onClick={downloadCSV} // Trigger the download on click
-                        >
-                            Download Data as .csv
-                        </button>
+            <div id='pdfToSave'>
+                <div className="m-8">
+                    <div className="m-1 text-xl tracking-tight text-slate-400 hover:text-slate-800 font-bold">Hypothetical Growth of $1</div>
+                    <div className="rounded-sm border-2 border-slate-300">
+                        <LinePlot strategyResult={strategyResult} costPerTrade={formInputs.costPerTrade} />
                     </div>
-                    <DataTable strategyResult={strategyResult} />
+                    <FormInputHeader formInputs={formInputs} />
+                </div>
+
+                <div className="grid grid-cols-3 gap-x-6 justify-stretch m-8">
+                    <MainStatistics stats={stats} />
+                    <div className="col-span-2 bg-slate bg-slate-100 rounded-sm border-2 border-slate-400 max-h-132.5 overflow-y-auto">
+                        <div className="flex justify-between mx-2">
+                            <div className="text-xl font-mono text-black/60 p-3 text-end">Trade Log</div>
+                            <button
+                                className="text-sm m-3 p-2 border-2 border-black rounded-lg bg-white font-light hover:font-bold hover:bg-slate-200"
+                                onClick={downloadCSV} // Trigger the download on click
+                            >
+                                Download Data as .csv
+                            </button>
+                        </div>
+                        <DataTable strategyResult={strategyResult} />
+                    </div>
                 </div>
             </div>
 

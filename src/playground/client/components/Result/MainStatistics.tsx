@@ -7,6 +7,7 @@ function MainStatistics({ stats }: { stats: StatProps }) {
             <div className='font-extrabold mb-2 text-xl text-start tracking-tight p-2 rounded-lg border-black border-2 bg-white'>
                 Stats
             </div>
+            <Stat text={'# of timepoints'} stat={stats.length} />
             <Stat text={'profit/loss'} stat={stats.pl} />
             {(stats.pl !== stats.plWCosts) && <Stat text={'profit/loss (w/ trading costs)'} stat={stats.plWCosts} />}
             <Stat text={'approx. annualized profit/loss'} stat={stats.annualizedPl} />

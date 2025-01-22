@@ -6,10 +6,10 @@ function FormInputHeader({ formInputs }: { formInputs: FormInputProps }) {
         <div className="flex justify-between bg-slate-100 p-2 rounded-b-lg border-slate-300 border-x-2 border-b-2">
             <div className="p-2">
                 <div className="font-extralight text-sm flex justify-between items-center">
-                    started <span className="text-lg font-bold tracking-tight text-slate-700 px-2">{formInputs.startDate.toLocaleString()}</span>
+                    started <span className="text-lg font-bold tracking-tight text-slate-700 px-2">{new Date(formInputs.startDate).toLocaleString()}</span>
                 </div>
                 <div className="font-extralight text-sm flex justify-between items-center">
-                    ended <span className="text-lg font-bold tracking-tight text-slate-700 px-2">{formInputs.endDate.toLocaleString()}</span>
+                    ended <span className="text-lg font-bold tracking-tight text-slate-700 px-2">{new Date(formInputs.endDate).toLocaleString()}</span>
                 </div>
             </div>
             <div className="p-2">

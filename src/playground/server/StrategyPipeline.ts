@@ -214,8 +214,8 @@ class StrategyPipeline {
 
         const baseUrl = 'https://query1.finance.yahoo.com/v8/finance/chart/';
         const symbolPath = `${symbol}`;
-        const period1 = `period1=${Math.floor(this.formInputs.startDate.getTime() / 1000)}`;
-        const period2 = `period2=${Math.floor(this.formInputs.endDate.getTime() / 1000)}`;
+        const period1 = `period1=${Math.floor(new Date(this.formInputs.startDate).getTime() / 1000)}`;
+        const period2 = `period2=${Math.floor(new Date(this.formInputs.endDate).getTime() / 1000)}`;
         const interval = `interval=${this.formInputs.intval}`;
 
         const url = `${baseUrl}${symbolPath}?${period1}&${period2}&${interval}`;

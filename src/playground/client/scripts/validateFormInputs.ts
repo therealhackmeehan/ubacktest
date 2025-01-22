@@ -1,10 +1,14 @@
-function validateFormInputs({formInputs}: any) {
+function validateFormInputs({ formInputs }: any) {
 
-    const { symbol, startDate, endDate, intval, timeOfDay } = formInputs;
+    const { symbol, startDate, endDate, intval, timeOfDay, useWarmupDate, warmupDate } = formInputs;
 
     // Check for missing inputs
-    if (!startDate || !endDate || !symbol || !intval || !timeOfDay) {
-        throw new Error("Missing input entries. Please provide 'symbol', 'startDate', 'endDate', and 'intval'.");
+    if (!startDate || !endDate || !symbol || !intval ) {
+        throw new Error("Missing input entries. Please provide 'symbol', 'start date', 'end date', and 'trading frequency'");
+    }
+
+    if (useWarmupDate && !warmupDate) {
+        throw new Error("If utilizing the warm-up period, make sure to include a warm-up start date.")
     }
 
     // Check for valid date format (assuming format is YYYY-MM-DD)
@@ -38,10 +42,15 @@ function validateFormInputs({formInputs}: any) {
 
     // Check if start date and end date are within a reasonable range (e.g., within the last 20 years)
     const today = new Date();
-    const twentyYearsAgo = new Date(today.getFullYear() - 20, today.getMonth(), today.getDate());
 
-    if (new Date(startDate) < twentyYearsAgo || new Date(endDate) < twentyYearsAgo) {
-        throw new Error("Dates must be within the last 20 years.");
+    if (useWarmupDate) {
+        const wDate = new Date(warmupDate);
+        if (wDate > today) {
+            throw new Error("Warm-up dates cannot be in the future.");
+        }
+        if (wDate > new Date(startDate)) {
+            throw new Error("Warm-up date cannot come after the start date.");
+        }
     }
 
     // Check if start date and end date are at least 3 days apart
@@ -55,8 +64,8 @@ function validateFormInputs({formInputs}: any) {
 
     // Check if startDate and endDate are not in the future
     if (new Date(startDate) > today || new Date(endDate) > today) {
-        throw new Error("Dates cannot be in the future.");
-    }
+            throw new Error("Dates cannot be in the future.");
+        }
 }
 
 export default validateFormInputs;

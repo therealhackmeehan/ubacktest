@@ -53,17 +53,28 @@ function RatiosBarChart({ sortino, sharpe }: RatiosBarChartProps) {
         },
         scales: {
             x: {
+                grid: {
+                    drawOnChartArea: false,
+                },
                 title: {
                     display: false,
                     text: "Metrics",
                 },
             },
             y: {
+                grid: {
+                    lineWidth: 1,
+                    color: (tick) => {
+                        return tick.tick.value === 0 ? 'rgba(100,100,100,.4)' : 'rgba(100,100,100,.1)';
+                    },
+                },
                 title: {
                     display: false,
                     text: "Value",
                 },
                 beginAtZero: true,
+                suggestedMin: -.1,
+                suggestedMax: .1,
             },
         },
     };

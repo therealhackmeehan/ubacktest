@@ -140,9 +140,15 @@ function LinePlot({ strategyResult, costPerTrade }: LinePlotProps) {
                     drawOnChartArea: false,
                 },
             },
+            y1: {
+                grid: {
+                    color: (tick) => { // IDK why this exists at tick.tick.value
+                        return tick.tick.value === 1 ? 'rgba(100,100,100,.4)' : 'rgba(100,100,100,.1)';
+                    },
+                    lineWidth: 2,
+                },
+            },
             y2: {
-                type: 'linear' as const,
-                display: true,
                 position: 'right' as const,
                 label: 'Position',
                 grid: {
@@ -166,14 +172,6 @@ function LinePlot({ strategyResult, costPerTrade }: LinePlotProps) {
                 },
                 suggestedMin: -1.1,
                 suggestedMax: 1.1,
-            },
-            y1: {
-                type: 'linear' as const,
-                display: true,
-                grid: {
-                    color: (tick) => tick.value == 1 ? 'rgba(100,100,100,.5)' : 'rgba(100,100,100,.1)',
-                    lineWidth: 1,
-                },
             },
         },
     };

@@ -1,6 +1,7 @@
 import { StrategyResultProps } from "../../../shared/sharedTypes";
 
 export interface StatProps {
+    length: number;
     pl: string | null;
     plWCosts: string | null;
     annualizedPl: string | null;
@@ -86,6 +87,7 @@ export default function calculateStats(strategyResult: StrategyResultProps): Sta
     const roundedSortinoRatio = sortinoRatio !== null ? sortinoRatio.toFixed(2) : null;
 
     return {
+        length: length,
         pl: formattedTotalPL,
         plWCosts: formattedTotalPLWCosts,
         annualizedPl: formattedAnnualizedPL,

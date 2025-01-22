@@ -1,4 +1,4 @@
-import { useState, useContext, useEffect} from "react";
+import { useState, useContext, useEffect } from "react";
 import Editor from "./editor/Editor";
 import ResultLayout from "./result/ResultLayout";
 import { FormInputProps, StrategyResultProps } from "../../../shared/sharedTypes";
@@ -10,18 +10,22 @@ export interface stdProps {
     err: string;
 }
 
-function addMonths(date: Date, months: number): Date{
-    date.setMonth(date.getMonth() + months);
-    return date;
-  }
+function addMonths(date: Date, months: number): Date {
+    const newDate = new Date(date);
+    newDate.setHours(0, 0, 0, 0);
+    newDate.setMonth(newDate.getMonth() + months);
+    return newDate;
+}
 
 const initFormInputs: FormInputProps = {
     symbol: 'aapl',
-    startDate: addMonths(new Date(), -12), // 12 months ago
-    endDate: addMonths(new Date(), -6), // 6 months ago
+    startDate: addMonths(new Date(), -12).toISOString(), // 12 months ago
+    endDate: addMonths(new Date(), -6).toISOString(), // 6 months ago
     intval: '1d',
     timeOfDay: 'close',
     costPerTrade: 0,
+    useWarmupDate: false,
+    warmupDate: null,
 };
 
 function StrategyEditor() {

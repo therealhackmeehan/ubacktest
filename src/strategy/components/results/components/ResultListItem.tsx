@@ -1,12 +1,11 @@
 import { useEffect, useState } from 'react';
-import { FiDelete, FiBookOpen } from 'react-icons/fi';
+import { FiBookOpen } from 'react-icons/fi';
 import { MdOutlineEdit, MdDeleteOutline } from 'react-icons/md';
 import { type Result } from 'wasp/entities';
 import ResultPanel from '../../../../playground/client/components/result/Result';
 import { FormInputProps, StrategyResultProps } from '../../../../shared/sharedTypes';
 import RenameResultModal from './modals/RenameResultModal';
 import DeleteResultModal from './modals/DeleteResultModal';
-import { getSpecificStrategy } from 'wasp/client/operations';
 import SmallPlot from './SmallPlot';
 
 export default function ResultListItem({ result }: { result: Result }) {
@@ -78,7 +77,7 @@ export default function ResultListItem({ result }: { result: Result }) {
                         <MdDeleteOutline onClick={() => setDeleteResultModalOpen(true)} />
                     </button>
                     <div className='font-mono text-xs'>
-                        saved: {result.createdAt.toLocaleDateString()}
+                        saved: {result.createdAt.toLocaleString()}
                     </div>
                 </div>
             </div>

@@ -1,5 +1,5 @@
 import { FaCaretDown, FaCaretUp } from "react-icons/fa";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { FormInputProps } from "../../../../shared/sharedTypes";
 import stocks from './stocks';
 import { IoMdReturnRight } from "react-icons/io";
@@ -31,7 +31,7 @@ function InputForm({ formInputs, setFormInputs, run }: InputFormSubcomponentProp
                     .filter((stock) =>
                         (stock["ACT Symbol"].toLowerCase().startsWith(value.toLowerCase()) ||
                             stock["Company Name"].toLowerCase().startsWith(value.toLowerCase())) &&
-                        !stock["ACT Symbol"].includes('$')
+                        (!stock["ACT Symbol"].includes('$') || !stock["ACT Symbol"].includes('.'))
                     )
                     .slice(0, 4);
                 setMatches(filteredMatches);
@@ -50,7 +50,9 @@ function InputForm({ formInputs, setFormInputs, run }: InputFormSubcomponentProp
         setMatches([]);
     };
 
-    const inputFormCss = 'text-xs text-gray-600 rounded-md border border-gray-200 shadow-md focus:outline-none focus:border-transparent focus:shadow-none duration-200 ease-in-out hover:shadow-none';
+    const useDatetimeLocal = ["1m", "2m", "5m", "15m", "30m", "1h", "60m", "90m"].includes(formInputs.intval);
+    const startDateToUse = useDatetimeLocal ? formInputs.startDate.slice(0, 16) : formInputs.startDate.slice(0, 10);
+    const endDateToUse = useDatetimeLocal ? formInputs.endDate.slice(0, 16) : formInputs.endDate.slice(0, 10);
 
     return (
         <div className='z-10 flex border-2 border-black flex-col shadow-lg justify-between rounded-lg fixed right-0 h-2/3 w-1/5 bg-white my-16 mr-12 p-6'>
@@ -66,7 +68,7 @@ function InputForm({ formInputs, setFormInputs, run }: InputFormSubcomponentProp
                         type='text'
                         maxLength={5}
                         minLength={1}
-                        className={inputFormCss}
+                        className='text-xs text-gray-600 rounded-md border border-gray-200 shadow-md focus:outline-none focus:border-transparent focus:shadow-none duration-200 ease-in-out hover:shadow-none'
                         value={formInputs.symbol}
                         onChange={handleChange}
                         name="symbol"
@@ -91,31 +93,33 @@ function InputForm({ formInputs, setFormInputs, run }: InputFormSubcomponentProp
                         Start Date
                     </div>
                     <input
-                        type={`${(formInputs.intval == '1d')? 'date' : 'datetime-local'}`}
-                        className={inputFormCss}
-                        value={formInputs.startDate.toISOString().slice(0, 16)}
+                        type={useDatetimeLocal ? 'datetime-local' : 'date'}
+                        className='text-xs text-gray-600 rounded-md border border-gray-200 shadow-md focus:outline-none focus:border-transparent focus:shadow-none duration-200 ease-in-out hover:shadow-none'
+                        value={startDateToUse}
                         onChange={handleChange}
                         name="startDate"
                     />
+
                 </div>
                 <div className='flex items-center justify-between gap-3'>
                     <div className="tracking-tight text-xs font-bold">
                         End Date
                     </div>
                     <input
-                        type='datetime-local'
-                        className={inputFormCss}
-                        value={formInputs.endDate.toISOString().slice(0, 16)}
+                        type={useDatetimeLocal ? 'datetime-local' : 'date'}
+                        className='text-xs text-gray-600 rounded-md border border-gray-200 shadow-md focus:outline-none focus:border-transparent focus:shadow-none duration-200 ease-in-out hover:shadow-none'
+                        value={endDateToUse}
                         onChange={handleChange}
                         name="endDate"
                     />
+
                 </div>
                 <div className='flex items-center justify-between gap-3'>
                     <div className="tracking-tight text-xs font-bold">
                         Trading Frequency
                     </div>
                     <select
-                        className={inputFormCss}
+                        className='text-xs text-gray-600 rounded-md border border-gray-200 shadow-md focus:outline-none focus:border-transparent focus:shadow-none duration-200 ease-in-out hover:shadow-none'
                         value={formInputs.intval}
                         onChange={handleChange}
                         name="intval"
@@ -141,46 +145,81 @@ function InputForm({ formInputs, setFormInputs, run }: InputFormSubcomponentProp
                 </button>
 
                 {displayAdvancedOptions &&
-                    <div className="space-y-1 border-2 border-slate-300 bg-sky-50 rounded-md p-2">
-                        <div className='flex items-center justify-between gap-3'>
-                            <div className="tracking-tight text-xs font-bold">
-                                Execute Trade @
-                            </div>
-                            <select
-                                className={inputFormCss}
-                                value={formInputs.timeOfDay}
-                                onChange={handleChange}
-                                name="timeOfDay"
-                            >
-                                <option value="close">close</option>
-                                <option value="open">open</option>
-                                <option value="high">high</option>
-                                <option value="low">low</option>
-                            </select>
-                        </div>
-
-                        <div className='flex items-center justify-between gap-3'>
-                            <div className="tracking-tight text-xs font-bold">
-                                Cost Per Trade
-                            </div>
-                            <div className="flex items-center gap-x-1">
-                                <input
-                                    type='number'
-                                    step={.01}
-                                    min={0}
-                                    max={100}
-                                    className={inputFormCss}
-                                    value={formInputs.costPerTrade}
+                    <>
+                        <div className="space-y-1 border-2 border-slate-300 bg-sky-50 rounded-md p-2">
+                            <div className='flex items-center justify-between gap-3'>
+                                <div className="tracking-tight text-xs font-light">
+                                    Execute Trade @
+                                </div>
+                                <select
+                                    className='text-xs text-gray-600 rounded-md border border-gray-200 shadow-md focus:outline-none focus:border-transparent focus:shadow-none duration-200 ease-in-out hover:shadow-none'
+                                    value={formInputs.timeOfDay}
                                     onChange={handleChange}
-                                    name="costPerTrade"
-                                />
-                                <div className="font-extralight">
-                                    %
+                                    name="timeOfDay"
+                                >
+                                    <option value="close">close</option>
+                                    <option value="open">open</option>
+                                    <option value="high">high</option>
+                                    <option value="low">low</option>
+                                </select>
+                            </div>
+
+                            <div className='flex items-center justify-between gap-3'>
+                                <div className="tracking-tight text-xs font-light">
+                                    Cost Per Trade
+                                </div>
+                                <div className="flex items-center gap-x-1">
+                                    <input
+                                        type='number'
+                                        step={.01}
+                                        min={0}
+                                        max={100}
+                                        className='text-xs text-gray-600 rounded-md border border-gray-200 shadow-md focus:outline-none focus:border-transparent focus:shadow-none duration-200 ease-in-out hover:shadow-none'
+                                        value={formInputs.costPerTrade}
+                                        onChange={handleChange}
+                                        name="costPerTrade"
+                                    />
+                                    <div className="font-extralight">
+                                        %
+                                    </div>
                                 </div>
                             </div>
                         </div>
-                    </div>
-                }
+                        <div className="space-y-1 border-2 border-slate-300 bg-sky-50 rounded-md p-2">
+                            <div className="flex py-2 items-center justify-between gap-3">
+                                <div className="tracking-tight text-xs font-light">
+                                    Include "Warm-Up" Period
+                                </div>
+                                <div className="flex items-center gap-x-1">
+                                    <input
+                                        type="checkbox"
+                                        className='text-xs text-gray-600 rounded-md border border-gray-200 shadow-md focus:outline-none focus:border-transparent focus:shadow-none duration-200 ease-in-out hover:shadow-none'
+                                        onChange={(e) => {
+                                            setFormInputs((prevInputs: FormInputProps) => ({
+                                                ...prevInputs,
+                                                useWarmupDate: e.target.checked, // Sets to true or false based on checkbox state
+                                            }));
+                                        }}
+                                        checked={formInputs.useWarmupDate}
+                                        name="useWarmupDate"
+                                    />
+                                </div>
+                            </div>
+
+                            {formInputs.useWarmupDate && <>
+                                <div className="tracking-tight text-xs text-center font-light">
+                                    "Warm-Up" Start Date
+                                </div>
+                                <input
+                                    type={useDatetimeLocal ? 'datetime-local' : 'date'}
+                                    className='text-xs w-full text-gray-600 rounded-md border border-gray-200 shadow-md focus:outline-none focus:border-transparent focus:shadow-none duration-200 ease-in-out hover:shadow-none'
+                                    value={formInputs.warmupDate || ''}
+                                    onChange={handleChange}
+                                    name="warmupDate"
+                                />
+                            </>}
+                        </div>
+                    </>}
             </div>
             <button onClick={run}
                 className="gap-x-2 flex justify-center items-center bg-gray-100 justify-self-center w-full text-xl font-extrabold tracking-tight border-2 border-gray-800 rounded-lg hover:bg-sky-100"

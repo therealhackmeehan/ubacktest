@@ -15,7 +15,7 @@ export default function ResultButtonGroup({ saveResult, abilityToSaveNew, symbol
 
     const [newResultModalOpen, setNewResultModalOpen] = useState<boolean>(false);
     const [loading, setLoading] = useState<boolean>(false);
-    
+
     const convertHtmlToCanvas = async (elementId: string) => {
         const content = document.getElementById(elementId);
         if (!content) {
@@ -29,16 +29,31 @@ export default function ResultButtonGroup({ saveResult, abilityToSaveNew, symbol
     };
 
     const pdfSaveHelper = async () => {
-        const canvas = await convertHtmlToCanvas("pdfToSave");
+        const originalElement = document.getElementById("pdfToSave") as HTMLElement;
+
+        if (!originalElement) throw new Error('No Strategy Result to Save.');
+
+        // Create a clone of the element
+        const clonedElement = originalElement.cloneNode(true) as HTMLElement;
+        clonedElement.style.width = "800px"; // Fixed width
+        clonedElement.style.height = "600px"; // Fixed height
+        clonedElement.style.position = "absolute"; // Position it off-screen
+        clonedElement.style.left = "-9999px";
+
+        // Append the cloned element to the body
+        document.body.appendChild(clonedElement);
+
+        // Generate the canvas from the cloned element
+        const canvas = await html2canvas(clonedElement);
+
         const imageData = canvas.toDataURL("image/png"); // Convert canvas to image
 
-        const pdf = new jsPDF("l", "mm", "a4"); // Create a new PDF (portrait, mm units, A4 size)
-        const pageWidth = pdf.internal.pageSize.getWidth();
-        const imageWidth = canvas.width; // Divide by scale factor (2 in this case)
-        const imageHeight = canvas.height;
+        const pdf = new jsPDF("l", "mm", "a4"); // Create a new PDF (landscape, mm units, A4 size)
+        // pdf.addImage(imageData, 'JPEG', 0, 0, 0, 0, 0, 0, 0);
+        pdf.save("result_" + symbol + ".pdf"); // Save the PDF with a file name
 
-        pdf.addImage(imageData, "PNG", 0, 0, pageWidth, (imageHeight / imageWidth) * pageWidth);
-        pdf.save("result_" + symbol + '.pdf'); // Save the PDF with a file name
+        // Remove the cloned element from the DOM
+        document.body.removeChild(clonedElement);
     };
 
     const saveAsPDF = async () => {
@@ -98,16 +113,16 @@ export default function ResultButtonGroup({ saveResult, abilityToSaveNew, symbol
 
             {newResultModalOpen &&
                 <NewResultModal onSuccess={saveResult}
-                    closeModal={() => setNewResultModalOpen(false)} 
-                    symbol={symbol}/>
+                    closeModal={() => setNewResultModalOpen(false)}
+                    symbol={symbol} />
             }
 
-            <button className='flex gap-x-2 items-center p-2 m-1 tracking-tight bg-slate-600 hover:bg-slate-900 rounded-md text-white font-extralight'
+            <button className='flex gap-x-2 items-center p-2 m-1 tracking-tight bg-slate-600 hover:bg-slate-900 rounded-md text-white'
                 onClick={saveAsPDF}>
                 <FiDownload /> download PDF
             </button>
 
-            <button className='flex gap-x-2 items-center p-2 m-1 tracking-tight bg-slate-700 hover:bg-slate-900 rounded-md text-white font-extralight'
+            <button className='flex gap-x-2 items-center p-2 m-1 tracking-tight bg-slate-700 hover:bg-slate-900 rounded-md text-white'
                 onClick={loadEmail}>
                 <FiShare /> share
             </button>
