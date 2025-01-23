@@ -27,6 +27,7 @@ class StrategyPipeline {
         portfolioWithCosts: [],
         signal: [],
         returns: [],
+        userDefinedData: {},
     };
 
     private stderr: string = '';
@@ -85,10 +86,14 @@ class StrategyPipeline {
         const { stdout, stderr } = await StrategyPipeline.judge0_post(mainFileContent);
         this.stderr = stderr;
 
-        // Extract data from the Python output
+        // Extract data, result from the Python output
         const parsedData = this.parsePythonOutput(stdout, uniqueKey);
-        if (parsedData) Object.assign(this.strategyResult, parsedData);
-        this.stdout = parsedData ? this.stripDebugOutput(stdout, uniqueKey) : stdout
+        if (parsedData) {
+            Object.assign(this.strategyResult, parsedData.result);
+            this.strategyResult.userDefinedData = parsedData.data;
+        }
+        console.log(this.strategyResult)
+        this.stdout = parsedData ? this.stripDebugOutput(stdout, uniqueKey) : stdout;
     }
 
     private async addSPData() {
@@ -262,8 +267,6 @@ class StrategyPipeline {
         if (!Array.isArray(closePrices) || closePrices.length < 5)
             throw new HttpError(400, "Less than 5 data points available for a backtest.");
 
-        console.log(closePrices)
-
         if (!closePrices.every((price) => typeof price === "number" && !isNaN(price)))
             throw new HttpError(400, "Invalid data detected in close prices.");
         if (!Array.isArray(timestamps) || timestamps.length !== closePrices.length)
@@ -340,9 +343,10 @@ class StrategyPipeline {
         }
 
         const fullResult = await response.json();
-        console.log(fullResult)
-
         let { stdout, stderr } = fullResult;
+
+        console.log(stdout)
+
         if (!stdout) stdout = '';
         if (!stderr) stderr = '';
 
@@ -387,9 +391,17 @@ if df.shape[0] != initHeight:
     raise Exception("The height of the dataframe has changed upon applying your strategy.")
 
 df['signal'] = df['signal'].fillna(method='ffill').fillna(0)
-dfToReturn = df[['signal']].round(3).to_dict('list')
+signalToReturn = df[['signal']].round(3).to_dict('list')
 
-print("${uniqueKey}START${uniqueKey}" + json.dumps(dfToReturn) + "${uniqueKey}END${uniqueKey}")`;
+colsToExclude = {"open", "close", "high", "low", "volume", "timestamp", "signal"}
+
+middleOutput = {
+    "result": signalToReturn,
+    "data": df.loc[:, ~df.columns.isin(colsToExclude)].round(3).to_dict('list')
+}
+
+output = "${uniqueKey}START${uniqueKey}" + json.dumps(middleOutput) + "${uniqueKey}END${uniqueKey}"
+print(output)`;
 
         return m;
     }

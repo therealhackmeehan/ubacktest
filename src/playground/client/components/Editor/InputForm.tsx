@@ -55,7 +55,7 @@ function InputForm({ formInputs, setFormInputs, run }: InputFormSubcomponentProp
     const endDateToUse = useDatetimeLocal ? formInputs.endDate.slice(0, 16) : formInputs.endDate.slice(0, 10);
 
     return (
-        <div className='z-10 flex border-2 border-black flex-col shadow-lg justify-between rounded-lg fixed right-0 h-2/3 w-1/5 bg-white my-16 mr-12 p-6'>
+        <div className='z-10 flex border-2 border-black flex-col shadow-lg justify-between rounded-lg fixed right-0 h-2/3 w-2/5 lg:w-1/5 bg-white my-16 mr-12 p-6'>
             <div className="space-y-3 overflow-auto px-1">
                 <div className="text-lg text-slate-800 tracking-tight font-extrabold text-end">
                     <span className="text-sm font-light text-sky-600">the</span> Backtest Engine

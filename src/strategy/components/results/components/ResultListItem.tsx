@@ -13,9 +13,9 @@ export default function ResultListItem({ result }: { result: Result }) {
     const [ret, setRet] = useState<string>('N/A');
 
     useEffect(() => {
-        const fetchStrategyName = async () => {
+        const fetchRet = async () => {
 
-            const data: any = result.data;
+            const data = result.data as unknown as StrategyResultProps;
             if (data && data.portfolio) {
                 const first = data.portfolio[0];
                 const last = data.portfolio[data.portfolio.length - 1];
@@ -24,18 +24,16 @@ export default function ResultListItem({ result }: { result: Result }) {
                     setRet(retToSet.toFixed(2) + '%');
                 }
             }
-
         };
 
-        fetchStrategyName();
+        fetchRet();
     }, [result]);
 
     const handleCopyToClipboard = () => {
         if (result.code) {
             navigator.clipboard.writeText(result.code)
                 .then(() => {
-                    console.log('Code copied to clipboard!');
-                    alert('code copied to clipboard.')
+                    alert('code successfully copied to clipboard.')
                 })
                 .catch(err => {
                     console.error('Failed to copy text to clipboard: ', err);
@@ -43,9 +41,9 @@ export default function ResultListItem({ result }: { result: Result }) {
         }
     };
 
-
     const [resultPanelOpen, setResultPanelOpen] = useState<boolean>(false);
     const formInputs = result.formInputs as unknown as FormInputProps;
+    const strategyResult = result.data as unknown as StrategyResultProps;
 
     const [renameResultModalOpen, setRenameResultModalOpen] = useState<boolean>(false);
     const [deleteResultModalOpen, setDeleteResultModalOpen] = useState<boolean>(false);
@@ -61,7 +59,7 @@ export default function ResultListItem({ result }: { result: Result }) {
                         profit/loss: <span className='text-lg'>{ret}</span>
                     </div>
                     <div className='p-1'>
-                        <SmallPlot data={result.data as unknown as StrategyResultProps} />
+                        <SmallPlot data={strategyResult} />
                     </div>
                 </div>
                 <div className='flex justify-between gap-x-2 items-center'>
@@ -92,7 +90,7 @@ export default function ResultListItem({ result }: { result: Result }) {
                         <button onClick={() => setResultPanelOpen(false)} className='text-red-500 gap-x-1 hover:font-extrabold border-red-500 px-3 py-1 rounded-md border-2 mx-2 hover:text-red-400 hover:bg-red-100 font-bold text-lg justify-self-end flex items-center'>
                             close
                         </button>
-                        <ResultPanel strategyResult={result.data as unknown as StrategyResultProps} formInputs={formInputs} selectedStrategy={result.fromStrategyID} abilityToSaveNew={false} />
+                        <ResultPanel strategyResult={strategyResult} formInputs={formInputs} selectedStrategy={result.fromStrategyID} abilityToSaveNew={false} />
                         <div onClick={handleCopyToClipboard} className='max-w-7xl mx-auto px-8'>
                             <textarea className='w-full bg-slate-100 p-4 rounded-lg h-72 font-mono text-xs border-white border-1 resize-none hover:bg-slate-200'
                                 value={result.code} readOnly />
