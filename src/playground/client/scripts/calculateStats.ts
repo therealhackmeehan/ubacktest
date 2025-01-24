@@ -12,6 +12,8 @@ export interface StatProps {
     sortinoRatio: string | null;
     maxDrawdown: string | null;
     maxGain: string | null;
+    meanReturn: string | null;
+    stddevReturn: string | null;
 }
 
 export default function calculateStats(strategyResult: StrategyResultProps): StatProps {
@@ -64,13 +66,16 @@ export default function calculateStats(strategyResult: StrategyResultProps): Sta
     const formattedMaxGain = maxGain !== null ? (maxGain * 100).toFixed(2) + '%' : null;
 
     const returns = strategyResult.returns;
-
     const averageReturn = returns.reduce((sum: number, ret: number) => sum + ret, 0) / returns.length;
 
     const variance =
         returns.reduce((sum: number, ret: number) => sum + Math.pow(ret - averageReturn, 2), 0) /
         (returns.length - 1);
     const stdDev = Math.sqrt(variance);
+
+    const formattedAvgReturn = averageReturn !== null ? (100 * averageReturn).toFixed(2) : null;
+    const formattedStdReturn = stdDev !== null ? (100 * stdDev).toFixed(2) : null;
+
 
     const negativeReturns = returns.filter((ret: number) => ret < 0);
     const downsideVariance =
@@ -98,5 +103,7 @@ export default function calculateStats(strategyResult: StrategyResultProps): Sta
         sortinoRatio: roundedSortinoRatio,
         maxDrawdown: formattedMaxDrawdown,
         maxGain: formattedMaxGain,
+        meanReturn: formattedAvgReturn,
+        stddevReturn: formattedStdReturn,
     };
 }

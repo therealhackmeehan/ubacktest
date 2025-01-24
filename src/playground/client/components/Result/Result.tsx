@@ -11,6 +11,8 @@ import calculateStats, { StatProps } from "../../scripts/calculateStats"
 import { createResult, getSpecificStrategy } from "wasp/client/operations"
 import SPChart from "./SPChart"
 import ContentWrapper from "../../../../client/components/ContentWrapper"
+import UserDefinedPlot from "./UserDefinedPlot"
+import { useState } from "react"
 
 interface ResultPanelProps {
     selectedStrategy: string | null;
@@ -20,6 +22,8 @@ interface ResultPanelProps {
 }
 
 function Result({ selectedStrategy, formInputs, strategyResult, abilityToSaveNew }: ResultPanelProps) {
+
+    const [userDefinedPlotOpen, setUserDefinedPlotOpen] = useState<boolean>(false);
 
     const downloadCSV = () => {
         if (!strategyResult) return;
@@ -80,9 +84,29 @@ function Result({ selectedStrategy, formInputs, strategyResult, abilityToSaveNew
             <div id='pdfToSave'>
                 <div className="m-8">
                     <div className="m-1 text-xl tracking-tight text-slate-400 hover:text-slate-800 font-bold">Hypothetical Growth of $1</div>
-                    <div className="rounded-sm border-2 border-slate-300">
+                    <div className="rounded-t-md border-2 border-slate-300">
                         <LinePlot strategyResult={strategyResult} costPerTrade={formInputs.costPerTrade} />
                     </div>
+                    {Object.keys(strategyResult.userDefinedData).length > 0 && (
+                        <div className="border-x-2 border-b-2 bg-white border-slate-300">
+                            <button
+                                className="w-full text-xs tracking-tight font-bold text-sky-800 hover:text-red-300 text-center animate-pulse"
+                                onClick={() => setUserDefinedPlotOpen(!userDefinedPlotOpen)}
+                            >
+                                {userDefinedPlotOpen
+                                    ? 'Show less'
+                                    : 'We found other columns in your dataframe. Click to view.'}
+                            </button>
+                            {userDefinedPlotOpen && (
+                                <div className="mt-2 h-60">
+                                    <UserDefinedPlot
+                                        userDefinedData={strategyResult.userDefinedData}
+                                        timestamp={strategyResult.timestamp}
+                                    />
+                                </div>
+                            )}
+                        </div>
+                    )}
                     <FormInputHeader formInputs={formInputs} />
                 </div>
 
@@ -103,8 +127,8 @@ function Result({ selectedStrategy, formInputs, strategyResult, abilityToSaveNew
                 </div>
             </div>
 
-            <div className="grid grid-cols-4 p-4 m-8 border-black border-2 rounded-lg bg-slate-100">
-                <DistributionOfReturns stockDataReturns={strategyResult.returns} />
+            <div className="grid grid-cols-4 p-2 gap-x-2 m-8 border-black border-2 rounded-lg bg-slate-100">
+                <DistributionOfReturns stockDataReturns={strategyResult.returns} mean={stats.meanReturn} stddev={stats.stddevReturn} />
                 <RatiosBarChart sharpe={stats.sharpeRatio} sortino={stats.sortinoRatio} />
             </div>
 

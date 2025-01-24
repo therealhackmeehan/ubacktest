@@ -13,7 +13,13 @@ import {
 // Register chart components
 ChartJS.register(CategoryScale, LinearScale, BarElement, Title, Tooltip, Legend);
 
-export default function DistributionOfReturns({ stockDataReturns }: { stockDataReturns: number[] }) {
+interface DistributionOfReturnsProps {
+    stockDataReturns: number[];
+    mean: string | null;
+    stddev: string | null;
+}
+
+export default function DistributionOfReturns({ stockDataReturns, mean, stddev }: DistributionOfReturnsProps) {
     const [returnsChartData, setReturnsChartData] = useState<any>({
         labels: [],
         datasets: [],
@@ -117,15 +123,15 @@ export default function DistributionOfReturns({ stockDataReturns }: { stockDataR
     };
 
     return (
-        <div className="col-span-2 m-4">
+        <div className="col-span-2 m-2">
             <div className="flex justify-between items-center">
                 <div className="text-lg tracking-tight font-bold">Distribution of Returns</div>
                 <div className="flex justify-items-center gap-x-2">
-                    {stdDev && <div className="text-xs p-1 bg-white rounded-md font-light">
-                        Standard Deviation: {stdDev}
+                    {mean && <div className="text-xs p-1 bg-white rounded-md font-light hover:border-2 border-slate-200 duration-100">
+                        &mu; = {mean}%
                     </div>}
-                    {avg && <div className="text-xs p-1 bg-white rounded-md font-light">
-                        Mean: {avg}
+                    {stddev && <div className="text-xs p-1 bg-white rounded-md font-light hover:border-2 border-slate-200 duration-100">
+                        &sigma; = {stddev}
                     </div>}
                 </div>
             </div>

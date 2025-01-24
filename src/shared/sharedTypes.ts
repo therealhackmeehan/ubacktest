@@ -1,6 +1,6 @@
-interface UserDefinedData {
+export interface UserDefinedData {
     [key: string]: number[]; // The key can be any string, and the value is an array of numbers.
-  }
+}
 
 export interface StrategyResultProps {
     timestamp: number[];

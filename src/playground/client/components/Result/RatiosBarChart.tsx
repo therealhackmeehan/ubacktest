@@ -80,7 +80,7 @@ function RatiosBarChart({ sortino, sharpe }: RatiosBarChartProps) {
     };
 
     return (
-        <div className="col-span-2 m-4">
+        <div className="col-span-2 m-2">
             <div className="text-lg tracking-tight font-bold">Risk Ratios</div>
             {(sharpe && sortino) ? <Bar data={chartData} options={options} /> :
                 <div className="p-4">Invalid Sharpe/Sortino Ratios.</div>}

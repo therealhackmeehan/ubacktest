@@ -1,4 +1,4 @@
-import { StrategyResultProps, FormInputProps } from "../../shared/sharedTypes";
+import { StrategyResultProps, FormInputProps, UserDefinedData } from "../../shared/sharedTypes";
 import { HttpError } from "wasp/server";
 
 /*
@@ -90,8 +90,18 @@ class StrategyPipeline {
         const parsedData = this.parsePythonOutput(stdout, uniqueKey);
         if (parsedData) {
             Object.assign(this.strategyResult, parsedData.result);
-            this.strategyResult.userDefinedData = parsedData.data;
-        }
+
+            const expectedLength = this.strategyResult.signal.length;
+            const userDefinedData: UserDefinedData = parsedData.data;
+
+            this.strategyResult.userDefinedData = Object.fromEntries(
+                Object.entries(userDefinedData).filter(([_, value]) =>
+                    Array.isArray(value) && // Ensure it's an array
+                    value.length === expectedLength &&  // Length is exactly 3
+                    value.every(item => typeof item === 'number') // All elements are numbers
+                )
+            )
+        };
         console.log(this.strategyResult)
         this.stdout = parsedData ? this.stripDebugOutput(stdout, uniqueKey) : stdout;
     }
@@ -156,9 +166,12 @@ class StrategyPipeline {
             throw new HttpError(500, 'Your portfolio arrays are missing or mismatched in length.');
         }
 
-        const allDataIsValid = requiredKeys.every(key =>
-            this.strategyResult[key].every(value => value !== null && value !== undefined && !Number.isNaN(value))
-        );
+        const allDataIsValid = requiredKeys.every(key => {
+            const data = this.strategyResult[key];
+            return Array.isArray(data) && data.every(
+                value => value !== null && value !== undefined && !Number.isNaN(value)
+            );
+        });
         if (!allDataIsValid) {
             throw new HttpError(500, 'Your portfolio contains invalid data (null, undefined, or NaN).');
         }
