@@ -17,21 +17,17 @@ interface DistributionOfReturnsProps {
     stockDataReturns: number[];
     mean: string | null;
     stddev: string | null;
+    max: string | null;
+    min: string | null;
 }
 
-export default function DistributionOfReturns({ stockDataReturns, mean, stddev }: DistributionOfReturnsProps) {
+export default function DistributionOfReturns({ stockDataReturns, mean, stddev, max, min }: DistributionOfReturnsProps) {
     const [returnsChartData, setReturnsChartData] = useState<any>({
         labels: [],
         datasets: [],
     });
 
-    const [stdDev, setStdDev] = useState<number | null>(null)
-    const [avg, setAvg] = useState<number | null>(null);
-
     useEffect(() => {
-        // Calculate stdev
-        setStdDev(3);
-        setAvg(2);
 
         // Process normal data
         const binCount = 10 + Math.round(stockDataReturns.length / 10); // Number of bins
@@ -68,8 +64,16 @@ export default function DistributionOfReturns({ stockDataReturns, mean, stddev }
         // Generate labels for bins (use the normal data bins for labels)
         const binLabels = binsNormal.map((_, index) => {
             const start = minReturn + index * binWidth;
-            const num = (100 * start).toFixed();
-            return `${num}%`;
+
+            const scalePrecision = (value: number) => {
+                if (Math.abs(value) >= 1) return 1; // Use 1 decimal for large values
+                if (Math.abs(value) >= 0.1) return 2; // Use 2 decimals for medium values
+                if (Math.abs(value) >= 0.01) return 3; // Use 3 decimals for smaller values
+                return 4; // Use 4 decimals for very small values
+            };
+
+            const startPrecision = scalePrecision(start * 100);
+            return `${(100 * start).toFixed(startPrecision)}%`;
         });
 
         // Chart data with two datasets
@@ -99,20 +103,24 @@ export default function DistributionOfReturns({ stockDataReturns, mean, stddev }
     // Chart options
     const options = {
         responsive: true,
+        aspectRatio: 4 / 1,
         plugins: {
             legend: {
                 display: true, // Show legend to differentiate datasets
             },
+            tooltip: {
+                enabled: false,
+            },
         },
         scales: {
             x: {
-                grid: {
-                    drawOnChartArea: false,
-                },
                 ticks: {
-                    align: 'end' as const,
+                    font: {
+                        family: 'Courier New' as const,
+                        weight: 'bolder' as const,
+                        size: 9,
+                    },
                 },
-                offset: true, // Align the bars with the ticks
             },
             y: {
                 grid: {
@@ -123,15 +131,21 @@ export default function DistributionOfReturns({ stockDataReturns, mean, stddev }
     };
 
     return (
-        <div className="col-span-2 m-2">
+        <div className="col-span-4 m-2">
             <div className="flex justify-between items-center">
                 <div className="text-lg tracking-tight font-bold">Distribution of Returns</div>
                 <div className="flex justify-items-center gap-x-2">
+                    {max && <div className="text-xs p-1 bg-white rounded-md font-light hover:border-2 border-slate-200 duration-100">
+                        max = {max}%
+                    </div>}
+                    {min && <div className="text-xs p-1 bg-white rounded-md font-light hover:border-2 border-slate-200 duration-100">
+                        min = {min}%
+                    </div>}
                     {mean && <div className="text-xs p-1 bg-white rounded-md font-light hover:border-2 border-slate-200 duration-100">
                         &mu; = {mean}%
                     </div>}
                     {stddev && <div className="text-xs p-1 bg-white rounded-md font-light hover:border-2 border-slate-200 duration-100">
-                        &sigma; = {stddev}
+                        &sigma; = {stddev}%
                     </div>}
                 </div>
             </div>

@@ -59,14 +59,14 @@ function DataTable({ strategyResult }: { strategyResult: StrategyResultProps }) 
             // Normalize positive values to [0, 1]
             const maxPositive = Math.max(0, maxReturn); // Ensure maxPositive is non-negative
             const percentage = maxPositive === 0 ? 0 : value / maxPositive; // Avoid division by zero
-            const green = Math.round(255 * percentage); // Scale green based on positive percentage
-            return `rgba(0, ${green}, 30, ${green/255 * .3})`; // Shades of green
+            const green = Math.round(55 + 200 * percentage); // Scale green based on positive percentage
+            return `rgba(0, ${green}, 0, ${.5 * green/255})`; // Shades of green
         } else {
             // Normalize negative values to [0, 1]
             const minNegative = Math.min(0, minReturn); // Ensure minNegative is non-positive
             const percentage = minNegative === 0 ? 0 : value / minNegative; // Avoid division by zero
-            const red = Math.round(255 * percentage); // Scale red based on negative percentage
-            return `rgba(${red}, 0, 30, ${red/255 * .3})`; // Shades of red
+            const red = Math.round(55 + 200 * percentage); // Scale red based on negative percentage
+            return `rgba(${red}, 0, 0, ${.5 * red/255})`; // Shades of red
         }
     };
 
@@ -81,7 +81,7 @@ function DataTable({ strategyResult }: { strategyResult: StrategyResultProps }) 
                     <TableHead column="returns" label="Period Return" handleSort={handleSort} />
                 </tr>
             </thead>
-            <tbody className="text-sm text-gray-700 lowercase bg-white overflow-y-auto">
+            <tbody className="text-xs text-gray-700 lowercase bg-white overflow-y-auto">
                 {sortedData.timestamp.map((date: any, index: number) => (
                     <tr
                         className="text-center group border-b-2 border-slate-100 hover:font-bold hover:bg-slate-100 hover:-translate-x-2 duration-200"

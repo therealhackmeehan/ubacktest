@@ -11,7 +11,7 @@ import {
     Title,
     Tooltip,
     Legend,
-    TimeScale
+    TimeSeriesScale,
 } from 'chart.js';
 import { StrategyResultProps } from '../../../../shared/sharedTypes';
 
@@ -23,7 +23,7 @@ ChartJS.register(
     Title,
     Tooltip,
     Legend,
-    TimeScale
+    TimeSeriesScale,
 );
 
 interface LinePlotProps {
@@ -48,7 +48,7 @@ function LinePlot({ strategyResult, costPerTrade }: LinePlotProps) {
                     borderColor: 'rgba(255, 0, 100, 1)',
                     backgroundColor: 'rgba(255, 0, 100, 1)',
                     pointRadius: 1,
-                    borderWidth: 2,
+                    borderWidth: 1,
                     yAxisID: 'y1',
                 },
                 {
@@ -135,17 +135,19 @@ function LinePlot({ strategyResult, costPerTrade }: LinePlotProps) {
         },
         scales: {
             x: {
-                type: 'time' as const,
-                grid: {
-                    drawOnChartArea: false,
-                },
+                type: 'timeseries' as const,
             },
             y1: {
+                ticks: {
+                    callback: (val: number) => {
+                        return '$' + val.toFixed(2);
+                    },
+                },
                 grid: {
                     color: (tick) => { // IDK why this exists at tick.tick.value
                         return tick.tick.value === 1 ? 'rgba(100,100,100,.4)' : 'rgba(100,100,100,.1)';
                     },
-                    lineWidth: 2,
+                    lineWidth: 1,
                 },
             },
             y2: {

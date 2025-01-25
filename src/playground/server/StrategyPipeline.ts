@@ -46,7 +46,12 @@ class StrategyPipeline {
 
         if (this.stderr) return this.sendJSONtoFrontend();      // 3. if stderr exists, we're done.
 
-        await this.addSPData();                                 // 4. append SP data for comparison!
+        try {
+            await this.addSPData();                             // 4. append SP data for comparison!
+        } catch (Error: any) {
+            this.warning.push("An issue occured with fetching S&P Comparison Data, so it will be excluded from this backtest.");
+        }
+
         this.calculatePortfolio();                              // 5. calculate porfolio and success metrics
         this.validatePortfolio();                               // 6. make sure the portfolio makes sense
 
@@ -81,7 +86,7 @@ class StrategyPipeline {
         // Extract necessary fields from strategyResult
         const { timestamp, volume, high, low, open, close } = this.strategyResult;
         const toEmbedInMain = { timestamp, volume, high, low, open, close };
-        const mainFileContent = StrategyPipeline.main_py(this.code, uniqueKey, toEmbedInMain);
+        const mainFileContent = StrategyPipeline.main_py(this.code, uniqueKey, toEmbedInMain, this.formInputs.startDate);
 
         const { stdout, stderr } = await StrategyPipeline.judge0_post(mainFileContent);
         this.stderr = stderr;
@@ -102,8 +107,7 @@ class StrategyPipeline {
                 )
             )
         };
-        console.log(this.strategyResult)
-        this.stdout = parsedData ? this.stripDebugOutput(stdout, uniqueKey) : stdout;
+        this.stdout = parsedData.result ? this.stripDebugOutput(stdout, uniqueKey) : stdout;
     }
 
     private async addSPData() {
@@ -124,8 +128,22 @@ class StrategyPipeline {
         this.strategyResult.portfolioWithCosts[0] = 1;
         this.strategyResult.returns[0] = 0;
 
+        // // set all signals to 0 within the warmup period
+        // if (this.formInputs.useWarmupDate) {
+        //     for (let i = 0; i < this.strategyResult.timestamp.length; i++) {
+        //         const currTime = this.strategyResult.timestamp[i];
+        //         if (new Date(currTime * 1000) < new Date(this.formInputs.startDate)) {
+        //             this.strategyResult.signal[i] = 0; // Set signal to 0
+        //         } else {
+        //             this.startIndex = i + 1;
+        //             break; // Exit the loop once the condition is no longer met
+        //         }
+        //     }
+        // }
+
         const timeOfDayKey: 'open' | 'close' | 'high' | 'low' = this.formInputs.timeOfDay;
         for (let i = 1; i < this.strategyResult.timestamp.length; i++) {
+
             const curr = this.strategyResult[timeOfDayKey][i];
             const prev = this.strategyResult[timeOfDayKey][i - 1];
 
@@ -232,8 +250,15 @@ class StrategyPipeline {
 
         const baseUrl = 'https://query1.finance.yahoo.com/v8/finance/chart/';
         const symbolPath = `${symbol}`;
-        const period1 = `period1=${Math.floor(new Date(this.formInputs.startDate).getTime() / 1000)}`;
-        const period2 = `period2=${Math.floor(new Date(this.formInputs.endDate).getTime() / 1000)}`;
+        const p1ToUse = this.formInputs.useWarmupDate ? this.formInputs.warmupDate : this.formInputs.startDate;
+        const startOfDay = (dateStr: string) => {
+            const date = new Date(dateStr);
+            date.setHours(0, 0, 0, 0); // Set to 00:00:00.000 UTC
+            return Math.floor(date.getTime() / 1000);
+        };
+
+        const period1 = `period1=${startOfDay(p1ToUse as string)}`;
+        const period2 = `period2=${startOfDay(this.formInputs.endDate)}`;
         const interval = `interval=${this.formInputs.intval}`;
 
         const url = `${baseUrl}${symbolPath}?${period1}&${period2}&${interval}`;
@@ -263,7 +288,7 @@ class StrategyPipeline {
 
     private validateStockDataFromAPI(tempAPIResult: any) {
         const errMsg = tempAPIResult.chart?.error;
-        if (errMsg) throw new HttpError(500, `Stock data retrieval failed or was not found: \n\n\nError Message: '${errMsg}'`);
+        if (errMsg) throw new HttpError(500, `Stock data retrieval failed or was not found: \n\n\nError Message: ${errMsg}`);
 
         const result = tempAPIResult.chart.result?.[0];
         const quote = result?.indicators?.quote?.[0];
@@ -366,7 +391,7 @@ class StrategyPipeline {
         return { stdout, stderr };
     }
 
-    private static main_py(code: string, uniqueKey: string, toEmbedInMain: any): string {
+    private static main_py(code: string, uniqueKey: string, toEmbedInMain: any, startDate: string): string {
 
         const m =
 
@@ -410,7 +435,7 @@ colsToExclude = {"open", "close", "high", "low", "volume", "timestamp", "signal"
 
 middleOutput = {
     "result": signalToReturn,
-    "data": df.loc[:, ~df.columns.isin(colsToExclude)].round(3).to_dict('list')
+    "data": df.loc[:, ~df.columns.isin(colsToExclude)].fillna(0).round(3).to_dict('list')
 }
 
 output = "${uniqueKey}START${uniqueKey}" + json.dumps(middleOutput) + "${uniqueKey}END${uniqueKey}"

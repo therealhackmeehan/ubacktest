@@ -19,13 +19,13 @@ function addMonths(date: Date, months: number): Date {
 
 const initFormInputs: FormInputProps = {
     symbol: 'aapl',
-    startDate: addMonths(new Date(), -12).toISOString(), // 12 months ago
-    endDate: addMonths(new Date(), -6).toISOString(), // 6 months ago
+    startDate: addMonths(new Date(), -12).toISOString().slice(0,10), // 12 months ago
+    endDate: addMonths(new Date(), -6).toISOString().slice(0,10), // 6 months ago
     intval: '1d',
     timeOfDay: 'close',
     costPerTrade: 0,
     useWarmupDate: false,
-    warmupDate: null,
+    warmupDate: addMonths(new Date(), -13).toISOString().slice(0,10),
 };
 
 function StrategyEditor() {

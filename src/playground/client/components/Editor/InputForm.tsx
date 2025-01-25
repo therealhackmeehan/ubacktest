@@ -50,9 +50,9 @@ function InputForm({ formInputs, setFormInputs, run }: InputFormSubcomponentProp
         setMatches([]);
     };
 
-    const useDatetimeLocal = ["1m", "2m", "5m", "15m", "30m", "1h", "60m", "90m"].includes(formInputs.intval);
-    const startDateToUse = useDatetimeLocal ? formInputs.startDate.slice(0, 16) : formInputs.startDate.slice(0, 10);
-    const endDateToUse = useDatetimeLocal ? formInputs.endDate.slice(0, 16) : formInputs.endDate.slice(0, 10);
+    // const useDatetimeLocal = ["1m", "2m", "5m", "15m", "30m", "1h", "60m", "90m"].includes(formInputs.intval);
+    // const startDateToUse = useDatetimeLocal ? formInputs.startDate.slice(0, 16) : formInputs.startDate.slice(0, 10);
+    // const endDateToUse = useDatetimeLocal ? formInputs.endDate.slice(0, 16) : formInputs.endDate.slice(0, 10);
 
     return (
         <div className='z-10 flex border-2 border-black flex-col shadow-lg justify-between rounded-lg fixed right-0 h-2/3 w-2/5 lg:w-1/5 bg-white my-16 mr-12 p-6'>
@@ -93,9 +93,9 @@ function InputForm({ formInputs, setFormInputs, run }: InputFormSubcomponentProp
                         Start Date
                     </div>
                     <input
-                        type={useDatetimeLocal ? 'datetime-local' : 'date'}
+                        type='date'
                         className='text-xs text-gray-600 rounded-md border border-gray-200 shadow-md focus:outline-none focus:border-transparent focus:shadow-none duration-200 ease-in-out hover:shadow-none'
-                        value={startDateToUse}
+                        value={formInputs.startDate}
                         onChange={handleChange}
                         name="startDate"
                     />
@@ -106,13 +106,12 @@ function InputForm({ formInputs, setFormInputs, run }: InputFormSubcomponentProp
                         End Date
                     </div>
                     <input
-                        type={useDatetimeLocal ? 'datetime-local' : 'date'}
+                        type='date'
                         className='text-xs text-gray-600 rounded-md border border-gray-200 shadow-md focus:outline-none focus:border-transparent focus:shadow-none duration-200 ease-in-out hover:shadow-none'
-                        value={endDateToUse}
+                        value={formInputs.endDate}
                         onChange={handleChange}
                         name="endDate"
                     />
-
                 </div>
                 <div className='flex items-center justify-between gap-3'>
                     <div className="tracking-tight text-xs font-bold">
@@ -211,9 +210,9 @@ function InputForm({ formInputs, setFormInputs, run }: InputFormSubcomponentProp
                                     "Warm-Up" Start Date
                                 </div>
                                 <input
-                                    type={useDatetimeLocal ? 'datetime-local' : 'date'}
+                                    type='date'
                                     className='text-xs w-full text-gray-600 rounded-md border border-gray-200 shadow-md focus:outline-none focus:border-transparent focus:shadow-none duration-200 ease-in-out hover:shadow-none'
-                                    value={formInputs.warmupDate || ''}
+                                    value={formInputs.warmupDate}
                                     onChange={handleChange}
                                     name="warmupDate"
                                 />

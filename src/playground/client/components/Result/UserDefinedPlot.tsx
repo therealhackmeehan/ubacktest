@@ -12,7 +12,7 @@ import {
     Title,
     Tooltip,
     Legend,
-    TimeScale
+    TimeSeriesScale,
 } from 'chart.js';
 
 ChartJS.register(
@@ -23,7 +23,7 @@ ChartJS.register(
     Title,
     Tooltip,
     Legend,
-    TimeScale
+    TimeSeriesScale,
 );
 
 interface UserDefinedPlotProps {
@@ -67,7 +67,7 @@ export default function UserDefinedPlot({ userDefinedData, timestamp }: UserDefi
 
     const options = {
         responsive: true,
-        maintainAspectRatio: false,
+        aspectRatio: 4/1,
         animation: {
             duration: 2000,
         },
@@ -85,7 +85,7 @@ export default function UserDefinedPlot({ userDefinedData, timestamp }: UserDefi
         },
         scales: {
             x: {
-                type: 'time' as const,
+                type: 'timeseries' as const,
                 ticks: {
                     display: false,
                 },

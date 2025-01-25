@@ -14,6 +14,8 @@ export interface StatProps {
     maxGain: string | null;
     meanReturn: string | null;
     stddevReturn: string | null;
+    maxReturn: string | null;
+    minReturn: string | null;
 }
 
 export default function calculateStats(strategyResult: StrategyResultProps): StatProps {
@@ -64,18 +66,34 @@ export default function calculateStats(strategyResult: StrategyResultProps): Sta
 
     const maxGain = Math.max.apply(Math, strategyResult.portfolio) - 1;
     const formattedMaxGain = maxGain !== null ? (maxGain * 100).toFixed(2) + '%' : null;
-
     const returns = strategyResult.returns;
-    const averageReturn = returns.reduce((sum: number, ret: number) => sum + ret, 0) / returns.length;
 
+    // Initialize variables for sum, max, min
+    let sum = 0;
+    let max = -Infinity;
+    let min = Infinity;
+
+    // First pass: calculate sum, max, and min
+    for (const ret of returns) {
+        sum += ret;
+        if (ret > max) max = ret;
+        if (ret < min) min = ret;
+    }
+
+    // Calculate average return
+    const averageReturn = sum / returns.length;
+
+    // Second pass: calculate variance
     const variance =
         returns.reduce((sum: number, ret: number) => sum + Math.pow(ret - averageReturn, 2), 0) /
         (returns.length - 1);
     const stdDev = Math.sqrt(variance);
 
-    const formattedAvgReturn = averageReturn !== null ? (100 * averageReturn).toFixed(2) : null;
-    const formattedStdReturn = stdDev !== null ? (100 * stdDev).toFixed(2) : null;
-
+    // Format values
+    const formattedAvgReturn = averageReturn !== null ? (100 * averageReturn).toPrecision(2) : null;
+    const formattedStdReturn = stdDev !== null ? (100 * stdDev).toPrecision(2) : null;
+    const formattedMax = max !== null ? (100 * max).toPrecision(2) : null;
+    const formattedMin = min !== null ? (100 * min).toPrecision(2) : null;
 
     const negativeReturns = returns.filter((ret: number) => ret < 0);
     const downsideVariance =
@@ -105,5 +123,7 @@ export default function calculateStats(strategyResult: StrategyResultProps): Sta
         maxGain: formattedMaxGain,
         meanReturn: formattedAvgReturn,
         stddevReturn: formattedStdReturn,
+        maxReturn: formattedMax,
+        minReturn: formattedMin,
     };
 }

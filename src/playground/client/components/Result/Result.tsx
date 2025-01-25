@@ -11,6 +11,7 @@ import calculateStats, { StatProps } from "../../scripts/calculateStats"
 import { createResult, getSpecificStrategy } from "wasp/client/operations"
 import SPChart from "./SPChart"
 import ContentWrapper from "../../../../client/components/ContentWrapper"
+import LoadingScreen from "../../../../client/components/LoadingScreen"
 import UserDefinedPlot from "./UserDefinedPlot"
 import { useState } from "react"
 
@@ -71,6 +72,7 @@ function Result({ selectedStrategy, formInputs, strategyResult, abilityToSaveNew
 
     return (
         <ContentWrapper>
+
             <div id='topOfResultPanel' className='items-center flex p-2 justify-between border-b-2 border-black'>
                 <h4 className="tracking-tight text-xl text-slate-700 font-extrabold text-center">
                     Stock Data and Simulated Backtest Result for
@@ -84,10 +86,10 @@ function Result({ selectedStrategy, formInputs, strategyResult, abilityToSaveNew
             <div id='pdfToSave'>
                 <div className="m-8">
                     <div className="m-1 text-xl tracking-tight text-slate-400 hover:text-slate-800 font-bold">Hypothetical Growth of $1</div>
-                    <div className="rounded-t-md border-2 border-slate-300">
+                    <div className="rounded-t-md border-2 border-slate-300 h-200">
                         <LinePlot strategyResult={strategyResult} costPerTrade={formInputs.costPerTrade} />
                     </div>
-                    {Object.keys(strategyResult.userDefinedData).length > 0 && (
+                    {(strategyResult.userDefinedData && Object.keys(strategyResult.userDefinedData).length > 0) && (
                         <div className="border-x-2 border-b-2 bg-white border-slate-300">
                             <button
                                 className="w-full text-xs tracking-tight font-bold text-sky-800 hover:text-red-300 text-center animate-pulse"
@@ -98,7 +100,7 @@ function Result({ selectedStrategy, formInputs, strategyResult, abilityToSaveNew
                                     : 'We found other columns in your dataframe. Click to view.'}
                             </button>
                             {userDefinedPlotOpen && (
-                                <div className="mt-2 h-60">
+                                <div className="mt-2">
                                     <UserDefinedPlot
                                         userDefinedData={strategyResult.userDefinedData}
                                         timestamp={strategyResult.timestamp}
@@ -116,7 +118,7 @@ function Result({ selectedStrategy, formInputs, strategyResult, abilityToSaveNew
                         <div className="flex justify-between mx-2">
                             <div className="text-xl font-mono text-black/60 p-3 text-end">Trade Log</div>
                             <button
-                                className="text-sm m-3 p-2 border-2 border-black rounded-lg bg-white font-light hover:font-bold hover:bg-slate-200"
+                                className="text-sm m-3 p-2 border-2 border-black rounded-lg bg-white font-light hover:shadow-lg hover:bg-slate-200"
                                 onClick={downloadCSV} // Trigger the download on click
                             >
                                 Download Data as .csv
@@ -128,8 +130,8 @@ function Result({ selectedStrategy, formInputs, strategyResult, abilityToSaveNew
             </div>
 
             <div className="grid grid-cols-4 p-2 gap-x-2 m-8 border-black border-2 rounded-lg bg-slate-100">
-                <DistributionOfReturns stockDataReturns={strategyResult.returns} mean={stats.meanReturn} stddev={stats.stddevReturn} />
-                <RatiosBarChart sharpe={stats.sharpeRatio} sortino={stats.sortinoRatio} />
+                <DistributionOfReturns stockDataReturns={strategyResult.returns} mean={stats.meanReturn} stddev={stats.stddevReturn} max={stats.maxReturn} min={stats.minReturn} />
+                {/* <RatiosBarChart sharpe={stats.sharpeRatio} sortino={stats.sortinoRatio} /> */}
             </div>
 
             {strategyResult.sp.length > 0 &&

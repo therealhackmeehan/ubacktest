@@ -11,7 +11,7 @@ import {
     Title,
     Tooltip,
     Legend,
-    TimeScale
+    TimeSeriesScale,
 } from 'chart.js';
 import { StrategyResultProps } from '../../../../shared/sharedTypes';
 
@@ -23,7 +23,7 @@ ChartJS.register(
     Title,
     Tooltip,
     Legend,
-    TimeScale
+    TimeSeriesScale,
 );
 
 function SPChart({ strategyResult }: { strategyResult: StrategyResultProps }) {
@@ -41,8 +41,8 @@ function SPChart({ strategyResult }: { strategyResult: StrategyResultProps }) {
                     })), 
                     borderColor: 'rgba(255, 0, 100, 1)',
                     backgroundColor: 'rgba(255, 0, 100, 1)',
-                    pointRadius: 2,
-                    borderWidth: 2,
+                    pointRadius: 0,
+                    borderWidth: 1,
                 },
                 {
                     label: 'S&P 500 Index',
@@ -52,6 +52,7 @@ function SPChart({ strategyResult }: { strategyResult: StrategyResultProps }) {
                     })), 
                     borderColor: 'rgba(123, 50, 168, 1)',
                     pointRadius: 0,
+                    borderWidth: 1,
                 },
             ],
         };
@@ -84,7 +85,7 @@ function SPChart({ strategyResult }: { strategyResult: StrategyResultProps }) {
                 },
             },
             x: {
-                type: 'time' as const,
+                type: 'timeseries' as const,
             },
         },
     };
