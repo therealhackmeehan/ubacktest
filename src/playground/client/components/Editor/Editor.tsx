@@ -1,4 +1,4 @@
-import { useState, useContext, useEffect } from "react"
+import { useState, useContext } from "react"
 import MonacoEditor from "./MonacoEditor";
 import ErrorModal from "../modals/ErrorModal";
 import DebugConsole from "./DebugConsole";
@@ -21,9 +21,10 @@ interface EditorProps {
     setStd: (value: any) => void;
     codeToDisplay: string;
     setCodeToDisplay: (value: string) => void;
+    setWarningMsg: (value: string | null) => void;
 }
 
-function Editor({ formInputs, setStrategyResult, setResultOpen, setFormInputs, setStrategyResultIsConnectedTo, std, setStd, codeToDisplay, setCodeToDisplay }: EditorProps) {
+function Editor({ formInputs, setStrategyResult, setResultOpen, setFormInputs, setStrategyResultIsConnectedTo, std, setStd, codeToDisplay, setCodeToDisplay, setWarningMsg }: EditorProps) {
 
     const { selectedStrategy } = useContext(StrategyContext);
 
@@ -37,10 +38,10 @@ function Editor({ formInputs, setStrategyResult, setResultOpen, setFormInputs, s
             handlePreRunValidations();
             charge();
 
-            const { strategyResult, stdout, stderr, warnings } =
+            const { strategyResult, debugOutput, stderr, warnings } =
                 await runStrategy({ formInputs: formInputs, code: codeToDisplay });
 
-            handleDebugOutput(stdout, stderr);
+            handleDebugOutput(debugOutput, stderr);
             if (stderr) return;
 
             setStrategyResult(strategyResult);
@@ -48,7 +49,7 @@ function Editor({ formInputs, setStrategyResult, setResultOpen, setFormInputs, s
             setStrategyResultIsConnectedTo(selectedStrategy.id);
 
             if (warnings && warnings.length > 0) {
-                setErrorModalMessage(warnings.map((str: string) => `WARNING: ${str}`));
+                setWarningMsg(warnings.map((str: string) => `WARNING: ${str}`).join('\n\n'));
             }
 
         } catch (error: any) {

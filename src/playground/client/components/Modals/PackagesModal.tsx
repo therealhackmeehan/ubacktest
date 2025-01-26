@@ -16,7 +16,7 @@ export default function PackagesModal({ closeModal }: { closeModal: () => void }
                 </button>
             </div>
 
-            <div className='h-72 text-center overflow-y-auto'>
+            <div className='h-72 text-center overflow-y-auto m-4 bg-slate-50 p-2'>
                 {Object.entries(packages).map(([category, packageDetails], categoryIndex) => (
                     <div key={categoryIndex} className="mb-4">
                         <h3 className="text-lg font-bold mb-2">{category}</h3>

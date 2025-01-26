@@ -133,7 +133,7 @@ interface BacktestResultProps {
   strategyResult: StrategyResultProps;
   debugOutput: string;
   stderr: string;
-  warning: string[];
+  warnings: string[];
 };
 
 export const runStrategy: RunStrategy<any, any> = async ({ formInputs, code }, context): Promise<BacktestResultProps> => {

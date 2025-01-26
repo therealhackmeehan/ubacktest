@@ -3,7 +3,7 @@ import LinePlot from "./LinePlot"
 import MainStatistics from "./MainStatistics"
 import DataTable from "./DataTable"
 import DistributionOfReturns from "./DistributionOfReturns"
-import RatiosBarChart from "./RatiosBarChart"
+// import RatiosBarChart from "./RatiosBarChart"
 import { FiArrowUp } from "react-icons/fi"
 import ResultButtonGroup from "./ResultButtonGroup"
 import { FormInputProps, StrategyResultProps } from "../../../../shared/sharedTypes"
@@ -11,7 +11,6 @@ import calculateStats, { StatProps } from "../../scripts/calculateStats"
 import { createResult, getSpecificStrategy } from "wasp/client/operations"
 import SPChart from "./SPChart"
 import ContentWrapper from "../../../../client/components/ContentWrapper"
-import LoadingScreen from "../../../../client/components/LoadingScreen"
 import UserDefinedPlot from "./UserDefinedPlot"
 import { useState } from "react"
 
@@ -47,7 +46,7 @@ function Result({ selectedStrategy, formInputs, strategyResult, abilityToSaveNew
         // Trigger the download
         const link = document.createElement('a');
         link.href = URL.createObjectURL(blob);
-        link.download = 'strategy_result.csv';
+        link.download = formInputs.symbol + '_strategy_result.csv';
         link.click();
     };
 
@@ -83,7 +82,7 @@ function Result({ selectedStrategy, formInputs, strategyResult, abilityToSaveNew
                 <ResultButtonGroup saveResult={saveResult} abilityToSaveNew={abilityToSaveNew} symbol={formInputs.symbol} />
             </div>
 
-            <div id='pdfToSave'>
+            <>
                 <div className="m-8">
                     <div className="m-1 text-xl tracking-tight text-slate-400 hover:text-slate-800 font-bold">Hypothetical Growth of $1</div>
                     <div className="rounded-t-md border-2 border-slate-300 h-200">
@@ -127,7 +126,7 @@ function Result({ selectedStrategy, formInputs, strategyResult, abilityToSaveNew
                         <DataTable strategyResult={strategyResult} />
                     </div>
                 </div>
-            </div>
+            </>
 
             <div className="grid grid-cols-4 p-2 gap-x-2 m-8 border-black border-2 rounded-lg bg-slate-100">
                 <DistributionOfReturns stockDataReturns={strategyResult.returns} mean={stats.meanReturn} stddev={stats.stddevReturn} max={stats.maxReturn} min={stats.minReturn} />

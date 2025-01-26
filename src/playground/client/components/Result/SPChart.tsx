@@ -79,6 +79,12 @@ function SPChart({ strategyResult }: { strategyResult: StrategyResultProps }) {
         },
         scales: {
             y: {
+                ticks: {
+                    callback: (tickValue: string | number) => {
+                        const value = typeof tickValue === 'number' ? tickValue : parseFloat(tickValue);
+                        return '$' + value.toFixed(2);
+                    },
+                },
                 grid: {
                     color: ({ tick }) => tick.value == 1 ? 'rgba(100,100,100,.5)' : 'rgba(100,100,100,.05)',
                     lineWidth: 2,

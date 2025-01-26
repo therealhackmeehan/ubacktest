@@ -139,9 +139,10 @@ function LinePlot({ strategyResult, costPerTrade }: LinePlotProps) {
             },
             y1: {
                 ticks: {
-                    callback: (val: number) => {
-                        return '$' + val.toFixed(2);
-                    },
+                    callback: (tickValue: string | number) => {
+                        const value = typeof tickValue === 'number' ? tickValue : parseFloat(tickValue);
+                        return '$' + value.toFixed(2);
+                    }
                 },
                 grid: {
                     color: (tick) => { // IDK why this exists at tick.tick.value

@@ -4,28 +4,29 @@ import ResultLayout from "./result/ResultLayout";
 import { FormInputProps, StrategyResultProps } from "../../../shared/sharedTypes";
 import { StrategyContext } from "../EditorPage";
 import StrategyHeader from "./editor/StrategyHeader";
+import WarningModal from "./modals/WarningModal";
 
 export interface stdProps {
     out: string;
     err: string;
 }
 
-function addMonths(date: Date, months: number): Date {
+function addMonths(date: Date, months: number): string {
     const newDate = new Date(date);
-    newDate.setHours(0, 0, 0, 0);
     newDate.setMonth(newDate.getMonth() + months);
-    return newDate;
+    newDate.setHours(0, 0, 0, 0);
+    return newDate.toISOString().slice(0,10);
 }
 
 const initFormInputs: FormInputProps = {
     symbol: 'aapl',
-    startDate: addMonths(new Date(), -12).toISOString().slice(0,10), // 12 months ago
-    endDate: addMonths(new Date(), -6).toISOString().slice(0,10), // 6 months ago
+    startDate: addMonths(new Date(), -12), // 12 months ago
+    endDate: addMonths(new Date(), -6), // 6 months ago
     intval: '1d',
     timeOfDay: 'close',
     costPerTrade: 0,
     useWarmupDate: false,
-    warmupDate: addMonths(new Date(), -13).toISOString().slice(0,10),
+    warmupDate: addMonths(new Date(), -13),
 };
 
 function StrategyEditor() {
@@ -39,6 +40,7 @@ function StrategyEditor() {
         }
     }, [selectedStrategy]);
 
+    const [warningMsg, setWarningMsg] = useState<string | null>('');
     const [resultOpen, setResultOpen] = useState<boolean>(false);
     const [strategyResult, setStrategyResult] = useState<StrategyResultProps | null>(null);
     const [strategyResultIsConnectedTo, setStrategyResultIsConnectedTo] = useState<string>('');
@@ -65,6 +67,8 @@ function StrategyEditor() {
                 Toggle To {resultOpen ? 'Editor' : 'Result'}
             </button>
 
+            {warningMsg && <WarningModal closeModal={() => setWarningMsg('')} msg={warningMsg} />}
+
             {resultOpen ? (
                 <ResultLayout
                     strategyResult={strategyResult}
@@ -83,6 +87,7 @@ function StrategyEditor() {
                     setStd={setStd}
                     codeToDisplay={codeToDisplay}
                     setCodeToDisplay={setCodeToDisplay}
+                    setWarningMsg={setWarningMsg}
                 />
             )}
         </>

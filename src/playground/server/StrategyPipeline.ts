@@ -64,7 +64,7 @@ class StrategyPipeline {
             strategyResult: this.strategyResult,
             debugOutput: this.stdout,
             stderr: this.stderr,
-            warning: this.warning,
+            warnings: [...new Set(this.warning)],
         }
     }
 
@@ -107,7 +107,8 @@ class StrategyPipeline {
                 )
             )
         };
-        this.stdout = parsedData.result ? this.stripDebugOutput(stdout, uniqueKey) : stdout;
+
+        this.stdout = this.stripDebugOutput(stdout, uniqueKey);
     }
 
     private async addSPData() {
@@ -127,19 +128,6 @@ class StrategyPipeline {
         this.strategyResult.portfolio[0] = 1;
         this.strategyResult.portfolioWithCosts[0] = 1;
         this.strategyResult.returns[0] = 0;
-
-        // // set all signals to 0 within the warmup period
-        // if (this.formInputs.useWarmupDate) {
-        //     for (let i = 0; i < this.strategyResult.timestamp.length; i++) {
-        //         const currTime = this.strategyResult.timestamp[i];
-        //         if (new Date(currTime * 1000) < new Date(this.formInputs.startDate)) {
-        //             this.strategyResult.signal[i] = 0; // Set signal to 0
-        //         } else {
-        //             this.startIndex = i + 1;
-        //             break; // Exit the loop once the condition is no longer met
-        //         }
-        //     }
-        // }
 
         const timeOfDayKey: 'open' | 'close' | 'high' | 'low' = this.formInputs.timeOfDay;
         for (let i = 1; i < this.strategyResult.timestamp.length; i++) {
@@ -251,9 +239,10 @@ class StrategyPipeline {
         const baseUrl = 'https://query1.finance.yahoo.com/v8/finance/chart/';
         const symbolPath = `${symbol}`;
         const p1ToUse = this.formInputs.useWarmupDate ? this.formInputs.warmupDate : this.formInputs.startDate;
+
         const startOfDay = (dateStr: string) => {
             const date = new Date(dateStr);
-            date.setHours(0, 0, 0, 0); // Set to 00:00:00.000 UTC
+            date.setHours(0,0,0,0);
             return Math.floor(date.getTime() / 1000);
         };
 
@@ -383,8 +372,6 @@ class StrategyPipeline {
         const fullResult = await response.json();
         let { stdout, stderr } = fullResult;
 
-        console.log(stdout)
-
         if (!stdout) stdout = '';
         if (!stderr) stderr = '';
 
@@ -392,6 +379,8 @@ class StrategyPipeline {
     }
 
     private static main_py(code: string, uniqueKey: string, toEmbedInMain: any, startDate: string): string {
+
+        const dateToCompare = new Date(startDate).getTime() / 1000;
 
         const m =
 
@@ -427,6 +416,8 @@ if not df.index.is_unique:
 
 if df.shape[0] != initHeight:
     raise Exception("The height of the dataframe has changed upon applying your strategy.")
+
+#df = df[df['timestamp'] >= ${dateToCompare}]
 
 df['signal'] = df['signal'].fillna(method='ffill').fillna(0)
 signalToReturn = df[['signal']].round(3).to_dict('list')
