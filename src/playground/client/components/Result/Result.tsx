@@ -12,7 +12,10 @@ import { createResult, getSpecificStrategy } from "wasp/client/operations"
 import SPChart from "./SPChart"
 import ContentWrapper from "../../../../client/components/ContentWrapper"
 import UserDefinedPlot from "./UserDefinedPlot"
-import { useState } from "react"
+import { useState, useRef, useEffect } from "react"
+import html2canvas from "html2canvas";
+import { jsPDF } from "jspdf";
+import LoadingScreen from "../../../../client/components/LoadingScreen"
 
 interface ResultPanelProps {
     selectedStrategy: string | null;
@@ -24,6 +27,30 @@ interface ResultPanelProps {
 function Result({ selectedStrategy, formInputs, strategyResult, abilityToSaveNew }: ResultPanelProps) {
 
     const [userDefinedPlotOpen, setUserDefinedPlotOpen] = useState<boolean>(false);
+    const [stats, setStats] = useState<StatProps | null>(null);
+    const [loading, setLoading] = useState<boolean>(false);
+
+    async function saveResult(name: string) {
+        if (!selectedStrategy) return;
+
+        const connectedStrat = await getSpecificStrategy({ id: selectedStrategy });
+        if (!connectedStrat?.code) {
+            throw new Error('No strategy with that result.');
+        }
+
+        await createResult({
+            name: name,
+            code: connectedStrat.code,
+            formInputs: formInputs,
+            data: strategyResult,
+            strategyId: selectedStrategy
+        })
+    }
+
+    useEffect(() => {
+        const stats: StatProps = calculateStats(strategyResult);
+        setStats(stats);
+    }, [strategyResult])
 
     const downloadCSV = () => {
         if (!strategyResult) return;
@@ -50,27 +77,68 @@ function Result({ selectedStrategy, formInputs, strategyResult, abilityToSaveNew
         link.click();
     };
 
-    async function saveResult(name: string) {
-        if (!selectedStrategy) return;
+    const pdfRef = useRef<HTMLDivElement>(null);
+    const saveAsPDF = async () => {
+        if (!pdfRef.current) return;
 
-        const connectedStrat = await getSpecificStrategy({ id: selectedStrategy });
-        if (!connectedStrat?.code) {
-            throw new Error('No strategy with that result.');
+        setLoading(true);
+        try {
+            // Capture the content as a canvas
+            const canvas = await html2canvas(pdfRef.current, {
+                scale: 2,
+                useCORS: true,
+                allowTaint: true,
+            });
+
+            // Get canvas dimensions
+            const canvasWidth = canvas.width;
+            const canvasHeight = canvas.height;
+
+            // PDF dimensions
+            const pdfWidth = 595.28; // A4 width in points (72 DPI)
+            const pdfHeight = 841.89; // A4 height in points (72 DPI)
+
+            // Margins (e.g., 20 points on all sides)
+            const margin = 20;
+            const availableWidth = pdfWidth - 2 * margin;
+            const availableHeight = pdfHeight - 2 * margin;
+
+            // Calculate scaling to fit content while maintaining aspect ratio
+            const scale = Math.min(availableWidth / canvasWidth, availableHeight / canvasHeight);
+            const imgWidth = canvasWidth * scale;
+            const imgHeight = canvasHeight * scale;
+
+            // Convert canvas to image
+            const imgData = canvas.toDataURL("image/png");
+
+            // Initialize jsPDF
+            const doc = new jsPDF({
+                orientation: "portrait",
+                unit: "pt",
+                format: "a4",
+            });
+
+            // Center the image within the available area (accounting for margins)
+            const xOffset = margin + (availableWidth - imgWidth) / 2;
+            const yOffset = margin / 2;
+
+            doc.addImage(imgData, "PNG", xOffset, yOffset, imgWidth, imgHeight);
+
+            // Save the PDF
+            doc.save(`${formInputs.symbol || "document"}_saved_result.pdf`);
+        } catch (error) {
+            console.error("Error generating PDF:", error);
+        } finally {
+            setLoading(false);
         }
+    };
 
-        await createResult({
-            name: name,
-            code: connectedStrat.code,
-            formInputs: formInputs,
-            data: strategyResult,
-            strategyId: selectedStrategy
-        })
-    }
-
-    const stats: StatProps = calculateStats(strategyResult);
+    const minDate = formInputs.useWarmupDate ? formInputs.warmupDate : null;
 
     return (
         <ContentWrapper>
+
+            {loading && <LoadingScreen />}
 
             <div id='topOfResultPanel' className='items-center flex p-2 justify-between border-b-2 border-black'>
                 <h4 className="tracking-tight text-xl text-slate-700 font-extrabold text-center">
@@ -79,14 +147,14 @@ function Result({ selectedStrategy, formInputs, strategyResult, abilityToSaveNew
                         {formInputs.symbol}
                     </span>
                 </h4>
-                <ResultButtonGroup saveResult={saveResult} abilityToSaveNew={abilityToSaveNew} symbol={formInputs.symbol} />
+                <ResultButtonGroup saveResult={saveResult} saveAsPDF={saveAsPDF} abilityToSaveNew={abilityToSaveNew} symbol={formInputs.symbol} />
             </div>
 
             <>
                 <div className="m-8">
                     <div className="m-1 text-xl tracking-tight text-slate-400 hover:text-slate-800 font-bold">Hypothetical Growth of $1</div>
                     <div className="rounded-t-md border-2 border-slate-300 h-200">
-                        <LinePlot strategyResult={strategyResult} costPerTrade={formInputs.costPerTrade} />
+                        <LinePlot strategyResult={strategyResult} costPerTrade={formInputs.costPerTrade} minDate={minDate} />
                     </div>
                     {(strategyResult.userDefinedData && Object.keys(strategyResult.userDefinedData).length > 0) && (
                         <div className="border-x-2 border-b-2 bg-white border-slate-300">
@@ -112,7 +180,7 @@ function Result({ selectedStrategy, formInputs, strategyResult, abilityToSaveNew
                 </div>
 
                 <div className="grid grid-cols-3 gap-x-6 justify-stretch m-8">
-                    <MainStatistics stats={stats} />
+                    {stats && <MainStatistics stats={stats} />}
                     <div className="col-span-2 bg-slate bg-slate-100 rounded-sm border-2 border-slate-400 max-h-132.5 overflow-y-auto">
                         <div className="flex justify-between mx-2">
                             <div className="text-xl font-mono text-black/60 p-3 text-end">Trade Log</div>
@@ -128,8 +196,24 @@ function Result({ selectedStrategy, formInputs, strategyResult, abilityToSaveNew
                 </div>
             </>
 
+            {/* invisible rendition for accurate PDF rendering! */}
+            <div ref={pdfRef} style={{ position: 'absolute', zIndex: -1, left: '-10000px', top: 'auto' }}>
+                <div className="tracking-tight text-2xl font-bold text-black text-end p-6">
+                    Strategy Report, Traded on {formInputs.symbol.toUpperCase()}
+                </div>
+                <div className="m-1 text-xl tracking-tight text-slate-400 hover:text-slate-800 font-bold">Hypothetical Growth of $1</div>
+                <div className="rounded-t-md border-2 border-slate-300 h-200">
+                    <LinePlot strategyResult={strategyResult} costPerTrade={formInputs.costPerTrade} minDate={minDate} />
+                </div>
+                <FormInputHeader formInputs={formInputs} />
+
+                <div className="m-8">
+                    {stats && <MainStatistics stats={stats} />}
+                </div>
+            </div>
+
             <div className="grid grid-cols-4 p-2 gap-x-2 m-8 border-black border-2 rounded-lg bg-slate-100">
-                <DistributionOfReturns stockDataReturns={strategyResult.returns} mean={stats.meanReturn} stddev={stats.stddevReturn} max={stats.maxReturn} min={stats.minReturn} />
+                {stats && <DistributionOfReturns stockDataReturns={strategyResult.returns} mean={stats.meanReturn} stddev={stats.stddevReturn} max={stats.maxReturn} min={stats.minReturn} />}
                 {/* <RatiosBarChart sharpe={stats.sharpeRatio} sortino={stats.sortinoRatio} /> */}
             </div>
 
@@ -147,7 +231,7 @@ function Result({ selectedStrategy, formInputs, strategyResult, abilityToSaveNew
                     onClick={() => document.getElementById('topOfResultPanel')?.scrollIntoView({ behavior: 'smooth' })}>
                     back to top <FiArrowUp />
                 </button >
-                <ResultButtonGroup saveResult={saveResult} abilityToSaveNew={abilityToSaveNew} symbol={formInputs.symbol} />
+                <ResultButtonGroup saveResult={saveResult} saveAsPDF={saveAsPDF} abilityToSaveNew={abilityToSaveNew} symbol={formInputs.symbol} />
             </div>
         </ContentWrapper>
     )

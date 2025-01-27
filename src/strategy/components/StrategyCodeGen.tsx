@@ -1,10 +1,18 @@
 import { useState } from "react";
+import alpacaCode from "../scripts/alpacaCode";
+import { Editor } from "@monaco-editor/react";
+import { miniEditorOpts } from "../StrategyPage";
 
 function StrategyCodeGen({ code }: { code: string | null }) {
+
     const [generatedCode, setGeneratedCode] = useState<string | null>(null);
     const [intval, setIntval] = useState<string>('5d');
     const [realMoney, setRealMoney] = useState<string>('false')
-    const [symbol, setSymbol] = useState<string>('AAPL');
+    const [symbol, setSymbol] = useState<string>('SPY');
+
+    function generateCode() {
+        setGeneratedCode(code + alpacaCode);
+    }
 
     return (
         <div className="mt-10 p-4 rounded-lg bg-slate-100 shadow-lg border-2 border-black duration-1000">
@@ -47,7 +55,8 @@ function StrategyCodeGen({ code }: { code: string | null }) {
                         <option value="false">false</option>
                     </select>
                 </div>
-                <button className="border-2 border-black rounded-md p-2 bg-green-100 hover:bg-green-700 hover:text-white shadow-sm">
+                <button className="border-2 border-black rounded-md p-2 bg-green-100 hover:bg-green-700 hover:text-white shadow-sm"
+                    onClick={generateCode}>
                     Generate Code
                 </button>
             </div>
@@ -67,11 +76,15 @@ function StrategyCodeGen({ code }: { code: string | null }) {
                     > copy
                     </button>
                 </div>
-                {!generatedCode &&
-                    <div className="py-48 text-center font-light tracking-tight text-black/40 bg-slate-50">
-                        Generated Code Will Appear Here.
-                    </div>
-                }
+                <Editor
+                    className="invert hue-rotate-180 hover:hue-rotate-15"
+                    options={miniEditorOpts}
+                    height="22vh"
+                    defaultLanguage='python'
+                    theme="vs-dark"
+                    value={generatedCode || '# Generated code will appear here (:'}
+                    loading={(<div className="text-white font-2xl tracking-tight">Loading...</div>)}
+                />
 
             </div>
         </div>

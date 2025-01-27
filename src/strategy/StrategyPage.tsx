@@ -10,6 +10,18 @@ import StrategyCodeGen from "./components/StrategyCodeGen";
 import ContentWrapper from "../client/components/ContentWrapper";
 import LoadingScreen from "../client/components/LoadingScreen";
 
+export const miniEditorOpts = {
+    readOnly: true,
+    domReadOnly: true,
+    selectionHighlight: false,
+    lineHeight: 18,
+    fontSize: 11,
+    padding: {
+        top: 12,
+        bottom: 0
+    }
+}
+
 function StrategyPage() {
     const { id } = useParams<'id'>();
     const { data: strategy, isLoading: isStrategyLoading, error: getStrategyError } = useQuery(getSpecificStrategy, {

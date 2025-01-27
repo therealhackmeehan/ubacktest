@@ -75,6 +75,9 @@ export const getResultsForStrategy: GetResultsForStrategy<Pick<Result, "fromStra
             fromStrategyID,
             user: { id: context.user.id },
         },
+        orderBy: {
+            createdAt: "desc",
+        },
     });
 }
 

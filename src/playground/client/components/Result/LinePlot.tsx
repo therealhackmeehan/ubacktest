@@ -29,9 +29,10 @@ ChartJS.register(
 interface LinePlotProps {
     strategyResult: StrategyResultProps;
     costPerTrade: number;
+    minDate: string | null;
 }
 
-function LinePlot({ strategyResult, costPerTrade }: LinePlotProps) {
+function LinePlot({ strategyResult, costPerTrade, minDate }: LinePlotProps) {
 
     const [chartData, setChartData] = useState<any | null>(null);
 
@@ -135,6 +136,7 @@ function LinePlot({ strategyResult, costPerTrade }: LinePlotProps) {
         },
         scales: {
             x: {
+                ...(minDate && { min: minDate }), // Conditionally include 'min'
                 type: 'timeseries' as const,
             },
             y1: {

@@ -1,24 +1,17 @@
-import { useState } from "react"
+import { useState} from "react"
 import { FiSave, FiShare, FiDownload } from "react-icons/fi"
 import NewResultModal from "../modals/NewResultModal";
-import html2canvas from "html2canvas";
-import { jsPDF } from "jspdf";
-import LoadingScreen from "../../../../client/components/LoadingScreen";
 
 interface ResultButtonGroupProps {
     saveResult: (name: string) => Promise<void>;
+    saveAsPDF: () => void;
     abilityToSaveNew: boolean;
     symbol: string;
 }
 
-export default function ResultButtonGroup({ saveResult, abilityToSaveNew, symbol }: ResultButtonGroupProps) {
+export default function ResultButtonGroup({ saveResult, saveAsPDF, abilityToSaveNew, symbol }: ResultButtonGroupProps) {
 
     const [newResultModalOpen, setNewResultModalOpen] = useState<boolean>(false);
-    const [loading, setLoading] = useState<boolean>(false);
-
-    function saveAsPDF() {
-        console.log('saving as pdf')
-    }
 
     function loadEmail() {
         console.log('saving as email')
@@ -37,8 +30,6 @@ export default function ResultButtonGroup({ saveResult, abilityToSaveNew, symbol
                     <div className="border-r-2 mx-2 border-black/60"></div>
                 </>
             }
-
-            {loading && <LoadingScreen />}
 
             {newResultModalOpen &&
                 <NewResultModal onSuccess={saveResult}

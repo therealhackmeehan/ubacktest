@@ -116,7 +116,6 @@ function DataTable({ strategyResult }: { strategyResult: StrategyResultProps }) 
                             <span className="group-hover:hidden">{sortedData.portfolio[index].toFixed(2)}</span>
                             <span className="hidden group-hover:inline">{sortedData.portfolio[index].toFixed(4)}</span>
                         </td>
-                        {index == 0 ? <td className="text-lg">...</td> :
                             <td
                                 className="text-lg tracking-tight"
                                 style={{
@@ -124,7 +123,7 @@ function DataTable({ strategyResult }: { strategyResult: StrategyResultProps }) 
                                 }}
                             >
                                 {(100 * sortedData.returns[index]).toFixed(2)}%
-                            </td>}
+                            </td>
                     </tr>
                 ))}
             </tbody>

@@ -115,10 +115,11 @@ export default function DistributionOfReturns({ stockDataReturns, mean, stddev, 
         scales: {
             x: {
                 ticks: {
+                    align: 'end' as const,
                     font: {
                         family: 'Courier New' as const,
                         weight: 'bolder' as const,
-                        size: 9,
+                        size: 11,
                     },
                 },
             },

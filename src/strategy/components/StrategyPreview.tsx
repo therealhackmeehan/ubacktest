@@ -2,6 +2,7 @@ import { type Strategy } from "wasp/entities"
 import { routes } from 'wasp/client/router';
 import { FaRegEdit } from "react-icons/fa";
 import { Editor } from "@monaco-editor/react";
+import { miniEditorOpts } from "../StrategyPage";
 
 function StrategyPreview({ strategy }: { strategy: Strategy }) {
 
@@ -12,18 +13,6 @@ function StrategyPreview({ strategy }: { strategy: Strategy }) {
             console.log(error);
         } finally {
             window.location.href = routes.EditorRoute.build();
-        }
-    }
-
-    const miniEditorOpts = {
-        readOnly: true,
-        domReadOnly: true,
-        selectionHighlight: false,
-        lineHeight: 18,
-        fontSize: 11,
-        padding: {
-            top: 12,
-            bottom: 0
         }
     }
 

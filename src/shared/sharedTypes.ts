@@ -29,5 +29,14 @@ export interface FormInputProps {
     timeOfDay: "open" | "close" | "high" | "low";
     costPerTrade: number;
     useWarmupDate: boolean;
-    warmupDate: string | null;
+    warmupDate: string;
+}
+
+export interface PythonDataProps {
+    timestamp: number[],
+    open: number[],
+    close: number[],
+    high: number[],
+    low: number[],
+    volume: number[],
 }

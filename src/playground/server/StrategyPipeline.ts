@@ -1,4 +1,4 @@
-import { StrategyResultProps, FormInputProps, UserDefinedData } from "../../shared/sharedTypes";
+import { StrategyResultProps, FormInputProps, UserDefinedData, PythonDataProps } from "../../shared/sharedTypes";
 import { HttpError } from "wasp/server";
 
 /*
@@ -30,6 +30,15 @@ class StrategyPipeline {
         userDefinedData: {},
     };
 
+    private toInsertInPython: PythonDataProps = {
+        timestamp: [],
+        open: [],
+        close: [],
+        high: [],
+        low: [],
+        volume: [],
+    }
+
     private stderr: string = '';
     private stdout: string = '';
     private warning: string[] = [];
@@ -41,6 +50,7 @@ class StrategyPipeline {
 
     //________________________________________
     public async run() {
+
         await this.getStrategyStockData();                      // 1. get data from stock data API
         await this.runPythonCode();                             // 2. run user-submitted python code
 
@@ -70,23 +80,21 @@ class StrategyPipeline {
 
     private async getStrategyStockData() {
         const tempAPIResult = await this.stockAPIHelper(this.formInputs.symbol);
-        const normalizedData = this.validateStockDataFromAPI(tempAPIResult);
+        const { normalizedQuote, shortenedNormalizedQuote } = this.validateStockDataFromAPI(tempAPIResult);
 
         // Assign all normalized data fields to strategyResult in one step
         this.strategyResult = {
             ...this.strategyResult,
-            ...normalizedData,
+            ...shortenedNormalizedQuote,
         };
+
+        this.toInsertInPython = normalizedQuote;
     }
 
     private async runPythonCode() {
         // Generate unique markers for parsing the output
         const uniqueKey = this.generateRandomKey();
-
-        // Extract necessary fields from strategyResult
-        const { timestamp, volume, high, low, open, close } = this.strategyResult;
-        const toEmbedInMain = { timestamp, volume, high, low, open, close };
-        const mainFileContent = StrategyPipeline.main_py(this.code, uniqueKey, toEmbedInMain, this.formInputs.startDate);
+        const mainFileContent = StrategyPipeline.main_py(this.code, uniqueKey, this.toInsertInPython, this.formInputs.startDate);
 
         const { stdout, stderr } = await StrategyPipeline.judge0_post(mainFileContent);
         this.stderr = stderr;
@@ -113,14 +121,14 @@ class StrategyPipeline {
 
     private async addSPData() {
 
-        let spResult = await this.stockAPIHelper('spy');
-        spResult = this.validateStockDataFromAPI(spResult);
+        const spResult = await this.stockAPIHelper('spy');
+        const { shortenedNormalizedQuote } = this.validateStockDataFromAPI(spResult);
 
         const stockStamp = this.strategyResult.timestamp;
-        const spStamp = spResult.timestamp;
+        const spStamp = shortenedNormalizedQuote.timestamp;
 
         if (StrategyPipeline.arraysAreEqual(stockStamp, spStamp)) {
-            this.strategyResult.sp = spResult[this.formInputs.timeOfDay];
+            this.strategyResult.sp = shortenedNormalizedQuote[this.formInputs.timeOfDay];
         }
     }
 
@@ -242,7 +250,7 @@ class StrategyPipeline {
 
         const startOfDay = (dateStr: string) => {
             const date = new Date(dateStr);
-            date.setHours(0,0,0,0);
+            date.setHours(0, 0, 0, 0);
             return Math.floor(date.getTime() / 1000);
         };
 
@@ -304,7 +312,7 @@ class StrategyPipeline {
             throw new HttpError(500, "Mismatch in data length for high, low, open, and close arrays.");
 
         // Check for missing data based on user-selected dates
-        const startInput = new Date(this.formInputs.startDate).getDay();
+        const startInput = this.formInputs.useWarmupDate ? new Date(this.formInputs.warmupDate).getDay() : new Date(this.formInputs.startDate).getDay();
         const endInput = new Date(this.formInputs.endDate).getDay();
 
         const startInData = new Date(timestamps[0]).getDay();
@@ -329,12 +337,14 @@ class StrategyPipeline {
             this.warning.push(lowVolumeMsg);
         }
 
-        // Normalize data by dividing by the first price
         const firstPrice = quote?.[this.formInputs.timeOfDay][0];
-        if (!firstPrice || typeof firstPrice !== "number" || isNaN(firstPrice))
+        if (!firstPrice || typeof firstPrice !== "number" || isNaN(firstPrice)) {
             throw new HttpError(500, "First close price is invalid. Cannot normalize data.");
+        }
 
         const normalizedPrices = (prices: number[]) => prices.map(price => price / firstPrice);
+
+        // Normalize all data
         const normalizedQuote = {
             high: normalizedPrices(highPrices),
             low: normalizedPrices(lowPrices),
@@ -344,7 +354,38 @@ class StrategyPipeline {
             timestamp: timestamps,
         };
 
-        return normalizedQuote;
+        // Filter data for shortened version based on timestamp limit
+        const shortenedIndex = normalizedQuote.timestamp.findIndex(ts => ts >= new Date(this.formInputs.startDate).getTime() / 1000);
+        if (shortenedIndex === -1) {
+            throw new HttpError(400, "No data exists after the specified timestamp.");
+        }
+
+        const shortenedHighPrices = highPrices.slice(shortenedIndex);
+        const shortenedLowPrices = lowPrices.slice(shortenedIndex);
+        const shortenedOpenPrices = openPrices.slice(shortenedIndex);
+        const shortenedClosePrices = closePrices.slice(shortenedIndex);
+        const shortenedVolumes = volumes.slice(shortenedIndex);
+        const shortenedTimestamps = timestamps.slice(shortenedIndex);
+
+        // Recalculate the first price for shortened data
+        const newFirstPrice = shortenedIndex >= 0 ? quote[this.formInputs.timeOfDay][shortenedIndex] : null;
+        if (!newFirstPrice || typeof newFirstPrice !== "number" || isNaN(newFirstPrice)) {
+            throw new HttpError(500, "First price of shortened data is invalid. Cannot normalize shortened data.");
+        }
+
+        const shortenedNormalizedPrices = (prices: number[]) =>
+            prices.map(price => price / newFirstPrice);
+
+        const shortenedNormalizedQuote = {
+            high: shortenedNormalizedPrices(shortenedHighPrices),
+            low: shortenedNormalizedPrices(shortenedLowPrices),
+            open: shortenedNormalizedPrices(shortenedOpenPrices),
+            close: shortenedNormalizedPrices(shortenedClosePrices),
+            volume: shortenedVolumes,
+            timestamp: shortenedTimestamps,
+        };
+
+        return { normalizedQuote, shortenedNormalizedQuote };
     }
 
     // static functions 
@@ -370,6 +411,7 @@ class StrategyPipeline {
         }
 
         const fullResult = await response.json();
+        console.log(fullResult);
         let { stdout, stderr } = fullResult;
 
         if (!stdout) stdout = '';
@@ -417,7 +459,7 @@ if not df.index.is_unique:
 if df.shape[0] != initHeight:
     raise Exception("The height of the dataframe has changed upon applying your strategy.")
 
-#df = df[df['timestamp'] >= ${dateToCompare}]
+df = df[df['timestamp'] >= ${dateToCompare}]
 
 df['signal'] = df['signal'].fillna(method='ffill').fillna(0)
 signalToReturn = df[['signal']].round(3).to_dict('list')
