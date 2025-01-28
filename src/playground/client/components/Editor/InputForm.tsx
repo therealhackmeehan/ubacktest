@@ -220,7 +220,7 @@ function InputForm({ formInputs, setFormInputs, run }: InputFormSubcomponentProp
                     </>}
             </div>
             <button onClick={run}
-                className="gap-x-2 flex justify-center items-center bg-gray-100 justify-self-center w-full text-xl font-extrabold tracking-tight border-2 border-gray-800 rounded-lg hover:bg-sky-100"
+                className="gap-x-2 flex justify-center items-center bg-sky-700 text-white justify-self-center w-full text-xl font-extrabold tracking-tight border-2 border-gray-800 rounded-lg hover:bg-sky-600"
             >
                 GO
                 <IoMdReturnRight />

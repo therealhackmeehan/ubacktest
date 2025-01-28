@@ -59,8 +59,8 @@ function StrategyEditor() {
                             hover:font-extrabold
                             tracking-tight 
                             ${resultOpen ?
-                        'bg-sky-800 text-white' :
-                        'bg-slate-200 text-sky-800'}`}
+                        'bg-sky-700 text-white' :
+                        'bg-slate-200 text-black'}`}
 
                 onClick={() => setResultOpen(!resultOpen)}
             >

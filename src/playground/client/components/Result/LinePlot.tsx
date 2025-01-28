@@ -119,6 +119,7 @@ function LinePlot({ strategyResult, costPerTrade, minDate }: LinePlotProps) {
 
     const options = {
         responsive: true,
+        aspectRatio: 2 / 1,
         animation: {
             duration: 0,
         },

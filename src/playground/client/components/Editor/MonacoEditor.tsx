@@ -21,7 +21,7 @@ const editorOpts = {
         top: 12,
         bottom: 10
     },
-    fixedOverflowWidgets: true,
+    automaticLayout: true,
 }
 
 interface MonacoEditorProps {
@@ -134,7 +134,7 @@ function MonacoEditor({ codeToDisplay, setCodeToDisplay }: MonacoEditorProps) {
                     <BsQuestionOctagon />Examples
                 </button>
             </div>
-            <Editor className="invert hue-rotate-180" defaultLanguage='python' theme="vs-dark" value={codeToDisplay} onChange={handleEditorChange} options={editorOpts} 
+            <Editor className="invert hue-rotate-180" defaultLanguage='python' theme="vs-dark" value={codeToDisplay} onChange={handleEditorChange} options={editorOpts}
                 loading={(<div className="text-white font-2xl tracking-tight">Loading...</div>)} />
 
             {packagesModalOpen &&

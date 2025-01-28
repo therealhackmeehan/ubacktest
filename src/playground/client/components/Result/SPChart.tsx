@@ -62,6 +62,7 @@ function SPChart({ strategyResult }: { strategyResult: StrategyResultProps }) {
 
     const options = {
         responsive: true,
+        aspectRatio: 2 / 1,
         animation: {
             duration: 0,
         },
