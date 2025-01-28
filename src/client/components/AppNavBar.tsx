@@ -69,13 +69,13 @@ export default function AppNavBar() {
         <div className='hidden lg:flex lg:gap-x-12 lg:mr-4'>
           <Link
             to={"/home"}
-            className='text-sm leading-6 text-sky-600 duration-300 ease-in-out hover:text-slate-500 dark:text-white'
+            className='text-sm leading-6 text-sky-700 duration-300 ease-in-out hover:text-slate-500 dark:text-white'
           >
             Documentation
           </Link>
           <Link
             to={"/pricing"}
-            className='text-sm leading-6 text-sky-600 duration-300 ease-in-out hover:text-slate-500 dark:text-white'
+            className='text-sm leading-6 text-sky-700 duration-300 ease-in-out hover:text-slate-500 dark:text-white'
           >
             Pricing
           </Link>

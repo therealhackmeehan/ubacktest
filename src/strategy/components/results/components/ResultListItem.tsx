@@ -7,6 +7,7 @@ import { FormInputProps, StrategyResultProps } from '../../../../shared/sharedTy
 import RenameResultModal from './modals/RenameResultModal';
 import DeleteResultModal from './modals/DeleteResultModal';
 import SmallPlot from './SmallPlot';
+import copyToClipboard from './copyToClipboard';
 
 export default function ResultListItem({ result }: { result: Result }) {
 
@@ -28,18 +29,6 @@ export default function ResultListItem({ result }: { result: Result }) {
 
         fetchRet();
     }, [result]);
-
-    const handleCopyToClipboard = () => {
-        if (result.code) {
-            navigator.clipboard.writeText(result.code)
-                .then(() => {
-                    alert('code successfully copied to clipboard.')
-                })
-                .catch(err => {
-                    console.error('Failed to copy text to clipboard: ', err);
-                });
-        }
-    };
 
     const [resultPanelOpen, setResultPanelOpen] = useState<boolean>(false);
     const formInputs = result.formInputs as unknown as FormInputProps;
@@ -91,7 +80,7 @@ export default function ResultListItem({ result }: { result: Result }) {
                             close
                         </button>
                         <ResultPanel strategyResult={strategyResult} formInputs={formInputs} selectedStrategy={result.fromStrategyID} abilityToSaveNew={false} />
-                        <div onClick={handleCopyToClipboard} className='max-w-7xl mx-auto px-8'>
+                        <div onClick={() => copyToClipboard(result.code)} className='max-w-7xl mx-auto px-8'>
                             <textarea className='w-full bg-slate-100 p-4 rounded-lg h-72 font-mono text-xs border-white border-1 resize-none hover:bg-slate-200'
                                 value={result.code} readOnly />
                             <div className='text-xs text-center -translate-y-8'>

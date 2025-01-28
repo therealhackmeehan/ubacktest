@@ -2,6 +2,7 @@ import { useState } from "react";
 import alpacaCode from "../scripts/alpacaCode";
 import { Editor } from "@monaco-editor/react";
 import { miniEditorOpts } from "../StrategyPage";
+import copyToClipboard from "./results/components/copyToClipboard";
 
 function StrategyCodeGen({ code }: { code: string | null }) {
 
@@ -71,7 +72,7 @@ function StrategyCodeGen({ code }: { code: string | null }) {
                     </button>
                     <button
                         type='button'
-                        onClick={() => (console.log())} // Keep the existing button functionality
+                        onClick={() => copyToClipboard(generatedCode)} // Keep the existing button functionality
                         className="flex px-3 py-1 items-center text-center tracking-tight text-white hover:bg-slate-800 hover:font-bold"
                     > copy
                     </button>

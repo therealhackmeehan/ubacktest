@@ -1,5 +1,5 @@
 import { FaCaretDown, FaCaretUp } from "react-icons/fa";
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import { FormInputProps } from "../../../../shared/sharedTypes";
 import stocks from './stocks';
 import { IoMdReturnRight } from "react-icons/io";
@@ -13,7 +13,7 @@ interface InputFormSubcomponentProps {
 function InputForm({ formInputs, setFormInputs, run }: InputFormSubcomponentProps) {
 
     const [displayAdvancedOptions, setDisplayAdvancedOptions] = useState<boolean>(false);
-    const [matches, setMatches] = useState<{ "ACT Symbol": string; "Company Name": string }[]>([]);
+    const [matches, setMatches] = useState<{ "symbol": string; "name": string }[]>([]);
 
     const handleChange = (event: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
         const { name, value } = event.target;
@@ -29,9 +29,8 @@ function InputForm({ formInputs, setFormInputs, run }: InputFormSubcomponentProp
             if (value.trim()) {
                 const filteredMatches = stocks
                     .filter((stock) =>
-                        (stock["ACT Symbol"].toLowerCase().startsWith(value.toLowerCase()) ||
-                            stock["Company Name"].toLowerCase().startsWith(value.toLowerCase())) &&
-                        (!stock["ACT Symbol"].includes('$') || !stock["ACT Symbol"].includes('.'))
+                    (stock["symbol"].toLowerCase().startsWith(value.toLowerCase()) ||
+                        stock["name"].toLowerCase().includes(value.toLowerCase()))
                     )
                     .slice(0, 4);
                 setMatches(filteredMatches);
@@ -58,7 +57,7 @@ function InputForm({ formInputs, setFormInputs, run }: InputFormSubcomponentProp
         <div className='z-10 flex border-2 border-black flex-col shadow-lg justify-between rounded-lg fixed right-0 h-2/3 w-2/5 lg:w-1/5 bg-white my-16 mr-12 p-6'>
             <div className="space-y-3 overflow-auto px-1">
                 <div className="text-lg text-slate-800 tracking-tight font-extrabold text-end">
-                    <span className="text-sm font-light text-sky-600">the</span> Backtest Engine
+                    <span className="text-sm font-light text-sky-700">the</span> Backtest Engine
                 </div>
                 <div className='flex items-center justify-between gap-3'>
                     <div className="tracking-tight text-xs font-bold">
@@ -79,11 +78,11 @@ function InputForm({ formInputs, setFormInputs, run }: InputFormSubcomponentProp
                     <ul className="text-xs z-10 bg-white border border-gray-300 rounded shadow-lg max-h-60 overflow-y-auto">
                         {matches.map((match) => (
                             <li
-                                key={match["ACT Symbol"]}
-                                onClick={() => handleSelect(match["ACT Symbol"])}
+                                key={match["symbol"]}
+                                onClick={() => handleSelect(match["symbol"])}
                                 className="p-2 hover:bg-gray-200 cursor-pointer"
                             >
-                                {match["ACT Symbol"]} - <span className="font-extralight">{match["Company Name"]}</span>
+                                {match["symbol"]} - <span className="font-extralight">{match["name"]}</span>
                             </li>
                         ))}
                     </ul>
@@ -137,7 +136,7 @@ function InputForm({ formInputs, setFormInputs, run }: InputFormSubcomponentProp
                         <option value="3mo">3mo</option>
                     </select>
                 </div>
-                <button className="flex hover:font-bold items-center justify-self-center text-xs text-sky-600"
+                <button className="flex hover:font-bold items-center justify-self-center text-xs text-sky-700"
                     onClick={() => setDisplayAdvancedOptions(!displayAdvancedOptions)}>
                     advanced options
                     {displayAdvancedOptions ? <FaCaretUp size="1rem" /> : <FaCaretDown size="1rem" />}
@@ -145,7 +144,7 @@ function InputForm({ formInputs, setFormInputs, run }: InputFormSubcomponentProp
 
                 {displayAdvancedOptions &&
                     <>
-                        <div className="space-y-1 border-2 border-slate-300 bg-sky-50 rounded-md p-2">
+                        <div className="space-y-1 border-2 border-slate-800 bg-slate-100 rounded-md p-2">
                             <div className='flex items-center justify-between gap-3'>
                                 <div className="tracking-tight text-xs font-light">
                                     Execute Trade @
@@ -184,7 +183,7 @@ function InputForm({ formInputs, setFormInputs, run }: InputFormSubcomponentProp
                                 </div>
                             </div>
                         </div>
-                        <div className="space-y-1 border-2 border-slate-300 bg-sky-50 rounded-md p-2">
+                        <div className="space-y-1 border-2 border-slate-800 bg-slate-200 rounded-md p-2">
                             <div className="flex py-2 items-center justify-between gap-3">
                                 <div className="tracking-tight text-xs font-light">
                                     Include "Warm-Up" Period

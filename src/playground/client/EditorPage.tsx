@@ -92,7 +92,7 @@ export default function EditorPage() {
 
     return (
 
-        <div className='w-full h-[92vh] grid grid-cols-[min-content_auto] border-t-2 border-black'>
+        <div className='w-full h-screen absolute grid grid-cols-[min-content_auto] border-t-2 border-black'>
 
             <div className="flex">
                 <div className="h-full overflow-x-auto bg-gray-50"

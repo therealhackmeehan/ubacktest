@@ -44,7 +44,7 @@ export default function StrategyHeader() {
                     params={{ id: selectedStrategy.id }}>
                     {nameToDisplay}
                 </Link>
-                <button className='pl-3 hover:text-slate-500 text-sky-600 duration-700' title='Rename Strategy'
+                <button className='pl-3 hover:text-slate-500 text-sky-700 duration-700' title='Rename Strategy'
                     onClick={() => setIsRenameModalOpen(true)}>
                     <MdOutlineEdit size='1.4rem' />
                 </button>
@@ -61,7 +61,7 @@ export default function StrategyHeader() {
 
             <div className="flex gap-1">
 
-                <button className='hover:text-slate-500 text-sky-600 duration-700' title='Delete Strategy'
+                <button className='hover:text-slate-500 text-sky-700 duration-700' title='Delete Strategy'
                     onClick={() => setIsDeleteModalOpen(true)}>
                     <MdDeleteOutline size='1.4rem' />
                 </button>
