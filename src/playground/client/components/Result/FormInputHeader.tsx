@@ -4,7 +4,7 @@ function FormInputHeader({ formInputs }: { formInputs: FormInputProps }) {
 
     const convertToZeroHours = (val: string): string => {
         const d = new Date(val);
-        d.setHours(0,0,0,0);
+        d.setHours(0, 0, 0, 0);
         return d.toLocaleDateString() + ', ' + d.toLocaleTimeString();
     }
 
@@ -16,6 +16,12 @@ function FormInputHeader({ formInputs }: { formInputs: FormInputProps }) {
                 </div>
                 <div className="font-extralight flex justify-between items-center">
                     ended <span className="font-bold tracking-tight text-slate-700 px-2">{convertToZeroHours(formInputs.endDate)}</span>
+                </div>
+                <div className="font-extralight flex justify-between items-center">
+                    started <span className="font-bold tracking-tight text-slate-700 px-2">{formInputs.startDate}</span>
+                </div>
+                <div className="font-extralight flex justify-between items-center">
+                    ended <span className="font-bold tracking-tight text-slate-700 px-2">{formInputs.endDate}</span>
                 </div>
             </div>
             <div className="p-2">

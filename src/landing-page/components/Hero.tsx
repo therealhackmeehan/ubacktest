@@ -1,10 +1,16 @@
-import openSaasBanner from '../../client/static/open-saas-banner.png';
+import sp500 from '../../client/static/sp500.png';
 import { DocsUrl } from '../../shared/common';
+import { useInView } from 'react-intersection-observer';
 
 export default function Hero() {
+
+  const [ref1, inView1] = useInView({ triggerOnce: true });
+  const [ref2, inView2] = useInView({ triggerOnce: true });
+  const [ref3, inView3] = useInView({ triggerOnce: true });
+
   return (
     <div className='relative max-w-7xl mx-auto'>
-      
+
       <div
         className='absolute top-0 right-0 -z-10 transform-gpu overflow-hidden w-full blur-3xl sm:top-0 '
         aria-hidden='true'
@@ -31,29 +37,38 @@ export default function Hero() {
       <div className='py-24 sm:py-32'>
         <div className='mx-auto max-w-8xl px-6 lg:px-8'>
           <div className='lg:mb-18 mx-auto max-w-3xl text-center'>
-            <h1 className='text-4xl font-bold text-gray-900 sm:text-6xl dark:text-white'>
-              Some <span className='italic'>cool</span> words about your product
+            <h1 ref={ref1} className={`text-4xl font-bold text-gray-900 sm:text-6xl dark:text-white duration-500 ${inView1 ? 'opacity-100' : 'opacity-0 translate-y-3'}`}>
+              <span className='opacity-0'>-</span>1 means <span className='text-sky-700'>buy</span>.
             </h1>
-            <h1 className='text-5xl p-12 font-bold text-gray-900 sm:text-6xl dark:text-white'>
-              algotrdr.com
+            <h1 ref={ref2} className={`text-4xl font-bold text-gray-900 sm:text-6xl dark:text-white duration-700 ${inView2 ? 'opacity-100' : 'opacity-0 translate-y-3'}`}>
+              -1 means <span className='text-sky-700'>short</span>.
+            </h1>
+            <h1 ref={ref3} className={`text-4xl my-12 font-bold text-gray-900 sm:text-6xl dark:text-white duration-1000 ${inView3 ? 'opacity-100' : 'opacity-0 translate-y-3'}`}>
+              The rest is up to <span className='italic text-sky-700'>you</span>.
             </h1>
             <p className='mt-6 mx-auto max-w-2xl text-lg leading-8 text-gray-600 dark:text-white'>
-              With some more exciting words about your product!
+              Backtest that trading strategy you've had on your mind...
             </p>
             <div className='mt-10 flex items-center justify-center gap-x-6'>
               <a
                 href={DocsUrl}
-                className='rounded-md px-3.5 py-2.5 text-sm font-semibold text-gray-700 ring-1 ring-inset ring-gray-200 hover:ring-2 hover:ring-yellow-300 shadow-sm focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600 dark:text-white'
+                className='rounded-md px-3.5 py-2.5 text-sm font-semibold text-gray-700 ring-1 ring-inset ring-gray-200 hover:ring-2 hover:ring-sky-600 shadow-sm focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600 dark:text-white'
               >
-                Get Started <span aria-hidden='true'>→</span>
+                Get Started for Free <span aria-hidden='true'>→</span>
+              </a>
+              <a
+                href={DocsUrl}
+                className='rounded-md px-3.5 py-2.5 text-sm font-semibold text-gray-700 ring-1 ring-inset ring-gray-200 hover:ring-2 hover:ring-sky-600 shadow-sm focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600 dark:text-white'
+              >
+                Read the Docs <span aria-hidden='true'>→</span>
               </a>
             </div>
           </div>
           <div className='mt-14 flow-root sm:mt-14 '>
             <div className='-m-2 rounded-xl  lg:-m-4 lg:rounded-2xl lg:p-4'>
               <img
-                src={openSaasBanner}
-                alt='App screenshot'
+                src={sp500}
+                alt='backtestResult'
                 width={2432}
                 height={1442}
                 className='rounded-md shadow-2xl ring-1 ring-gray-900/10'
