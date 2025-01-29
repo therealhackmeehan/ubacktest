@@ -1,4 +1,7 @@
 import sp500 from '../../client/static/sp500.png';
+import editor from '../../client/static/editor.png';
+import engine from '../../client/static/engine.png';
+import results from '../../client/static/results.png';
 import { DocsUrl } from '../../shared/common';
 import { useInView } from 'react-intersection-observer';
 
@@ -64,17 +67,45 @@ export default function Hero() {
               </a>
             </div>
           </div>
-          <div className='mt-14 flow-root sm:mt-14 '>
-            <div className='-m-2 rounded-xl  lg:-m-4 lg:rounded-2xl lg:p-4'>
+          <div className="mt-14 w-full">
+            {/* First Image */}
+            <div className="rotate-[-2deg] hover:rotate-[-4deg] duration-700 z-10 pr-12">
               <img
                 src={sp500}
-                alt='backtestResult'
-                width={2432}
-                height={1442}
-                className='rounded-md shadow-2xl ring-1 ring-gray-900/10'
+                alt="backtestResult"
+                className="rounded-md shadow-2xl ring-1 ring-gray-900/10 dark:invert"
               />
             </div>
+
+            {/* Second Image */}
+            <div className="rotate-[2deg] -mt-12 hover:rotate-[4deg] duration-700 z-20 pl-12">
+              <img
+                src={editor}
+                alt="editor"
+                className="rounded-md shadow-2xl ring-1 ring-gray-900/10 dark:invert"
+              />
+            </div>
+
+            {/* Third Image */}
+            <div className="rotate-[-2deg] -mt-12 hover:rotate-[-4deg] duration-700 z-20 pr-12">
+              <img
+                src={results}
+                alt="results"
+                className="rounded-md shadow-2xl ring-1 ring-gray-900/10 dark:invert"
+              />
+            </div>
+
+            {/* <div className="absolute top-40 left-40 rotate-[-8deg] z-30">
+              <img
+                src={engine}
+                alt="engine"
+                width={400}
+                height={300}
+                className="rounded-md shadow-2xl ring-1 ring-gray-900/10"
+              />
+            </div> */}
           </div>
+
         </div>
       </div>
     </div>

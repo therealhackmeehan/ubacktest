@@ -94,7 +94,7 @@ export default function EditorPage() {
 
         <div className='w-full h-screen grid grid-cols-[min-content_auto] border-t-2 border-black'>
 
-            <div className="flex">
+            <div className="flex overflow-y-auto">
                 <div className="h-full overflow-x-auto bg-gray-50"
                     style={{ width: `${width / 16}rem` }}>
                     <StrategyBrowser
@@ -112,7 +112,7 @@ export default function EditorPage() {
                 </div>
             </div>
 
-            <div className='h-full overflow-x-auto'>
+            <div className='h-full overflow-x-auto overflow-y-clip'>
                 {selectedStrategy ? (
                     <StrategyContext.Provider value={{ selectedStrategy, setSelectedStrategy }}>
                         <StrategyEditor />

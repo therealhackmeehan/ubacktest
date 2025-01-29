@@ -4,9 +4,9 @@ import { routes } from 'wasp/client/router';
 import { FaPython, FaSave } from 'react-icons/fa';
 import { SiPandas, SiReadthedocs } from "react-icons/si";
 import { RiStockLine } from "react-icons/ri";
-import { GrDeploy, GrTestDesktop} from "react-icons/gr";
 import { MdOutlineImportExport } from "react-icons/md";
-
+import { LuRocket } from "react-icons/lu";
+import { AiTwotoneExperiment } from "react-icons/ai";
 
 export const navigation = [
   { name: 'Features', href: '#features' },
@@ -39,7 +39,7 @@ export const features = [
   {
     name: 'Deploy with Auto-Generated Code',
     description: 'Effortlessly generate production-ready code to execute your strategy—even with real capital.',
-    icon: GrDeploy,
+    icon: LuRocket,
   },
   {
     name: 'Comprehensive Docs & Examples',
@@ -49,7 +49,7 @@ export const features = [
   {
     name: 'Fully Customizable Backtesting',
     description: 'Define your stock, date range, trading costs, and more for tailored backtesting.',
-    icon: GrTestDesktop,
+    icon: AiTwotoneExperiment,
   },
   {
     name: 'Import & Export Python Scripts',

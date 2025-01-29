@@ -58,12 +58,6 @@ export default function AppNavBar() {
           >
             My Strategies
           </Link>
-          <Link
-            to={"/home"}
-            className='text-sm font-semibold leading-6 text-gray-900 duration-300 ease-in-out hover:text-slate-500 dark:text-white'
-          >
-            Live Paper Trading
-          </Link>
         </div>
         <div className='hidden lg:flex mx-12 border-r-2 py-4 border-black/80'></div>
         <div className='hidden lg:flex lg:gap-x-12 lg:mr-4'>
