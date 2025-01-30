@@ -1,5 +1,9 @@
 import { StrategyResultProps, FormInputProps, UserDefinedData, PythonDataProps } from "../../shared/sharedTypes";
 import { HttpError } from "wasp/server";
+import fs from 'fs/promises';
+import path from 'path';
+import archiver from 'archiver';
+import { createWriteStream, readFileSync } from 'fs';
 
 /*
     Main backend endpoint for processing of the stock trading strategy.
@@ -96,7 +100,12 @@ class StrategyPipeline {
         const uniqueKey = this.generateRandomKey();
         const mainFileContent = StrategyPipeline.main_py(this.code, uniqueKey, this.toInsertInPython, this.formInputs.startDate);
 
-        const { stdout, stderr } = await StrategyPipeline.judge0_post(mainFileContent);
+        // get zip options (base 64)
+        console.log('about to zip');
+        const zipped = await StrategyPipeline.zipFiles(mainFileContent);
+        const { stdout, stderr } = await StrategyPipeline.judge0_zipped(zipped);
+
+        //const { stdout, stderr } = await StrategyPipeline.judge0_post(mainFileContent);
         this.stderr = stderr;
 
         // Extract data, result from the Python output
@@ -391,6 +400,85 @@ class StrategyPipeline {
     }
 
     // static functions 
+    private static async judge0_zipped(zip: string) {
+        const url = 'https://judge0-ce.p.rapidapi.com/submissions?base64_encoded=true&wait=false&fields=*';
+        const options = {
+            method: 'POST',
+            headers: {
+                'x-rapidapi-key': process.env.JUDGE_APIKEY,
+                'x-rapidapi-host': 'judge0-extra-ce.p.rapidapi.com',
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+                language_id: 89,
+                source_code: "",
+                additional_files: zip
+            })
+        };
+
+        const response = await fetch(url, options);
+        if (!response.ok) {
+            throw new HttpError(503, `In Executing Code, Unable to make that request: ${response.statusText}`);
+        }
+
+        const submissionData = await response.json();
+        const token = submissionData.token;
+        console.log(`[${new Date().toISOString()}] Submission Token: ${token}`);
+
+        const maxAttempts = 10;
+        let attempt = 0;
+        let statusId = 1;
+
+        while (attempt < maxAttempts) {
+            await new Promise((res) => setTimeout(res, (attempt / 2) * 1000)); // Incremental delay (0.5s, 1s, 1.5s, ...)
+
+            const url2 = `https://judge0-ce.p.rapidapi.com/submissions/${token}?base64_encoded=true&fields=*`;
+            const options2 = {
+                method: 'GET',
+                headers: {
+                    'x-rapidapi-key': process.env.JUDGE_APIKEY,
+                    'x-rapidapi-host': 'judge0-extra-ce.p.rapidapi.com',
+                    'Content-Type': 'application/json'
+                }
+            };
+            const response2 = await fetch(url2, options2)
+
+            if (!response2.ok) {
+                throw new Error(`Failed to get submission status: ${response2.statusText}`);
+            }
+
+            const resultData = await response2.json();
+            statusId = resultData.status?.id;
+
+            console.log(`[${new Date().toISOString()}] Polling Status ID: ${statusId}`);
+
+            if (statusId !== 1 && statusId !== 2) {
+                return {
+                    stdout: StrategyPipeline.decodeBase64(resultData.stdout) || '',
+                    stderr: StrategyPipeline.decodeBase64(resultData.stderr) || '',
+                    // compile_output: resultData.compile_output || '',
+                    // message: resultData.message || ''
+                };
+            }
+
+            attempt++;
+        }
+
+        const fullResult = await response.json();
+        console.log(fullResult);
+        let { stdout, stderr } = fullResult;
+
+        if (!stdout) stdout = '';
+        if (!stderr) stderr = '';
+
+        return { stdout, stderr };
+    }
+
+    private static decodeBase64(base64String: string | null): string {
+        if (!base64String) return ''; // Handle empty/null cases
+        return Buffer.from(base64String, 'base64').toString('utf-8');
+    }
+
     private static async judge0_post(mainFileContent: string) {
 
         const url = 'https://judge0-extra-ce.p.rapidapi.com/submissions?base64_encoded=false&wait=true&fields=*';
@@ -477,6 +565,41 @@ output = "${uniqueKey}START${uniqueKey}" + json.dumps(middleOutput) + "${uniqueK
 print(output)`;
 
         return m;
+    }
+
+    private static async zipFiles(codeToEmbed: string) {
+        try {
+            const zipPath = path.join(process.cwd(), 'output.zip');
+            const output = await fs.open(zipPath, 'w');
+            const archive = archiver('zip', { zlib: { level: 9 } });
+
+            archive.pipe(output.createWriteStream());
+
+            // Create the dynamically generated file (e.g., strategy.py)
+            const textFilePath = path.join(process.cwd(), 'strategy.py');
+            await fs.writeFile(textFilePath, codeToEmbed); // Write the string content to file
+            archive.file(textFilePath, { name: 'strategy.py' }); // Add to zip
+
+            // Add additional files
+            const additionalFilesPath = path.join(process.cwd());
+            const files = await fs.readdir(additionalFilesPath);
+
+            for (const file of files) {
+                const filePath = path.join(additionalFilesPath, file);
+                archive.file(filePath, { name: file });
+            }
+
+            await archive.finalize();
+            output.close();
+
+            // Read the ZIP file and encode in Base64
+            const zipBuffer = await fs.readFile(zipPath);
+            const zipBase64 = zipBuffer.toString('base64');
+
+            return zipBase64;
+        } catch (error) {
+            console.error("Error creating Base64 ZIP:", error);
+        }
     }
 }
 

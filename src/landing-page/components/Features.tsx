@@ -22,7 +22,6 @@ export default function Features({ features }: { features: Feature[] }) {
         <dl className='grid max-w-xl grid-cols-1 gap-x-8 gap-y-10 lg:max-w-none lg:grid-cols-2 lg:gap-y-16'>
           {features.map((feature, _) => {
             const { ref, inView } = useInView({ triggerOnce: true });
-
             return (
               <div
                 key={feature.name}
