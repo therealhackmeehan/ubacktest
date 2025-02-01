@@ -11,11 +11,6 @@ export interface StrategyContextProps {
     setSelectedStrategy: (value: Strategy) => void;
 }
 
-// export const StrategyContext = createContext<StrategyContextProps>({
-//     selectedStrategy: null,
-//     setSelectedStrategy: () => (),
-// });
-
 export const StrategyContext = createContext<any>(null);
 
 export default function EditorPage() {
@@ -36,7 +31,7 @@ export default function EditorPage() {
     const isResized = useRef(false);
 
     useEffect(() => {
-        window.addEventListener("mousemove", (e) => {
+        const handleMouseMove = (e: MouseEvent) => {
             if (!isResized.current) {
                 return;
             }
@@ -44,7 +39,8 @@ export default function EditorPage() {
             setWidth((previousWidth) => {
                 const newWidth = previousWidth + e.movementX / 2;
 
-                if (newWidth > maxWidth) return maxWidth;
+                const maxAllowedWidth = Math.min(window.innerWidth/3, maxWidth);
+                if (newWidth > maxAllowedWidth) return maxAllowedWidth;
                 if (newWidth < minWidth) {
                     if (previousWidth > newWidth) return 0;
                     if (previousWidth === 0) return newWidth;
@@ -52,11 +48,20 @@ export default function EditorPage() {
 
                 return newWidth;
             });
-        });
+        };
 
-        window.addEventListener("mouseup", () => {
+        const handleMouseUp = () => {
             isResized.current = false;
-        });
+            document.body.style.userSelect = ""; // Re-enable text selection
+        };
+
+        window.addEventListener("mousemove", handleMouseMove);
+        window.addEventListener("mouseup", handleMouseUp);
+
+        return () => {
+            window.removeEventListener("mousemove", handleMouseMove);
+            window.removeEventListener("mouseup", handleMouseUp);
+        };
     }, []);
 
     useEffect(() => {
@@ -94,8 +99,8 @@ export default function EditorPage() {
 
         <div className='w-full h-screen grid grid-cols-[min-content_auto] border-t-2 border-black'>
 
-            <div className="flex overflow-y-auto">
-                <div className="h-full overflow-x-clip bg-gray-50"
+            <div className="flex overflow-x-hidden overflow-y-auto">
+                <div className="h-full bg-gray-50"
                     style={{ width: `${width / 16}rem` }}>
                     <StrategyBrowser
                         strategies={strategies}
@@ -106,13 +111,14 @@ export default function EditorPage() {
                 <div className="w-3 cursor-col-resize border-r-2 border-black bg-slate-200"
                     onMouseDown={() => {
                         isResized.current = true;
+                        document.body.style.userSelect = "none";
                     }}
                 >
                     <BsThreeDotsVertical className="justify-self-center h-full py-auto" />
                 </div>
             </div>
 
-            <div className='h-full overflow-x-auto overflow-y-clip'>
+            <div className='h-full overflow-x-auto'>
                 {selectedStrategy ? (
                     <StrategyContext.Provider value={{ selectedStrategy, setSelectedStrategy }}>
                         <StrategyEditor />

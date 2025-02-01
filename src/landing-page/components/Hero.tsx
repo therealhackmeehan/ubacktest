@@ -67,35 +67,36 @@ export default function Hero() {
               </a>
             </div>
           </div>
-          <div className="mt-14 w-full">
-            {/* First Image */}
-            <div className="rotate-[-2deg] hover:rotate-[-4deg] duration-700 z-10 pr-12">
-              <img
-                src={sp500}
-                alt="backtestResult"
-                className="rounded-md shadow-2xl ring-1 ring-gray-900/10 dark:invert"
-              />
-            </div>
+          <div className="max-w-3xl m-4 lg:mx-auto">
+            <div className="mt-14 w-full">
+              {/* First Image */}
+              <div className="rotate-[-2deg] hover:rotate-[-4deg] duration-700 z-10 pr-12">
+                <img
+                  src={sp500}
+                  alt="backtestResult"
+                  className="rounded-md shadow-2xl ring-1 ring-gray-900/10 dark:invert"
+                />
+              </div>
 
-            {/* Second Image */}
-            <div className="rotate-[2deg] -mt-12 hover:rotate-[4deg] duration-700 z-20 pl-12">
-              <img
-                src={editor}
-                alt="editor"
-                className="rounded-md shadow-2xl ring-1 ring-gray-900/10 dark:invert"
-              />
-            </div>
+              {/* Second Image */}
+              <div className="rotate-[2deg] -mt-12 hover:rotate-[4deg] duration-700 z-20 pl-12">
+                <img
+                  src={editor}
+                  alt="editor"
+                  className="rounded-md shadow-2xl ring-1 ring-gray-900/10 dark:invert"
+                />
+              </div>
 
-            {/* Third Image */}
-            <div className="rotate-[-2deg] -mt-12 hover:rotate-[-4deg] duration-700 z-20 pr-12">
-              <img
-                src={results}
-                alt="results"
-                className="rounded-md shadow-2xl ring-1 ring-gray-900/10 dark:invert"
-              />
-            </div>
+              {/* Third Image */}
+              <div className="rotate-[-2deg] -mt-12 hover:rotate-[-4deg] duration-700 z-20 pr-12">
+                <img
+                  src={results}
+                  alt="results"
+                  className="rounded-md shadow-2xl ring-1 ring-gray-900/10 dark:invert"
+                />
+              </div>
 
-            {/* <div className="absolute top-40 left-40 rotate-[-8deg] z-30">
+              {/* <div className="absolute top-40 left-40 rotate-[-8deg] z-30">
               <img
                 src={engine}
                 alt="engine"
@@ -104,6 +105,7 @@ export default function Hero() {
                 className="rounded-md shadow-2xl ring-1 ring-gray-900/10"
               />
             </div> */}
+            </div>
           </div>
 
         </div>

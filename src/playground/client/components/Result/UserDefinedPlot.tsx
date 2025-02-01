@@ -67,7 +67,7 @@ export default function UserDefinedPlot({ userDefinedData, timestamp }: UserDefi
 
     const options = {
         responsive: true,
-        aspectRatio: 4/1,
+        aspectRatio: 4 / 1,
         animation: {
             duration: 2000,
         },
@@ -98,7 +98,10 @@ export default function UserDefinedPlot({ userDefinedData, timestamp }: UserDefi
 
     if (!chartData) return <div className='w-full mt-4 text-center text-xl tracking-tight'>Loading...</div>;
     return (
-        <Line data={chartData} options={options} />
+        <>
+            <div className="w-full h-1 bg-white"></div>
+            <Line data={chartData} options={options} />
+        </>
     );
 
 }

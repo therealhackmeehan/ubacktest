@@ -10,7 +10,6 @@ import { FormInputProps, StrategyResultProps } from "../../../../shared/sharedTy
 import calculateStats, { StatProps } from "../../scripts/calculateStats"
 import { createResult, getSpecificStrategy } from "wasp/client/operations"
 import SPChart from "./SPChart"
-import ContentWrapper from "../../../../client/components/ContentWrapper"
 import UserDefinedPlot from "./UserDefinedPlot"
 import { useState, useRef, useEffect } from "react"
 import html2canvas from "html2canvas";
@@ -38,11 +37,18 @@ function Result({ selectedStrategy, formInputs, strategyResult, abilityToSaveNew
             throw new Error('No strategy with that result.');
         }
 
+        let dataToUse: StrategyResultProps | null = strategyResult;
+
+        const storageLimit = 366;
+        if (strategyResult.timestamp.length > storageLimit) {
+            dataToUse = null;
+        }
+
         await createResult({
             name: name,
             code: connectedStrat.code,
             formInputs: formInputs,
-            data: strategyResult,
+            data: dataToUse,
             strategyId: selectedStrategy
         })
     }
@@ -136,24 +142,25 @@ function Result({ selectedStrategy, formInputs, strategyResult, abilityToSaveNew
     const minDate = formInputs.useWarmupDate ? formInputs.warmupDate : null;
 
     return (
-        <ContentWrapper>
+        <>
+            <div className="max-w-6xl m-4 lg:mx-auto">
 
-            {loading && <LoadingScreen />}
+                {loading && <LoadingScreen />}
 
-            <div id='topOfResultPanel' className='items-center flex p-2 justify-between border-b-2 border-black'>
-                <h4 className="tracking-tight text-xl text-slate-700 font-extrabold text-center">
-                    Stock Data and Simulated Backtest Result for
-                    <span className="mx-2 text-slate-500 italic uppercase text-2xl">
-                        {formInputs.symbol}
-                    </span>
-                </h4>
-                <ResultButtonGroup saveResult={saveResult} saveAsPDF={saveAsPDF} abilityToSaveNew={abilityToSaveNew} symbol={formInputs.symbol} />
-            </div>
+                <div id='topOfResultPanel' className='items-center flex p-2 justify-between border-b-2 border-black'>
+                    <h4 className="tracking-tight text-xl text-slate-700 font-extrabold text-center">
+                        Stock Data and Simulated Backtest Result for
+                        <span className="mx-2 text-slate-500 italic uppercase text-2xl">
+                            {formInputs.symbol}
+                        </span>
+                    </h4>
+                    <ResultButtonGroup saveResult={saveResult} saveAsPDF={saveAsPDF} abilityToSaveNew={abilityToSaveNew} symbol={formInputs.symbol} />
+                </div>
 
-            <>
+
                 <div className="m-8">
                     <div className="m-1 text-xl tracking-tight text-slate-400 hover:text-slate-800 font-bold">Hypothetical Growth of $1</div>
-                    <div className="rounded-t-md border-2 border-slate-300 h-200">
+                    <div className="rounded-t-md border-2 border-slate-300">
                         <LinePlot strategyResult={strategyResult} costPerTrade={formInputs.costPerTrade} minDate={minDate} />
                     </div>
                     {(strategyResult.userDefinedData && Object.keys(strategyResult.userDefinedData).length > 0) && (
@@ -194,7 +201,28 @@ function Result({ selectedStrategy, formInputs, strategyResult, abilityToSaveNew
                         <DataTable strategyResult={strategyResult} />
                     </div>
                 </div>
-            </>
+
+
+                <div className="p-2 m-8 border-black border-2 rounded-lg bg-slate-100">
+                    {stats && <DistributionOfReturns stockDataReturns={strategyResult.returns} mean={stats.meanReturn} stddev={stats.stddevReturn} max={stats.maxReturn} min={stats.minReturn} />}
+                </div>
+
+                {strategyResult.sp.length > 0 &&
+                    <div className="m-8">
+                        <div className="rounded-sm bg-white">
+                            <SPChart strategyResult={strategyResult} />
+                        </div>
+                    </div>
+                }
+
+                <div className="flex justify-between m-2 pb-8">
+                    <button className="flex p-2 rounded-md hover:bg-slate-100"
+                        onClick={() => document.getElementById('topOfResultPanel')?.scrollIntoView({ behavior: 'smooth' })}>
+                        back to top <FiArrowUp />
+                    </button >
+                    <ResultButtonGroup saveResult={saveResult} saveAsPDF={saveAsPDF} abilityToSaveNew={abilityToSaveNew} symbol={formInputs.symbol} />
+                </div>
+            </div>
 
             {/* invisible rendition for accurate PDF rendering! */}
             <div ref={pdfRef} style={{ position: 'absolute', zIndex: -1, left: '-10000px', top: 'auto' }}>
@@ -211,33 +239,12 @@ function Result({ selectedStrategy, formInputs, strategyResult, abilityToSaveNew
                     {stats && <MainStatistics stats={stats} />}
                 </div>
 
-                <div className="grid grid-cols-4 p-2 gap-x-2 m-8 border-black border-2 rounded-lg bg-slate-100">
+                <div className="p-2 m-8 border-black border-2 rounded-lg bg-slate-100">
                     {stats && <DistributionOfReturns stockDataReturns={strategyResult.returns} mean={stats.meanReturn} stddev={stats.stddevReturn} max={stats.maxReturn} min={stats.minReturn} />}
                 </div>
             </div>
-
-            <div className="grid grid-cols-4 p-2 gap-x-2 m-8 border-black border-2 rounded-lg bg-slate-100">
-                {stats && <DistributionOfReturns stockDataReturns={strategyResult.returns} mean={stats.meanReturn} stddev={stats.stddevReturn} max={stats.maxReturn} min={stats.minReturn} />}
-                {/* <RatiosBarChart sharpe={stats.sharpeRatio} sortino={stats.sortinoRatio} /> */}
-            </div>
-
-            {strategyResult.sp.length > 0 &&
-                <div className="m-8">
-                    <div className="text-xl tracking-tight text-slate-400 hover:text-slate-800 font-bold">Did You Beat the S&P 500?</div>
-                    <div className="rounded-sm border-2 border-slate-300 bg-slate-50">
-                        <SPChart strategyResult={strategyResult} />
-                    </div>
-                </div>
-            }
-
-            <div className="flex justify-between m-2 pb-8">
-                <button className="flex p-2 rounded-md hover:bg-slate-100"
-                    onClick={() => document.getElementById('topOfResultPanel')?.scrollIntoView({ behavior: 'smooth' })}>
-                    back to top <FiArrowUp />
-                </button >
-                <ResultButtonGroup saveResult={saveResult} saveAsPDF={saveAsPDF} abilityToSaveNew={abilityToSaveNew} symbol={formInputs.symbol} />
-            </div>
-        </ContentWrapper>
+            {/* End Invisible PDF Rendition */}
+        </>
     )
 }
 

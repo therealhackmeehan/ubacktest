@@ -132,7 +132,7 @@ export default function DistributionOfReturns({ stockDataReturns, mean, stddev, 
     };
 
     return (
-        <div className="col-span-4 m-2">
+        <div className="m-2">
             <div className="flex justify-between items-center">
                 <div className="text-lg tracking-tight font-bold">Distribution of Returns</div>
                 <div className="flex justify-items-center gap-x-2">

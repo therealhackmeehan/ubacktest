@@ -1,9 +1,6 @@
-import { StrategyResultProps, FormInputProps, UserDefinedData, PythonDataProps } from "../../shared/sharedTypes";
+import { StrategyResultProps, FormInputProps, PythonDataProps, UserDefinedData } from "../../shared/sharedTypes";
+import CodeExecutor from "./CodeExecutor";
 import { HttpError } from "wasp/server";
-import fs from 'fs/promises';
-import path from 'path';
-import archiver from 'archiver';
-import { createWriteStream, readFileSync } from 'fs';
 
 /*
     Main backend endpoint for processing of the stock trading strategy.
@@ -55,21 +52,42 @@ class StrategyPipeline {
     //________________________________________
     public async run() {
 
-        await this.getStrategyStockData();                      // 1. get data from stock data API
-        await this.runPythonCode();                             // 2. run user-submitted python code
+        await this.getStrategyStockData();
 
-        if (this.stderr) return this.sendJSONtoFrontend();      // 3. if stderr exists, we're done.
+        const { stdout, stderr, uniqueKey } = await new CodeExecutor(this.code, this.toInsertInPython, this.formInputs.startDate).execute();
+
+        this.stderr = stderr;
+
+        const parsedData = StrategyPipeline.parsePythonOutput(stdout, uniqueKey);
+        if (parsedData) {
+            Object.assign(this.strategyResult, parsedData.result);
+
+            const expectedLength = this.strategyResult.signal.length;
+            const userDefinedData: UserDefinedData = parsedData.data;
+
+            this.strategyResult.userDefinedData = Object.fromEntries(
+                Object.entries(userDefinedData).filter(([_, value]) =>
+                    Array.isArray(value) &&
+                    value.length === expectedLength &&
+                    value.every(item => typeof item === 'number')
+                )
+            )
+        };
+
+        this.stdout = StrategyPipeline.stripDebugOutput(stdout, uniqueKey);
+
+        if (this.stderr) return this.sendJSONtoFrontend();
 
         try {
-            await this.addSPData();                             // 4. append SP data for comparison!
+            await this.addSPData();
         } catch (Error: any) {
             this.warning.push("An issue occured with fetching S&P Comparison Data, so it will be excluded from this backtest.");
         }
 
-        this.calculatePortfolio();                              // 5. calculate porfolio and success metrics
-        this.validatePortfolio();                               // 6. make sure the portfolio makes sense
+        this.calculatePortfolio();
+        this.validatePortfolio();
 
-        return this.sendJSONtoFrontend();                       // 7. send back all our data to the frontend
+        return this.sendJSONtoFrontend();
     }
     //________________________________________
 
@@ -79,65 +97,6 @@ class StrategyPipeline {
             debugOutput: this.stdout,
             stderr: this.stderr,
             warnings: [...new Set(this.warning)],
-        }
-    }
-
-    private async getStrategyStockData() {
-        const tempAPIResult = await this.stockAPIHelper(this.formInputs.symbol);
-        const { normalizedQuote, shortenedNormalizedQuote } = this.validateStockDataFromAPI(tempAPIResult);
-
-        // Assign all normalized data fields to strategyResult in one step
-        this.strategyResult = {
-            ...this.strategyResult,
-            ...shortenedNormalizedQuote,
-        };
-
-        this.toInsertInPython = normalizedQuote;
-    }
-
-    private async runPythonCode() {
-        // Generate unique markers for parsing the output
-        const uniqueKey = this.generateRandomKey();
-        const mainFileContent = StrategyPipeline.main_py(this.code, uniqueKey, this.toInsertInPython, this.formInputs.startDate);
-
-        // get zip options (base 64)
-        console.log('about to zip');
-        const zipped = await StrategyPipeline.zipFiles(mainFileContent);
-        const { stdout, stderr } = await StrategyPipeline.judge0_zipped(zipped);
-
-        //const { stdout, stderr } = await StrategyPipeline.judge0_post(mainFileContent);
-        this.stderr = stderr;
-
-        // Extract data, result from the Python output
-        const parsedData = this.parsePythonOutput(stdout, uniqueKey);
-        if (parsedData) {
-            Object.assign(this.strategyResult, parsedData.result);
-
-            const expectedLength = this.strategyResult.signal.length;
-            const userDefinedData: UserDefinedData = parsedData.data;
-
-            this.strategyResult.userDefinedData = Object.fromEntries(
-                Object.entries(userDefinedData).filter(([_, value]) =>
-                    Array.isArray(value) && // Ensure it's an array
-                    value.length === expectedLength &&  // Length is exactly 3
-                    value.every(item => typeof item === 'number') // All elements are numbers
-                )
-            )
-        };
-
-        this.stdout = this.stripDebugOutput(stdout, uniqueKey);
-    }
-
-    private async addSPData() {
-
-        const spResult = await this.stockAPIHelper('spy');
-        const { shortenedNormalizedQuote } = this.validateStockDataFromAPI(spResult);
-
-        const stockStamp = this.strategyResult.timestamp;
-        const spStamp = shortenedNormalizedQuote.timestamp;
-
-        if (StrategyPipeline.arraysAreEqual(stockStamp, spStamp)) {
-            this.strategyResult.sp = shortenedNormalizedQuote[this.formInputs.timeOfDay];
         }
     }
 
@@ -219,37 +178,43 @@ class StrategyPipeline {
         }
     }
 
-    /// helper functions
-    private static arraysAreEqual<T>(arr1: T[], arr2: T[]): boolean {
-        // Check if the arrays are the same length
-        if (arr1.length !== arr2.length) {
-            return false;
-        }
-
-        // Compare each element
-        for (let i = 0; i < arr1.length; i++) {
-            if (arr1[i] !== arr2[i]) {
-                return false;
-            }
-        }
-
-        return true;
-    }
-
-    private parsePythonOutput(stdout: string, uniqueKey: string) {
+    private static parsePythonOutput(stdout: string, uniqueKey: string) {
         const regex = new RegExp(`${uniqueKey}START${uniqueKey}(.*?)${uniqueKey}END${uniqueKey}`, "s");
         const match = stdout.match(regex);
         return match ? JSON.parse(match[1]) : null;
     }
 
-    private stripDebugOutput(stdout: string, uniqueKey: string) {
+    private static stripDebugOutput(stdout: string, uniqueKey: string) {
         const regex = new RegExp(`${uniqueKey}START${uniqueKey}(.*?)${uniqueKey}END${uniqueKey}`, "s");
         return stdout.replace(regex, '').trim();
     }
 
-    private generateRandomKey(): string {
-        return Math.random().toString(36).substring(2, 8) + Math.random().toString(36).substring(2, 8);
+    private async addSPData() {
+
+        const spResult = await this.stockAPIHelper('spy');
+        const { shortenedNormalizedQuote } = this.validateStockDataFromAPI(spResult);
+
+        const stockStamp = this.strategyResult.timestamp;
+        const spStamp = shortenedNormalizedQuote.timestamp;
+
+        if (StrategyPipeline.arraysAreEqual(stockStamp, spStamp)) {
+            this.strategyResult.sp = shortenedNormalizedQuote[this.formInputs.timeOfDay];
+        }
     }
+
+    private async getStrategyStockData() {
+        const tempAPIResult = await this.stockAPIHelper(this.formInputs.symbol);
+        const { normalizedQuote, shortenedNormalizedQuote } = this.validateStockDataFromAPI(tempAPIResult);
+
+        // Assign all normalized data fields to strategyResult in one step
+        this.strategyResult = {
+            ...this.strategyResult,
+            ...shortenedNormalizedQuote,
+        };
+
+        this.toInsertInPython = normalizedQuote;
+    }
+
 
     private async stockAPIHelper(symbol: string) {
 
@@ -399,207 +364,20 @@ class StrategyPipeline {
         return { normalizedQuote, shortenedNormalizedQuote };
     }
 
-    // static functions 
-    private static async judge0_zipped(zip: string) {
-        const url = 'https://judge0-ce.p.rapidapi.com/submissions?base64_encoded=true&wait=false&fields=*';
-        const options = {
-            method: 'POST',
-            headers: {
-                'x-rapidapi-key': process.env.JUDGE_APIKEY,
-                'x-rapidapi-host': 'judge0-extra-ce.p.rapidapi.com',
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify({
-                language_id: 89,
-                source_code: "",
-                additional_files: zip
-            })
-        };
-
-        const response = await fetch(url, options);
-        if (!response.ok) {
-            throw new HttpError(503, `In Executing Code, Unable to make that request: ${response.statusText}`);
+    private static arraysAreEqual<T>(arr1: T[], arr2: T[]): boolean {
+        // Check if the arrays are the same length
+        if (arr1.length !== arr2.length) {
+            return false;
         }
 
-        const submissionData = await response.json();
-        const token = submissionData.token;
-        console.log(`[${new Date().toISOString()}] Submission Token: ${token}`);
-
-        const maxAttempts = 10;
-        let attempt = 0;
-        let statusId = 1;
-
-        while (attempt < maxAttempts) {
-            await new Promise((res) => setTimeout(res, (attempt / 2) * 1000)); // Incremental delay (0.5s, 1s, 1.5s, ...)
-
-            const url2 = `https://judge0-ce.p.rapidapi.com/submissions/${token}?base64_encoded=true&fields=*`;
-            const options2 = {
-                method: 'GET',
-                headers: {
-                    'x-rapidapi-key': process.env.JUDGE_APIKEY,
-                    'x-rapidapi-host': 'judge0-extra-ce.p.rapidapi.com',
-                    'Content-Type': 'application/json'
-                }
-            };
-            const response2 = await fetch(url2, options2)
-
-            if (!response2.ok) {
-                throw new Error(`Failed to get submission status: ${response2.statusText}`);
+        // Compare each element
+        for (let i = 0; i < arr1.length; i++) {
+            if (arr1[i] !== arr2[i]) {
+                return false;
             }
-
-            const resultData = await response2.json();
-            statusId = resultData.status?.id;
-
-            console.log(`[${new Date().toISOString()}] Polling Status ID: ${statusId}`);
-
-            if (statusId !== 1 && statusId !== 2) {
-                return {
-                    stdout: StrategyPipeline.decodeBase64(resultData.stdout) || '',
-                    stderr: StrategyPipeline.decodeBase64(resultData.stderr) || '',
-                    // compile_output: resultData.compile_output || '',
-                    // message: resultData.message || ''
-                };
-            }
-
-            attempt++;
         }
 
-        const fullResult = await response.json();
-        console.log(fullResult);
-        let { stdout, stderr } = fullResult;
-
-        if (!stdout) stdout = '';
-        if (!stderr) stderr = '';
-
-        return { stdout, stderr };
-    }
-
-    private static decodeBase64(base64String: string | null): string {
-        if (!base64String) return ''; // Handle empty/null cases
-        return Buffer.from(base64String, 'base64').toString('utf-8');
-    }
-
-    private static async judge0_post(mainFileContent: string) {
-
-        const url = 'https://judge0-extra-ce.p.rapidapi.com/submissions?base64_encoded=false&wait=true&fields=*';
-        const options = {
-            method: 'POST',
-            headers: {
-                'x-rapidapi-key': process.env.JUDGE_APIKEY,
-                'x-rapidapi-host': 'judge0-extra-ce.p.rapidapi.com',
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify({
-                language_id: 25,
-                source_code: mainFileContent
-            })
-        };
-
-        const response = await fetch(url, options);
-        if (!response.ok) {
-            throw new HttpError(503, `In Executing Code, Unable to make that request: ${response.statusText}`);
-        }
-
-        const fullResult = await response.json();
-        console.log(fullResult);
-        let { stdout, stderr } = fullResult;
-
-        if (!stdout) stdout = '';
-        if (!stderr) stderr = '';
-
-        return { stdout, stderr };
-    }
-
-    private static main_py(code: string, uniqueKey: string, toEmbedInMain: any, startDate: string): string {
-
-        const dateToCompare = new Date(startDate).getTime() / 1000;
-
-        const m =
-
-            `${code}
-
-import json
-import pandas as pd
-
-jsonCodeUnformatted = '${JSON.stringify(toEmbedInMain)}'
-jsonCodeFormatted = json.loads(jsonCodeUnformatted)
-
-df = pd.DataFrame(jsonCodeFormatted)
-initHeight = df.shape[0]
-
-df = strategy(df)
-
-if not isinstance(df, pd.DataFrame):
-    raise Exception("You must return a dataframe from your strategy.")
-
-df.columns = df.columns.str.lower()
-
-if 'signal' not in df.columns:
-    raise Exception("There is no 'signal' column in the table.")
-
-if (df.columns == 'signal').sum() > 1:
-    raise Exception("There are two or more 'signal' columns in the table.")
-
-if df['signal'].empty:
-    raise Exception("'signal' column is empty.")
-
-if not df.index.is_unique:
-    raise Exception("Table index is not unique.")
-
-if df.shape[0] != initHeight:
-    raise Exception("The height of the dataframe has changed upon applying your strategy.")
-
-df = df[df['timestamp'] >= ${dateToCompare}]
-
-df['signal'] = df['signal'].fillna(method='ffill').fillna(0)
-signalToReturn = df[['signal']].round(3).to_dict('list')
-
-colsToExclude = {"open", "close", "high", "low", "volume", "timestamp", "signal"}
-
-middleOutput = {
-    "result": signalToReturn,
-    "data": df.loc[:, ~df.columns.isin(colsToExclude)].fillna(0).round(3).to_dict('list')
-}
-
-output = "${uniqueKey}START${uniqueKey}" + json.dumps(middleOutput) + "${uniqueKey}END${uniqueKey}"
-print(output)`;
-
-        return m;
-    }
-
-    private static async zipFiles(codeToEmbed: string) {
-        try {
-            const zipPath = path.join(process.cwd(), 'output.zip');
-            const output = await fs.open(zipPath, 'w');
-            const archive = archiver('zip', { zlib: { level: 9 } });
-
-            archive.pipe(output.createWriteStream());
-
-            // Create the dynamically generated file (e.g., strategy.py)
-            const textFilePath = path.join(process.cwd(), 'strategy.py');
-            await fs.writeFile(textFilePath, codeToEmbed); // Write the string content to file
-            archive.file(textFilePath, { name: 'strategy.py' }); // Add to zip
-
-            // Add additional files
-            const additionalFilesPath = path.join(process.cwd());
-            const files = await fs.readdir(additionalFilesPath);
-
-            for (const file of files) {
-                const filePath = path.join(additionalFilesPath, file);
-                archive.file(filePath, { name: file });
-            }
-
-            await archive.finalize();
-            output.close();
-
-            // Read the ZIP file and encode in Base64
-            const zipBuffer = await fs.readFile(zipPath);
-            const zipBase64 = zipBuffer.toString('base64');
-
-            return zipBase64;
-        } catch (error) {
-            console.error("Error creating Base64 ZIP:", error);
-        }
+        return true;
     }
 }
 

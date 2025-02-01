@@ -14,7 +14,6 @@ export default function LandingPage() {
         <Hero />
         <Workflow />
         <Features features={features} />
-        {/* <Testimonials testimonials={testimonials} /> */}
         <FAQ faqs={faqs} />
       </main>
     </div>

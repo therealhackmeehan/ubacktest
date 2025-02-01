@@ -187,9 +187,10 @@ function LinePlot({ strategyResult, costPerTrade, minDate }: LinePlotProps) {
     }
 
     return (
-        <div className='col-span-3 bg-slate-50'>
+        <>
             <Line data={chartData} options={options} />
-        </div>
+            <div className="w-full border-1 h-1 bg-white"></div>
+        </>
     )
 }
 

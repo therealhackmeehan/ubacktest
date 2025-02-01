@@ -22,6 +22,7 @@ const editorOpts = {
         bottom: 10
     },
     automaticLayout: true,
+    scrollBeyondLastLine: false,
 }
 
 interface MonacoEditorProps {
@@ -111,7 +112,7 @@ function MonacoEditor({ codeToDisplay, setCodeToDisplay }: MonacoEditorProps) {
     }
 
     return (
-        <>
+        <div className="h-5/6">
             {errMsg && <ErrorModal msg={errMsg} closeModal={() => setErrMsg('')} />}
 
             <div className="flex text-xs justify-start border-b-2 border-black">
@@ -134,8 +135,8 @@ function MonacoEditor({ codeToDisplay, setCodeToDisplay }: MonacoEditorProps) {
                     <BsQuestionOctagon />Examples
                 </button>
             </div>
-                <Editor className="invert hue-rotate-180" defaultLanguage='python' theme="vs-dark" value={codeToDisplay} onChange={handleEditorChange} options={editorOpts}
-                    loading={(<div className="text-white font-2xl tracking-tight">Loading...</div>)} />
+            <Editor className="invert hue-rotate-180" defaultLanguage='python' theme="vs-dark" value={codeToDisplay} onChange={handleEditorChange} options={editorOpts}
+                loading={(<div className="text-white font-2xl tracking-tight">Loading...</div>)} />
             {packagesModalOpen &&
                 <PackagesModal closeModal={() => setPackagesModalOpen(false)} />
             }
@@ -143,7 +144,7 @@ function MonacoEditor({ codeToDisplay, setCodeToDisplay }: MonacoEditorProps) {
             {examplesModalOpen &&
                 <ExamplesModal onSuccess={onSuccess} closeModal={() => setExamplesModalOpen(false)} />
             }
-        </>
+        </div>
     )
 }
 

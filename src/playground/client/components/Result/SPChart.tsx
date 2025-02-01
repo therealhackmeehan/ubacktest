@@ -38,7 +38,7 @@ function SPChart({ strategyResult }: { strategyResult: StrategyResultProps }) {
                     data: strategyResult.timestamp.map((timestamp: number, index: number) => ({
                         x: new Date(timestamp * 1000), // Use Date object for x
                         y: strategyResult.portfolio[index], // Corresponding y value
-                    })), 
+                    })),
                     borderColor: 'rgba(255, 0, 100, 1)',
                     backgroundColor: 'rgba(255, 0, 100, 1)',
                     pointRadius: 0,
@@ -49,7 +49,7 @@ function SPChart({ strategyResult }: { strategyResult: StrategyResultProps }) {
                     data: strategyResult.timestamp.map((timestamp: number, index: number) => ({
                         x: new Date(timestamp * 1000), // Use Date object for x
                         y: strategyResult.sp[index], // Corresponding y value
-                    })), 
+                    })),
                     borderColor: 'rgba(123, 50, 168, 1)',
                     pointRadius: 0,
                     borderWidth: 1,
@@ -63,9 +63,7 @@ function SPChart({ strategyResult }: { strategyResult: StrategyResultProps }) {
     const options = {
         responsive: true,
         aspectRatio: 2 / 1,
-        animation: {
-            duration: 0,
-        },
+
         layout: {
             padding: 20,
         },
@@ -101,7 +99,12 @@ function SPChart({ strategyResult }: { strategyResult: StrategyResultProps }) {
         return <div className='w-full mt-4 text-center text-xl tracking-tight'>Loading...</div>;
     }
 
-    return <Line data={chartData} options={options} />;
+    return (
+        <div className="m-2">
+            <div className="text-lg tracking-tight font-bold text-sky-700">Did you beat the S&P 500?</div>
+            <Line data={chartData} options={options} />
+        </div>
+    );
 }
 
 export default SPChart;
