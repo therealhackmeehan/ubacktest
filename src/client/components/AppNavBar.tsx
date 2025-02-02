@@ -8,18 +8,7 @@ import { HiBars3 } from 'react-icons/hi2';
 import logo from '../static/logo.png';
 import DropdownUser from '../../user/DropdownUser';
 import { UserMenuItems } from '../../user/UserMenuItems';
-import { DocsUrl, BlogUrl } from '../../shared/common';
 import DarkModeSwitcher from './DarkModeSwitcher';
-
-const mainNavigation = [
-  { name: 'Strategy Editor', to: "/editor" },
-  { name: 'My Strategies', to: "/home" },
-];
-
-const subNavigation = [
-  { name: 'Documentation', to: DocsUrl },
-  { name: 'Pricing', to: "/pricing" },
-]
 
 const NavLogo = () => <img className='h-8 w-8' src={logo} alt='Your SaaS App' />;
 
@@ -29,7 +18,7 @@ export default function AppNavBar() {
   const { data: user, isLoading: isUserLoading } = useAuth();
   return (
     <header className='bg-white bg-opacity-50 backdrop-blur-lg backdrop-filter dark:border dark:border-gray-100/10 dark:bg-boxdark-2'>
-      <nav className='flex items-center justify-between p-6 lg:px-8' aria-label='Global'>
+      <nav className='flex items-center justify-between p-5 lg:px-8' aria-label='Global'>
         <div className='flex lg:flex-1'>
           <Link to='/' className='-m-1.5 p-1.5'>
             <img className='h-8 w-8 invert -hue-rotate-15 saturate-50' src={logo} alt='My SaaS App' />
@@ -59,7 +48,7 @@ export default function AppNavBar() {
             My Strategies
           </Link>
         </div>
-        <div className='hidden lg:flex mx-12 border-r-2 py-4 border-black/80'></div>
+        <div className='hidden lg:flex mx-12 border-r-2 py-4 border-black/80 dark:border-white'></div>
         <div className='hidden lg:flex lg:gap-x-12 lg:mr-4'>
           <Link
             to={"/home"}
@@ -75,7 +64,7 @@ export default function AppNavBar() {
           </Link>
         </div>
         <div className='hidden lg:flex lg:flex-1 gap-3 justify-end items-center'>
-          <ul className='flex justify-center items-center gap-2 sm:gap-4'>
+          <ul className='flex justify-end items-center gap-2 sm:gap-4'>
             <DarkModeSwitcher />
           </ul>
 

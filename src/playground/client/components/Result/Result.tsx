@@ -147,6 +147,7 @@ function Result({ selectedStrategy, formInputs, strategyResult, abilityToSaveNew
 
                 {loading && <LoadingScreen />}
 
+                {/* header and top button row */}
                 <div id='topOfResultPanel' className='items-center flex p-2 justify-between border-b-2 border-black'>
                     <h4 className="tracking-tight text-xl text-slate-700 font-extrabold text-center">
                         Stock Data and Simulated Backtest Result for
@@ -157,7 +158,7 @@ function Result({ selectedStrategy, formInputs, strategyResult, abilityToSaveNew
                     <ResultButtonGroup saveResult={saveResult} saveAsPDF={saveAsPDF} abilityToSaveNew={abilityToSaveNew} symbol={formInputs.symbol} />
                 </div>
 
-
+                {/* Strategy result plot and some form inputs */}
                 <div className="m-8">
                     <div className="m-1 text-xl tracking-tight text-slate-400 hover:text-slate-800 font-bold">Hypothetical Growth of $1</div>
                     <div className="rounded-t-md border-2 border-slate-300">
@@ -186,6 +187,7 @@ function Result({ selectedStrategy, formInputs, strategyResult, abilityToSaveNew
                     <FormInputHeader formInputs={formInputs} />
                 </div>
 
+                {/* Stats and Data Table of All Trades */}
                 <div className="grid grid-cols-3 gap-x-6 justify-stretch m-8">
                     {stats && <MainStatistics stats={stats} />}
                     <div className="col-span-2 bg-slate bg-slate-100 rounded-sm border-2 border-slate-400 max-h-132.5 overflow-y-auto">
@@ -202,7 +204,7 @@ function Result({ selectedStrategy, formInputs, strategyResult, abilityToSaveNew
                     </div>
                 </div>
 
-
+                {/* Histogram of Charts */}
                 <div className="p-2 m-8 border-black border-2 rounded-lg bg-slate-100">
                     {stats && <DistributionOfReturns stockDataReturns={strategyResult.returns} mean={stats.meanReturn} stddev={stats.stddevReturn} max={stats.maxReturn} min={stats.minReturn} />}
                 </div>
@@ -215,6 +217,7 @@ function Result({ selectedStrategy, formInputs, strategyResult, abilityToSaveNew
                     </div>
                 }
 
+                {/* Footer of buttons */}
                 <div className="flex justify-between m-2 pb-8">
                     <button className="flex p-2 rounded-md hover:bg-slate-100"
                         onClick={() => document.getElementById('topOfResultPanel')?.scrollIntoView({ behavior: 'smooth' })}>

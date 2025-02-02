@@ -2,21 +2,9 @@ import { FormInputProps } from "../../../../shared/sharedTypes";
 
 function FormInputHeader({ formInputs }: { formInputs: FormInputProps }) {
 
-    const convertToZeroHours = (val: string): string => {
-        const d = new Date(val);
-        d.setHours(0, 0, 0, 0);
-        return d.toLocaleDateString() + ', ' + d.toLocaleTimeString();
-    }
-
     return (
         <div className="flex justify-between bg-slate-100 p-2 rounded-b-lg border-slate-300 border-x-2 border-b-2 text-sm">
             <div className="p-2">
-                <div className="font-extralight flex justify-between items-center">
-                    started <span className="font-bold tracking-tight text-slate-700 px-2">{convertToZeroHours(formInputs.startDate)}</span>
-                </div>
-                <div className="font-extralight flex justify-between items-center">
-                    ended <span className="font-bold tracking-tight text-slate-700 px-2">{convertToZeroHours(formInputs.endDate)}</span>
-                </div>
                 <div className="font-extralight flex justify-between items-center">
                     started <span className="font-bold tracking-tight text-slate-700 px-2">{formInputs.startDate}</span>
                 </div>

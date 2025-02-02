@@ -28,12 +28,12 @@ function StrategyOverview({ strategy }: { strategy: Strategy }) {
                 to={"/home"}>
                 <MdArrowBack /> back to strategies
             </Link>
-            <div className="flex justify-between items-end m-2">
-                <div className="text-6xl tracking-tight font-bold">
+            <div className="lg:flex justify-between items-end m-2">
+                <div className="text-3xl lg:text-6xl tracking-tight font-bold">
                     <span className="text-sm mr-3 text-sky-600">strategy</span>{nameToDisplay}<span className="text-sky-600">.</span>
                 </div>
 
-                <div>
+                <div className="text-end">
                     <button className='hover:text-slate-500' onClick={() => setRenameModalOpen(true)}>
                         <MdOutlineEdit size='2rem' />
                     </button>

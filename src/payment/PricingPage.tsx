@@ -20,7 +20,7 @@ export const paymentPlanCards: Record<PaymentPlanId, PaymentPlanCard> = {
     name: prettyPaymentPlanName(PaymentPlanId.Hobby),
     price: '$6.99',
     description: 'All you need to get started',
-    features: ['Unlimited Monthly Usage', 'Up to 1d Trading Frequency'],
+    features: ['Unlimited Monthly Usage', 'Up to 1 day Trading Frequency'],
   },
   [PaymentPlanId.Pro]: {
     name: prettyPaymentPlanName(PaymentPlanId.Pro),
@@ -30,9 +30,9 @@ export const paymentPlanCards: Record<PaymentPlanId, PaymentPlanCard> = {
   },
   [PaymentPlanId.Credits10]: {
     name: prettyPaymentPlanName(PaymentPlanId.Credits10),
-    price: '$0.00',
-    description: 'Get 10 Free Backtests /Month',
-    features: ['Save/test up to 3 trading strategies', 'Up to 1 day trading frequency'],
+    price: '$.99',
+    description: '10 Successful Backtests',
+    features: ['"Pay as you go" pricing model', 'Up to 1 day trading frequency'],
   },
 };
 

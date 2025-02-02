@@ -224,9 +224,9 @@ class StrategyPipeline {
 
         const startOfDay = (dateStr: string) => {
             const date = new Date(dateStr);
-            if (!["1m", "2m"].includes(this.formInputs.intval)) {
-                date.setHours(0, 0, 0, 0);
-            }
+            // if (!["1m", "2m"].includes(this.formInputs.intval)) {
+            //     date.setHours(0, 0, 0, 0);
+            // }
             return Math.floor(date.getTime() / 1000);
         };
 

@@ -14,7 +14,7 @@ export function StrategyDropDown({ strategy }: { strategy: Strategy }) {
     return (
         <li key={strategy.id}
             className='border-t-2 border-gray-100 p-3 transition-all duration-[500ms]'>
-            <div className='flex justify-between'>
+            <div className='md:flex justify-between'>
                 <div className='flex gap-x-2 items-center'>
                     <Link
                         className="font-bold text-xl tracking-tight text-gray-900 hover:text-gray-500 hover:scale-110 hover:cursor-pointer"

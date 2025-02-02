@@ -117,7 +117,7 @@ function DataTable({ strategyResult }: { strategyResult: StrategyResultProps }) 
                             <span className="hidden group-hover:inline">{sortedData.portfolio[index].toFixed(4)}</span>
                         </td>
                             <td
-                                className="text-lg tracking-tight"
+                                className="text-sm tracking-tight"
                                 style={{
                                     background: getColor(sortedData.returns[index]), // Dynamic color
                                 }}
