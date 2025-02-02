@@ -1,6 +1,16 @@
-import { ReactNode } from "react";
+import { ReactNode, useEffect } from "react";
 
 function ModalLayout({ children }: { children: ReactNode }) {
+    useEffect(() => {
+        // Disable scrolling when modal is open
+        document.body.style.overflow = "hidden";
+
+        return () => {
+            // Re-enable scrolling when modal is closed
+            document.body.style.overflow = "";
+        };
+    }, []);
+
     return (
         <div className="fixed inset-0 flex items-center justify-center z-50">
             <div className="bg-gray-800 w-full opacity-50 fixed inset-0"></div>
@@ -9,6 +19,6 @@ function ModalLayout({ children }: { children: ReactNode }) {
             </div>
         </div>
     );
-};
+}
 
 export default ModalLayout;

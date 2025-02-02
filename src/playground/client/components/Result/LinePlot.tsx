@@ -1,6 +1,8 @@
 import { Line } from 'react-chartjs-2';
 import { useState, useEffect } from 'react';
 import 'chartjs-adapter-date-fns';
+import zoomPlugin from 'chartjs-plugin-zoom';
+import { StrategyResultProps } from '../../../../shared/sharedTypes';
 
 import {
     Chart as ChartJS,
@@ -13,7 +15,6 @@ import {
     Legend,
     TimeSeriesScale,
 } from 'chart.js';
-import { StrategyResultProps } from '../../../../shared/sharedTypes';
 
 ChartJS.register(
     CategoryScale,
@@ -24,6 +25,7 @@ ChartJS.register(
     Tooltip,
     Legend,
     TimeSeriesScale,
+    zoomPlugin,
 );
 
 interface LinePlotProps {
@@ -133,6 +135,17 @@ function LinePlot({ strategyResult, costPerTrade, minDate }: LinePlotProps) {
         plugins: {
             legend: {
                 position: 'top' as const,
+            },
+            zoom: {
+                zoom: {
+                    wheel: {
+                        enabled: true,
+                    },
+                    pinch: {
+                        enabled: true
+                    },
+                    mode: 'xy' as const,
+                },
             },
         },
         scales: {

@@ -95,6 +95,11 @@ export default function EditorPage() {
 
     }, [strategies, isStrategiesLoading]);
 
+    const setToAlternateWidth = () => {
+        const widthToSet = (width === 0) ? defaultWidth : 0;
+        setWidth(widthToSet);
+    }
+
     return (
 
         <div className='w-full h-screen grid grid-cols-[min-content_auto] border-t-2 border-black'>
@@ -113,6 +118,7 @@ export default function EditorPage() {
                         isResized.current = true;
                         document.body.style.userSelect = "none";
                     }}
+                    onClick={setToAlternateWidth}
                 >
                     <BsThreeDotsVertical className="justify-self-center h-full py-auto" />
                 </div>

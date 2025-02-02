@@ -11,15 +11,15 @@ export interface stdProps {
     err: string;
 }
 
-function addMonths(date: Date, months: number): string {
+export function addMonths(date: Date, months: number): string {
     const newDate = new Date(date);
     newDate.setMonth(newDate.getMonth() + months);
     newDate.setHours(0, 0, 0, 0);
     return newDate.toISOString().slice(0,10);
 }
 
-const initFormInputs: FormInputProps = {
-    symbol: 'aapl',
+export const initFormInputs: FormInputProps = {
+    symbol: 'AAPL',
     startDate: addMonths(new Date(), -12), // 12 months ago
     endDate: addMonths(new Date(), -6), // 6 months ago
     intval: '1d',

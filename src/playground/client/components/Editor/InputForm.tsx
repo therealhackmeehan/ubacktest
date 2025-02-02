@@ -1,15 +1,22 @@
 import { FaCaretDown, FaCaretUp } from "react-icons/fa";
-import React, { useState, useCallback } from "react";
+import React, { useState, useRef, useEffect } from "react";
 import { FormInputProps } from "../../../../shared/sharedTypes";
 import stocks from './stocks';
 import { IoMdReturnRight } from "react-icons/io";
 import { CgArrowUp } from "react-icons/cg";
+import { GiInvertedDice5 } from "react-icons/gi";
+import { BiReset } from "react-icons/bi";
+import { initFormInputs } from "../StrategyEditor";
+import { addMonths } from "../StrategyEditor";
+import { VscGrabber } from "react-icons/vsc";
 
 interface InputFormSubcomponentProps {
     formInputs: FormInputProps;
     setFormInputs: (value: any) => void;
     run: (value: any) => Promise<void>;
 }
+
+const LOCAL_STORAGE_KEY = "inputFormHeight";
 
 function InputForm({ formInputs, setFormInputs, run }: InputFormSubcomponentProps) {
 
@@ -76,42 +83,101 @@ function InputForm({ formInputs, setFormInputs, run }: InputFormSubcomponentProp
         setMatches([]);
     };
 
-    // const [position, setPosition] = useState({ x: 0, y: 0 });
-    // const [isDragging, setIsDragging] = useState(false);
+    const randomFormInputs = () => {
+        const randomStock = stocks[Math.floor(Math.random() * stocks.length)];
 
-    // const startDrag = (e) => {
-    //     if (!expanded) {
-    //         setIsDragging(true);
-    //     }
-    // };
+        // Generate two random numbers between 0 and 24
+        const startOffset = Math.floor(Math.random() * 25);
+        const endOffset = Math.floor(Math.random() * 25);
 
-    // const stopDrag = () => {
-    //     setIsDragging(false);
-    // };
+        // Ensure start date is before end date
+        const [newStartOffset, newEndOffset] = startOffset > endOffset
+            ? [startOffset, endOffset]
+            : [endOffset, startOffset];
 
-    // const onDrag = useCallback(
-    //     (e) => {
-    //         if (!isDragging || expanded) return;
+        const today = new Date();
+        const newStartDate = formatDate(addMonths(today, -newStartOffset), useDatetimeLocal);
+        const newEndDate = formatDate(addMonths(today, -newEndOffset), useDatetimeLocal);
+        const newWarmupDate = formatDate(addMonths(new Date(newStartDate), -1), useDatetimeLocal);
 
-    //         const newX = e.clientX - e.target.offsetWidth / 2;
-    //         const newY = e.clientY - e.target.offsetHeight / 2;
-    //         setPosition({ x: newX, y: newY });
-    //     },
-    //     [isDragging, expanded]
-    // );
+        setFormInputs({
+            ...formInputs,
+            symbol: randomStock["symbol"],
+            startDate: newStartDate,
+            endDate: newEndDate,
+            warmupDate: newWarmupDate,
+        });
+    };
+
+    const resetFormInputs = () => {
+        setUseDatetimeLocal(false);
+        setFormInputs(initFormInputs);
+    }
+
+    const [position, setPosition] = useState<{ y: number }>(() => {
+        const savedPosition = localStorage.getItem(LOCAL_STORAGE_KEY);
+        return savedPosition ? JSON.parse(savedPosition) : { y: 0 };
+    });
+    const [isDragging, setIsDragging] = useState(false);
+    const offset = useRef({ y: 0 });
+
+    useEffect(() => {
+        localStorage.setItem('inputFormHeight', JSON.stringify(position))
+    }, [position])
+
+    const handleMouseDown = (e: React.MouseEvent) => {
+        setIsDragging(true);
+        offset.current = {
+            y: e.clientY - position.y,
+        };
+    };
+    
+    const handleMouseMove = (e: MouseEvent) => {
+        if (!isDragging) return;
+    
+        const elementHeight = 100; // Set this to the actual height of your draggable component
+        const newY = e.clientY - offset.current.y;
+    
+        // Clamp the position to stay within the viewport
+        const clampedY = Math.max(0, Math.min(newY, window.innerHeight - elementHeight));
+    
+        setPosition({ y: clampedY });
+    };
+    
+
+    const handleMouseUp = () => {
+        setIsDragging(false);
+    };
+
+    useEffect(() => {
+        if (isDragging) {
+            document.addEventListener("mousemove", handleMouseMove);
+            document.addEventListener("mouseup", handleMouseUp);
+        } else {
+            document.removeEventListener("mousemove", handleMouseMove);
+            document.removeEventListener("mouseup", handleMouseUp);
+        }
+        return () => {
+            document.removeEventListener("mousemove", handleMouseMove);
+            document.removeEventListener("mouseup", handleMouseUp);
+        };
+    }, [isDragging]);
+
+    useEffect(() => {
+        localStorage.setItem(LOCAL_STORAGE_KEY, JSON.stringify(position));
+    }, [position]);
 
     return (
         <div
-            className="z-10 flex border-2 border-black flex-col shadow-lg justify-between right-0 rounded-lg fixed bg-gradient-to-br from-white to-slate-100 my-16 mr-12 p-4"
-            // style={{
-            //     top: expanded ? '300px' : position.y,  // Change '50px' to your default position when expanded
-            //     left: expanded ? '600px' : position.x,  // Same for the left value
-            //     cursor: isDragging && !expanded ? 'grabbing' : 'grab',
-            // }}
-            // onMouseDown={startDrag}
-            // onMouseUp={stopDrag}
-            // onMouseMove={onDrag}
+            className="z-10 flex border-2 border-black flex-col shadow-lg justify-between rounded-lg fixed bg-gradient-to-br from-white to-slate-100 p-4"
+            style={{ right: "3rem", top: `${position.y}px`, position: "fixed", cursor: isDragging ? "grabbing" : "default" }}
         >
+            <button
+                className="rounded-md -mt-3 mb-1 hover:cursor-grab active:cursor-grabbing"
+                onMouseDown={handleMouseDown}
+            >
+                <VscGrabber className="justify-self-center" />
+            </button>
             <div className="space-y-3 overflow-auto px-1">
                 <div className="flex justify-between items-center gap-x-4 overflow-hidden">
                     <button
@@ -159,7 +225,7 @@ function InputForm({ formInputs, setFormInputs, run }: InputFormSubcomponentProp
                         </ul>
                     )}
 
-                    <div className='flex items-center justify-between gap-3'>
+                    <div className='flex items-center justify-between gap-12'>
                         <div className="tracking-tight text-xs font-bold">
                             Start Date
                         </div>
@@ -172,7 +238,7 @@ function InputForm({ formInputs, setFormInputs, run }: InputFormSubcomponentProp
                         />
 
                     </div>
-                    <div className='flex items-center justify-between gap-3'>
+                    <div className='flex items-center justify-between gap-12'>
                         <div className="tracking-tight text-xs font-bold">
                             End Date
                         </div>
@@ -184,7 +250,7 @@ function InputForm({ formInputs, setFormInputs, run }: InputFormSubcomponentProp
                             name="endDate"
                         />
                     </div>
-                    <div className='flex items-center justify-between gap-3'>
+                    <div className='flex items-center justify-between gap-12'>
                         <div className="tracking-tight text-xs font-bold">
                             Trading Frequency
                         </div>
@@ -208,6 +274,18 @@ function InputForm({ formInputs, setFormInputs, run }: InputFormSubcomponentProp
                             <option value="3mo">3mo</option>
                         </select>
                     </div>
+
+                    <div className="flex text-xs bg-gradient-to-r from-white to-sky-700 rounded-md border-2 border-sky-700">
+                        <button className="w-full rounded-l-md p-0.5 flex gap-x-1 items-center justify-center hover:bg-slate-50 group"
+                            onClick={randomFormInputs}>
+                            random <GiInvertedDice5 className="group-hover:rotate-180 duration-500" />
+                        </button>
+                        <button className="w-full border-l-2 border-sky-700 text-white rounded-r-md p-0.5 flex gap-x-1 items-center justify-center hover:bg-slate-50 group hover:text-black"
+                            onClick={resetFormInputs}>
+                            reset <BiReset className="group-hover:rotate-180 duration-500" />
+                        </button>
+                    </div>
+
                     <button className="flex hover:font-bold items-center justify-self-center text-xs text-sky-700"
                         onClick={() => setDisplayAdvancedOptions(!displayAdvancedOptions)}>
                         advanced options
@@ -216,7 +294,7 @@ function InputForm({ formInputs, setFormInputs, run }: InputFormSubcomponentProp
 
                     {displayAdvancedOptions &&
                         <>
-                            <div className="space-y-1 border-2 border-slate-800 bg-slate-100 rounded-md p-2">
+                            <div className="space-y-1 border-2 border-white bg-slate-100 rounded-md p-2">
                                 <div className='flex items-center justify-between gap-3'>
                                     <div className="tracking-tight text-xs font-light">
                                         Execute Trade @
@@ -255,7 +333,7 @@ function InputForm({ formInputs, setFormInputs, run }: InputFormSubcomponentProp
                                     </div>
                                 </div>
                             </div>
-                            <div className="space-y-1 border-2 border-slate-800 bg-slate-200 rounded-md p-2">
+                            <div className="space-y-1 border-2 border-white bg-slate-200 rounded-md p-2">
                                 <div className="flex py-2 items-center justify-between gap-3">
                                     <div className="tracking-tight text-xs font-light">
                                         Include "Warm-Up" Period
@@ -291,13 +369,16 @@ function InputForm({ formInputs, setFormInputs, run }: InputFormSubcomponentProp
                             </div>
                         </>}
                 </>}
+
             </div>
             {expanded &&
                 <button onClick={run}
-                    className="gap-x-2 mt-12 flex justify-center items-center bg-sky-700 text-white justify-self-center w-full text-xl font-extrabold tracking-tight border-2 border-gray-800 rounded-lg hover:bg-sky-600"
+                    className="gap-x-2 mt-14 flex justify-center items-center bg-sky-700 text-white justify-self-center w-full text-xl font-extrabold tracking-tight border-2 border-gray-800 rounded-lg hover:bg-sky-600 group"
                 >
-                    GO
-                    <IoMdReturnRight />
+                    <div className="group-hover:translate-x-3 duration-700">
+                        GO
+                    </div>
+                    <IoMdReturnRight className="group-hover:translate-x-full group-hover:opacity-0 duration-1000" />
                 </button>
             }
         </div>

@@ -45,7 +45,7 @@ function StrategyCodeGen({ code }: { code: string | null }) {
                 <div>
                     <div className="text-sm font-extrabold tracking-tight text-sky-700 text-start">Stock To Trade</div>
                     <input
-                        className="rounded-lg w-full text-xs"
+                        className="rounded-lg w-full text-xs shadow-lg"
                         type='text'
                         value={symbol}
                         onChange={(e) => setSymbol(e.currentTarget.value)}
@@ -53,7 +53,7 @@ function StrategyCodeGen({ code }: { code: string | null }) {
                 </div>
 
                 <div className="md:flex gap-x-4">
-                    <div>
+                    {/* <div>
                         <div className="text-sm font-bold text-center">Trading Frequency</div>
                         <select
                             className="rounded-lg w-full text-xs"
@@ -71,12 +71,12 @@ function StrategyCodeGen({ code }: { code: string | null }) {
                             <option value="ytd">ytd</option>
                             <option value="max">max</option>
                         </select>
-                    </div>
+                    </div> */}
 
                     <div>
-                        <div className="text-sm font-bold text-center">Number of Timepoints To Include</div>
+                        <div className="text-sm font-bold text-center">Approx. Lookback Period</div>
                         <input
-                            className="rounded-lg w-full text-xs"
+                            className="rounded-lg w-full text-xs shadow-lg"
                             type='number'
                             value={daysBackToTest}
                             onChange={(e) => setDaysBackToTest(e.currentTarget.valueAsNumber)}
@@ -86,7 +86,7 @@ function StrategyCodeGen({ code }: { code: string | null }) {
                     <div>
                         <div className="text-sm font-bold text-center">Use Real Money</div>
                         <select
-                            className="rounded-lg w-full text-xs"
+                            className="rounded-lg w-full text-xs shadow-lg"
                             value={realMoney}
                             onChange={(e) => setRealMoney(e.currentTarget.value)}
                         >
@@ -108,20 +108,20 @@ function StrategyCodeGen({ code }: { code: string | null }) {
                     <a
                         type='button'
                         ref={linkRef}
-                        className="flex px-3 py-1 items-center text-center tracking-tight text-white hover:bg-slate-800 hover:font-bold"
+                        className="flex px-3 py-1 items-center text-center tracking-tight text-white hover:bg-slate-800 hover:font-bold duration-700"
                     > download
                     </a>
                     <button
                         type='button'
                         onClick={() => copyToClipboard(generatedCode)} // Keep the existing button functionality
-                        className="flex px-3 py-1 items-center text-center tracking-tight text-white hover:bg-slate-800 hover:font-bold"
+                        className="flex px-3 py-1 items-center text-center tracking-tight text-white hover:bg-slate-800 hover:font-bold duration-700"
                     > copy
                     </button>
                 </div>
                 <Editor
                     className="invert hue-rotate-180 hover:hue-rotate-15"
                     options={miniEditorOpts}
-                    height="22vh"
+                    height={generatedCode ? "40vh" : "12vh"}
                     defaultLanguage='python'
                     theme="vs-dark"
                     value={generatedCode || '# Generated code will appear here (:'}

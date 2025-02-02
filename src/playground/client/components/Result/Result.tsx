@@ -161,9 +161,7 @@ function Result({ selectedStrategy, formInputs, strategyResult, abilityToSaveNew
                 {/* Strategy result plot and some form inputs */}
                 <div className="m-8">
                     <div className="m-1 text-xl tracking-tight text-slate-400 hover:text-slate-800 font-bold">Hypothetical Growth of $1</div>
-                    <div className="rounded-t-md border-2 border-slate-300">
-                        <LinePlot strategyResult={strategyResult} costPerTrade={formInputs.costPerTrade} minDate={minDate} />
-                    </div>
+                    <LinePlot strategyResult={strategyResult} costPerTrade={formInputs.costPerTrade} minDate={minDate} />
                     {(strategyResult.userDefinedData && Object.keys(strategyResult.userDefinedData).length > 0) && (
                         <div className="border-x-2 border-b-2 bg-white border-slate-300">
                             <button
