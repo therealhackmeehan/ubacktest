@@ -132,8 +132,8 @@ export default function DistributionOfReturns({ stockDataReturns, mean, stddev, 
     };
 
     return (
-        <div className="m-2">
-            <div className="flex justify-between items-center">
+        <>
+            <div className="m-2 shadow-sm flex justify-between items-center">
                 <div className="text-lg tracking-tight font-bold">Distribution of Returns</div>
                 <div className="flex justify-items-center gap-x-2">
                     {max && <div className="text-xs p-1 bg-white rounded-md font-light hover:border-2 border-slate-200 duration-100">
@@ -151,6 +151,6 @@ export default function DistributionOfReturns({ stockDataReturns, mean, stddev, 
                 </div>
             </div>
             <Bar data={returnsChartData} options={options} />
-        </div>
+        </>
     );
 }

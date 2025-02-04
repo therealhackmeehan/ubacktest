@@ -73,7 +73,7 @@ function DataTable({ strategyResult }: { strategyResult: StrategyResultProps }) 
 
     return (
         <table className="w-full">
-            <thead className="tracking-tight text-gray-700 bg-slate-200">
+            <thead className="tracking-tight text-sm text-gray-700 bg-slate-200">
                 <tr>
                     <TableHead column="date" label="Date" handleSort={handleSort} />
                     <TableHead column="signal" label="Buy/Short/Hold Signal" handleSort={handleSort} />
@@ -94,7 +94,7 @@ function DataTable({ strategyResult }: { strategyResult: StrategyResultProps }) 
                         <td className="font-bold">
                             {sortedData.signal[index]}
                             <span
-                                className="text-xs text-slate-400 mx-4 opacity-0 group-hover:opacity-100 transition-opacity duration-100"
+                                className="text-xs text-slate-400 hidden transition-opacity duration-500"
                             >(
                                 {sortedData.signal[index] >= -1 && sortedData.signal[index] < -0.7
                                     ? "strong short"

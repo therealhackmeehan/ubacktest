@@ -3,7 +3,7 @@ import { FormInputProps } from "../../../../shared/sharedTypes";
 function FormInputHeader({ formInputs }: { formInputs: FormInputProps }) {
 
     return (
-        <div className="flex justify-between bg-slate-100 p-1 mt-1 rounded-lg border-slate-300 border-2 text-xs">
+        <div className="flex justify-between bg-slate-100 p-1 mt-1 rounded-lg text-xs shadow-sm">
             <div className="p-2">
                 <div className="font-extralight flex justify-between items-center">
                     started <span className="font-bold tracking-tight text-slate-700 px-2">{formInputs.startDate}</span>

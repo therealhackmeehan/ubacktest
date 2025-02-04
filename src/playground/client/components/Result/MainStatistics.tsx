@@ -3,8 +3,8 @@ import { StatProps } from "../../scripts/calculateStats";
 function MainStatistics({ stats }: { stats: StatProps }) {
 
     return (
-        <div className="p-4 col-span-1 bg-slate-100 rounded-lg">
-            <div className='font-extrabold mb-2 text-xl text-start tracking-tight p-2 rounded-lg border-black border-2 bg-white'>
+        <div className="p-4 col-span-1 bg-slate-100 rounded-lg shadow-sm">
+            <div className='font-extrabold mb-2 text-xl text-start tracking-tight p-2 rounded-lg bg-white'>
                 Stats
             </div>
             <Stat text={'# of timepoints'} stat={stats.length} />

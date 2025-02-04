@@ -22,7 +22,7 @@ export default function EditorPage() {
     const { data: strategies, isLoading: isStrategiesLoading } = useQuery(getStrategies);
     const hasLoadedInitial = useRef(false); // To track whether we've already loaded the data
 
-    const [minWidth, maxWidth, defaultWidth] = [100, 600, 300];
+    const [minWidth, maxWidth, defaultWidth] = [100, 600, 200];
     const [width, setWidth] = useState<number>(() => {
         const savedWidth = localStorage.getItem("sidebarWidth");
         return savedWidth ? JSON.parse(savedWidth) : defaultWidth;

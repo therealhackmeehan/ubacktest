@@ -42,7 +42,7 @@ export default function ResultButtonGroup({ saveResult, saveAsPDF, abilityToSave
                 <FiDownload /> download PDF
             </button>
 
-            <button className='flex gap-x-2 items-center p-2 m-1 tracking-tight bg-slate-700 hover:bg-slate-900 rounded-md text-white'
+            <button className='flex gap-x-2 items-center p-2 m-1 tracking-tight bg-sky-700 hover:bg-slate-900 rounded-md text-white'
                 onClick={loadEmail}>
                 <FiShare /> share
             </button>

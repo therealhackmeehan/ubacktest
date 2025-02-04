@@ -85,12 +85,15 @@ function SPChart({ strategyResult }: { strategyResult: StrategyResultProps }) {
                     },
                 },
                 grid: {
-                    color: ({ tick }) => tick.value == 1 ? 'rgba(100,100,100,.5)' : 'rgba(100,100,100,.05)',
+                    color: ({ tick }) => tick.value == 1 ? 'rgba(100,100,100,.5)' : 'rgba(100,100,100,0)',
                     lineWidth: 2,
                 },
             },
             x: {
                 type: 'timeseries' as const,
+                grid: {
+                    display: false,
+                }
             },
         },
     };

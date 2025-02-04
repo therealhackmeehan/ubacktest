@@ -63,7 +63,7 @@ function InputForm({ formInputs, setFormInputs, run }: InputFormSubcomponentProp
                 const filteredMatches = stocks
                     .filter((stock) =>
                         stock["symbol"].toLowerCase().startsWith(value.toLowerCase()) ||
-                        stock["name"].toLowerCase().includes(value.toLowerCase())
+                        stock["name"].toLowerCase().startsWith(value.toLowerCase())
                     )
                     .slice(0, 4);
                 setMatches(filteredMatches);

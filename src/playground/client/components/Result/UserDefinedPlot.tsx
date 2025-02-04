@@ -86,12 +86,6 @@ export default function UserDefinedPlot({ userDefinedData, timestamp }: UserDefi
         scales: {
             x: {
                 type: 'timeseries' as const,
-                ticks: {
-                    display: false,
-                },
-                grid: {
-                    display: false,
-                },
             },
         },
     };

@@ -15,6 +15,7 @@ import { useState, useRef, useEffect } from "react"
 import html2canvas from "html2canvas";
 import { jsPDF } from "jspdf";
 import LoadingScreen from "../../../../client/components/LoadingScreen"
+import CandlePlot from "./CandlePlot"
 
 interface ResultPanelProps {
     selectedStrategy: string | null;
@@ -160,18 +161,13 @@ function Result({ selectedStrategy, formInputs, strategyResult, abilityToSaveNew
 
                 {/* Strategy result plot and some form inputs */}
                 <div className="m-8">
-                    <div className="m-1 text-xl tracking-tight text-slate-400 hover:text-slate-800 font-bold">Hypothetical Growth of $1</div>
-                    <LinePlot strategyResult={strategyResult} costPerTrade={formInputs.costPerTrade} minDate={minDate} />
+                    <div className="flex justify-between">
+                        <div className="m-1 text-xl tracking-tight text-slate-400 hover:text-slate-800 font-bold">Hypothetical Growth of $1</div>
+                        <div className="font-extrabold text-xs text-sky-700/50">scroll to zoom</div>
+                    </div>
+                    <CandlePlot strategyResult={strategyResult} costPerTrade={formInputs.costPerTrade} minDate={minDate} symbol={formInputs.symbol} />
                     {(strategyResult.userDefinedData && Object.keys(strategyResult.userDefinedData).length > 0) && (
-                        <div className="border-x-2 border-b-2 bg-white border-slate-300">
-                            <button
-                                className="w-full text-xs tracking-tight font-bold text-sky-800 hover:text-red-300 text-center animate-pulse"
-                                onClick={() => setUserDefinedPlotOpen(!userDefinedPlotOpen)}
-                            >
-                                {userDefinedPlotOpen
-                                    ? 'Show less'
-                                    : 'We found other columns in your dataframe. Click to view.'}
-                            </button>
+                        <div className="my-1">
                             {userDefinedPlotOpen && (
                                 <div className="mt-2">
                                     <UserDefinedPlot
@@ -180,6 +176,14 @@ function Result({ selectedStrategy, formInputs, strategyResult, abilityToSaveNew
                                     />
                                 </div>
                             )}
+                            <button
+                                className="w-full text-xs tracking-tight font-bold text-sky-800 hover:text-red-300 text-center animate-pulse"
+                                onClick={() => setUserDefinedPlotOpen(!userDefinedPlotOpen)}
+                            >
+                                {userDefinedPlotOpen
+                                    ? 'Show less'
+                                    : 'We found other columns in your dataframe. Click to view.'}
+                            </button>
                         </div>
                     )}
                     <FormInputHeader formInputs={formInputs} />
@@ -188,11 +192,11 @@ function Result({ selectedStrategy, formInputs, strategyResult, abilityToSaveNew
                 {/* Stats and Data Table of All Trades */}
                 <div className="grid grid-cols-3 gap-x-6 justify-stretch m-8">
                     {stats && <MainStatistics stats={stats} />}
-                    <div className="col-span-2 bg-slate bg-slate-100 rounded-sm border-2 border-slate-400 max-h-132.5 overflow-y-auto">
-                        <div className="flex justify-between mx-2">
-                            <div className="text-xl font-mono text-black/60 p-3 text-end">Trade Log</div>
+                    <div className="col-span-2 bg-slate-100 rounded-lg max-h-132.5 overflow-y-auto shadow-sm">
+                        <div className="flex justify-between m-2">
+                            <div className="text-sky-700">Trade Log</div>
                             <button
-                                className="text-sm m-3 p-2 border-2 border-black rounded-lg bg-white font-light hover:shadow-lg hover:bg-slate-200"
+                                className="text-xs border-2 border-slate-600 p-1 rounded-lg bg-white font-light hover:shadow-lg hover:bg-slate-200"
                                 onClick={downloadCSV} // Trigger the download on click
                             >
                                 Download Data as .csv
@@ -203,7 +207,7 @@ function Result({ selectedStrategy, formInputs, strategyResult, abilityToSaveNew
                 </div>
 
                 {/* Histogram of Charts */}
-                <div className="p-2 m-8 border-black border-2 rounded-lg bg-slate-100">
+                <div className="p-2 m-8 rounded-lg bg-slate-100">
                     {stats && <DistributionOfReturns stockDataReturns={strategyResult.returns} mean={stats.meanReturn} stddev={stats.stddevReturn} max={stats.maxReturn} min={stats.minReturn} />}
                 </div>
 
@@ -232,7 +236,7 @@ function Result({ selectedStrategy, formInputs, strategyResult, abilityToSaveNew
                 </div>
                 <div className="m-1 text-xl tracking-tight text-slate-400 hover:text-slate-800 font-bold">Hypothetical Growth of $1</div>
                 <div className="rounded-t-md border-2 border-slate-300 h-200">
-                    <LinePlot strategyResult={strategyResult} costPerTrade={formInputs.costPerTrade} minDate={minDate} />
+                    <CandlePlot strategyResult={strategyResult} costPerTrade={formInputs.costPerTrade} minDate={minDate} symbol={formInputs.symbol} />
                 </div>
                 <FormInputHeader formInputs={formInputs} />
 

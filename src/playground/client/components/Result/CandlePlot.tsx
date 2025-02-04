@@ -1,8 +1,9 @@
-import { Line } from 'react-chartjs-2';
+import { Chart } from 'react-chartjs-2';
 import { useState, useEffect } from 'react';
 import 'chartjs-adapter-date-fns';
 import zoomPlugin from 'chartjs-plugin-zoom';
 import { StrategyResultProps } from '../../../../shared/sharedTypes';
+import { CandlestickController, CandlestickElement } from "chartjs-chart-financial";
 
 import {
     Chart as ChartJS,
@@ -25,16 +26,19 @@ ChartJS.register(
     Tooltip,
     Legend,
     TimeSeriesScale,
-    zoomPlugin,
+    CandlestickController,
+    CandlestickElement,
+    zoomPlugin
 );
 
 interface LinePlotProps {
     strategyResult: StrategyResultProps;
     costPerTrade: number;
     minDate: string | null;
+    symbol: string;
 }
 
-function LinePlot({ strategyResult, costPerTrade, minDate }: LinePlotProps) {
+function CandlePlot({ strategyResult, costPerTrade, minDate, symbol }: LinePlotProps) {
 
     const [chartData, setChartData] = useState<any | null>(null);
 
@@ -43,58 +47,47 @@ function LinePlot({ strategyResult, costPerTrade, minDate }: LinePlotProps) {
         const chartData = {
             datasets: [
                 {
+                    type: 'line',
                     label: 'My Strategy',
                     data: strategyResult.timestamp.map((timestamp: number, index: number) => ({
                         x: new Date(timestamp * 1000), // Use Date object for x
                         y: strategyResult.portfolio[index], // Corresponding y value
                     })),
-                    borderColor: 'rgba(255, 0, 100, 1)',
-                    backgroundColor: 'rgba(255, 0, 100, 1)',
-                    pointRadius: 1,
-                    borderWidth: 1,
-                    yAxisID: 'y1',
-                },
-                {
-                    label: 'Open',
-                    data: strategyResult.timestamp.map((timestamp: number, index: number) => ({
-                        x: new Date(timestamp * 1000),
-                        y: strategyResult.open[index],
-                    })),
-                    borderColor: 'rgba(123, 50, 168, 1)',
+                    borderColor: 'rgba(0, 0, 0, .8)',
+                    backgroundColor: 'rgba(0, 0, 0, .8)',
                     pointRadius: 0,
-                    borderWidth: 1,
-                    borderDash: [4, 1],
-                    tension: 0.05,
-                    hidden: true,
+                    borderWidth: 2,
                     yAxisID: 'y1',
+                    tension: .05,
                 },
                 {
-                    label: 'Close',
+                    type: 'candlestick',
+                    label: symbol.toUpperCase(),
                     data: strategyResult.timestamp.map((timestamp: number, index: number) => ({
-                        x: new Date(timestamp * 1000),
-                        y: strategyResult.close[index],
+                        x: new Date(timestamp * 1000).valueOf(), // Convert timestamp to Date
+                        o: strategyResult.open[index], // Open price
+                        h: strategyResult.high[index], // High price
+                        l: strategyResult.low[index],  // Low price
+                        c: strategyResult.close[index] // Close price
                     })),
-                    borderColor: 'rgba(70, 15, 105, 1)',
-                    pointRadius: 0,
-                    borderWidth: 1,
-                    borderDash: [4, 1],
-                    tension: 0.05,
-                    yAxisID: 'y1',
+                    yAxisID: 'y1'
                 },
                 {
+                    type: 'line',
                     label: 'Buy/Sell Signal',
                     data: strategyResult.timestamp.map((timestamp: number, index: number) => ({
                         x: new Date(timestamp * 1000),
                         y: strategyResult.signal[index],
                     })),
-                    borderColor: 'rgba(0, 155, 255, 1)',
-                    backgroundColor: 'rgba(0, 155, 255, 1)',
+                    borderColor: 'rgba(0, 155, 255, .6)',
+                    backgroundColor: 'rgba(0, 155, 255, .6)',
                     stepped: true,
                     pointRadius: 0,
                     borderWidth: 1,
                     yAxisID: 'y2',
                 },
                 {
+                    type: 'line',
                     label: 'My Strategy (w/ trading costs)',
                     data: strategyResult.timestamp.map((timestamp: number, index: number) => ({
                         x: new Date(timestamp * 1000),
@@ -110,7 +103,6 @@ function LinePlot({ strategyResult, costPerTrade, minDate }: LinePlotProps) {
             ],
         };
 
-
         // Conditionally add the "My Strategy (w trading costs)" dataset
         if (costPerTrade === 0) {
             chartData.datasets.pop();
@@ -122,9 +114,6 @@ function LinePlot({ strategyResult, costPerTrade, minDate }: LinePlotProps) {
     const options = {
         responsive: true,
         aspectRatio: 2 / 1,
-        animation: {
-            duration: 0,
-        },
         layout: {
             padding: 20,
         },
@@ -133,6 +122,27 @@ function LinePlot({ strategyResult, costPerTrade, minDate }: LinePlotProps) {
             mode: 'index' as const,
         },
         plugins: {
+            tooltip: {
+                callbacks: {
+                    label: function (context) {
+                        let label = context.dataset.label || '';
+                        const value = context.raw;
+
+                        // Check if the raw value contains OHLC data
+                        if (value.o !== undefined && value.h !== undefined && value.l !== undefined && value.c !== undefined) {
+                            const o = value.o !== undefined ? value.o.toFixed(3) : value.o;
+                            const h = value.h !== undefined ? value.h.toFixed(3) : value.h;
+                            const l = value.l !== undefined ? value.l.toFixed(3) : value.l;
+                            const c = value.c !== undefined ? value.c.toFixed(3) : value.c;
+
+                            return `${label} | Open: $${o} High: $${h} Low: $${l} Close: $${c}`;
+                        }
+
+                        // Default case
+                        return `${label}: ${value.y.toFixed(3)}`;
+                    },
+                },
+            },
             legend: {
                 position: 'top' as const,
             },
@@ -144,7 +154,7 @@ function LinePlot({ strategyResult, costPerTrade, minDate }: LinePlotProps) {
                     pinch: {
                         enabled: true
                     },
-                    mode: 'xy' as const,
+                    mode: 'x' as const,
                 },
             },
         },
@@ -187,7 +197,7 @@ function LinePlot({ strategyResult, costPerTrade, minDate }: LinePlotProps) {
                     font: {
                         weight: 'bolder' as const,
                     },
-                    color: 'rgba(0, 155, 255, 1)',
+                    color: 'rgba(0, 155, 255, .6)',
                 },
                 suggestedMin: -1.1,
                 suggestedMax: 1.1,
@@ -196,15 +206,15 @@ function LinePlot({ strategyResult, costPerTrade, minDate }: LinePlotProps) {
     };
 
     if (!chartData) {
-        return <div className='w-full mt-4 text-center text-xl tracking-tight'>Loading...</div>;
+        return <div className='w-full h-90 mt-4 text-center text-xl tracking-tight'>Loading...</div>;
     }
 
     return (
         <>
-            <Line data={chartData} options={options} />
+            <Chart type="candlestick" data={chartData} options={options} />
             <div className="w-full border-1 h-1 bg-white"></div>
         </>
     )
 }
 
-export default LinePlot;
+export default CandlePlot;
