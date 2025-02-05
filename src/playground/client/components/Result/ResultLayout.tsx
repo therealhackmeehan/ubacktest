@@ -1,4 +1,3 @@
-import ContentWrapper from "../../../../client/components/ContentWrapper";
 import { FormInputProps, StrategyResultProps } from "../../../../shared/sharedTypes";
 import Result from "./Result";
 
@@ -7,9 +6,10 @@ interface ResultProps {
     formInputs: FormInputProps;
     strategyResultIsConnectedTo: string;
     selectedStrategy: string;
+    isPublic: boolean,
 }
 
-export default function ResultLayout({ strategyResult, formInputs, strategyResultIsConnectedTo, selectedStrategy }: ResultProps) {
+export default function ResultLayout({ strategyResult, formInputs, strategyResultIsConnectedTo, selectedStrategy, isPublic }: ResultProps) {
 
     if ((!strategyResult) || (strategyResultIsConnectedTo !== selectedStrategy)) {
         return (
@@ -20,6 +20,6 @@ export default function ResultLayout({ strategyResult, formInputs, strategyResul
     }
 
     return (
-        <Result selectedStrategy={selectedStrategy} formInputs={formInputs} strategyResult={strategyResult} abilityToSaveNew={true} />
+        <Result selectedStrategy={selectedStrategy} formInputs={formInputs} strategyResult={strategyResult} abilityToSaveNew={true} isPublic={isPublic} />
     );
 };

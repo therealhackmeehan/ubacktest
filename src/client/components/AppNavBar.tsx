@@ -47,6 +47,12 @@ export default function AppNavBar() {
           >
             My Strategies
           </Link>
+          <Link
+            to={"/leaderboard"}
+            className='text-sm font-semibold leading-6 text-gray-900 duration-300 ease-in-out hover:text-slate-500 dark:text-white'
+          >
+            Leaderboard
+          </Link>
         </div>
         <div className='hidden lg:flex mx-12 border-r-2 py-4 border-black/80 dark:border-white'></div>
         <div className='hidden lg:flex lg:gap-x-12 lg:mr-4'>
@@ -114,6 +120,13 @@ export default function AppNavBar() {
                   className='-mx-3 block rounded-lg px-3 py-2 text-base font-semibold leading-7 text-gray-900 hover:bg-gray-50 dark:text-white hover:dark:bg-boxdark-2'
                 >
                   My Strategies
+                </Link>
+                <Link
+                  to={"/leaderboard"}
+                  onClick={() => setMobileMenuOpen(false)}
+                  className='-mx-3 block rounded-lg px-3 py-2 text-base font-semibold leading-7 text-gray-900 hover:bg-gray-50 dark:text-white hover:dark:bg-boxdark-2'
+                >
+                  Leaderboard
                 </Link>
               </div>
               <div className='space-y-2 scale-90 py-6'>

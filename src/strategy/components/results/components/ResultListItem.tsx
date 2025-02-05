@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import { FiBookOpen } from 'react-icons/fi';
 import { MdOutlineEdit, MdDeleteOutline } from 'react-icons/md';
 import { type Result } from 'wasp/entities';
@@ -9,27 +9,6 @@ import SmallPlot from './SmallPlot';
 import OpenResult from './OpenResult';
 
 export default function ResultListItem({ result }: { result: Result }) {
-
-    const [ret, setRet] = useState<string>('~too large to show~');
-
-    useEffect(() => {
-        const fetchRet = async () => {
-
-            if (!result.data) return;
-
-            const data = result.data as unknown as StrategyResultProps;
-            if (data && data.portfolio) {
-                const first = data.portfolio[0];
-                const last = data.portfolio[data.portfolio.length - 1];
-                const retToSet = 100 * ((last - first) / first);
-                if (retToSet) {
-                    setRet(retToSet.toFixed(2) + '%');
-                }
-            }
-        };
-
-        fetchRet();
-    }, [result]);
 
     const formInputs = result.formInputs as unknown as FormInputProps;
     const [resultPanelOpen, setResultPanelOpen] = useState<boolean>(false);
@@ -44,18 +23,16 @@ export default function ResultListItem({ result }: { result: Result }) {
                     <div className='tracking-tight text-xl font-semibold'>
                         {result.name}
                     </div>
+                    <div className='text-xs border-l-2 border-black/40 px-2 bg-white'>
+                        profit/loss: <span className='text-lg'>{result.profitLoss.toFixed(2)}%</span>
+                    </div>
                     {result.data ?
-                        <>
-                            <div className='text-xs border-l-2 border-black/40 px-2 bg-white'>
-                                profit/loss: <span className='text-lg'>{ret}</span>
-                            </div>
-                            <div className='p-1'>
-                                <SmallPlot data={result.data as unknown as StrategyResultProps} />
-                            </div>
-                        </>
+                        <div className='p-1'>
+                            <SmallPlot data={result.data as unknown as StrategyResultProps} />
+                        </div>
                         :
                         // for really large strategies, data is not stored but the api is called if clicked on.
-                        <div className='text-xs p-1 font-extralight lowercase'>open result to view more.</div>
+                        <div className='text-xs tracking-tight p-1 font-extralight lowercase'>Open to view plot.</div>
                     }
                 </div>
                 <div className='flex justify-between gap-x-2 items-center'>

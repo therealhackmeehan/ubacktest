@@ -1,7 +1,6 @@
-import { getSpecificStrategy } from "wasp/client/operations";
+import { getSpecificStrategy, useQuery } from "wasp/client/operations";
 import { useParams } from "react-router-dom";
 import { Link } from "wasp/client/router"
-import { useQuery } from "wasp/client/operations";
 
 import StrategyOverview from "./components/StrategyOverview";
 import StrategyPreview from "./components/StrategyPreview";

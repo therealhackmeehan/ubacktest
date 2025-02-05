@@ -55,6 +55,12 @@ model Result {
 
   name                      String
   code                      String
+
+  profitLoss                Float
+  profitLossAnnualized      Float
+  timepoints                Int   
+  public                    Boolean       @default(true)    
+
   fromStrategy              Strategy?     @relation(fields: [fromStrategyID], references: [id], onDelete: Cascade)   
   fromStrategyID            String? 
 

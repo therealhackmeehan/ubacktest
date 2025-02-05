@@ -60,7 +60,7 @@ app OpenSaaS {
     },
     onAfterSignup: import { onAfterSignup } from "@src/auth/hooks",
     onAuthFailedRedirectTo: "/login",
-    onAuthSucceededRedirectTo: "/home",
+    onAuthSucceededRedirectTo: "/editor",
   },
 
   db: {
@@ -120,6 +120,11 @@ route AboutRoute { path: "/about", to: AboutPage }
 page AboutPage {
   component: import About from "@src/about/About"
 }
+
+route LeaderboardRoute { path: "/leaderboard", to: LeaderboardPage }
+page LeaderboardPage {
+  component: import LeaderboardPage from "@src/leaderboard/LeaderboardPage"
+}
 // END MY ROUTES
 
 //region result-related actions
@@ -135,12 +140,20 @@ action deleteResult {
   fn: import { deleteResult } from "@src/playground/server/resultOperations",
   entities: [Result] 
 }
+action togglePrivacy {
+  fn: import { togglePrivacy } from "@src/playground/server/resultOperations",
+  entities: [Result]
+}
 query getResults {
   fn: import { getResults } from "@src/playground/server/resultOperations",
   entities: [Result] 
 }
 query getResultsForStrategy {
   fn: import { getResultsForStrategy } from "@src/playground/server/resultOperations",
+  entities: [Result]
+}
+query getTopResults {
+  fn: import { getTopResults } from "@src/playground/server/resultOperations",
   entities: [Result]
 }
 //endregion

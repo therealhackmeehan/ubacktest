@@ -1,14 +1,12 @@
 import FormInputHeader from "./FormInputHeader"
-import LinePlot from "./LinePlot"
 import MainStatistics from "./MainStatistics"
 import DataTable from "./DataTable"
 import DistributionOfReturns from "./DistributionOfReturns"
-// import RatiosBarChart from "./RatiosBarChart"
 import { FiArrowUp } from "react-icons/fi"
 import ResultButtonGroup from "./ResultButtonGroup"
 import { FormInputProps, StrategyResultProps } from "../../../../shared/sharedTypes"
 import calculateStats, { StatProps } from "../../scripts/calculateStats"
-import { createResult, getSpecificStrategy } from "wasp/client/operations"
+import { createResult, getSpecificStrategy, togglePrivacy } from "wasp/client/operations"
 import SPChart from "./SPChart"
 import UserDefinedPlot from "./UserDefinedPlot"
 import { useState, useRef, useEffect } from "react"
@@ -16,42 +14,86 @@ import html2canvas from "html2canvas";
 import { jsPDF } from "jspdf";
 import LoadingScreen from "../../../../client/components/LoadingScreen"
 import CandlePlot from "./CandlePlot"
+import ErrorModal from "../modals/ErrorModal"
 
 interface ResultPanelProps {
     selectedStrategy: string | null;
     formInputs: FormInputProps;
     strategyResult: StrategyResultProps;
     abilityToSaveNew: boolean;
+    isPublic: boolean;
 }
 
-function Result({ selectedStrategy, formInputs, strategyResult, abilityToSaveNew }: ResultPanelProps) {
+function Result({ selectedStrategy, formInputs, strategyResult, abilityToSaveNew, isPublic }: ResultPanelProps) {
 
     const [userDefinedPlotOpen, setUserDefinedPlotOpen] = useState<boolean>(false);
     const [stats, setStats] = useState<StatProps | null>(null);
     const [loading, setLoading] = useState<boolean>(false);
+    const [errorMsg, setErrorMsg] = useState<string | null>('');
+    const [isPublicLocal, setIsPublicLocal] = useState<boolean>(isPublic);
+
+    async function togglePublicPrivate() {
+        if (!selectedStrategy) return;
+        setErrorMsg('');
+        setLoading(true);
+
+        try {
+            const r = await togglePrivacy({ id: selectedStrategy });
+            if (!r) return;
+            setIsPublicLocal(r.public);
+        } catch (error: any) {
+            setErrorMsg(error.message)
+        } finally {
+            setLoading(false);
+        }
+    }
 
     async function saveResult(name: string) {
         if (!selectedStrategy) return;
+        setErrorMsg('');
 
-        const connectedStrat = await getSpecificStrategy({ id: selectedStrategy });
-        if (!connectedStrat?.code) {
-            throw new Error('No strategy with that result.');
+        try {
+            const connectedStrat = await getSpecificStrategy({ id: selectedStrategy });
+            if (!connectedStrat?.code) {
+                throw new Error('No strategy with that result.');
+            }
+
+            let dataToUse: StrategyResultProps | null = strategyResult;
+
+            const maxTimepoints = 366;
+            const timepoints = strategyResult.timestamp.length;
+            if (timepoints > maxTimepoints) {
+                dataToUse = null;
+            }
+
+            //calculate profit
+            const firstPoint = strategyResult.portfolio[0];
+            const lastPoint = strategyResult.portfolio[timepoints - 1]
+            const profitLoss = 100 * (lastPoint - firstPoint) / firstPoint;
+
+            const firstDate = new Date(strategyResult.timestamp[0] * 1000).getTime();
+            const lastDate = new Date(strategyResult.timestamp[length] * 1000).getTime();
+
+            const numberOfDays = (lastDate - firstDate) / (1000 * 60 * 60 * 24);
+            const annualizedPL = ((1 + profitLoss / 100) ** (365 / numberOfDays)) - 1;
+
+            if (!profitLoss || !annualizedPL) {
+                throw new Error("Something is wrong with your data. Unable to calculate Profit/Loss.")
+            }
+
+            await createResult({
+                name: name,
+                code: connectedStrat.code,
+                formInputs: formInputs,
+                data: dataToUse,
+                strategyId: selectedStrategy,
+                timepoints: timepoints,
+                profitLoss: profitLoss,
+                profitLossAnnualized: annualizedPL,
+            })
+        } catch (error: any) {
+            setErrorMsg(error.message)
         }
-
-        let dataToUse: StrategyResultProps | null = strategyResult;
-
-        const storageLimit = 366;
-        if (strategyResult.timestamp.length > storageLimit) {
-            dataToUse = null;
-        }
-
-        await createResult({
-            name: name,
-            code: connectedStrat.code,
-            formInputs: formInputs,
-            data: dataToUse,
-            strategyId: selectedStrategy
-        })
     }
 
     useEffect(() => {
@@ -133,8 +175,8 @@ function Result({ selectedStrategy, formInputs, strategyResult, abilityToSaveNew
 
             // Save the PDF
             doc.save(`${formInputs.symbol || "document"}_saved_result.pdf`);
-        } catch (error) {
-            console.error("Error generating PDF:", error);
+        } catch (error: any) {
+            setErrorMsg(error.msg)
         } finally {
             setLoading(false);
         }
@@ -144,9 +186,11 @@ function Result({ selectedStrategy, formInputs, strategyResult, abilityToSaveNew
 
     return (
         <>
-            <div className="max-w-6xl m-4 lg:mx-auto">
+            {loading && <LoadingScreen />}
 
-                {loading && <LoadingScreen />}
+            {errorMsg && <ErrorModal msg={errorMsg} closeModal={() => setErrorMsg('')} />}
+
+            <div className="max-w-6xl m-4 lg:mx-auto">
 
                 {/* header and top button row */}
                 <div id='topOfResultPanel' className='items-center flex p-2 justify-between border-b-2 border-black'>
@@ -156,7 +200,7 @@ function Result({ selectedStrategy, formInputs, strategyResult, abilityToSaveNew
                             {formInputs.symbol}
                         </span>
                     </h4>
-                    <ResultButtonGroup saveResult={saveResult} saveAsPDF={saveAsPDF} abilityToSaveNew={abilityToSaveNew} symbol={formInputs.symbol} />
+                    <ResultButtonGroup saveResult={saveResult} saveAsPDF={saveAsPDF} abilityToSaveNew={abilityToSaveNew} symbol={formInputs.symbol} togglePrivacyFcn={togglePublicPrivate} isPublic={isPublicLocal} />
                 </div>
 
                 {/* Strategy result plot and some form inputs */}
@@ -225,7 +269,7 @@ function Result({ selectedStrategy, formInputs, strategyResult, abilityToSaveNew
                         onClick={() => document.getElementById('topOfResultPanel')?.scrollIntoView({ behavior: 'smooth' })}>
                         back to top <FiArrowUp />
                     </button >
-                    <ResultButtonGroup saveResult={saveResult} saveAsPDF={saveAsPDF} abilityToSaveNew={abilityToSaveNew} symbol={formInputs.symbol} />
+                    <ResultButtonGroup saveResult={saveResult} saveAsPDF={saveAsPDF} abilityToSaveNew={abilityToSaveNew} symbol={formInputs.symbol} togglePrivacyFcn={togglePublicPrivate} isPublic={isPublicLocal} />
                 </div>
             </div>
 
