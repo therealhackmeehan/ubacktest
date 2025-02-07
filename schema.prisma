@@ -28,6 +28,7 @@ model User {
   contactFormMessages       ContactFormMessage[]
   strategies                Strategy[]
   results                   Result[]
+  shares                    Shares[]
 }
 
 model Strategy {
@@ -67,8 +68,29 @@ model Result {
   data                      Json
   formInputs                Json
 
+  shares                    Shares[]
+
   @@unique([userId, name])
 }
+
+model Shares {
+  id                        String        @id @default(uuid())
+  sharedAt                  DateTime      @default(now())
+  
+  user                      User          @relation(fields: [userID], references: [id])
+  userID                    String
+
+  receiver                  User          @relation(fields: [receiverID], references: [id])
+  receiverID                String
+
+  result                    Result        @relation(fields: [resultID], references: [id], onDelete: Cascade)
+  resultID                  String
+
+  accepted                  Boolean      @default(true)
+
+  @@unique([resultID, receiverID])
+}
+
 
 model DailyStats {
   id                               Int             @id @default(autoincrement())

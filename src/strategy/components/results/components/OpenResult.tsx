@@ -79,7 +79,6 @@ export default function OpenResult({ formInputs, setResultPanelOpen, result }: O
                             formInputs={formInputs}
                             selectedStrategy={result.fromStrategyID}
                             abilityToSaveNew={false}
-                            isPublic={result.public}
                         />
                         <div onClick={() => copyToClipboard(result.code)} className="max-w-7xl px-8 mx-auto">
                             <textarea

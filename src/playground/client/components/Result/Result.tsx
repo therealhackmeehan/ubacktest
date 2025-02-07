@@ -6,7 +6,7 @@ import { FiArrowUp } from "react-icons/fi"
 import ResultButtonGroup from "./ResultButtonGroup"
 import { FormInputProps, StrategyResultProps } from "../../../../shared/sharedTypes"
 import calculateStats, { StatProps } from "../../scripts/calculateStats"
-import { createResult, getSpecificStrategy, togglePrivacy } from "wasp/client/operations"
+import { createResult, getSpecificStrategy } from "wasp/client/operations"
 import SPChart from "./SPChart"
 import UserDefinedPlot from "./UserDefinedPlot"
 import { useState, useRef, useEffect } from "react"
@@ -21,32 +21,14 @@ interface ResultPanelProps {
     formInputs: FormInputProps;
     strategyResult: StrategyResultProps;
     abilityToSaveNew: boolean;
-    isPublic: boolean;
 }
 
-function Result({ selectedStrategy, formInputs, strategyResult, abilityToSaveNew, isPublic }: ResultPanelProps) {
+function Result({ selectedStrategy, formInputs, strategyResult, abilityToSaveNew }: ResultPanelProps) {
 
     const [userDefinedPlotOpen, setUserDefinedPlotOpen] = useState<boolean>(false);
     const [stats, setStats] = useState<StatProps | null>(null);
     const [loading, setLoading] = useState<boolean>(false);
     const [errorMsg, setErrorMsg] = useState<string | null>('');
-    const [isPublicLocal, setIsPublicLocal] = useState<boolean>(isPublic);
-
-    async function togglePublicPrivate() {
-        if (!selectedStrategy) return;
-        setErrorMsg('');
-        setLoading(true);
-
-        try {
-            const r = await togglePrivacy({ id: selectedStrategy });
-            if (!r) return;
-            setIsPublicLocal(r.public);
-        } catch (error: any) {
-            setErrorMsg(error.message)
-        } finally {
-            setLoading(false);
-        }
-    }
 
     async function saveResult(name: string) {
         if (!selectedStrategy) return;
@@ -200,7 +182,7 @@ function Result({ selectedStrategy, formInputs, strategyResult, abilityToSaveNew
                             {formInputs.symbol}
                         </span>
                     </h4>
-                    <ResultButtonGroup saveResult={saveResult} saveAsPDF={saveAsPDF} abilityToSaveNew={abilityToSaveNew} symbol={formInputs.symbol} togglePrivacyFcn={togglePublicPrivate} isPublic={isPublicLocal} />
+                    <ResultButtonGroup saveResult={saveResult} saveAsPDF={saveAsPDF} abilityToSaveNew={abilityToSaveNew} symbol={formInputs.symbol} />
                 </div>
 
                 {/* Strategy result plot and some form inputs */}
@@ -269,7 +251,7 @@ function Result({ selectedStrategy, formInputs, strategyResult, abilityToSaveNew
                         onClick={() => document.getElementById('topOfResultPanel')?.scrollIntoView({ behavior: 'smooth' })}>
                         back to top <FiArrowUp />
                     </button >
-                    <ResultButtonGroup saveResult={saveResult} saveAsPDF={saveAsPDF} abilityToSaveNew={abilityToSaveNew} symbol={formInputs.symbol} togglePrivacyFcn={togglePublicPrivate} isPublic={isPublicLocal} />
+                    <ResultButtonGroup saveResult={saveResult} saveAsPDF={saveAsPDF} abilityToSaveNew={abilityToSaveNew} symbol={formInputs.symbol} />
                 </div>
             </div>
 

@@ -6,10 +6,9 @@ interface ResultProps {
     formInputs: FormInputProps;
     strategyResultIsConnectedTo: string;
     selectedStrategy: string;
-    isPublic: boolean,
 }
 
-export default function ResultLayout({ strategyResult, formInputs, strategyResultIsConnectedTo, selectedStrategy, isPublic }: ResultProps) {
+export default function ResultLayout({ strategyResult, formInputs, strategyResultIsConnectedTo, selectedStrategy }: ResultProps) {
 
     if ((!strategyResult) || (strategyResultIsConnectedTo !== selectedStrategy)) {
         return (
@@ -20,6 +19,6 @@ export default function ResultLayout({ strategyResult, formInputs, strategyResul
     }
 
     return (
-        <Result selectedStrategy={selectedStrategy} formInputs={formInputs} strategyResult={strategyResult} abilityToSaveNew={true} isPublic={isPublic} />
+        <Result selectedStrategy={selectedStrategy} formInputs={formInputs} strategyResult={strategyResult} abilityToSaveNew={true} />
     );
 };

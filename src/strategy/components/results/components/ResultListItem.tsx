@@ -7,6 +7,11 @@ import RenameResultModal from './modals/RenameResultModal';
 import DeleteResultModal from './modals/DeleteResultModal';
 import SmallPlot from './SmallPlot';
 import OpenResult from './OpenResult';
+import { BiLock, BiLockOpen } from 'react-icons/bi';
+import LoadingScreen from '../../../../client/components/LoadingScreen';
+import { togglePrivacy } from 'wasp/client/operations';
+import { CgLock, CgLockUnlock } from 'react-icons/cg';
+import { FaLock, FaLockOpen } from 'react-icons/fa';
 
 export default function ResultListItem({ result }: { result: Result }) {
 
@@ -15,9 +20,28 @@ export default function ResultListItem({ result }: { result: Result }) {
 
     const [renameResultModalOpen, setRenameResultModalOpen] = useState<boolean>(false);
     const [deleteResultModalOpen, setDeleteResultModalOpen] = useState<boolean>(false);
+    const [loading, setLoading] = useState<boolean>(false);
+
+    const [isPublic, setIsPublic] = useState<boolean>(result.public);
+
+    async function togglePublicPrivate() {
+        setLoading(true);
+
+        try {
+            const r = await togglePrivacy({ id: result.id });
+            if (!r) return;
+
+            setIsPublic(r.public);
+        } catch (error: any) {
+            console.log(error.message)
+        } finally {
+            setLoading(false);
+        }
+    }
 
     return (
         <>
+            {loading && <LoadingScreen />}
             <div className='flex justify-between my-3 mx-1 items-center p-2 rounded-lg bg-slate-100 border-slate-200 border-2 hover:shadow-lg duration-700'>
                 <div className='flex justify-between gap-x-3'>
                     <div className='tracking-tight text-xl font-semibold'>
@@ -41,11 +65,17 @@ export default function ResultListItem({ result }: { result: Result }) {
                         view
                         <FiBookOpen />
                     </button>
-                    <button className='hover:text-slate-600 hover:scale-110'>
-                        <MdOutlineEdit onClick={() => setRenameResultModalOpen(true)} />
+                    <button className='hover:text-slate-600 hover:scale-110'
+                        onClick={togglePublicPrivate}>
+                        {isPublic ? <FaLockOpen /> : <FaLock />}
                     </button>
-                    <button className='hover:text-slate-600 hover:scale-110'>
-                        <MdDeleteOutline onClick={() => setDeleteResultModalOpen(true)} />
+                    <button className='hover:text-slate-600 hover:scale-110'
+                        onClick={() => setRenameResultModalOpen(true)}>
+                        <MdOutlineEdit />
+                    </button>
+                    <button className='hover:text-slate-600 hover:scale-110'
+                        onClick={() => setDeleteResultModalOpen(true)}>
+                        <MdDeleteOutline />
                     </button>
                     <div className='font-mono text-xs'>
                         saved: {result.createdAt.toLocaleString()}

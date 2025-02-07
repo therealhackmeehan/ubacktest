@@ -75,7 +75,6 @@ function StrategyEditor() {
                     formInputs={formInputs}
                     strategyResultIsConnectedTo={strategyResultIsConnectedTo}
                     selectedStrategy={selectedStrategy.id}
-                    isPublic={selectedStrategy.public}
                 />
             ) : (
                 <Editor
