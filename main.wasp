@@ -120,10 +120,14 @@ route AboutRoute { path: "/about", to: AboutPage }
 page AboutPage {
   component: import About from "@src/about/About"
 }
-
 route LeaderboardRoute { path: "/leaderboard", to: LeaderboardPage }
 page LeaderboardPage {
   component: import LeaderboardPage from "@src/leaderboard/LeaderboardPage"
+}
+route ResultRoute { path: "/results", to: ResultPage }
+page ResultPage {
+  authRequired: true,
+  component: import ResultPage from "@src/result/client/ResultPage"
 }
 // END MY ROUTES
 
@@ -154,7 +158,7 @@ query getResultsForStrategy {
 }
 query getTopResults {
   fn: import { getTopResults } from "@src/playground/server/resultOperations",
-  entities: [Result]
+  entities: [Result, User]
 }
 //endregion
 
@@ -184,6 +188,26 @@ query getSpecificStrategy {
   entities: [Strategy]
 }
 //end strategy-related actions
+
+//region share-related actions
+action shareResult {
+  fn: import { shareResult } from "@src/result/server/shareOperations",
+  entities: [User, Share]
+}
+query getShared {
+  fn: import { getShared } from "@src/result/server/shareOperations",
+  entities: [Share, Result, User]
+}
+action acceptShare {
+  fn: import { acceptShare } from "@src/result/server/shareOperations",
+  entities: [Share]
+}
+action deleteShare {
+  fn: import { deleteShare } from "@src/result/server/shareOperations",
+  entities: [Share]
+}
+
+//end share-related actions
 
 // The big action -> run strategy and initiate a backend process
 query runStrategy {

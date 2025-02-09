@@ -1,5 +1,5 @@
 import { useState } from "react"
-import { FiSave, FiShare, FiDownload } from "react-icons/fi"
+import { FiSave, FiDownload } from "react-icons/fi"
 import NewResultModal from "../modals/NewResultModal";
 
 interface ResultButtonGroupProps {
@@ -12,10 +12,6 @@ interface ResultButtonGroupProps {
 export default function ResultButtonGroup({ saveResult, saveAsPDF, abilityToSaveNew, symbol }: ResultButtonGroupProps) {
 
     const [newResultModalOpen, setNewResultModalOpen] = useState<boolean>(false);
-
-    function loadEmail() {
-        console.log('saving as email')
-    }
 
     return (
         <div className='flex justify-between text-sm'>
@@ -40,9 +36,5 @@ export default function ResultButtonGroup({ saveResult, saveAsPDF, abilityToSave
                 <FiDownload /> download PDF
             </button>
 
-            <button className='flex gap-x-2 items-center p-2 m-1 tracking-tight bg-sky-700 hover:bg-slate-900 text-white rounded-md'
-                onClick={loadEmail}>
-                <FiShare /> share
-            </button>
         </div>)
 }

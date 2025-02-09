@@ -90,23 +90,41 @@ export const getResultsForStrategy: GetResultsForStrategy<Pick<Result, "fromStra
     });
 }
 
-export const getTopResults: GetTopResults<void, Result[] | null> = async (_args, context) => {
-    if (!context.user) {
-        throw new HttpError(401);
-    }
+export type ResultWithUsername = Result & {
+    email: string;
+};
 
+export type GetTopResultsProp = {
+    topByProfitLoss: ResultWithUsername[] | null;
+    topByAnnualizedProfitLoss: ResultWithUsername[] | null;
+}
+
+export const getTopResults: GetTopResults<void, GetTopResultsProp> = async (_args, context) => {
     const results = await context.entities.Result.findMany({
-        orderBy: {
-            profitLoss: "desc",
-        }, 
-        where: {
-            public: true,
-        },
-        take: 10, // Limit results to the top 10
+        where: { public: true },
+        include: { user: true },
     });
 
-    return results.length > 0 ? results : null;
+    if (results.length === 0) {
+        return { topByProfitLoss: null, topByAnnualizedProfitLoss: null };
+    }
+
+    // Map results to include email
+    const resultsWithUsername = results.map((result: any) => ({
+        ...result,
+        email: result.user?.email,
+    }));
+
+    return {
+        topByProfitLoss: resultsWithUsername
+            .sort((a, b) => b.profitLoss - a.profitLoss)
+            .slice(0, 10),
+        topByAnnualizedProfitLoss: resultsWithUsername
+            .sort((a, b) => b.profitLossAnnualized - a.profitLossAnnualized)
+            .slice(0, 10),
+    };
 };
+
 
 export const deleteResult: DeleteResult<Pick<Result, "id">, Result> = async ({ id }, context) => {
     if (!context.user) {

@@ -2,7 +2,7 @@ import { useRef, useState, useEffect } from "react";
 import alpacaCode from "../scripts/alpacaCode";
 import { Editor } from "@monaco-editor/react";
 import { miniEditorOpts } from "../StrategyPage";
-import copyToClipboard from "./results/components/copyToClipboard";
+import copyToClipboard from "../../result/client/components/copyToClipboard";
 
 function StrategyCodeGen({ code }: { code: string | null }) {
 

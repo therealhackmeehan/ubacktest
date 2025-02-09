@@ -4,7 +4,7 @@ import { Link } from "wasp/client/router"
 
 import StrategyOverview from "./components/StrategyOverview";
 import StrategyPreview from "./components/StrategyPreview";
-import StrategyResults from "./components/results/StrategyResults";
+import StrategyResults from "./components/StrategyResults";
 import StrategyCodeGen from "./components/StrategyCodeGen";
 import ContentWrapper from "../client/components/ContentWrapper";
 import LoadingScreen from "../client/components/LoadingScreen";

@@ -1,11 +1,11 @@
 import { useState, useEffect } from "react";
-import { FormInputProps, StrategyResultProps } from "../../../../shared/sharedTypes";
+import { FormInputProps, StrategyResultProps } from "../../../shared/sharedTypes";
 import copyToClipboard from "./copyToClipboard";
 import { Result } from "wasp/entities";
-import LoadingScreen from "../../../../client/components/LoadingScreen";
-import ResultPanel from "../../../../playground/client/components/result/Result";
+import LoadingScreen from "../../../client/components/LoadingScreen";
+import ResultPanel from "../../../playground/client/components/result/Result";
 import { runStrategy } from "wasp/client/operations";
-import ErrorModal from "../../../../playground/client/components/modals/ErrorModal";
+import ErrorModal from "../../../playground/client/components/modals/ErrorModal";
 import { TiCancel } from "react-icons/ti";
 
 interface OpenResultProps {

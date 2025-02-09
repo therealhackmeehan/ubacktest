@@ -28,7 +28,9 @@ model User {
   contactFormMessages       ContactFormMessage[]
   strategies                Strategy[]
   results                   Result[]
-  shares                    Shares[]
+
+  sentShares                Share[]         @relation(name: "SenderShares")
+  receivedShares            Share[]         @relation(name: "ReceiverShares")
 }
 
 model Strategy {
@@ -68,25 +70,25 @@ model Result {
   data                      Json
   formInputs                Json
 
-  shares                    Shares[]
+  shares                    Share[]
 
   @@unique([userId, name])
 }
 
-model Shares {
+model Share {
   id                        String        @id @default(uuid())
   sharedAt                  DateTime      @default(now())
   
-  user                      User          @relation(fields: [userID], references: [id])
+  user                      User          @relation(name: "SenderShares", fields: [userID], references: [id])
   userID                    String
 
-  receiver                  User          @relation(fields: [receiverID], references: [id])
+  receiver                  User          @relation(name: "ReceiverShares", fields: [receiverID], references: [id])
   receiverID                String
 
   result                    Result        @relation(fields: [resultID], references: [id], onDelete: Cascade)
   resultID                  String
 
-  accepted                  Boolean      @default(true)
+  accepted                  Boolean       @default(false)
 
   @@unique([resultID, receiverID])
 }

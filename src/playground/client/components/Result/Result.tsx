@@ -48,19 +48,26 @@ function Result({ selectedStrategy, formInputs, strategyResult, abilityToSaveNew
                 dataToUse = null;
             }
 
-            //calculate profit
             const firstPoint = strategyResult.portfolio[0];
-            const lastPoint = strategyResult.portfolio[timepoints - 1]
+            const lastPoint = strategyResult.portfolio[timepoints - 1];
+            if (firstPoint === 0 || lastPoint === 0) {
+                throw new Error("Portfolio values cannot be zero.");
+            }
+
             const profitLoss = 100 * (lastPoint - firstPoint) / firstPoint;
 
             const firstDate = new Date(strategyResult.timestamp[0] * 1000).getTime();
-            const lastDate = new Date(strategyResult.timestamp[length] * 1000).getTime();
+            const lastDate = new Date(strategyResult.timestamp[timepoints - 1] * 1000).getTime();
 
             const numberOfDays = (lastDate - firstDate) / (1000 * 60 * 60 * 24);
-            const annualizedPL = ((1 + profitLoss / 100) ** (365 / numberOfDays)) - 1;
+            if (numberOfDays <= 0) {
+                throw new Error("Invalid date range.");
+            }
+
+            const annualizedPL = 100 * ((1 + profitLoss / 100) ** (365 / numberOfDays)) - 1;
 
             if (!profitLoss || !annualizedPL) {
-                throw new Error("Something is wrong with your data. Unable to calculate Profit/Loss.")
+                throw new Error("Something is wrong with your data. Unable to calculate Profit/Loss.");
             }
 
             await createResult({

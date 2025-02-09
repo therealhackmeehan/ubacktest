@@ -273,6 +273,10 @@ class StrategyPipeline {
         const timestamps = result?.timestamp;
         const volumes = quote?.volume;
 
+        if (timestamps.length > 1000) {
+            throw new HttpError(400, "Sorry, we don't support backtests that are more than 1000 timepoints.");
+        }
+
         // Validation checks
         if (!closePrices) throw new HttpError(400, "Although it appears this stock exists, no data was found. Try another stock or adjust the timeframe.");
         if (!Array.isArray(closePrices) || closePrices.length < 5)

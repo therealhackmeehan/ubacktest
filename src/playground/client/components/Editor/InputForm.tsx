@@ -336,7 +336,7 @@ function InputForm({ formInputs, setFormInputs, run }: InputFormSubcomponentProp
                             <div className="space-y-1 border-2 border-white bg-slate-200 rounded-md p-2">
                                 <div className="flex py-2 items-center justify-between gap-3">
                                     <div className="tracking-tight text-xs font-light">
-                                        Include "Warm-Up" Period
+                                        Include "Burn-In" Period
                                     </div>
                                     <div className="flex items-center gap-x-1">
                                         <input
@@ -356,7 +356,7 @@ function InputForm({ formInputs, setFormInputs, run }: InputFormSubcomponentProp
 
                                 {formInputs.useWarmupDate && <>
                                     <div className="tracking-tight text-xs text-center font-light">
-                                        "Warm-Up" Start Date
+                                        "Burn-In" Start Date
                                     </div>
                                     <input
                                         type={useDatetimeLocal ? 'datetime-local' : 'date'}

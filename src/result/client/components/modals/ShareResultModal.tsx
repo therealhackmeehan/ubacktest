@@ -1,34 +1,28 @@
 import { useState } from 'react';
-import { validateNewName } from '../../scripts/modalHelpers';
+import { shareResult } from 'wasp/client/operations';
+import { TiDelete } from "react-icons/ti";
 import useEnterKey from '../../../../client/hooks/useEnterKey';
 import ModalLayout from '../../../../client/components/ModalLayout';
-import { TiDelete } from 'react-icons/ti';
 
-interface NewProjectModalProps {
-    onSuccess: (name: string) => Promise<void>;
+interface ShareResultModalProps {
     closeModal: () => void;
-    symbol: string;
+    id: string;
 }
 
-export default function NewResultModal({ onSuccess, closeModal, symbol }: NewProjectModalProps) {
+export default function ShareResultModal({ closeModal, id }: ShareResultModalProps) {
 
-    const currDate = new Date();
-    const currDateString: string = currDate.toLocaleDateString().replaceAll('/', '_')
-    const fullPlaceholderName = symbol + '_result_' + currDateString;
-
-    const [newResultName, setNewResultName] = useState<string>(fullPlaceholderName);
-    const [errMsg, setErrMsg] = useState<string>('');
-    const [showSuccess, setShowSuccess] = useState<boolean>(false);
+    const [errMsg, setErrMsg] = useState('');
+    const [showSuccess, setShowSuccess] = useState(false);
+    const [email, setEmail] = useState('');
     const [currentlyInTimeout, setCurrentlyInTimeout] = useState<boolean>(false);
     const [progress, setProgress] = useState<number>(0); // New state for tracking progress
 
-    const handleNewResult = async () => {
+    const handleResultDelete = async () => {
         if (currentlyInTimeout) return;
 
         setErrMsg('');
         try {
-            validateNewName(newResultName);
-            await onSuccess(newResultName);
+            await shareResult({ email, resultID: id });
             setShowSuccess(true);
             setCurrentlyInTimeout(true);
             const timeoutDuration = 3000;
@@ -43,7 +37,7 @@ export default function NewResultModal({ onSuccess, closeModal, symbol }: NewPro
                 }
             }, 50);
 
-            // Set timeout to close the modal after 4 seconds
+            // Set timeout to close the modal after 3 seconds
             setTimeout(() => {
                 closeModal();
                 setCurrentlyInTimeout(false);
@@ -53,21 +47,21 @@ export default function NewResultModal({ onSuccess, closeModal, symbol }: NewPro
         }
     };
 
-    useEnterKey(handleNewResult);
+    useEnterKey(handleResultDelete);
 
     return (
         <ModalLayout>
             <div className='flex justify-between'>
-                <h2 className="text-base text-slate-500 font-semibold">Save Result <span className="text-slate-800">To My Results</span></h2>
+                <h2 className="text-base text-slate-500 font-semibold">Share your result with another user!</h2>
                 <button onClick={closeModal}>
                     <TiDelete size='1.8rem' className='hover:rotate-6 text-gray-900 hover:scale-110' />
                 </button>
             </div>
             <input
                 type="text"
-                placeholder="Enter result name"
-                value={newResultName}
-                onChange={(e) => setNewResultName(e.target.value)}
+                placeholder="Enter email"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
                 className="border p-2 rounded w-full mt-4"
                 autoFocus
             />
@@ -80,9 +74,9 @@ export default function NewResultModal({ onSuccess, closeModal, symbol }: NewPro
                 </button>
                 <button
                     className="bg-slate-500 text-white p-2 rounded hover:bg-slate-700"
-                    onClick={handleNewResult}
+                    onClick={handleResultDelete}
                 >
-                    Confirm
+                    Share
                 </button>
             </div>
             {errMsg &&
@@ -90,8 +84,8 @@ export default function NewResultModal({ onSuccess, closeModal, symbol }: NewPro
                     {errMsg}
                 </div>}
             {showSuccess &&
-                <div className="mt-4 p-2 text-sky-800 font-bold text-center">
-                    Success! You can find your saved result on your results page.
+                <div className="mt-4 p-2 text-sky-800 font-extralight text-center">
+                    Success! You've shared the result with {email}.
                 </div>}
             {currentlyInTimeout && (
                 <div className="mt-4">

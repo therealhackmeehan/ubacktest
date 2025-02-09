@@ -48,6 +48,12 @@ export default function AppNavBar() {
             My Strategies
           </Link>
           <Link
+            to={"/results"}
+            className='text-sm font-semibold leading-6 text-gray-900 duration-300 ease-in-out hover:text-slate-500 dark:text-white'
+          >
+            My Results
+          </Link>
+          <Link
             to={"/leaderboard"}
             className='text-sm font-semibold leading-6 text-gray-900 duration-300 ease-in-out hover:text-slate-500 dark:text-white'
           >

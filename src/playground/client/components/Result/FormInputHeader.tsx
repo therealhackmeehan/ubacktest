@@ -27,10 +27,10 @@ function FormInputHeader({ formInputs }: { formInputs: FormInputProps }) {
             </div>
             <div className="p-2 text-sky-800">
                 <div className="font-extralight flex justify-between items-center">
-                    Using a warmup period? <span className="font-bold tracking-tight text-sky-700 px-2">{formInputs.useWarmupDate ? "Y" : "N"}</span>
+                    Using a burnin period? <span className="font-bold tracking-tight text-sky-700 px-2">{formInputs.useWarmupDate ? "Y" : "N"}</span>
                 </div>
                 <div className="font-extralight flex justify-between items-center">
-                    warmup start @ <span className="font-bold tracking-tight text-sky-700 px-2">{formInputs.useWarmupDate ? formInputs.warmupDate : "N/A"}</span>
+                    burnin start @ <span className="font-bold tracking-tight text-sky-700 px-2">{formInputs.useWarmupDate ? formInputs.warmupDate : "N/A"}</span>
                 </div>
             </div>
         </div>

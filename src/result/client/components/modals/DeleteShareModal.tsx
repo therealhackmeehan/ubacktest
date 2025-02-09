@@ -1,50 +1,38 @@
 import { useState } from 'react';
-import { renameResult } from 'wasp/client/operations';
+import { deleteShare } from 'wasp/client/operations';
 import { TiDelete } from "react-icons/ti";
-import { validateNewName } from '../../../../../playground/client/scripts/modalHelpers';
-import useEnterKey from '../../../../../client/hooks/useEnterKey';
-import ModalLayout from '../../../../../client/components/ModalLayout';
+import useEnterKey from '../../../../client/hooks/useEnterKey';
+import ModalLayout from '../../../../client/components/ModalLayout';
 
-interface RenameModalProps {
+interface DeleteResultModalProps {
     closeModal: () => void;
     id: string;
-    currResultName: string;
 }
 
-export default function RenameResultModal({ closeModal, id, currResultName }: RenameModalProps) {
+export default function DeleteShareModal({ closeModal, id }: DeleteResultModalProps) {
 
-    const [newName, setNewName] = useState<string>(currResultName);
-    const [errMsg, setErrMsg] = useState<string>('');
+    const [errMsg, setErrMsg] = useState('');
 
-    const handleResultRename = async () => {
+    const handleShareDelete = async () => {
         setErrMsg('');
         try {
-            validateNewName(newName);
-            await renameResult({ id, name: newName });
+            await deleteShare({ id });
             closeModal();
         } catch (error: any) {
             setErrMsg(error.message);
         }
     };
 
-    useEnterKey(handleResultRename);
+    useEnterKey(handleShareDelete);
 
     return (
         <ModalLayout>
             <div className='flex justify-between'>
-                <h2 className="text-base text-slate-500 font-semibold">Rename Your <span className="text-slate-800">Saved Result</span></h2>
+                <h2 className="text-base text-slate-500 font-semibold">Are you sure you'd like to remove yourself from this <span className="text-slate-800">Saved Result</span>?</h2>
                 <button onClick={closeModal}>
                     <TiDelete size='1.8rem' className='hover:rotate-6 text-gray-900 hover:scale-110' />
                 </button>
             </div>
-            <input
-                type="text"
-                placeholder="Enter new name"
-                value={newName}
-                onChange={(e) => setNewName(e.target.value)}
-                className="border p-2 rounded w-full mt-4"
-                autoFocus
-            />
             <div className="flex justify-between mt-4">
                 <button
                     className="bg-gray-500 text-white p-2 rounded hover:bg-gray-700"
@@ -54,7 +42,7 @@ export default function RenameResultModal({ closeModal, id, currResultName }: Re
                 </button>
                 <button
                     className="bg-slate-500 text-white p-2 rounded hover:bg-slate-700"
-                    onClick={handleResultRename}
+                    onClick={handleShareDelete}
                 >
                     Confirm
                 </button>
