@@ -33,6 +33,9 @@ export default function DeleteResultModal({ closeModal, id }: DeleteResultModalP
                     <TiDelete size='1.8rem' className='hover:rotate-6 text-gray-900 hover:scale-110' />
                 </button>
             </div>
+            <div className="py-4 text-center italic text-red-900">
+                Please note that this action will also remove this result for anyone it was shared with.
+            </div>
             <div className="flex justify-between mt-4">
                 <button
                     className="bg-gray-500 text-white p-2 rounded hover:bg-gray-700"

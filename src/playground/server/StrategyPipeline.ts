@@ -44,6 +44,8 @@ class StrategyPipeline {
     private stdout: string = '';
     private warning: string[] = [];
 
+    private decimalPlaces: number = 4;
+
     constructor(formInputs: FormInputProps, code: string) {
         this.formInputs = formInputs;
         this.code = code;
@@ -136,6 +138,14 @@ class StrategyPipeline {
                 this.strategyResult.portfolioWithCosts[i] = 0;
             }
         }
+
+        this.strategyResult.returns = this.strategyResult.returns.map(val => this.roundToFour(val));
+        this.strategyResult.portfolio = this.strategyResult.portfolio.map(val => this.roundToFour(val));
+        this.strategyResult.portfolioWithCosts = this.strategyResult.portfolioWithCosts.map(val => this.roundToFour(val));
+    }
+
+    private roundToFour(value: number): number {
+        return Math.round(value * 10 ** this.decimalPlaces) / (10 ** this.decimalPlaces);
     }
 
     private validatePortfolio() {
@@ -273,10 +283,6 @@ class StrategyPipeline {
         const timestamps = result?.timestamp;
         const volumes = quote?.volume;
 
-        if (timestamps.length > 1000) {
-            throw new HttpError(400, "Sorry, we don't support backtests that are more than 1000 timepoints.");
-        }
-
         // Validation checks
         if (!closePrices) throw new HttpError(400, "Although it appears this stock exists, no data was found. Try another stock or adjust the timeframe.");
         if (!Array.isArray(closePrices) || closePrices.length < 5)
@@ -290,6 +296,10 @@ class StrategyPipeline {
             throw new HttpError(500, "Invalid structure for high, low, or open data. Expected arrays.");
         if (highPrices.length !== closePrices.length || lowPrices.length !== closePrices.length || openPrices.length !== closePrices.length)
             throw new HttpError(500, "Mismatch in data length for high, low, open, and close arrays.");
+
+        if (timestamps.length > 1000) {
+            throw new HttpError(400, "Sorry, we don't support backtests that are more than 1000 timepoints.");
+        }
 
         // Check for missing data based on user-selected dates
         const startInput = this.formInputs.useWarmupDate ? new Date(this.formInputs.warmupDate).getDay() : new Date(this.formInputs.startDate).getDay();
@@ -322,7 +332,7 @@ class StrategyPipeline {
             throw new HttpError(500, "First close price is invalid. Cannot normalize data.");
         }
 
-        const normalizedPrices = (prices: number[]) => prices.map(price => price / firstPrice);
+        const normalizedPrices = (prices: number[]) => prices.map(price => Math.round((price / firstPrice) * 10 ** this.decimalPlaces) / 10 ** this.decimalPlaces);
 
         // Normalize all data
         const normalizedQuote = {
@@ -354,7 +364,7 @@ class StrategyPipeline {
         }
 
         const shortenedNormalizedPrices = (prices: number[]) =>
-            prices.map(price => price / newFirstPrice);
+            prices.map(price => Math.round((price / newFirstPrice) * 10 ** this.decimalPlaces) / 10 ** this.decimalPlaces);
 
         const shortenedNormalizedQuote = {
             high: shortenedNormalizedPrices(shortenedHighPrices),

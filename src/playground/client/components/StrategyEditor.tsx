@@ -51,7 +51,7 @@ function StrategyEditor() {
     });
 
     return (
-        <>
+        <div className="h-full flex flex-col">
             <StrategyHeader />
 
             <button
@@ -90,7 +90,7 @@ function StrategyEditor() {
                     setWarningMsg={setWarningMsg}
                 />
             )}
-        </>
+        </div>
     )
 }
 

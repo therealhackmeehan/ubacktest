@@ -116,8 +116,14 @@ function InputForm({ formInputs, setFormInputs, run }: InputFormSubcomponentProp
 
     const [position, setPosition] = useState<{ y: number }>(() => {
         const savedPosition = localStorage.getItem(LOCAL_STORAGE_KEY);
-        return savedPosition ? JSON.parse(savedPosition) : { y: 0 };
+        const initialPosition = savedPosition ? JSON.parse(savedPosition) : { y: 0 };
+
+        // Ensure y is within the visible screen bounds
+        const clampedY = Math.min(Math.max(initialPosition.y, 0), window.innerHeight - 100); // 50px buffer
+
+        return { y: clampedY };
     });
+
     const [isDragging, setIsDragging] = useState(false);
     const offset = useRef({ y: 0 });
 
@@ -131,19 +137,19 @@ function InputForm({ formInputs, setFormInputs, run }: InputFormSubcomponentProp
             y: e.clientY - position.y,
         };
     };
-    
+
     const handleMouseMove = (e: MouseEvent) => {
         if (!isDragging) return;
-    
+
         const elementHeight = 100; // Set this to the actual height of your draggable component
         const newY = e.clientY - offset.current.y;
-    
+
         // Clamp the position to stay within the viewport
         const clampedY = Math.max(0, Math.min(newY, window.innerHeight - elementHeight));
-    
+
         setPosition({ y: clampedY });
     };
-    
+
 
     const handleMouseUp = () => {
         setIsDragging(false);

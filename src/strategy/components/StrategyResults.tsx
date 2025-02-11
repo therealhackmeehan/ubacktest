@@ -9,7 +9,7 @@ function StrategyResults({ strategy }: { strategy: Strategy }) {
     })
 
     return (
-        <div className="my-10 bg-white rounded-lg p-4 shadow-lg border-2 border-black duration-1000">
+        <div className="my-10 bg-white rounded-lg p-4">
             <div className="text-xl font-extrabold my-2">
                 Saved Results from <span className="text-sky-600 italic font-normal">{strategy.name}</span>
             </div>

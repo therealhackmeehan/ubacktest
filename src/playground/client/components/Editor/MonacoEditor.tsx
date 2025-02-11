@@ -112,7 +112,7 @@ function MonacoEditor({ codeToDisplay, setCodeToDisplay }: MonacoEditorProps) {
     }
 
     return (
-        <div className="h-5/6">
+        <>
             {errMsg && <ErrorModal msg={errMsg} closeModal={() => setErrMsg('')} />}
 
             <div className="flex text-xs justify-start border-b-2 border-black">
@@ -144,7 +144,7 @@ function MonacoEditor({ codeToDisplay, setCodeToDisplay }: MonacoEditorProps) {
             {examplesModalOpen &&
                 <ExamplesModal onSuccess={onSuccess} closeModal={() => setExamplesModalOpen(false)} />
             }
-        </div>
+        </>
     )
 }
 

@@ -33,7 +33,7 @@ function LeaderboardPage() {
     return (
         <ContentWrapper>
             <div className="max-w-3xl mx-auto">
-                <div className="m-2 p-4 bg-gradient-to-tr from-sky-700 to-white duration-1000 rounded-lg shadow-xl">
+                <div className="m-2 p-4 bg-gradient-to-tr from-sky-700/50 to-white duration-1000 rounded-lg shadow-xl">
                     <div className="text-3xl text-end font-extrabold tracking-tight"><span className="text-xs">global </span>Leaderboard</div>
                 </div>
                 <div className="text-center text-sm font-light my-4">
@@ -45,11 +45,11 @@ function LeaderboardPage() {
                         onClick={() => setIsProfitLoss(!isProfitLoss)}
                     >
                         <div className={`duration-1000 ${!isProfitLoss ? "text-black" : "text-slate-200"}`}>
-                            Annualized Profit Loss
+                            Annualized Profit/Loss
                         </div>
                         <div className="border-2 border-sky-700 mx-2"></div>
                         <div className={`duration-1000 ${isProfitLoss ? "text-black" : "text-slate-200"}`}>
-                            Total Profit Loss
+                            Total Profit/Loss
                         </div>
                     </button>
                     {
@@ -78,7 +78,7 @@ function LeaderboardPage() {
 
                 </div>
                 <div className="text-sm m-1 text-sky-700">
-                    You can toggle the privacy of your results on your results page.
+                    You can toggle the privacy of your result on your results page.
                 </div>
             </div>
         </ContentWrapper>

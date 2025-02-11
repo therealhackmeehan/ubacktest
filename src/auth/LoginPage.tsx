@@ -1,11 +1,12 @@
 import { Link } from 'react-router-dom';
 import { LoginForm } from 'wasp/client/auth';
 import { AuthPageLayout } from './AuthPageLayout';
+import { authAppearance } from './appearance';
 
 export default function Login() {
   return (
     <AuthPageLayout>
-      <LoginForm />
+      <LoginForm appearance={authAppearance}/>
       <br />
       <span className='text-sm font-medium text-gray-900 dark:text-gray-900'>
         Don't have an account yet?{' '}

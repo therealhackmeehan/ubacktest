@@ -31,14 +31,14 @@ function LeaderboardItem({ result, index }: LeaderboardItemProps) {
                     <div className='text-title-lg font-bold'>
                         {index + 1}
                     </div>
-                    <div className={`py-2 px-4 rounded-xl ${randomColor()} text-white font-extrabold text-xl`}>{result.email.charAt(0).toUpperCase()}</div>
+                    <div className={`py-2 px-4 rounded-xl ${randomColor()} text-white hidden flex font-extrabold text-xl`}>{result.email.charAt(0).toUpperCase()}</div>
                 </div>
                 <div className='font-bold text-xs text-end tracking-tight flex gap-x-3 justify-end'>
                     <div className='p-2 m-1 text-sky-700'>@{result.email.split('@')[0]}</div>
                     <div className='flex gap-x-4 justify-between py-1 px-2 rounded-md bg-slate-100'>Annualized P/L <span className='text-lg text-sky-700 font-mono'>{result.profitLossAnnualized.toFixed(2)}%</span></div>
-                    <div className='flex gap-x-4 justify-between py-1 px-2 rounded-md bg-slate-200'>P/L <span className='text-lg text-sky-700 font-mono'>{result.profitLoss.toFixed(2)}%</span></div>
+                    <div className='flex gap-x-4 justify-between py-1 px-2 mdrounded-md bg-slate-200'>P/L <span className='text-lg text-sky-700 font-mono'>{result.profitLoss.toFixed(2)}%</span></div>
 
-                    <button className='px-3 py-1 flex rounded-lg bg-slate-300 hover:shadow-lg items-center gap-x-2'
+                    <button className='px-3 py-1 flex rounded-md bg-slate-300 justify-self-center hover:shadow-lg items-center gap-x-2'
                         onClick={() => setLeaderboardPlotOpen(true)}>
                         view
                         <FiBookOpen />

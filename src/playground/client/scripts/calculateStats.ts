@@ -36,11 +36,12 @@ export default function calculateStats(strategyResult: StrategyResultProps): Sta
     const annualizedPL = ((1 + totalPL) ** (365 / numberOfDays)) - 1;
     const formattedAnnualizedPL = annualizedPL !== null ? (annualizedPL * 100).toFixed(2) + '%' : null;
 
-    let numberOfTrades = 1;
+    let numberOfTrades = 0;
     let numberOfProfitableTrades = 0;
     let peak = strategyResult.portfolio[0];
     let maxDrawdown = 0;
 
+    const hasInitialTrade = strategyResult.signal[0] !== 0;
     let buyPrice = strategyResult.portfolio[0];
 
     for (let i = 1; i < length; i++) {
@@ -60,6 +61,13 @@ export default function calculateStats(strategyResult: StrategyResultProps): Sta
 
         const drawdown = (peak - strategyResult.portfolio[i]) / peak;
         maxDrawdown = Math.max(maxDrawdown, drawdown);
+    }
+
+    if (hasInitialTrade && numberOfTrades === 0) {
+        numberOfTrades = 1;
+        if (strategyResult.portfolio[length] > strategyResult.portfolio[0]) {
+            numberOfProfitableTrades++;
+        }
     }
 
     const formattedMaxDrawdown = maxDrawdown !== null ? (maxDrawdown * 100).toFixed(2) + '%' : null;

@@ -95,7 +95,7 @@ function Editor({ formInputs, setStrategyResult, setResultOpen, setFormInputs, s
     }
 
     return (
-        <>
+        <div className="flex-1 overflow-y-hidden">
             <InputForm formInputs={formInputs} setFormInputs={setFormInputs} run={run} />
 
             {loading && <LoadingScreen />}
@@ -105,7 +105,7 @@ function Editor({ formInputs, setStrategyResult, setResultOpen, setFormInputs, s
             <MonacoEditor codeToDisplay={codeToDisplay} setCodeToDisplay={setCodeToDisplay} />
 
             <DebugConsole userStdout={std.out} userStderr={std.err} />
-        </>
+        </div>
     )
 }
 

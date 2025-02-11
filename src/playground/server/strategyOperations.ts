@@ -160,7 +160,7 @@ export const charge: Charge<void, void> = async (_args, context) => {
   if (context.user.credits) {
     await context.entities.User.update({
       where: { id: context.user.id },
-      data: { credits: { increment: 1 } }, // for now increment while testing
+      data: { credits: { decrement: 1 } }, // for now increment while testing
     });
   }
 };

@@ -113,7 +113,7 @@ export default function EditorPage() {
                         selectedStrategy={selectedStrategy}
                         setSelectedStrategy={setSelectedStrategy} />
                 </div>
-                <div className="w-3 cursor-col-resize border-r-2 border-black bg-slate-200"
+                <div className="w-3 cursor-col-resize border-r-2 border-black bg-slate-200 z-10"
                     onMouseDown={() => {
                         isResized.current = true;
                         document.body.style.userSelect = "none";

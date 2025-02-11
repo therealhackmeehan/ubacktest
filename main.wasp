@@ -206,7 +206,6 @@ action deleteShare {
   fn: import { deleteShare } from "@src/result/server/shareOperations",
   entities: [Share]
 }
-
 //end share-related actions
 
 // The big action -> run strategy and initiate a backend process
@@ -223,7 +222,6 @@ action uncharge {
   entities: [User]
 }
 // end runStrategy
-
 
 //region Auth Pages
 route LoginRoute { path: "/login", to: LoginPage }
@@ -323,6 +321,19 @@ job dailyStatsJob {
   entities: [User, DailyStats, Logs, PageViewSource]
 }
 //endregion
+
+// region monthlyCreditReset
+job monthlyCreditReset {
+  executor: PgBoss,
+  perform: {
+    fn: import { monthlyCreditReset } from "@src/user/workers/monthlyCreditReset"
+  },
+  schedule: {
+    cron: "* * * * *"
+  },
+  entities: [User],
+}
+// endregion
 
 //region Admin Dashboard
 route AdminRoute { path: "/admin", to: AnalyticsDashboardPage }

@@ -12,7 +12,7 @@ export default function Features({ features }: { features: Feature[] }) {
     <div id='features' className='mx-auto mt-48 max-w-7xl px-6 lg:px-8'>
       <div className='mx-auto max-w-2xl text-center'>
         <p className='mt-2 text-4xl font-bold tracking-tight text-gray-900 sm:text-5xl dark:text-white'>
-          All the <span className='text-sky-700'>features</span>.
+          All the <span className='text-sky-700 dark:text-sky-500'>features</span>.
         </p>
         <p className='mt-6 text-lg leading-8 text-gray-600 dark:text-white'>
           We've tried to make this backtesting software both feature-rich and easy to use.

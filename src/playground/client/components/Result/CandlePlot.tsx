@@ -117,6 +117,7 @@ function CandlePlot({ strategyResult, costPerTrade, minDate, symbol }: LinePlotP
         layout: {
             padding: 20,
         },
+        animation: strategyResult.timestamp.length > 365 ? false : {},
         interaction: {
             intersect: false,
             mode: 'index' as const,
@@ -130,10 +131,10 @@ function CandlePlot({ strategyResult, costPerTrade, minDate, symbol }: LinePlotP
 
                         // Check if the raw value contains OHLC data
                         if (value.o !== undefined && value.h !== undefined && value.l !== undefined && value.c !== undefined) {
-                            const o = value.o !== undefined ? value.o.toFixed(3) : value.o;
-                            const h = value.h !== undefined ? value.h.toFixed(3) : value.h;
-                            const l = value.l !== undefined ? value.l.toFixed(3) : value.l;
-                            const c = value.c !== undefined ? value.c.toFixed(3) : value.c;
+                            const o = value.o;
+                            const h = value.h;
+                            const l = value.l;
+                            const c = value.c;
 
                             return `${label} | Open: $${o} High: $${h} Low: $${l} Close: $${c}`;
                         }

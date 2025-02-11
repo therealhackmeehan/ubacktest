@@ -9,7 +9,7 @@ export default function FAQ({ faqs }: { faqs: FAQ[] }) {
   return (
     <div className='mt-32 mx-auto max-w-2xl divide-y divide-gray-900/10 dark:divide-gray-200/10 px-6 pb-8 sm:pb-24 sm:pt-12 lg:max-w-6xl lg:px-8 lg:py-32'>
       <h2 className='text-2xl font-bold leading-10 tracking-tight text-gray-900 dark:text-white'>
-        Frequently asked <span className="text-sky-700">questions</span>
+        Frequently asked <span className="text-sky-700 dark:text-sky-500">questions</span>
       </h2>
       <dl className='mt-10 space-y-8 divide-y divide-gray-900/10'>
         {faqs.map((faq) => (

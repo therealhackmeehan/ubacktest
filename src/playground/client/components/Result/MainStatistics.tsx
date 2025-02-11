@@ -29,12 +29,12 @@ interface StatItemProps {
 function Stat({ text, stat }: StatItemProps) {
 
     return (
-        <div className="p-1 flex justify-between">
-            <div className="text-xs font-light">
+        <div className="p-1 flex justify-between text-xs">
+            <div className="font-light">
                 {text}
             </div>
 
-            <div className="font-bold tracking-tight text-sm">
+            <div className="font-bold tracking-tight">
                 {stat !== null ? stat : "na"}
             </div>
         </div>

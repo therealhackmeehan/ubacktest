@@ -9,9 +9,9 @@ import calculateStats, { StatProps } from "../../scripts/calculateStats"
 import { createResult, getSpecificStrategy } from "wasp/client/operations"
 import SPChart from "./SPChart"
 import UserDefinedPlot from "./UserDefinedPlot"
-import { useState, useRef, useEffect } from "react"
-import html2canvas from "html2canvas";
-import { jsPDF } from "jspdf";
+import { useState, useRef, useEffect } from "react";
+import html2canvas from "html2canvas"
+import { jsPDF } from "jspdf"
 import LoadingScreen from "../../../../client/components/LoadingScreen"
 import CandlePlot from "./CandlePlot"
 import ErrorModal from "../modals/ErrorModal"
@@ -32,57 +32,52 @@ function Result({ selectedStrategy, formInputs, strategyResult, abilityToSaveNew
 
     async function saveResult(name: string) {
         if (!selectedStrategy) return;
-        setErrorMsg('');
 
-        try {
-            const connectedStrat = await getSpecificStrategy({ id: selectedStrategy });
-            if (!connectedStrat?.code) {
-                throw new Error('No strategy with that result.');
-            }
-
-            let dataToUse: StrategyResultProps | null = strategyResult;
-
-            const maxTimepoints = 366;
-            const timepoints = strategyResult.timestamp.length;
-            if (timepoints > maxTimepoints) {
-                dataToUse = null;
-            }
-
-            const firstPoint = strategyResult.portfolio[0];
-            const lastPoint = strategyResult.portfolio[timepoints - 1];
-            if (firstPoint === 0 || lastPoint === 0) {
-                throw new Error("Portfolio values cannot be zero.");
-            }
-
-            const profitLoss = 100 * (lastPoint - firstPoint) / firstPoint;
-
-            const firstDate = new Date(strategyResult.timestamp[0] * 1000).getTime();
-            const lastDate = new Date(strategyResult.timestamp[timepoints - 1] * 1000).getTime();
-
-            const numberOfDays = (lastDate - firstDate) / (1000 * 60 * 60 * 24);
-            if (numberOfDays <= 0) {
-                throw new Error("Invalid date range.");
-            }
-
-            const annualizedPL = 100 * ((1 + profitLoss / 100) ** (365 / numberOfDays)) - 1;
-
-            if (!profitLoss || !annualizedPL) {
-                throw new Error("Something is wrong with your data. Unable to calculate Profit/Loss.");
-            }
-
-            await createResult({
-                name: name,
-                code: connectedStrat.code,
-                formInputs: formInputs,
-                data: dataToUse,
-                strategyId: selectedStrategy,
-                timepoints: timepoints,
-                profitLoss: profitLoss,
-                profitLossAnnualized: annualizedPL,
-            })
-        } catch (error: any) {
-            setErrorMsg(error.message)
+        const connectedStrat = await getSpecificStrategy({ id: selectedStrategy });
+        if (!connectedStrat?.code) {
+            throw new Error('No strategy with that result.');
         }
+
+        let dataToUse: StrategyResultProps | null = strategyResult;
+
+        const maxTimepoints = 366;
+        const timepoints = strategyResult.timestamp.length;
+        if (timepoints > maxTimepoints) {
+            dataToUse = null;
+        }
+
+        const firstPoint = strategyResult.portfolio[0];
+        const lastPoint = strategyResult.portfolio[timepoints - 1];
+        if (firstPoint === 0 || lastPoint === 0) {
+            throw new Error("Portfolio values cannot be zero.");
+        }
+
+        const profitLoss = 100 * (lastPoint - firstPoint) / firstPoint;
+
+        const firstDate = new Date(strategyResult.timestamp[0] * 1000).getTime();
+        const lastDate = new Date(strategyResult.timestamp[timepoints - 1] * 1000).getTime();
+
+        const numberOfDays = (lastDate - firstDate) / (1000 * 60 * 60 * 24);
+        if (numberOfDays <= 0) {
+            throw new Error("Invalid date range.");
+        }
+
+        const annualizedPL = 100 * ((1 + profitLoss / 100) ** (365 / numberOfDays)) - 1;
+
+        if (!profitLoss || !annualizedPL) {
+            throw new Error("Something is wrong with your data. Unable to calculate Profit/Loss.");
+        }
+
+        await createResult({
+            name: name,
+            code: connectedStrat.code,
+            formInputs: formInputs,
+            data: dataToUse,
+            strategyId: selectedStrategy,
+            timepoints: timepoints,
+            profitLoss: profitLoss,
+            profitLossAnnualized: annualizedPL,
+        })
     }
 
     useEffect(() => {

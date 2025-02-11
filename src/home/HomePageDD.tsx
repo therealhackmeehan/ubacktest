@@ -14,7 +14,7 @@ export function StrategyDropDown({ strategy }: { strategy: Strategy }) {
     return (
         <li key={strategy.id}
             className='border-t-2 border-gray-100 p-3 transition-all duration-[500ms]'>
-            <div className='md:flex justify-between'>
+            <div className='flex justify-between'>
                 <div className='flex gap-x-2 items-center'>
                     <Link
                         className="font-bold text-xl tracking-tight text-gray-900 hover:text-gray-500 hover:scale-110 duration-500 hover:cursor-pointer"
@@ -25,7 +25,6 @@ export function StrategyDropDown({ strategy }: { strategy: Strategy }) {
                     </Link>
                 </div>
                 <div className='flex items-end'>
-
                     <button className='pl-3 hover:text-slate-500' title='Rename Strategy'
                         onClick={() => setIsRenameModalOpen(true)}>
                         <MdOutlineEdit size='1.4rem' />

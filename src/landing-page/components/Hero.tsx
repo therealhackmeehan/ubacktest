@@ -15,22 +15,22 @@ export default function Hero() {
     <div className='relative max-w-7xl mx-auto'>
 
       <div
-        className='absolute top-0 right-0 -z-10 transform-gpu overflow-hidden w-full blur-3xl sm:top-0 '
+        className='absolute top-0 right-0 transform-gpu overflow-hidden w-full blur-3xl sm:top-0 pointer-events-none'
         aria-hidden='true'
       >
         <div
-          className='aspect-[1020/880] w-[55rem] flex-none sm:right-1/4 sm:translate-x-1/2 dark:hidden bg-gradient-to-tr from-sky-400 to-slate-800 opacity-40'
+          className='aspect-[1020/880] w-[55rem] flex-none sm:right-1/4 sm:translate-x-1/2 bg-gradient-to-tr from-sky-500 dark:from-sky-700 to-slate-400 opacity-40'
           style={{
             clipPath: 'polygon(80% 20%, 90% 55%, 50% 100%, 70% 30%, 20% 50%, 50% 0)',
           }}
         />
       </div>
       <div
-        className='absolute inset-x-0 top-[calc(100%-40rem)] sm:top-[calc(100%-65rem)] -z-10 transform-gpu overflow-hidden blur-3xl'
+        className='absolute inset-x-0 top-[calc(100%-40rem)] sm:top-[calc(100%-65rem)] transform-gpu overflow-hidden blur-3xl pointer-events-none'
         aria-hidden='true'
       >
         <div
-          className='relative aspect-[1020/880] sm:-left-3/4 sm:translate-x-1/4 dark:hidden bg-gradient-to-br from-sky-700 to-slate-300  opacity-30 w-[72.1875rem]'
+          className='relative aspect-[1020/880] sm:-left-3/4 sm:translate-x-1/4 bg-gradient-to-br from-sky-700 to-slate-300 dark:to-sky-800 opacity-30 w-[72.1875rem]'
           style={{
             clipPath: 'ellipse(80% 30% at 80% 50%)',
           }}
@@ -41,13 +41,13 @@ export default function Hero() {
         <div className='mx-auto max-w-8xl px-6 lg:px-8'>
           <div className='lg:mb-18 mx-auto max-w-3xl text-center'>
             <h1 ref={ref1} className={`text-4xl font-bold text-gray-900 sm:text-6xl dark:text-white duration-500 ${inView1 ? 'opacity-100' : 'opacity-0 translate-y-3'}`}>
-              <span className='opacity-0'>-</span>1 means <span className='text-sky-700'>buy</span>.
+              <span className='opacity-0'>-</span>1 means <span className='text-sky-700 dark:text-sky-500'>buy</span>.
             </h1>
             <h1 ref={ref2} className={`text-4xl font-bold text-gray-900 sm:text-6xl dark:text-white duration-700 ${inView2 ? 'opacity-100' : 'opacity-0 translate-y-3'}`}>
-              -1 means <span className='text-sky-700'>short</span>.
+              -1 means <span className='text-sky-700 dark:text-sky-500'>short</span>.
             </h1>
             <h1 ref={ref3} className={`text-4xl my-12 font-bold text-gray-900 sm:text-6xl dark:text-white duration-1000 ${inView3 ? 'opacity-100' : 'opacity-0 translate-y-3'}`}>
-              The rest is up to <span className='italic text-sky-700'>you</span>.
+              The rest is up to <span className='italic text-sky-700 dark:text-sky-500'>you</span>.
             </h1>
             <p className='mt-6 mx-auto max-w-2xl text-lg leading-8 text-gray-600 dark:text-white'>
               Backtest that trading strategy you've had on your mind...
@@ -67,14 +67,14 @@ export default function Hero() {
               </a>
             </div>
           </div>
-          <div className="max-w-3xl m-4 lg:mx-auto">
+          <div className="m-4 lg:mx-auto">
             <div className="mt-14 w-full">
               {/* First Image */}
               <div className="rotate-[-2deg] hover:rotate-[-4deg] duration-700 z-10 pr-12">
                 <img
                   src={sp500}
                   alt="backtestResult"
-                  className="rounded-md shadow-2xl ring-1 ring-gray-900/10 dark:invert"
+                  className="rounded-md shadow-2xl ring-1 ring-gray-900/10"
                 />
               </div>
 
@@ -83,7 +83,7 @@ export default function Hero() {
                 <img
                   src={editor}
                   alt="editor"
-                  className="rounded-md shadow-2xl ring-1 ring-gray-900/10 dark:invert"
+                  className="rounded-md shadow-2xl ring-1 ring-gray-900/10"
                 />
               </div>
 
@@ -92,19 +92,17 @@ export default function Hero() {
                 <img
                   src={results}
                   alt="results"
-                  className="rounded-md shadow-2xl ring-1 ring-gray-900/10 dark:invert"
+                  className="rounded-md shadow-2xl ring-1 ring-gray-900/10"
                 />
               </div>
-
-              {/* <div className="absolute top-40 left-40 rotate-[-8deg] z-30">
-              <img
-                src={engine}
-                alt="engine"
-                width={400}
-                height={300}
-                className="rounded-md shadow-2xl ring-1 ring-gray-900/10"
-              />
-            </div> */}
+              {/* 
+              <div className="rotate-[-2deg] -mt-12 hover:rotate-[-4deg] duration-700 z-20 pr-12">
+                <img
+                  src={engine}
+                  alt="results"
+                  className="rounded-md shadow-2xl ring-1 ring-gray-900/10"
+                />
+              </div> */}
             </div>
           </div>
 

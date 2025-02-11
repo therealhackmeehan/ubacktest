@@ -15,7 +15,7 @@ function LeaderboardPlot({ result, setLeaderboardPlotOpen, index }: LeaderboardP
     return (
         <div className="fixed inset-0 flex items-center justify-center overflow-y-auto z-50">
             <div className="fixed inset-0 w-full bg-black/70"></div>
-            <div className="relative z-10 w-11/12 p-4 bg-white border-2 border-black rounded-lg shadow-xl overflow-y-auto">
+            <div className="relative z-10 w-11/12 p-4 m-8 bg-white border-2 border-black rounded-lg shadow-xl overflow-y-auto">
                 <div className="flex justify-between m-2 p-4 bg-gradient-to-r from-sky-700 to-white shadow-lg rounded-md">
                     <div className="font-extrabold text-slate-100 text-xl tracking-tight">
                         Strategy Overview <span className="text-xs p-2 bg-slate-700 text-white italic font-extralight mx-4 rounded-full">hypothetical growth of $1</span>
@@ -35,10 +35,17 @@ function LeaderboardPlot({ result, setLeaderboardPlotOpen, index }: LeaderboardP
                         </button>
                     </div>
                 </div>
-                <CandlePlot strategyResult={result.data as unknown as StrategyResultProps}
-                    costPerTrade={formInputsLocal.costPerTrade}
-                    minDate={formInputsLocal.useWarmupDate ? formInputsLocal.warmupDate : formInputsLocal.startDate}
-                    symbol={formInputsLocal.symbol} />
+                {(result.data)
+                    ?
+                    <CandlePlot strategyResult={result.data as unknown as StrategyResultProps}
+                        costPerTrade={formInputsLocal.costPerTrade}
+                        minDate={formInputsLocal.useWarmupDate ? formInputsLocal.warmupDate : formInputsLocal.startDate}
+                        symbol={formInputsLocal.symbol} />
+                    :
+                    <div className="m-auto font-bold tracking-tight p-8">
+                        Sorry, unable to view this strategy currently because it is too large and something went wrong on our end.
+                    </div>
+                }
             </div>
         </div>
     )

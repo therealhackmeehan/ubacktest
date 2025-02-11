@@ -10,7 +10,7 @@ import Workflow from './components/Workflow';
 export default function LandingPage() {
   return (
     <div className='bg-white dark:text-white dark:bg-boxdark-2'>
-      <main className='isolate dark:bg-boxdark-2'>
+      <main className='dark:bg-boxdark-2'>
         <Hero />
         <Workflow />
         <Features features={features} />

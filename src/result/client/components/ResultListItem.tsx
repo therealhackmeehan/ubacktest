@@ -8,10 +8,10 @@ import RenameResultModal from './modals/RenameResultModal';
 import DeleteResultModal from './modals/DeleteResultModal';
 import SmallPlot from './SmallPlot';
 import OpenResult from './OpenResult';
-import LoadingScreen from '../../../client/components/LoadingScreen';
 import { togglePrivacy } from 'wasp/client/operations';
 import ShareResultModal from './modals/ShareResultModal';
 import { RxLockOpen2, RxLockClosed } from "react-icons/rx";
+import { AiOutlineLoading3Quarters } from 'react-icons/ai';
 
 export default function ResultListItem({ result }: { result: Result }) {
 
@@ -27,6 +27,8 @@ export default function ResultListItem({ result }: { result: Result }) {
     const [isPublic, setIsPublic] = useState<boolean>(result.public);
 
     async function togglePublicPrivate() {
+        if (loading) return;
+
         setLoading(true);
 
         try {
@@ -43,8 +45,7 @@ export default function ResultListItem({ result }: { result: Result }) {
 
     return (
         <>
-            {loading && <LoadingScreen />}
-            <div className='flex justify-between my-3 mx-1 items-center p-2 rounded-lg bg-slate-100 border-slate-200 border-2 hover:shadow-lg duration-700'>
+            <div className='md:flex justify-between my-3 mx-1 items-center p-2 rounded-lg bg-slate-100 border-slate-200 border-2 hover:shadow-lg duration-700'>
                 <ResultHeader result={result} setResultPanelOpen={setResultPanelOpen} />
                 <div className='flex justify-between gap-x-3 items-center'>
                     <button className='px-3 py-1 flex rounded-lg bg-white hover:shadow-lg items-center gap-x-2'
@@ -58,7 +59,7 @@ export default function ResultListItem({ result }: { result: Result }) {
                     </button>
                     <button className='hover:text-slate-600 hover:scale-110'
                         onClick={togglePublicPrivate}>
-                        {isPublic ? <RxLockOpen2 /> : <RxLockClosed />}
+                        {loading ? <AiOutlineLoading3Quarters className="animate-spin" /> : (isPublic ? <RxLockOpen2 /> : <RxLockClosed />)}
                     </button>
                     <button className='hover:text-slate-600 hover:scale-110'
                         onClick={() => setRenameResultModalOpen(true)}>
@@ -92,7 +93,7 @@ interface ResultHeaderProps {
 }
 export function ResultHeader({ result, setResultPanelOpen }: ResultHeaderProps) {
     return (
-        <div className='flex justify-between gap-x-3'>
+        <div className='md:flex justify-between gap-x-3'>
             <button className='tracking-tight text-xl font-semibold hover:text-sky-700' onClick={() => setResultPanelOpen(true)}>
                 {result.name}
             </button>
