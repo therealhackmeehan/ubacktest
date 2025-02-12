@@ -207,7 +207,7 @@ function CandlePlot({ strategyResult, costPerTrade, minDate, symbol }: LinePlotP
     };
 
     if (!chartData) {
-        return <div className='w-full h-90 mt-4 text-center text-xl tracking-tight'>Loading...</div>;
+        return <div className='w-full mt-4 text-center text-xl tracking-tight'>Loading...</div>;
     }
 
     return (

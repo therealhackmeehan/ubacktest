@@ -45,12 +45,15 @@ class CodeExecutor {
         };
 
         const response = await fetch(url, options);
-        if (!response.ok) {
-            throw new HttpError(503, `In Executing Code, Unable to make that request: ${response.statusText}`);
-        }
 
         const fullResult = await response.json();
         console.log(fullResult);
+
+        if (!response.ok) {
+            const errorMsg = fullResult?.error;
+            throw new HttpError(503, `In Executing Code, Unable to make that request: ${errorMsg || response.statusText}`);
+        }
+        
         let { stdout, stderr } = fullResult;
 
         if (!stdout) stdout = '';

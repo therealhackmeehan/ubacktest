@@ -136,16 +136,30 @@ interface BacktestResultProps {
   warnings: string[];
 };
 
+let isProcessing = false;
+const delay = 1000; // 1 second delay between execution (rate-limiting)
+
 export const runStrategy: RunStrategy<any, any> = async ({ formInputs, code }, context): Promise<BacktestResultProps> => {
   if (!context.user) throw new HttpError(401);
 
   if (!context.user.credits && context.user.subscriptionPlan !== "active" && !context.user.isAdmin) {
-    throw new HttpError(402, "You must add more credits or purchase an basic monthy subscription to use this software.");
+    throw new HttpError(402, "You must add more credits or purchase a basic monthly subscription to use this software.");
   }
 
-  const strategyInstance = new StrategyPipeline(formInputs, code);
-  return await strategyInstance.run();
+  if (isProcessing) {
+    throw new HttpError(429, "Please wait before running another strategy.");
+  }
 
+  isProcessing = true;
+
+  try {
+    const strategyInstance = new StrategyPipeline(formInputs, code);
+    return await strategyInstance.run();
+  } finally {
+    setTimeout(() => {
+      isProcessing = false;
+    }, delay);
+  }
 };
 
 export const charge: Charge<void, void> = async (_args, context) => {
@@ -177,7 +191,7 @@ export const uncharge: Uncharge<void, void> = async (_args, context) => {
   if (context.user.credits) {
     await context.entities.User.update({
       where: { id: context.user.id },
-      data: { credits: { decrement: 1 } }, // for now increment while testing
+      data: { credits: { increment: 1 } }, // for now increment while testing
     });
   }
 };

@@ -84,17 +84,17 @@ function DataTable({ strategyResult }: { strategyResult: StrategyResultProps }) 
             <tbody className="text-xs text-gray-700 lowercase bg-white overflow-y-auto">
                 {sortedData.timestamp.map((date: any, index: number) => (
                     <tr
-                        className="text-center group border-b-2 border-slate-100 hover:font-bold hover:bg-slate-100 hover:-translate-x-2 duration-200"
+                        className="text-center group border-b-2 border-slate-100 hover:font-bold hover:bg-slate-100 hover:-translate-x-2 duration-200 group"
                         key={index}
                     >
                         <td className="font-extralight">
                             {new Date(date * 1000).toLocaleString()}
                         </td>
 
-                        <td className="font-bold">
+                        <td className="font-bold flex justify-center gap-x-4">
                             {sortedData.signal[index]}
                             <span
-                                className="text-xs text-slate-400 hidden transition-opacity duration-500"
+                                className="text-xs text-slate-400 hidden group-hover:flex  duration-500"
                             >(
                                 {sortedData.signal[index] >= -1 && sortedData.signal[index] < -0.7
                                     ? "strong short"

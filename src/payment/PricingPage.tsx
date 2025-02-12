@@ -97,10 +97,6 @@ const PricingPage = () => {
           </h2>
         </div>
         <p className='mx-auto mt-6 max-w-2xl text-center text-lg leading-8 text-gray-600 dark:text-white'>
-          Stock data is expensive.<br />
-          <span className='px-2 py-1 bg-gray-100 rounded-md text-gray-700'>4242 4242 4242 4242 4242</span>
-        </p>
-        <p className='mx-auto mt-6 max-w-2xl text-center text-lg leading-8 text-gray-600 dark:text-white'>
           Choose between Stripe and LemonSqueezy as your payment provider. Just add your Product IDs! Try it
           out below with test credit card number <br />
           <span className='px-2 py-1 bg-gray-100 rounded-md text-gray-700'>4242 4242 4242 4242 4242</span>
