@@ -21,6 +21,7 @@ export default function OpenResult({ formInputs, setResultPanelOpen, result }: O
 
     useEffect(() => {
         const fetchStrategyResult = async () => {
+
             setLoading(true);
             setErrMsg(""); // Reset error on new fetch
 
@@ -64,7 +65,7 @@ export default function OpenResult({ formInputs, setResultPanelOpen, result }: O
             {loading && !errMsg && <LoadingScreen />}
 
             {strategyResult && (
-                <div className="fixed inset-0 flex items-center justify-center overflow-y-auto z-50">
+                <div className="fixed inset-0 flex items-center justify-center z-50">
                     <div className="fixed inset-0 w-full bg-gray-800 opacity-50"></div>
                     <div className="z-10 w-11/12 h-5/6 p-4 bg-white border-2 border-black rounded-lg shadow-xl overflow-y-auto">
                         <button

@@ -140,6 +140,7 @@ let isProcessing = false;
 const delay = 1000; // 1 second delay between execution (rate-limiting)
 
 export const runStrategy: RunStrategy<any, any> = async ({ formInputs, code }, context): Promise<BacktestResultProps> => {
+
   if (!context.user) throw new HttpError(401);
 
   if (!context.user.credits && context.user.subscriptionPlan !== "active" && !context.user.isAdmin) {

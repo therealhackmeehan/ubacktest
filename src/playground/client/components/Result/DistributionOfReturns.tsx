@@ -9,6 +9,7 @@ import {
     Tooltip,
     Legend,
 } from "chart.js";
+import ChartWrapper from "../../../../client/components/ChartWrapper";
 
 // Register chart components
 ChartJS.register(CategoryScale, LinearScale, BarElement, Title, Tooltip, Legend);
@@ -103,7 +104,7 @@ export default function DistributionOfReturns({ stockDataReturns, mean, stddev, 
     // Chart options
     const options = {
         responsive: true,
-        aspectRatio: 4 / 1,
+        maintainAspectRatio: false,
         plugins: {
             legend: {
                 display: true, // Show legend to differentiate datasets
@@ -150,7 +151,9 @@ export default function DistributionOfReturns({ stockDataReturns, mean, stddev, 
                     </div>}
                 </div>
             </div>
-            <Bar data={returnsChartData} options={options} />
+            <ChartWrapper height={20}>
+                <Bar data={returnsChartData} options={options} />
+            </ChartWrapper>
         </>
     );
 }

@@ -22,7 +22,6 @@ const editorOpts = {
         bottom: 10
     },
     automaticLayout: true,
-    scrollBeyondLastLine: false,
 }
 
 interface MonacoEditorProps {

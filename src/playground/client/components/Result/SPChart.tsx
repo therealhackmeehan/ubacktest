@@ -14,6 +14,7 @@ import {
     TimeSeriesScale,
 } from 'chart.js';
 import { StrategyResultProps } from '../../../../shared/sharedTypes';
+import ChartWrapper from '../../../../client/components/ChartWrapper';
 
 ChartJS.register(
     CategoryScale,
@@ -62,8 +63,7 @@ function SPChart({ strategyResult }: { strategyResult: StrategyResultProps }) {
 
     const options = {
         responsive: true,
-        aspectRatio: 2 / 1,
-
+        maintainAspectRatio: false,
         layout: {
             padding: 20,
         },
@@ -105,7 +105,9 @@ function SPChart({ strategyResult }: { strategyResult: StrategyResultProps }) {
     return (
         <div className="m-2">
             <div className="text-lg tracking-tight font-bold text-sky-700">Did you beat the S&P 500?</div>
-            <Line data={chartData} options={options} />
+            <ChartWrapper height={65}>
+                <Line data={chartData} options={options} />
+            </ChartWrapper>
         </div>
     );
 }

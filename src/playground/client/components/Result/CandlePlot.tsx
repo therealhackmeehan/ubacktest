@@ -16,6 +16,7 @@ import {
     Legend,
     TimeSeriesScale,
 } from 'chart.js';
+import ChartWrapper from '../../../../client/components/ChartWrapper';
 
 ChartJS.register(
     CategoryScale,
@@ -113,7 +114,7 @@ function CandlePlot({ strategyResult, costPerTrade, minDate, symbol }: LinePlotP
 
     const options = {
         responsive: true,
-        aspectRatio: 2 / 1,
+        maintainAspectRatio: false,
         layout: {
             padding: 20,
         },
@@ -211,10 +212,9 @@ function CandlePlot({ strategyResult, costPerTrade, minDate, symbol }: LinePlotP
     }
 
     return (
-        <>
+        <ChartWrapper height={65}>
             <Chart type="candlestick" data={chartData} options={options} />
-            <div className="w-full border-1 h-1 bg-white"></div>
-        </>
+        </ChartWrapper>
     )
 }
 

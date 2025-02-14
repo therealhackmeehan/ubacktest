@@ -14,6 +14,7 @@ import {
     Legend,
     TimeSeriesScale,
 } from 'chart.js';
+import ChartWrapper from "../../../../client/components/ChartWrapper";
 
 ChartJS.register(
     CategoryScale,
@@ -67,7 +68,7 @@ export default function UserDefinedPlot({ userDefinedData, timestamp }: UserDefi
 
     const options = {
         responsive: true,
-        aspectRatio: 4 / 1,
+        maintainAspectRatio: false,
         animation: {
             duration: 2000,
         },
@@ -80,7 +81,7 @@ export default function UserDefinedPlot({ userDefinedData, timestamp }: UserDefi
         },
         plugins: {
             legend: {
-                position: 'right' as const,
+                position: 'bottom' as const,
             },
         },
         scales: {
@@ -92,10 +93,9 @@ export default function UserDefinedPlot({ userDefinedData, timestamp }: UserDefi
 
     if (!chartData) return <div className='w-full mt-4 text-center text-xl tracking-tight'>Loading...</div>;
     return (
-        <>
-            <div className="w-full h-1 bg-white"></div>
+        <ChartWrapper height={40}>
             <Line data={chartData} options={options} />
-        </>
+        </ChartWrapper>
     );
 
 }

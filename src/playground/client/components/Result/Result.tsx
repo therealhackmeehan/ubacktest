@@ -81,8 +81,10 @@ function Result({ selectedStrategy, formInputs, strategyResult, abilityToSaveNew
     }
 
     useEffect(() => {
-        const stats: StatProps = calculateStats(strategyResult);
-        setStats(stats);
+        if (strategyResult) {
+            const stats: StatProps = calculateStats(strategyResult);
+            setStats(stats);
+        }
     }, [strategyResult])
 
     const downloadCSV = () => {
@@ -263,7 +265,7 @@ function Result({ selectedStrategy, formInputs, strategyResult, abilityToSaveNew
                     Strategy Report, Traded on {formInputs.symbol.toUpperCase()}
                 </div>
                 <div className="m-1 text-xl tracking-tight text-slate-400 hover:text-slate-800 font-bold">Hypothetical Growth of $1</div>
-                <div className="rounded-t-md border-2 border-slate-300 h-200">
+                <div className="rounded-t-md border-2 border-slate-300">
                     <CandlePlot strategyResult={strategyResult} costPerTrade={formInputs.costPerTrade} minDate={minDate} symbol={formInputs.symbol} />
                 </div>
                 <FormInputHeader formInputs={formInputs} />
