@@ -26,9 +26,12 @@ export default function NewResultModal({ onSuccess, closeModal, symbol }: NewPro
         if (currentlyInTimeout) return;
 
         setErrMsg('');
+        setShowSuccess(false); // Reset success state
+
         try {
-            validateNewName(newResultName);
-            await onSuccess(newResultName);
+            validateNewName(newResultName); // This should throw an error if invalid
+            await onSuccess(newResultName); // Ensure success before showing success UI
+
             setShowSuccess(true);
             setCurrentlyInTimeout(true);
             const timeoutDuration = 3000;
@@ -37,21 +40,23 @@ export default function NewResultModal({ onSuccess, closeModal, symbol }: NewPro
             // Start interval to update the progress
             const progressInterval = setInterval(() => {
                 elapsedTime += 50;
-                setProgress((elapsedTime / timeoutDuration) * 100); // Update progress
+                setProgress((elapsedTime / timeoutDuration) * 100);
                 if (elapsedTime >= timeoutDuration) {
-                    clearInterval(progressInterval); // Clear interval when timeout is complete
+                    clearInterval(progressInterval);
                 }
             }, 50);
 
-            // Set timeout to close the modal after 4 seconds
+            // Set timeout to close the modal after 3 seconds
             setTimeout(() => {
                 closeModal();
                 setCurrentlyInTimeout(false);
             }, timeoutDuration);
         } catch (error: any) {
             setErrMsg(error.message);
+            setShowSuccess(false); // Ensure success message is removed on error
         }
     };
+
 
     useEnterKey(handleNewResult);
 

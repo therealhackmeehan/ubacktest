@@ -16,7 +16,7 @@ export default function App() {
   const { data: user } = useAuth();
 
   const shouldDisplayFooter = useMemo(() => {
-    return !((location.pathname === '/editor') || (location.pathname === '/deploy'));
+    return !(location.pathname === '/editor');
   }, [location]);
 
   const isAdminDashboard = useMemo(() => {
@@ -50,8 +50,8 @@ export default function App() {
           <Outlet />
         ) : (
           <>
-              <AppNavBar />
-              <Outlet />
+            <AppNavBar />
+            <Outlet />
           </>
         )}
       </div>

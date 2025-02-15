@@ -12,13 +12,15 @@ export default function ResultLayout({ strategyResult, formInputs, strategyResul
 
     if ((!strategyResult) || (strategyResultIsConnectedTo !== selectedStrategy)) {
         return (
-            <div className="border-2 p-4 border-black font-extrabold m-4 lg:m-12 first-letter:justify-self-center blur-sm text-5xl text-slate-800/30 tracking-tight">
+            <div className="border-2 p-4 border-black font-extrabold m-4 lg:m-12 blur-sm text-5xl text-slate-800/30 tracking-tight">
                 No Current Result to Display for This Strategy
             </div>
         );
     }
 
     return (
-        <Result selectedStrategy={selectedStrategy} formInputs={formInputs} strategyResult={strategyResult} abilityToSaveNew={true} />
+        <div className='overflow-auto'>
+            <Result selectedStrategy={selectedStrategy} formInputs={formInputs} strategyResult={strategyResult} abilityToSaveNew={true} />
+        </div>
     );
 };

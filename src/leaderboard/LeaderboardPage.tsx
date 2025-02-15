@@ -32,7 +32,7 @@ function LeaderboardPage() {
 
     return (
         <ContentWrapper>
-            <div className="max-w-3xl mx-auto">
+            <div className="max-w-5xl mx-auto">
                 <div className="m-2 p-4 bg-gradient-to-tr from-sky-700/50 to-white duration-1000 rounded-lg shadow-xl">
                     <div className="text-3xl text-end font-extrabold tracking-tight"><span className="text-xs">global </span>Leaderboard</div>
                 </div>

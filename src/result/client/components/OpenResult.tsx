@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useRef, useEffect } from "react";
 import { FormInputProps, StrategyResultProps } from "../../../shared/sharedTypes";
 import copyToClipboard from "./copyToClipboard";
 import { Result } from "wasp/entities";
@@ -19,9 +19,15 @@ export default function OpenResult({ formInputs, setResultPanelOpen, result }: O
     const [loading, setLoading] = useState(true);
     const [errMsg, setErrMsg] = useState("");
 
-    useEffect(() => {
-        const fetchStrategyResult = async () => {
+    const hasRun = useRef(false); // Track if useEffect has run
 
+
+    useEffect(() => {
+
+        if (hasRun.current) return; // Prevent re-running
+        hasRun.current = true; // Mark as run
+
+        const fetchStrategyResult = async () => {
             setLoading(true);
             setErrMsg(""); // Reset error on new fetch
 
@@ -43,7 +49,8 @@ export default function OpenResult({ formInputs, setResultPanelOpen, result }: O
         };
 
         fetchStrategyResult();
-    }, [result, formInputs]);
+    }, []); // Empty dependency array ensures it runs only once
+
 
     useEffect(() => {
         if (strategyResult) {
@@ -81,7 +88,7 @@ export default function OpenResult({ formInputs, setResultPanelOpen, result }: O
                             selectedStrategy={result.fromStrategyID}
                             abilityToSaveNew={false}
                         />
-                        <div onClick={() => copyToClipboard(result.code)} className="max-w-7xl px-8 mx-auto">
+                        <div onClick={() => copyToClipboard(result.code)} className="px-8 mx-auto">
                             <textarea
                                 className="w-full h-72 p-4 text-xs font-mono bg-slate-100 border border-white rounded-lg resize-none hover:bg-slate-200 hover:cursor-pointer"
                                 value={result.code}

@@ -31,7 +31,7 @@ function LeaderboardItem({ result, index }: LeaderboardItemProps) {
                     <div className='text-title-lg font-bold'>
                         {index + 1}
                     </div>
-                    <div className={`py-2 px-4 rounded-xl ${randomColor()} text-white hidden flex font-extrabold text-xl`}>{result.email.charAt(0).toUpperCase()}</div>
+                    <div className={`py-2 px-4 rounded-xl ${randomColor()} text-white font-extrabold text-xl`}>{result.email.charAt(0).toUpperCase()}</div>
                 </div>
                 <div className='font-bold text-xs text-end tracking-tight flex gap-x-3 justify-end'>
                     <div className='p-2 m-1 text-sky-700'>@{result.email.split('@')[0]}</div>

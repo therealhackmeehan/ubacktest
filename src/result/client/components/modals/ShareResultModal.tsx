@@ -16,13 +16,17 @@ export default function ShareResultModal({ closeModal, id }: ShareResultModalPro
     const [email, setEmail] = useState('');
     const [currentlyInTimeout, setCurrentlyInTimeout] = useState<boolean>(false);
     const [progress, setProgress] = useState<number>(0); // New state for tracking progress
-
+    
     const handleResultDelete = async () => {
         if (currentlyInTimeout) return;
 
         setErrMsg('');
+        setShowSuccess(false); // Reset success state
+
         try {
             await shareResult({ email, resultID: id });
+
+            // Only proceed to success if no errors occur
             setShowSuccess(true);
             setCurrentlyInTimeout(true);
             const timeoutDuration = 3000;
@@ -44,8 +48,10 @@ export default function ShareResultModal({ closeModal, id }: ShareResultModalPro
             }, timeoutDuration);
         } catch (error: any) {
             setErrMsg(error.message);
+            setShowSuccess(false); // Ensure success message doesn't appear on error
         }
     };
+
 
     useEnterKey(handleResultDelete);
 
