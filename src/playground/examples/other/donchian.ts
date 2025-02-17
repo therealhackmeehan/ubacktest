@@ -1,6 +1,5 @@
 export const donchian =
-    `
-'''
+    `'''
 Donchian Channel Breakout Strategy.
 
 Buy when the price crosses above the upper band (breakout to the upside).

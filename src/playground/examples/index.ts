@@ -148,7 +148,7 @@ export const examples: StrategyExamples = {
             script: random
         },
         {
-            name: "Advanced Random Strategy",
+            name: "(More) Random Strategy",
             script: moreRandom
         }
     ],

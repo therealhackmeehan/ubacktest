@@ -19,39 +19,45 @@ CREATE TABLE "User" (
 );
 
 -- CreateTable
-CREATE TABLE "GptResponse" (
+CREATE TABLE "Strategy" (
     "id" TEXT NOT NULL,
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updatedAt" TIMESTAMP(3) NOT NULL,
     "userId" TEXT NOT NULL,
-    "content" TEXT NOT NULL,
+    "name" TEXT NOT NULL,
+    "code" TEXT,
 
-    CONSTRAINT "GptResponse_pkey" PRIMARY KEY ("id")
+    CONSTRAINT "Strategy_pkey" PRIMARY KEY ("id")
 );
 
 -- CreateTable
-CREATE TABLE "Task" (
-    "id" TEXT NOT NULL,
-    "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    "userId" TEXT NOT NULL,
-    "description" TEXT NOT NULL,
-    "time" TEXT NOT NULL DEFAULT '1',
-    "isDone" BOOLEAN NOT NULL DEFAULT false,
-
-    CONSTRAINT "Task_pkey" PRIMARY KEY ("id")
-);
-
--- CreateTable
-CREATE TABLE "File" (
+CREATE TABLE "Result" (
     "id" TEXT NOT NULL,
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "userId" TEXT NOT NULL,
     "name" TEXT NOT NULL,
-    "type" TEXT NOT NULL,
-    "key" TEXT NOT NULL,
-    "uploadUrl" TEXT NOT NULL,
+    "code" TEXT NOT NULL,
+    "profitLoss" DOUBLE PRECISION NOT NULL,
+    "profitLossAnnualized" DOUBLE PRECISION NOT NULL,
+    "timepoints" INTEGER NOT NULL,
+    "public" BOOLEAN NOT NULL DEFAULT true,
+    "fromStrategyID" TEXT,
+    "data" JSONB NOT NULL,
+    "formInputs" JSONB NOT NULL,
 
-    CONSTRAINT "File_pkey" PRIMARY KEY ("id")
+    CONSTRAINT "Result_pkey" PRIMARY KEY ("id")
+);
+
+-- CreateTable
+CREATE TABLE "Share" (
+    "id" TEXT NOT NULL,
+    "sharedAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "userID" TEXT NOT NULL,
+    "receiverID" TEXT NOT NULL,
+    "resultID" TEXT NOT NULL,
+    "accepted" BOOLEAN NOT NULL DEFAULT false,
+
+    CONSTRAINT "Share_pkey" PRIMARY KEY ("id")
 );
 
 -- CreateTable
@@ -139,6 +145,15 @@ CREATE UNIQUE INDEX "User_username_key" ON "User"("username");
 CREATE UNIQUE INDEX "User_paymentProcessorUserId_key" ON "User"("paymentProcessorUserId");
 
 -- CreateIndex
+CREATE UNIQUE INDEX "Strategy_userId_name_key" ON "Strategy"("userId", "name");
+
+-- CreateIndex
+CREATE UNIQUE INDEX "Result_userId_name_key" ON "Result"("userId", "name");
+
+-- CreateIndex
+CREATE UNIQUE INDEX "Share_resultID_receiverID_key" ON "Share"("resultID", "receiverID");
+
+-- CreateIndex
 CREATE UNIQUE INDEX "DailyStats_date_key" ON "DailyStats"("date");
 
 -- CreateIndex
@@ -151,13 +166,22 @@ CREATE UNIQUE INDEX "Session_id_key" ON "Session"("id");
 CREATE INDEX "Session_userId_idx" ON "Session"("userId");
 
 -- AddForeignKey
-ALTER TABLE "GptResponse" ADD CONSTRAINT "GptResponse_userId_fkey" FOREIGN KEY ("userId") REFERENCES "User"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
+ALTER TABLE "Strategy" ADD CONSTRAINT "Strategy_userId_fkey" FOREIGN KEY ("userId") REFERENCES "User"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "Task" ADD CONSTRAINT "Task_userId_fkey" FOREIGN KEY ("userId") REFERENCES "User"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
+ALTER TABLE "Result" ADD CONSTRAINT "Result_userId_fkey" FOREIGN KEY ("userId") REFERENCES "User"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "File" ADD CONSTRAINT "File_userId_fkey" FOREIGN KEY ("userId") REFERENCES "User"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
+ALTER TABLE "Result" ADD CONSTRAINT "Result_fromStrategyID_fkey" FOREIGN KEY ("fromStrategyID") REFERENCES "Strategy"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "Share" ADD CONSTRAINT "Share_userID_fkey" FOREIGN KEY ("userID") REFERENCES "User"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "Share" ADD CONSTRAINT "Share_receiverID_fkey" FOREIGN KEY ("receiverID") REFERENCES "User"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "Share" ADD CONSTRAINT "Share_resultID_fkey" FOREIGN KEY ("resultID") REFERENCES "Result"("id") ON DELETE CASCADE ON UPDATE CASCADE;
 
 -- AddForeignKey
 ALTER TABLE "PageViewSource" ADD CONSTRAINT "PageViewSource_dailyStatsId_fkey" FOREIGN KEY ("dailyStatsId") REFERENCES "DailyStats"("id") ON DELETE SET NULL ON UPDATE CASCADE;

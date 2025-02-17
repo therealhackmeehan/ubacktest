@@ -2,11 +2,12 @@ import { Link } from 'react-router-dom';
 import { LoginForm } from 'wasp/client/auth';
 import { AuthPageLayout } from './AuthPageLayout';
 import { authAppearance } from './appearance';
+import logo from '../client/static/logo.png';
 
 export default function Login() {
   return (
     <AuthPageLayout>
-      <LoginForm appearance={authAppearance}/>
+      <LoginForm appearance={authAppearance} logo={logo}/>
       <br />
       <span className='text-sm font-medium text-gray-900 dark:text-gray-900'>
         Don't have an account yet?{' '}

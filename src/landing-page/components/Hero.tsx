@@ -8,7 +8,6 @@ import { useInView } from 'react-intersection-observer';
 export default function Hero() {
 
   const [ref1, inView1] = useInView({ triggerOnce: true });
-  const [ref2, inView2] = useInView({ triggerOnce: true });
   const [ref3, inView3] = useInView({ triggerOnce: true });
 
   return (
@@ -41,16 +40,14 @@ export default function Hero() {
         <div className='mx-auto max-w-8xl px-6 lg:px-8'>
           <div className='lg:mb-18 mx-auto max-w-3xl text-center'>
             <h1 ref={ref1} className={`text-4xl font-bold text-gray-900 sm:text-6xl dark:text-white duration-500 ${inView1 ? 'opacity-100' : 'opacity-0 translate-y-3'}`}>
-              <span className='opacity-0'>-</span>1 means <span className='text-sky-700 dark:text-sky-500'>buy</span>.
-            </h1>
-            <h1 ref={ref2} className={`text-4xl font-bold text-gray-900 sm:text-6xl dark:text-white duration-700 ${inView2 ? 'opacity-100' : 'opacity-0 translate-y-3'}`}>
-              -1 means <span className='text-sky-700 dark:text-sky-500'>short</span>.
+              1 is <span className='text-sky-700 dark:text-sky-500'>buy</span>.
+              -1 is <span className='text-sky-700 dark:text-sky-500'>short</span>.
             </h1>
             <h1 ref={ref3} className={`text-4xl my-12 font-bold text-gray-900 sm:text-6xl dark:text-white duration-1000 ${inView3 ? 'opacity-100' : 'opacity-0 translate-y-3'}`}>
               The rest is up to <span className='italic text-sky-700 dark:text-sky-500'>you</span>.
             </h1>
             <p className='mt-6 mx-auto max-w-2xl text-lg leading-8 text-gray-600 dark:text-white'>
-              Backtest that trading strategy you've had on your mind...
+              Test your trading strategies effortlessly with our stock data and powerful tools.
             </p>
             <div className='mt-10 flex items-center justify-center gap-x-6'>
               <a

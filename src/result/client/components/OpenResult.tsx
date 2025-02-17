@@ -21,7 +21,6 @@ export default function OpenResult({ formInputs, setResultPanelOpen, result }: O
 
     const hasRun = useRef(false); // Track if useEffect has run
 
-
     useEffect(() => {
 
         if (hasRun.current) return; // Prevent re-running

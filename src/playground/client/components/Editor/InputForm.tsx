@@ -86,9 +86,9 @@ function InputForm({ formInputs, setFormInputs, run }: InputFormSubcomponentProp
     const randomFormInputs = () => {
         const randomStock = stocks[Math.floor(Math.random() * stocks.length)];
 
-        // Generate two random numbers between 0 and 24
-        const startOffset = Math.floor(Math.random() * 25);
-        const endOffset = Math.floor(Math.random() * 25);
+        // Generate two random numbers between 1 and 25
+        const startOffset = 1 + Math.floor(Math.random() * 25);
+        const endOffset = 1 + Math.floor(Math.random() * 25);
 
         // Ensure start date is before end date
         const [newStartOffset, newEndOffset] = startOffset > endOffset

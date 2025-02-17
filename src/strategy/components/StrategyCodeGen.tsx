@@ -121,7 +121,7 @@ function StrategyCodeGen({ code }: { code: string | null }) {
                 <Editor
                     className="invert hue-rotate-180 hover:hue-rotate-15"
                     options={miniEditorOpts}
-                    height={generatedCode ? "40vh" : "12vh"}
+                    height={"40vh"}
                     defaultLanguage='python'
                     theme="vs-dark"
                     value={generatedCode || '# Generated code will appear here (:'}

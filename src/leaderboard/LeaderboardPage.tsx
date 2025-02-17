@@ -32,9 +32,10 @@ function LeaderboardPage() {
 
     return (
         <ContentWrapper>
-            <div className="max-w-5xl mx-auto">
-                <div className="m-2 p-4 bg-gradient-to-tr from-sky-700/50 to-white duration-1000 rounded-lg shadow-xl">
-                    <div className="text-3xl text-end font-extrabold tracking-tight"><span className="text-xs">global </span>Leaderboard</div>
+            <div className="max-w-5xl mx-auto min-w-3xl">
+                <div className="m-2 p-4 bg-gradient-to-tr from-sky-700/50 to-white duration-1000 rounded-lg shadow-xl flex justify-between">
+                    <div className="font-extrabold tracking-tight p-2 bg-sky-700 rounded-md text-white">uBacktest.</div>
+                    <div className="text-3xl font-extrabold tracking-tight"><span className="text-xs">global </span>Leaderboard</div>
                 </div>
                 <div className="text-center text-sm font-light my-4">
                     <p>Saved results are public by default, but your code is <span className="italic">never</span> public. Only your success.</p>

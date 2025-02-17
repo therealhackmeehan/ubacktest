@@ -1,6 +1,6 @@
-export const alpacaCode = 
+export const alpacaCode = (strategyFcn: string) : string => {
 
-`import alpaca_trade_api as tradeapi
+   return `import alpaca_trade_api as tradeapi
 import random
 import time
 from datetime import datetime
@@ -32,8 +32,7 @@ def execute_trade():
     # Get portfolio value
     portfolio_value = float(account.cash)
 
-    # Generate random float between 0 and 1
-    trade_fraction = random.uniform(0, 1)
+    # Generate trading signal by applying strategy
 
     # Calculate amount to trade
     amount_to_trade = portfolio_value * trade_fraction
@@ -63,6 +62,6 @@ def trade():
             time.sleep(60)  # Check every minute if market opens
 
 if __name__ == "__main__":
-    trade()`
+    trade()`}
 
-    export default alpacaCode;
+export default alpacaCode;

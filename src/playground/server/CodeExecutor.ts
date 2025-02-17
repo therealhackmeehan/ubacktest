@@ -1,8 +1,19 @@
 import { PythonDataProps } from "../../shared/sharedTypes";
 import { HttpError } from "wasp/server";
 
+/*
+    Backend endpoint for executing python code in an isolated,
+    secure environment, using Judge0 API.
+
+    Inserts user script into the body of a python script and executes
+    that script, after given access to the stock data.
+
+    simply returns the stdout and stderr of our code execution.
+*/
+
 class CodeExecutor {
 
+    // store user code and additional form inputs specific to code execution
     private userCode: string;
     private dataToEmbedInPython: PythonDataProps;
     private startDate: string;
@@ -15,10 +26,11 @@ class CodeExecutor {
 
     public async execute() {
 
+        // wrap desired stdout in a unique key, so we can access our own data at a later point, and keep user stdout seperate
         const uniqueKey = CodeExecutor.generateRandomKey();
         const embeddedCode = CodeExecutor.embedUserCode(this.userCode, uniqueKey, this.dataToEmbedInPython, this.startDate);
 
-        //const zippedCode = await this.zip(embeddedCode);
+        // send to the Judge0 API and grab both the stdout and stderr
         const { stdout, stderr } = await CodeExecutor.sendToJudge_simple(embeddedCode);
 
         return {
@@ -39,7 +51,7 @@ class CodeExecutor {
                 'Content-Type': 'application/json'
             },
             body: JSON.stringify({
-                language_id: 25,
+                language_id: 25, // python for ML (base image)
                 source_code: mainFileContent
             })
         };
@@ -49,8 +61,8 @@ class CodeExecutor {
         const fullResult = await response.json();
         console.log(fullResult);
 
-        if (!response.ok) {
-            const errorMsg = fullResult?.error;
+        if (!response.ok) { // error right away if the response is not ok
+            const errorMsg = fullResult?.error; // if error available, append to errMsg
             throw new HttpError(503, `In Executing Code, Unable to make that request: ${errorMsg || response.statusText}`);
         }
         
@@ -69,6 +81,7 @@ class CodeExecutor {
     private static embedUserCode(code: string, uniqueKey: string, toEmbedInMain: PythonDataProps, startDate: string): string {
         const dateToCompare = new Date(startDate).getTime() / 1000;
 
+        // python string (where the magic happens)
         const m =
 `${code}
 

@@ -45,7 +45,7 @@ export default function App() {
 
   return (
     <>
-      <div>
+      <div className='min-w-171.5'>
         {isAdminDashboard ? (
           <Outlet />
         ) : (

@@ -20,8 +20,9 @@ export default function AppNavBar() {
     <header className='bg-white bg-opacity-50 backdrop-blur-lg backdrop-filter dark:border dark:border-gray-100/10 dark:bg-boxdark-2'>
       <nav className='flex items-center justify-between p-5 lg:px-8' aria-label='Global'>
         <div className='flex lg:flex-1'>
-          <Link to='/' className='-m-1.5 p-1.5'>
-            <img className='h-8 w-8 invert -hue-rotate-15 saturate-50' src={logo} alt='My SaaS App' />
+          <Link to='/' className='-m-1.5 p-1.5 font-extrabold text-sky-700 tracking-tight text-xl'>
+            uBacktest.
+            {/* <img className='h-8 w-8' src={logo} alt='My SaaS App' /> */}
           </Link>
         </div>
         <div className='flex lg:hidden'>

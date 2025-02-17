@@ -1,5 +1,5 @@
-export const buyAndHold = 
-`'''
+export const buyAndHold =
+    `'''
 Classic Buy & Hold Strategy.
 
 Set a buy signal to every date.

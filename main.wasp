@@ -1,9 +1,9 @@
-app OpenSaaS {
+app uBacktest {
   wasp: {
     version: "^0.15.0"
   },
 
-  title: "My Open SaaS App",
+  title: "uBacktest",
 
   head: [
         "<meta property='og:type' content='website' />",
@@ -414,3 +414,9 @@ job sendNewsletter {
   entities: [User]
 }
 //endregion
+
+// finally, a wildcard 404 route as a catch-all
+route WildcardRoute { path: "*", to: WildcardPage }
+page WildcardPage {
+  component: import Wildcard from "@src/client/components/Wildcard"
+}

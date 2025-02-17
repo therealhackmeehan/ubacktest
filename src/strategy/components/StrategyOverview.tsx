@@ -24,7 +24,7 @@ function StrategyOverview({ strategy }: { strategy: Strategy }) {
 
     return (
         <>
-            <Link className="p-t1 mb-8 mx-1 items-center flex gap-x-1 hover:underline hover:bg-slate-50 rounded-lg"
+            <Link className="p-t1 mb-8 mx-1 duration-500 items-center flex gap-x-1 hover:underline hover:bg-slate-50 rounded-lg"
                 to={"/home"}>
                 <MdArrowBack /> back to strategies
             </Link>

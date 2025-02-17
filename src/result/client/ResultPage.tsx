@@ -10,7 +10,7 @@ function ResultPage() {
     return (
         <ContentWrapper>
             <div className='flex justify-between'>
-                <h4 className='my-2 font-bold tracking-tchangeight text-gray-900 text-3xl dark:text-white'>
+                <h4 className='my-2 font-bold tracking-tight text-gray-900 text-3xl dark:text-white'>
                     My <span className='text-sky-600'>Results</span>
                 </h4>
             </div>

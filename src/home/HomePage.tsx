@@ -30,7 +30,7 @@ export default function HomePage() {
                     <span className='font-bold p-1 text-xl text-sky-700'>new</span>
                 </button>
             </div>
-            <div className='hidden flex border-b-2 w-5/6 border-slate-400'></div>
+            <div className='hidden md:flex border-b-2 w-5/6 border-slate-400'></div>
 
             {newProjectModalOpen && <NewProjectModal
                 onSuccess={() => setNewProjectModalOpen(false)}

@@ -22,7 +22,7 @@ function StrategyPreview({ strategy }: { strategy: Strategy }) {
             <Editor
                 className="invert hue-rotate-180 hover:hue-rotate-15"
                 options={miniEditorOpts}
-                height="22vh"
+                height="40vh"
                 defaultLanguage='python'
                 theme="vs-dark"
                 value={strategy.code || 'No code found for this strategy.'}

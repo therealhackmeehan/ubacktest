@@ -3,10 +3,10 @@ import { routes } from 'wasp/client/router';
 
 import { FaPython, FaSave } from 'react-icons/fa';
 import { SiPandas, SiReadthedocs } from "react-icons/si";
-import { RiStockLine } from "react-icons/ri";
 import { MdOutlineImportExport } from "react-icons/md";
 import { LuRocket } from "react-icons/lu";
 import { AiTwotoneExperiment } from "react-icons/ai";
+import { BsDatabase } from 'react-icons/bs';
 
 export const navigation = [
   { name: 'Features', href: '#features' },
@@ -22,14 +22,14 @@ export const features = [
     icon: FaPython,
   },
   {
+    name: 'Stock Data Included',
+    description: 'Simply choose a time range and ticker—no need to deal with costly, outdated options or local setups.',
+    icon: BsDatabase,
+  },
+  {
     name: 'Seamless Library Integration',
     description: 'Preloaded with essential statistics, machine learning, and finance libraries—ready to use out of the box.',
     icon: SiPandas,
-  },
-  {
-    name: 'Built-in Financial Indicators',
-    description: 'Access a suite of preconfigured econometrics functions like RSI, Moving Averages, and Bollinger Bands instantly.',
-    icon: RiStockLine,
   },
   {
     name: 'Save and Share Strategies',
