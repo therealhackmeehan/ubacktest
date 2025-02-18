@@ -63,9 +63,9 @@ export default function NewResultModal({ onSuccess, closeModal, symbol }: NewPro
     return (
         <ModalLayout>
             <div className='flex justify-between'>
-                <h2 className="text-base text-slate-500 font-semibold">Save Result <span className="text-slate-800">To My Results</span></h2>
+                <h2 className="text-base text-slate-500 font-semibold dark:text-white">Save Result <span className="text-slate-800 dark:text-blue-300">To My Results</span></h2>
                 <button onClick={closeModal}>
-                    <TiDelete size='1.8rem' className='hover:rotate-6 text-gray-900 hover:scale-110' />
+                    <TiDelete size='1.8rem' className='hover:rotate-6 text-gray-900 hover:scale-110 dark:text-white' />
                 </button>
             </div>
             <input
@@ -91,11 +91,11 @@ export default function NewResultModal({ onSuccess, closeModal, symbol }: NewPro
                 </button>
             </div>
             {errMsg &&
-                <div className='mt-4 rounded-md p-2 bg-red-200 tracking-tight font-bold text-base'>
+                <div className='mt-4 rounded-md p-2 bg-red-200 tracking-tight font-bold text-black'>
                     {errMsg}
                 </div>}
             {showSuccess &&
-                <div className="mt-4 p-2 text-sky-800 font-bold text-center">
+                <div className="mt-4 p-2 text-sky-800 font-bold text-center dark:text-white">
                     Success! You can find your saved result on your results page.
                 </div>}
             {currentlyInTimeout && (

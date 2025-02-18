@@ -8,7 +8,7 @@ export default function Privacy() {
                 Privacy Policy
             </h4>
             <div className='border-b-2 w-full border-slate-400'></div>
-            <div className="mt-12 max-w-5xl">
+            <div className="mt-12 max-w-5xl dark:text-white">
                 <h5 className='font-semibold text-lg mb-4'>1. Introduction</h5>
                 <p>
                     Welcome to [Your Company Name]. We value your privacy and are committed to protecting your personal information. This Privacy Policy explains how we collect, use, disclose, and safeguard your data when you visit our website or use our services.

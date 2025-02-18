@@ -9,7 +9,7 @@ function SharedWithMe() {
     const { data: results } = useQuery(getShared);
 
     return (
-        <div className="m-3 p-2 rounded-lg bg-slate-100 shadow-lg">
+        <div className="m-3 p-2 rounded-lg bg-slate-100 shadow-lg dark:bg-boxdark-2">
             {results && results.length > 0 ? (
                 <>
                     <ul>
@@ -28,7 +28,7 @@ function SharedWithMe() {
                     )}
                 </>
             ) : (
-                <div className="text-center">
+                <div className="text-center dark:text-white">
                     No results found. If someone were to share a result with you, it would appear here.
                 </div>
             )}

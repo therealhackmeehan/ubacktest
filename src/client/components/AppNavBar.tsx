@@ -17,10 +17,10 @@ export default function AppNavBar() {
 
   const { data: user, isLoading: isUserLoading } = useAuth();
   return (
-    <header className='bg-white bg-opacity-50 backdrop-blur-lg backdrop-filter dark:border dark:border-gray-100/10 dark:bg-boxdark-2'>
+    <header className='bg-white bg-opacity-50 backdrop-blur-lg backdrop-filter dark:bg-boxdark-2'>
       <nav className='flex items-center justify-between p-5 lg:px-8' aria-label='Global'>
         <div className='flex lg:flex-1'>
-          <Link to='/' className='-m-1.5 p-1.5 font-extrabold text-sky-700 tracking-tight text-xl'>
+          <Link to='/' className='-m-1.5 p-1.5 font-extrabold text-sky-700 tracking-tight text-xl dark:text-blue-300'>
             uBacktest.
             {/* <img className='h-8 w-8' src={logo} alt='My SaaS App' /> */}
           </Link>
@@ -61,7 +61,7 @@ export default function AppNavBar() {
             Leaderboard
           </Link>
         </div>
-        <div className='hidden lg:flex mx-12 border-r-2 py-4 border-black/80 dark:border-white'></div>
+        <div className='hidden lg:flex mx-12 border-r-2 py-4 border-black/80 dark:border-blue-300'></div>
         <div className='hidden lg:flex lg:gap-x-10 lg:mr-4'>
           <Link
             to={"/home"}

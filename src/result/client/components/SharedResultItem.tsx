@@ -19,7 +19,7 @@ const SharedResultItem = ({ result }: SharedResultItemProps) => {
     return (
         <li key={result.id}>
             {result.accepted ? (
-                <div className="rounded-lg bg-white border-2 border-slate-500 items-center my-3 mx-1 px-2 flex justify-between">
+                <div className="rounded-lg bg-white border-2 border-slate-500 items-center my-3 mx-1 px-2 flex justify-between dark:border-0 dark:bg-boxdark dark:text-white">
                     <ResultHeader result={result} setResultPanelOpen={setResultPanelOpen} />
                     <div className="flex gap-x-2 justify-between">
                         <div className="text-xs p-2 m-1">
@@ -32,7 +32,7 @@ const SharedResultItem = ({ result }: SharedResultItemProps) => {
                             <BiTrash />
                         </button>
                         <button
-                            className="px-3 py-1 flex rounded-lg bg-slate-100 m-1 hover:shadow-lg items-center gap-x-2"
+                            className="px-3 py-1 flex rounded-lg bg-slate-100 m-1 hover:shadow-lg items-center gap-x-2 dark:bg-boxdark-2 dark:border-2 dark:border-blue-300"
                             onClick={() => setResultPanelOpen(true)}
                         >
                             View
@@ -42,12 +42,12 @@ const SharedResultItem = ({ result }: SharedResultItemProps) => {
                 </div>
             ) : (
                 <div className="flex justify-between gap-x-2">
-                    <div className="font-light tracking-tight">
+                    <div className="font-light tracking-tight dark:text-white">
                         @{result.email?.split('@')[0] ?? "unknown"} sent you a result.
                     </div>
                     <div className="flex justify-between gap-x-2 p-1">
                         <button
-                            className="bg-sky-700 rounded-lg text-xs font-bold text-white p-1"
+                            className="bg-sky-700 rounded-lg text-xs font-bold text-white p-1 dark:bg-boxdark dark:border-2 dark:border-white"
                             onClick={() => acceptShare({ id: result.sharedID })}
                         >
                             Accept

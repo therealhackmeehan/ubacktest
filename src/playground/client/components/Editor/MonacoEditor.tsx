@@ -114,27 +114,27 @@ function MonacoEditor({ codeToDisplay, setCodeToDisplay }: MonacoEditorProps) {
         <>
             {errMsg && <ErrorModal msg={errMsg} closeModal={() => setErrMsg('')} />}
 
-            <div className="flex text-xs justify-start border-b-2 border-black">
+            <div className="flex text-xs justify-start border-b-2 dark:border-0 border-black text-gray-800">
                 <button
                     disabled={saving}
                     type='button'
                     onClick={saveCodeToDB} // Keep the existing button functionality
-                    className="flex px-3 py-1 items-center text-center tracking-tight text-gray-800 hover:bg-slate-100 duration-300"
+                    className="flex px-3 py-1 items-center text-center tracking-tight hover:bg-slate-100 duration-300 dark:text-white dark:hover:text-slate-700"
                 >
                     <FiSave size='1.2rem' className="pr-1" /> {buttonText}
                 </button>
                 <DownloadButton code={codeToDisplay} />
                 <UploadButton setCode={setCodeToDisplay} />
-                <button className='border-l-2 border-black flex gap-x-1 px-3 py-1 hover:bg-slate-100 items-center text-center text-gray-800 tracking-tight duration-300'
+                <button className='border-l-2 border-black dark:border-0 flex gap-x-1 px-3 py-1 hover:bg-slate-100 items-center text-center tracking-tight duration-300 dark:text-white dark:hover:text-slate-700'
                     onClick={() => setPackagesModalOpen(true)}>
                     <MdLaunch />Included Packages
                 </button>
-                <button className='border-l-2 border-black flex gap-x-1 px-3 py-1 hover:bg-slate-100 items-center text-center text-gray-800 tracking-tight duration-300'
+                <button className='border-l-2 border-black dark:border-0 flex gap-x-1 px-3 py-1 hover:bg-slate-100 items-center text-center tracking-tight duration-300 dark:text-white dark:hover:text-slate-700'
                     onClick={() => setExamplesModalOpen(true)}>
                     <BsQuestionOctagon />Examples
                 </button>
             </div>
-            <Editor className="invert hue-rotate-180" defaultLanguage='python' theme="vs-dark" value={codeToDisplay} onChange={handleEditorChange} options={editorOpts}
+            <Editor className="invert dark:invert-0 hue-rotate-180" defaultLanguage='python' theme="vs-dark" value={codeToDisplay} onChange={handleEditorChange} options={editorOpts}
                 loading={(<div className="text-white font-2xl tracking-tight">Loading...</div>)} />
             {packagesModalOpen &&
                 <PackagesModal closeModal={() => setPackagesModalOpen(false)} />

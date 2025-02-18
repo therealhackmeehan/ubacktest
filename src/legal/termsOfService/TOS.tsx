@@ -7,7 +7,7 @@ export default function TOS() {
                 Terms of Service
             </h4>
             <div className='border-b-2 w-full border-slate-400'></div>
-            <div className="mt-12 max-w-5xl">
+            <div className="mt-12 max-w-5xl dark:text-white">
                 <h5 className='font-semibold text-lg mb-4'>1. Acceptance of Terms</h5>
                 <p>
                     By using our services, you agree to be bound by these Terms of Service, as well as any additional rules or policies that may apply. If you do not agree with these terms, please do not use our services.

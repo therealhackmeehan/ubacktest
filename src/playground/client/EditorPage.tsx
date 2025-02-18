@@ -39,7 +39,7 @@ export default function EditorPage() {
             setWidth((previousWidth) => {
                 const newWidth = previousWidth + e.movementX / 2;
 
-                const maxAllowedWidth = Math.min(window.innerWidth/3, maxWidth);
+                const maxAllowedWidth = Math.min(window.innerWidth / 3, maxWidth);
                 if (newWidth > maxAllowedWidth) return maxAllowedWidth;
                 if (newWidth < minWidth) {
                     if (previousWidth > newWidth) return 0;
@@ -105,7 +105,7 @@ export default function EditorPage() {
         <div className='w-full h-screen grid grid-cols-[min-content_auto] border-t-2 border-black'>
 
             <div className="flex overflow-x-hidden overflow-y-auto">
-                <div className="h-full bg-gray-50"
+                <div className="h-full bg-gray-50 dark:bg-boxdark"
                     style={{ width: `${width / 16}rem` }}>
                     <StrategyBrowser
                         strategies={strategies}
@@ -113,7 +113,7 @@ export default function EditorPage() {
                         selectedStrategy={selectedStrategy}
                         setSelectedStrategy={setSelectedStrategy} />
                 </div>
-                <div className="w-3 cursor-col-resize border-r-2 border-black bg-slate-200 z-10"
+                <div className="w-3 cursor-col-resize border-r-2 border-black bg-slate-200 dark:bg-black dark:text-white z-10"
                     onMouseDown={() => {
                         isResized.current = true;
                         document.body.style.userSelect = "none";
@@ -141,8 +141,33 @@ export default function EditorPage() {
 
 function NoStrategiesBanner({ isStrategiesLoading }: { isStrategiesLoading: boolean }) {
     return (
-        <div className="border-2 p-4 border-black font-extrabold mt-12 justify-self-center blur-sm text-5xl text-slate-800/30 tracking-tight">
-            {isStrategiesLoading ? "Loading..." : "No Strategies Exist (yet)"}
-        </div>
+        <>
+            <div className="border-2 p-4 border-black font-extrabold mt-12 justify-self-center blur-sm text-5xl text-slate-800/30 tracking-tight dark:text-white dark:border-white">
+                {isStrategiesLoading ? "Loading..." : "No Strategies Exist (yet)"}
+            </div>
+            <div
+                className='transform-gpu overflow-hidden w-full blur-3xl sm:top-0 pointer-events-none'
+                aria-hidden='true'
+            >
+                <div
+                    className='aspect-[1020/880] w-[55rem] flex-none sm:right-1/4 sm:translate-x-1/2 bg-gradient-to-tr from-sky-500 dark:from-sky-700 to-slate-400 opacity-40'
+                    style={{
+                        clipPath: 'polygon(80% 20%, 90% 55%, 50% 100%, 70% 30%, 20% 50%, 50% 0)',
+                    }}
+                />
+            </div>
+            <div
+                className='top-[calc(100%-40rem)] sm:top-[calc(100%-65rem)] transform-gpu overflow-hidden blur-3xl pointer-events-none'
+                aria-hidden='true'
+            >
+                <div
+                    className='relative aspect-[1020/880] sm:-left-3/4 sm:translate-x-1/4 bg-gradient-to-br from-sky-700 to-slate-300 dark:to-sky-800 opacity-30 w-[72.1875rem]'
+                    style={{
+                        clipPath: 'ellipse(80% 30% at 80% 50%)',
+                    }}
+                />
+            </div>
+        </>
+
     )
 }

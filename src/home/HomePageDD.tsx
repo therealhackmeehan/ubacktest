@@ -17,7 +17,7 @@ export function StrategyDropDown({ strategy }: { strategy: Strategy }) {
             <div className='flex justify-between'>
                 <div className='flex gap-x-2 items-center'>
                     <Link
-                        className="font-bold text-xl tracking-tight text-gray-900 hover:text-gray-500 hover:scale-110 duration-500 hover:cursor-pointer"
+                        className="font-bold text-xl tracking-tight text-gray-900 hover:text-gray-500 hover:scale-110 duration-500 hover:cursor-pointer dark:text-white"
                         key={strategy.id}
                         to="/strategy/:id"
                         params={{ id: strategy.id }}>
@@ -25,7 +25,7 @@ export function StrategyDropDown({ strategy }: { strategy: Strategy }) {
                     </Link>
                 </div>
                 <div className='flex items-end'>
-                    <button className='pl-3 hover:text-slate-500' title='Rename Strategy'
+                    <button className='pl-3 hover:text-slate-500 dark:text-sky-300' title='Rename Strategy'
                         onClick={() => setIsRenameModalOpen(true)}>
                         <MdOutlineEdit size='1.4rem' />
                     </button>
@@ -35,7 +35,7 @@ export function StrategyDropDown({ strategy }: { strategy: Strategy }) {
                         id={strategy.id}
                         currName={strategy.name} />}
 
-                    <button className='hover:text-slate-500 px-1' title='Delete Strategy'
+                    <button className='hover:text-slate-500 px-1 dark:text-sky-300' title='Delete Strategy'
                         onClick={() => setIsDeleteModalOpen(true)}>
                         <MdDeleteOutline size='1.2rem' />
                     </button>

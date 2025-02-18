@@ -93,7 +93,7 @@ const PricingPage = () => {
       <div className='mx-auto max-w-7xl px-6 lg:px-8'>
         <div id='pricing' className='mx-auto max-w-4xl text-center'>
           <h2 className='mt-2 text-4xl font-bold tracking-tight text-gray-900 sm:text-5xl dark:text-white'>
-            Pick your <span className='text-sky-700'>pricing</span>
+            Pick your <span className='text-sky-700 dark:text-blue-300'>pricing</span>
           </h2>
         </div>
         <p className='mx-auto mt-6 max-w-2xl text-center text-lg leading-8 text-gray-600 dark:text-white'>
@@ -146,7 +146,7 @@ const PricingPage = () => {
                 <ul role='list' className='mt-8 space-y-3 text-sm leading-6 text-gray-600 dark:text-white'>
                   {paymentPlanCards[planId].features.map((feature) => (
                     <li key={feature} className='flex gap-x-3'>
-                      <AiFillCheckCircle className='h-6 w-5 flex-none text-sky-700' aria-hidden='true' />
+                      <AiFillCheckCircle className='h-6 w-5 flex-none text-sky-700 dark:text-blue-300' aria-hidden='true' />
                       {feature}
                     </li>
                   ))}
@@ -175,7 +175,7 @@ const PricingPage = () => {
                   aria-describedby={planId}
                   className={cn(
                     {
-                      'bg-sky-700 text-white hover:text-white shadow-sm hover:bg-sky-600':
+                      'bg-sky-700 dark:bg-blue-300 text-white hover:text-white shadow-sm hover:bg-sky-600':
                         planId === bestDealPaymentPlanId,
                       'text-gray-600  ring-1 ring-inset ring-sky-200 hover:ring-sky-400':
                         planId !== bestDealPaymentPlanId,

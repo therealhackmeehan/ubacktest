@@ -38,13 +38,13 @@ export default function StrategyHeader() {
             <div className="flex gap-1">
                 <Link
                     title='go to strategy page'
-                    className="font-bold tracking-tight pb-1 text-3xl hover:text-sky-700"
+                    className="font-bold tracking-tight pb-1 text-3xl hover:text-sky-700 dark:text-white"
                     key={selectedStrategy.id}
                     to="/strategy/:id"
                     params={{ id: selectedStrategy.id }}>
                     {nameToDisplay}
                 </Link>
-                <button className='pl-3 hover:text-slate-500 text-sky-700 duration-700' title='Rename Strategy'
+                <button className='pl-3 hover:text-slate-500 text-sky-700 dark:text-blue-300 duration-700' title='Rename Strategy'
                     onClick={() => setIsRenameModalOpen(true)}>
                     <MdOutlineEdit size='1.4rem' />
                 </button>
@@ -61,7 +61,7 @@ export default function StrategyHeader() {
 
             <div className="flex gap-1">
 
-                <button className='hover:text-slate-500 text-sky-700 duration-700' title='Delete Strategy'
+                <button className='hover:text-slate-500 text-sky-700 dark:text-blue-300 duration-700' title='Delete Strategy'
                     onClick={() => setIsDeleteModalOpen(true)}>
                     <MdDeleteOutline size='1.4rem' />
                 </button>
@@ -74,7 +74,7 @@ export default function StrategyHeader() {
                 }
 
                 {(user?.subscriptionStatus != "active") &&
-                    <Link className="place-self-center pl-3 font-bold hover:rotate-3 duration-700 hover:text-slate-900"
+                    <Link className="place-self-center pl-3 font-bold hover:rotate-3 duration-700 hover:text-slate-900 dark:text-white"
                         to={"/pricing"}>{user?.credits}
                         <span className="text-xs font-extralight"> tests remaining</span>
                     </Link>}

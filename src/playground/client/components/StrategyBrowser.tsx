@@ -32,13 +32,13 @@ function StrategyBrowser({ selectedStrategy, setSelectedStrategy, strategies, is
                         {strategies.map((strategy) => (
                             <li
                                 key={strategy.id}
-                                className={`flex pl-2 pb-1 pr-2 ${strategy.id === selectedStrategy.id ? "bg-sky-100" : "hover:bg-sky-100"
+                                className={`flex pl-2 pb-1 pr-2 ${strategy.id === selectedStrategy.id ? "bg-sky-100 dark:bg-black" : "hover:bg-sky-100 dark:hover:bg-black"
                                     }`}
                             >
                                 <button
                                     type="button"
                                     onClick={() => setSelectedStrategy(strategy)}
-                                    className="flex pt-1 w-full tracking-tight text-sm font-light"
+                                    className="flex pt-1 w-full tracking-tight text-sm font-light dark:text-white"
                                 >
                                     {strategy.name}
                                     {(strategy.id === selectedStrategy.id) &&
@@ -50,10 +50,10 @@ function StrategyBrowser({ selectedStrategy, setSelectedStrategy, strategies, is
                         ))}
                     </>)}
 
-                <button className='justify-between items-center gap-x-2 border-2 flex bg-sky-700 border-black rounded-lg px-8 mt-4 mb-12 justify-self-center hover:bg-sky-600'
+                <button className='justify-between items-center gap-x-2 border-2 flex bg-sky-700 border-black rounded-lg px-8 mt-4 mb-12 justify-self-center hover:bg-sky-600 dark:bg-blue-300 text-white dark:text-black dark:border-0'
                     onClick={() => setNewProjectModalOpen(true)}>
-                    <span className='font-bold text-white text-lg'>new</span>
-                    <FaPlus className="text-white"/>
+                    <span className='font-bold text-lg'>new</span>
+                    <FaPlus />
                 </button>
 
                 {newProjectModalOpen && <NewProjectModal

@@ -17,10 +17,10 @@ function StrategyPreview({ strategy }: { strategy: Strategy }) {
     }
 
     return (
-        <div className="my-10 p-4 rounded-lg bg-white">
-            <div className="my-2 text-xl tracking-tight font-extrabold text-black">Code <span className="text-sky-600">Preview</span></div>
+        <div className="my-10 p-4 rounded-lg bg-white dark:bg-boxdark-2">
+            <div className="my-2 text-xl tracking-tight font-extrabold text-black dark:text-white">Code <span className="text-sky-600 dark:text-blue-300">Preview</span></div>
             <Editor
-                className="invert hue-rotate-180 hover:hue-rotate-15"
+                className="invert dark:invert-0 hue-rotate-180"
                 options={miniEditorOpts}
                 height="40vh"
                 defaultLanguage='python'

@@ -24,7 +24,7 @@ function DownloadButton({ code }: { code: string }) {
     return (
         <a
             ref={linkRef}
-            className="flex px-3 py-1 items-center hover:bg-slate-100 duration-300 text-center text-gray-800 tracking-tight"
+            className="flex px-3 py-1 items-center hover:bg-slate-100 duration-300 text-center text-gray-800 tracking-tight dark:hover:text-slate-700 dark:text-white"
         >
             <FiDownload size="1.2rem" className="pr-1" />
             download <span className="text-xs ml-1 font-extralight">(as .py file)</span>

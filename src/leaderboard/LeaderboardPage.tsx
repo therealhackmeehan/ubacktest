@@ -33,23 +33,23 @@ function LeaderboardPage() {
     return (
         <ContentWrapper>
             <div className="max-w-5xl mx-auto min-w-3xl">
-                <div className="m-2 p-4 bg-gradient-to-tr from-sky-700/50 to-white duration-1000 rounded-lg shadow-xl flex justify-between">
-                    <div className="font-extrabold tracking-tight p-2 bg-sky-700 rounded-md text-white">uBacktest.</div>
+                <div className="m-2 p-4 bg-slate-100 duration-1000 rounded-lg shadow-xl flex justify-between dark:text-white dark:bg-boxdark-2">
+                    <div className="font-extrabold tracking-tight p-2 bg-sky-700 rounded-md text-white dark:bg-boxdark dark:text-blue-300">uBacktest.</div>
                     <div className="text-3xl font-extrabold tracking-tight"><span className="text-xs">global </span>Leaderboard</div>
                 </div>
-                <div className="text-center text-sm font-light my-4">
+                <div className="text-center text-sm font-light my-4 dark:text-white">
                     <p>Saved results are public by default, but your code is <span className="italic">never</span> public. Only your success.</p>
                 </div>
-                <div className="mt-12 p-8 rounded-lg bg-gradient-to-br from-slate-100 to-slate-300">
+                <div className="mt-12 p-8 rounded-lg bg-slate-100 dark:bg-boxdark-2">
                     <button
-                        className="p-1 mb-4 font-bold text-xs justify-self-center tracking-tight rounded-md bg-white flex"
+                        className="p-1 mb-4 font-bold text-xs justify-self-center tracking-tight rounded-md bg-white flex dark:bg-boxdark-2"
                         onClick={() => setIsProfitLoss(!isProfitLoss)}
                     >
-                        <div className={`duration-1000 ${!isProfitLoss ? "text-black" : "text-slate-200"}`}>
+                        <div className={`duration-1000 ${!isProfitLoss ? "text-black dark:text-white dark:underline dark:font-extrabold" : "text-slate-200 dark:font-light"}`}>
                             Annualized Profit/Loss
                         </div>
-                        <div className="border-2 border-sky-700 mx-2"></div>
-                        <div className={`duration-1000 ${isProfitLoss ? "text-black" : "text-slate-200"}`}>
+                        <div className="border-2 border-sky-700 mx-2 dark:border-blue-300"></div>
+                        <div className={`duration-1000 ${isProfitLoss ? "text-black dark:text-white dark:underline dark:font-extrabold" : "text-slate-200 dark:font-light"}`}>
                             Total Profit/Loss
                         </div>
                     </button>
@@ -78,7 +78,7 @@ function LeaderboardPage() {
                     }
 
                 </div>
-                <div className="text-sm m-1 text-sky-700">
+                <div className="text-sm m-1 text-sky-700 dark:text-blue-300">
                     You can toggle the privacy of your result on your results page.
                 </div>
             </div>

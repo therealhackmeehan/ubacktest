@@ -45,10 +45,10 @@ export default function ResultListItem({ result }: { result: Result }) {
 
     return (
         <>
-            <div className='md:flex justify-between my-3 mx-1 items-center p-2 rounded-lg bg-slate-100 border-slate-200 border-2 hover:shadow-lg duration-700'>
+            <div className='md:flex justify-between my-3 mx-1 items-center p-2 rounded-lg bg-slate-100 border-slate-200 border-2 hover:shadow-lg duration-700 dark:border-0 dark:bg-boxdark dark:shadow-none'>
                 <ResultHeader result={result} setResultPanelOpen={setResultPanelOpen} />
-                <div className='flex justify-between gap-x-3 items-center'>
-                    <button className='px-3 py-1 flex rounded-lg bg-white hover:shadow-lg items-center gap-x-2'
+                <div className='flex justify-between gap-x-3 items-center dark:text-white'>
+                    <button className='px-3 py-1 flex rounded-lg bg-white hover:shadow-lg items-center gap-x-2 dark:bg-boxdark-2 dark:border-2 dark:border-blue-300'
                         onClick={() => setResultPanelOpen(!resultPanelOpen)}>
                         view
                         <FiBookOpen />
@@ -69,7 +69,7 @@ export default function ResultListItem({ result }: { result: Result }) {
                         onClick={() => setDeleteResultModalOpen(true)}>
                         <MdDeleteOutline />
                     </button>
-                    <div className='font-mono text-xs'>
+                    <div className='font-mono text-xs dark:text-blue-300'>
                         saved: {result.createdAt.toLocaleString()}
                     </div>
                 </div>
@@ -94,14 +94,14 @@ interface ResultHeaderProps {
 export function ResultHeader({ result, setResultPanelOpen }: ResultHeaderProps) {
     return (
         <div className='md:flex justify-between gap-x-3'>
-            <button className='tracking-tight text-xl font-semibold hover:text-sky-700' onClick={() => setResultPanelOpen(true)}>
+            <button className='tracking-tight text-xl font-semibold hover:text-sky-700 dark:text-white' onClick={() => setResultPanelOpen(true)}>
                 {result.name}
             </button>
-            <div className='text-xs border-l-2 border-black/40 px-2 bg-white'>
+            <div className='text-xs border-l-2 border-black/40 px-2 bg-white dark:bg-boxdark-2 dark:text-white'>
                 profit/loss: <span className='text-lg'>{result.profitLoss.toFixed(2)}%</span>
             </div>
             {result.data ?
-                <div className='p-1'>
+                <div className='p-1 dark:brightness-200'>
                     <SmallPlot data={result.data as unknown as StrategyResultProps} />
                 </div>
                 :

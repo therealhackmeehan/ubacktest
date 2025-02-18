@@ -7,7 +7,7 @@ const DarkModeSwitcher = () => {
 
   return (
     <div>
-      <label className={cn('relative m-0 block h-7.5 w-14 rounded-full', isInLightMode ? 'bg-gray-200' : 'bg-sky-700')}>
+      <label className={cn('relative m-0 block h-7.5 w-14 rounded-full', isInLightMode ? 'bg-gray-200' : 'bg-blue-300')}>
         <input
           type='checkbox'
           onChange={() => {

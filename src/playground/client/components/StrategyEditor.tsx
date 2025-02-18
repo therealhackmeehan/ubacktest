@@ -51,7 +51,7 @@ function StrategyEditor() {
     });
 
     return (
-        <div className="h-full flex flex-col">
+        <div className="h-full flex flex-col bg-white dark:bg-boxdark">
             <StrategyHeader />
 
             <button
@@ -59,8 +59,8 @@ function StrategyEditor() {
                             hover:font-extrabold
                             tracking-tight 
                             ${resultOpen ?
-                        'bg-sky-700 text-white' :
-                        'bg-slate-200 text-black'}`}
+                        'bg-sky-700 text-white dark:bg-blue-300 dark:text-black' :
+                        'bg-slate-200 text-black dark:bg-boxdark-2 dark:text-white'}`}
 
                 onClick={() => setResultOpen(!resultOpen)}
             >

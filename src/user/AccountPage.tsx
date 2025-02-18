@@ -7,9 +7,10 @@ import { logout } from 'wasp/client/auth';
 export default function AccountPage({ user }: { user: User }) {
   return (
     <div className='mt-35 max-w-4xl mx-auto px-6'>
+      <div className='text-title-xl2 text-center text-sky-700 dark:text-blue-300 tracking-tight font-bold'>uBacktest.</div>
       <div className='overflow-hidden border border-gray-900/10 shadow-lg sm:rounded-lg mb-4 lg:m-8 dark:border-gray-100/10'>
         <div className='px-4 py-5 sm:px-6 lg:px-8'>
-          <h3 className='text-xl font-semibold leading-6 text-sky-800 tracking-tight dark:text-white'>Account Information</h3>
+          <h3 className='text-xl font-semibold leading-6 text-sky-800 dark:text-white'>Account Information</h3>
         </div>
         <div className='border-t border-gray-900/10 dark:border-gray-100/10 px-4 py-5 sm:p-0'>
           <dl className='sm:divide-y sm:divide-gray-900/10 sm:dark:divide-gray-100/10'>
@@ -35,7 +36,7 @@ export default function AccountPage({ user }: { user: User }) {
       <div className='inline-flex w-full justify-end'>
         <button
           onClick={logout}
-          className='inline-flex justify-center mx-8 py-2 px-4 border border-transparent shadow-md text-sm font-medium rounded-md text-white bg-sky-800 hover:bg-slate-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500'
+          className='inline-flex justify-center mx-8 py-2 px-4 border border-transparent shadow-md text-sm font-medium rounded-md text-white bg-sky-700 dark:bg-blue-300 dark:text-black hover:bg-slate-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500'
         >
           logout
         </button>

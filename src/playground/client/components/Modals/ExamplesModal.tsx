@@ -11,20 +11,20 @@ export default function ExamplesModal({ onSuccess, closeModal }: ExamplesModalPr
     return (
         <ModalLayout>
             <div className='flex justify-between mb-4'>
-                <h2 className="text-base text-sky-700 font-semibold">Import an Example <span className="text-slate-800">Strategy</span></h2>
+                <h2 className="text-sky-700 dark:text-blue-300 font-semibold">Import an Example <span className="text-slate-800 dark:text-white">Strategy</span></h2>
                 <button onClick={closeModal}>
-                    <TiDelete size='1.8rem' className='hover:rotate-6 text-gray-900 hover:scale-110' />
+                    <TiDelete size='1.8rem' className='hover:rotate-6 text-gray-900 hover:scale-110 dark:text-white' />
                 </button>
             </div>
 
             <div className='overflow-y-auto h-[70vh]'>
                 {Object.keys(examples).map((category, index) => (
                     <div key={index} className="mb-4">
-                        <h3 className="text-lg font-semibold text-slate-700">{category}</h3>
+                        <h3 className="text-lg font-semibold text-slate-700 dark:text-white">{category}</h3>
                         {examples[category].map((example, idx) => (
                             <div key={idx}>
                                 <button
-                                    className="p-1 my-1 text-sm w-full rounded-lg bg-slate-100 hover:bg-slate-200 hover:-translate-x-1 duration-500"
+                                    className="p-1 my-1 text-sm w-full rounded-lg bg-slate-100 hover:bg-slate-200 hover:-hue-rotate-60 duration-500"
                                     onClick={() => onSuccess(example.script)}>
                                     {example.name}
                                 </button>
@@ -34,7 +34,7 @@ export default function ExamplesModal({ onSuccess, closeModal }: ExamplesModalPr
                 ))}
             </div>
 
-            <div className="font-mono text-xs text-center mt-2">
+            <div className="font-mono text-xs text-center mt-2 dark:text-red-100">
                 Please note that importing an example will completely erase any code that you may have attached to this strategy.
             </div>
 

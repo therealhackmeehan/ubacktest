@@ -22,12 +22,12 @@ export default function HomePage() {
         <ContentWrapper>
             <div className='flex justify-between'>
                 <h4 className='my-2 font-bold tracking-tight text-gray-900 text-3xl dark:text-white'>
-                    My <span className='text-sky-600'>Strategies</span>
+                    My <span className='text-sky-700 dark:text-blue-300'>Strategies</span>
                 </h4>
-                <button className='group bg-slate-100 flex border-2 border-black rounded-lg p-1 dark:bg-gray-600 dark:border-2 dark:border-white'
+                <button className='group bg-slate-100 flex border-2 border-black rounded-lg p-1 dark:bg-boxdark-2 dark:border-0'
                     onClick={() => setNewProjectModalOpen(true)}>
-                    <IoMdAddCircleOutline size='3rem' className='text-slate-500 group-hover:rotate-6 group-hover:scale-110 duration-500' />
-                    <span className='font-bold p-1 text-xl text-sky-700'>new</span>
+                    <IoMdAddCircleOutline size='3rem' className='text-slate-500 group-hover:rotate-6 group-hover:scale-110 duration-500 dark:text-white' />
+                    <span className='font-bold p-1 text-xl text-sky-700 dark:text-blue-300'>new</span>
                 </button>
             </div>
             <div className='hidden md:flex border-b-2 w-5/6 border-slate-400'></div>
@@ -47,7 +47,7 @@ export default function HomePage() {
                         ))}
                     </ul>
                 ) : (
-                    <div>No strategies found. Create one now!</div>
+                    <div className='dark:text-white'>No strategies found. Create one now!</div>
                 )}
             </div>
         </ContentWrapper>

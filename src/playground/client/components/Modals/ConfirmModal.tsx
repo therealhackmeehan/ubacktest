@@ -14,7 +14,7 @@ export default function ConfirmModal({ msg, onConfirm, closeModal }: ConfirmModa
     return (
         <ModalLayout>
             <div className='flex justify-between'>
-                <h2 className="text-base text-slate-500 font-semibold">{msg}</h2>
+                <h2 className="text-base text-slate-500 font-semibold dark:text-white">{msg}</h2>
             </div>
             <div className="flex justify-between mt-4">
                 <button

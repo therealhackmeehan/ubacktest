@@ -35,15 +35,15 @@ function StrategyCodeGen({ code }: { code: string | null }) {
     }, [generatedCode]);
 
     return (
-        <div className="mt-10 p-4 rounded-lg bg-white border-2 border-sky-700">
-            <div className="my-2 text-xl text-slate-800 tracking-tight font-extrabold">
-                <span className="text-sky-600">Deploy this Strategy</span> with Real or Paper Money
-                <span className="text-xs m-2 align-top p-1 rounded-md bg-sky-700 text-white">BETA</span>
+        <div className="mt-10 p-4 rounded-lg bg-white border-2 border-sky-700 dark:border-0 dark:bg-boxdark">
+            <div className="my-2 text-xl text-slate-800 tracking-tight font-extrabold dark:text-white">
+                <span className="text-sky-600 dark:text-blue-300">Deploy this Strategy</span> with Real or Paper Money
+                <span className="text-xs m-2 align-top p-1 rounded-md bg-sky-700 text-white dark:bg-blue-300 dark:text-black">BETA</span>
             </div>
-            <div className="rounded-md bg-slate-100 border-slate-200 border-2 p-3 lg:flex justify-between">
+            <div className="rounded-md bg-slate-100 border-slate-200 border-2 p-3 lg:flex justify-between dark:bg-boxdark-2 dark:border-0">
 
                 <div>
-                    <div className="text-sm font-extrabold tracking-tight text-sky-700 text-start">Stock To Trade</div>
+                    <div className="text-sm font-extrabold tracking-tight text-sky-700 text-start dark:text-white">Stock To Trade</div>
                     <input
                         className="rounded-lg w-full text-xs shadow-lg"
                         type='text'
@@ -74,7 +74,7 @@ function StrategyCodeGen({ code }: { code: string | null }) {
                     </div> */}
 
                     <div>
-                        <div className="text-sm font-bold text-center">Approx. Lookback Period</div>
+                        <div className="text-sm font-bold text-center dark:text-white">Approx. Lookback Period</div>
                         <input
                             className="rounded-lg w-full text-xs shadow-lg"
                             type='number'
@@ -84,7 +84,7 @@ function StrategyCodeGen({ code }: { code: string | null }) {
                     </div>
 
                     <div>
-                        <div className="text-sm font-bold text-center">Use Real Money</div>
+                        <div className="text-sm font-bold text-center dark:text-white">Use Real Money</div>
                         <select
                             className="rounded-lg w-full text-xs shadow-lg"
                             value={realMoney}
@@ -97,7 +97,7 @@ function StrategyCodeGen({ code }: { code: string | null }) {
                 </div>
 
 
-                <button className="shadow-lg duration-500 mt-2 lg:m-0 rounded-md p-2 bg-sky-700 hover:bg-sky-600 text-white"
+                <button className="shadow-lg duration-500 mt-2 lg:m-0 rounded-md p-2 bg-sky-700 hover:bg-sky-600 text-white dark:text-blue-300 dark:bg-boxdark dark:border-2 dark:border-white"
                     onClick={generateCode}>
                     Generate Code
                 </button>
@@ -108,7 +108,7 @@ function StrategyCodeGen({ code }: { code: string | null }) {
                     <a
                         type='button'
                         ref={linkRef}
-                        className="flex px-3 py-1 items-center text-center tracking-tight text-white hover:bg-slate-800 hover:font-bold duration-700"
+                        className="flex px-3 py-1 items-center text-center tracking-tight text-white hover:bg-slate-800 hover:font-bold duration-700 hover:cursor-pointer"
                     > download
                     </a>
                     <button
@@ -119,7 +119,7 @@ function StrategyCodeGen({ code }: { code: string | null }) {
                     </button>
                 </div>
                 <Editor
-                    className="invert hue-rotate-180 hover:hue-rotate-15"
+                    className="invert dark:invert-0 hue-rotate-180"
                     options={miniEditorOpts}
                     height={"40vh"}
                     defaultLanguage='python'

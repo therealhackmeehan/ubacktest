@@ -1,55 +1,41 @@
 import { DocsUrl, BlogUrl } from '../../shared/common';
 import { routes } from 'wasp/client/router';
 
-const footerInfo = {
+const footerLinks = {
   app: [
     { name: 'Documentation', href: DocsUrl },
-    { name: 'Blog', href: BlogUrl },
+    { name: 'Contact Us', href: BlogUrl },
   ],
   company: [
-    { name: 'About', href: routes.AboutRoute.build()},
-    { name: 'Privacy', href: routes.PrivacyRoute.build()},
-    { name: 'Terms of Service', href: routes.TOSRoute.build()},
+    { name: 'About', href: routes.AboutRoute.build() },
+    { name: 'Privacy', href: routes.PrivacyRoute.build() },
+    { name: 'Terms of Service', href: routes.TOSRoute.build() },
   ],
 };
 
 export default function Footer() {
   return (
-    <div className='mx-auto mt-6 max-w-7xl px-6 lg:px-8 dark:bg-boxdark-2'>
-      <footer
-        aria-labelledby='footer-heading'
-        className='relative border-t border-gray-900/10 dark:border-gray-200/10 py-12 sm:mt-32'
-      >
-        <h2 id='footer-heading' className='sr-only'>
-          Footer
-        </h2>
-        <div className='flex items-start justify-end gap-20'>
-          <div>
-            <h3 className='text-sm font-semibold leading-6 text-gray-900 dark:text-white'>App</h3>
-            <ul role='list' className='mt-6 space-y-2'>
-              {footerInfo.app.map((item) => (
-                <li key={item.name}>
-                  <a href={item.href} className='text-sm leading-6 text-gray-600 hover:text-slate-700 dark:text-white'>
-                    {item.name}
+    <footer
+      aria-labelledby='footer-heading'
+      className='px-6 lg:px-8 py-12 border-t border-gray-900/10 dark:border-0 dark:bg-boxdark-2'
+    >
+      <h2 id='footer-heading' className='sr-only'>Footer</h2>
+      <div className='flex justify-end gap-20'>
+        {Object.entries(footerLinks).map(([section, links]) => (
+          <div key={section}>
+            <h3 className='text-sm font-semibold text-gray-900 dark:text-white capitalize'>{section}</h3>
+            <ul className='mt-6 space-y-2'>
+              {links.map(({ name, href }) => (
+                <li key={name}>
+                  <a href={href} className='text-sm text-gray-600 hover:text-slate-700 dark:text-white'>
+                    {name}
                   </a>
                 </li>
               ))}
             </ul>
           </div>
-          <div>
-            <h3 className='text-sm font-semibold leading-6 text-gray-900 dark:text-white'>Company</h3>
-            <ul role='list' className='mt-6 space-y-2'>
-              {footerInfo.company.map((item) => (
-                <li key={item.name}>
-                  <a href={item.href} className='text-sm leading-6 text-gray-600 hover:text-slate-700 dark:text-white'>
-                    {item.name}
-                  </a>
-                </li>
-              ))}
-            </ul>
-          </div>
-        </div>
-      </footer>
-    </div>
-  )
+        ))}
+      </div>
+    </footer>
+  );
 }

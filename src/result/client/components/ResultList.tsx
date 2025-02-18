@@ -26,7 +26,7 @@ function ResultList({ results }: { results: Result[] | null | undefined }) {
                     )}
                 </>
             ) : (
-                <div className="text-center">
+                <div className="text-center dark:text-white">
                     No results found. Create one by running a strategy and saving the result.
                 </div>
             )}

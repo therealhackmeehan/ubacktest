@@ -175,7 +175,7 @@ function InputForm({ formInputs, setFormInputs, run }: InputFormSubcomponentProp
 
     return (
         <div
-            className="z-10 flex border-2 border-black flex-col shadow-lg justify-between rounded-lg fixed bg-gradient-to-br from-white to-slate-100 p-4"
+            className="z-10 flex border-2 border-black flex-col shadow-lg justify-between rounded-lg fixed bg-gradient-to-br from-white to-slate-100 p-4 dark:bg-gradient-to-br dark:from-boxdark dark:to-boxdark-2 dark:text-white"
             style={{ right: "3rem", top: `${position.y}px`, position: "fixed", cursor: isDragging ? "grabbing" : "default" }}
         >
             <button
@@ -187,14 +187,14 @@ function InputForm({ formInputs, setFormInputs, run }: InputFormSubcomponentProp
             <div className="space-y-3 overflow-auto px-1">
                 <div className="flex justify-between items-center gap-x-4 overflow-hidden">
                     <button
-                        className={`hover:text-sky-700 duration-500 hover:bg-gradient-to-br from-white to-slate-300 p-1 border-2 border-slate-300 rounded-md m-1 ${expanded ? '' : 'rotate-180'}`}
+                        className={`hover:text-sky-700 duration-500 hover:bg-gradient-to-br from-white to-slate-300 dark:to-black p-1 border-2 border-slate-300 rounded-md m-1 dark:text-white ${expanded ? '' : 'rotate-180'}`}
                         onClick={() => setExpanded(!expanded)}
                     >
                         <CgArrowUp />
                     </button>
 
-                    <div className="text-lg text-slate-800 tracking-tight font-extrabold text-nowrap">
-                        <span className="text-sm font-light text-sky-700">the</span> Backtest Engine
+                    <div className="text-lg text-slate-800 tracking-tight font-extrabold text-nowrap dark:text-white">
+                        <span className="text-sm font-light text-sky-700 dark:text-blue-300">the</span> Backtest Engine
                     </div>
 
                 </div>
@@ -281,18 +281,18 @@ function InputForm({ formInputs, setFormInputs, run }: InputFormSubcomponentProp
                         </select>
                     </div>
 
-                    <div className="flex text-xs bg-gradient-to-r from-white to-sky-700 rounded-md border-2 border-sky-700">
-                        <button className="w-full rounded-l-md p-0.5 flex gap-x-1 items-center justify-center hover:bg-slate-50 group"
+                    <div className="flex text-xs bg-gradient-to-r from-white to-sky-700 dark:to-blue-300 rounded-md border-2 border-sky-700 dark:border-0">
+                        <button className="w-full rounded-l-md p-0.5 flex gap-x-1 items-center justify-center hover:bg-slate-50 group dark:text-black"
                             onClick={randomFormInputs}>
                             random <GiInvertedDice5 className="group-hover:rotate-180 duration-500" />
                         </button>
-                        <button className="w-full border-l-2 border-sky-700 text-white rounded-r-md p-0.5 flex gap-x-1 items-center justify-center hover:bg-slate-50 group hover:text-black"
+                        <button className="w-full border-l-2 border-sky-700 dark:border-boxdark-2 rounded-r-md p-0.5 flex gap-x-1 items-center justify-center hover:bg-slate-50 group hover:text-black text-white dark:text-black"
                             onClick={resetFormInputs}>
                             reset <BiReset className="group-hover:rotate-180 duration-500" />
                         </button>
                     </div>
 
-                    <button className="flex hover:font-bold items-center justify-self-center text-xs text-sky-700"
+                    <button className="flex hover:font-bold items-center justify-self-center text-xs text-sky-700 dark:text-blue-300"
                         onClick={() => setDisplayAdvancedOptions(!displayAdvancedOptions)}>
                         advanced options
                         {displayAdvancedOptions ? <FaCaretUp size="1rem" /> : <FaCaretDown size="1rem" />}
@@ -300,7 +300,7 @@ function InputForm({ formInputs, setFormInputs, run }: InputFormSubcomponentProp
 
                     {displayAdvancedOptions &&
                         <>
-                            <div className="space-y-1 border-2 border-white bg-slate-100 rounded-md p-2">
+                            <div className="space-y-1 border-2 border-white bg-slate-100 rounded-md p-2 dark:bg-boxdark-2">
                                 <div className='flex items-center justify-between gap-3'>
                                     <div className="tracking-tight text-xs font-light">
                                         Execute Trade @
@@ -339,7 +339,7 @@ function InputForm({ formInputs, setFormInputs, run }: InputFormSubcomponentProp
                                     </div>
                                 </div>
                             </div>
-                            <div className="space-y-1 border-2 border-white bg-slate-200 rounded-md p-2">
+                            <div className="space-y-1 border-2 border-white bg-slate-200 rounded-md p-2 dark:bg-boxdark-2">
                                 <div className="flex py-2 items-center justify-between gap-3">
                                     <div className="tracking-tight text-xs font-light">
                                         Include "Burn-In" Period
@@ -379,7 +379,7 @@ function InputForm({ formInputs, setFormInputs, run }: InputFormSubcomponentProp
             </div>
             {expanded &&
                 <button onClick={run}
-                    className="gap-x-2 mt-14 flex justify-center items-center bg-sky-700 text-white justify-self-center w-full text-xl font-extrabold tracking-tight border-2 border-gray-800 rounded-lg hover:bg-sky-600 group"
+                    className="gap-x-2 mt-14 flex justify-center items-center bg-sky-700 text-white justify-self-center w-full text-xl font-extrabold tracking-tight border-2 border-gray-800 rounded-lg hover:bg-sky-600 group dark:bg-blue-300 dark:text-black"
                 >
                     <div className="group-hover:translate-x-3 duration-700">
                         GO

@@ -13,15 +13,15 @@ export default function ErrorModal({ closeModal, msg }: ErrorModalProps) {
 
     return (
         <ModalLayout>
-            <div className='flex justify-between'>
-                <div className='p-3 tracking-tight font-bold text-gray-800'>
+            <div className='flex justify-between text-gray-800 dark:text-white'>
+                <div className='p-3 tracking-tight font-bold'>
                     We've Encountered an Error...
                 </div>
                 <button onClick={closeModal}>
-                    <TiDelete size='1.8rem' className='hover:rotate-6 text-gray-900 hover:scale-110' />
+                    <TiDelete size='1.8rem' className='hover:rotate-6 hover:scale-110' />
                 </button>
             </div>
-            <textarea rows={7} className='w-full border-0 border-transparent resize-none bg-white font-mono text-xs text-red-700' readOnly={true} value={msg}>
+            <textarea rows={7} className='w-full border-0 border-transparent resize-none bg-white font-mono text-xs text-red-700 dark:bg-black dark:text-red-200' readOnly={true} value={msg}>
             </textarea>
             <div className="flex justify-between mt-4 gap-x-3">
                 <button

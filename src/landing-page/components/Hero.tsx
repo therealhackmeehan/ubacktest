@@ -40,11 +40,11 @@ export default function Hero() {
         <div className='mx-auto max-w-8xl px-6 lg:px-8'>
           <div className='lg:mb-18 mx-auto max-w-3xl text-center'>
             <h1 ref={ref1} className={`text-4xl font-bold text-gray-900 sm:text-6xl dark:text-white duration-500 ${inView1 ? 'opacity-100' : 'opacity-0 translate-y-3'}`}>
-              1 is <span className='text-sky-700 dark:text-sky-500'>buy</span>.
-              -1 is <span className='text-sky-700 dark:text-sky-500'>short</span>.
+              1 is <span className='text-sky-700 dark:text-blue-300'>buy</span>.
+              -1 is <span className='text-sky-700 dark:text-blue-300'>short</span>.
             </h1>
             <h1 ref={ref3} className={`text-4xl my-12 font-bold text-gray-900 sm:text-6xl dark:text-white duration-1000 ${inView3 ? 'opacity-100' : 'opacity-0 translate-y-3'}`}>
-              The rest is up to <span className='italic text-sky-700 dark:text-sky-500'>you</span>.
+              The rest is up to <span className='italic text-sky-700 dark:text-blue-300'>you</span>.
             </h1>
             <p className='mt-6 mx-auto max-w-2xl text-lg leading-8 text-gray-600 dark:text-white'>
               Test your trading strategies effortlessly with our stock data and powerful tools.
@@ -52,13 +52,13 @@ export default function Hero() {
             <div className='mt-10 flex items-center justify-center gap-x-6'>
               <a
                 href={DocsUrl}
-                className='rounded-md px-3.5 py-2.5 text-sm font-semibold text-gray-700 ring-1 ring-inset ring-gray-200 hover:ring-2 hover:ring-sky-600 shadow-sm focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600 dark:text-white'
+                className='rounded-md px-3.5 py-2.5 text-sm font-semibold text-gray-700 ring-1 ring-inset ring-gray-200 hover:ring-2 hover:ring-sky-600 dark:hover:ring-blue-300 shadow-sm focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600 dark:text-white'
               >
                 Get Started for Free <span aria-hidden='true'>→</span>
               </a>
               <a
                 href={DocsUrl}
-                className='rounded-md px-3.5 py-2.5 text-sm font-semibold text-gray-700 ring-1 ring-inset ring-gray-200 hover:ring-2 hover:ring-sky-600 shadow-sm focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600 dark:text-white'
+                className='rounded-md px-3.5 py-2.5 text-sm font-semibold text-gray-700 ring-1 ring-inset ring-gray-200 hover:ring-2 hover:ring-sky-600 dark:hover:ring-blue-300 shadow-sm focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600 dark:text-white'
               >
                 Read the Docs <span aria-hidden='true'>→</span>
               </a>
