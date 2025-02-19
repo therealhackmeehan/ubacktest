@@ -11,7 +11,7 @@ export default function Privacy() {
             <div className="mt-12 max-w-5xl dark:text-white">
                 <h5 className='font-semibold text-lg mb-4'>1. Introduction</h5>
                 <p>
-                    Welcome to [Your Company Name]. We value your privacy and are committed to protecting your personal information. This Privacy Policy explains how we collect, use, disclose, and safeguard your data when you visit our website or use our services.
+                    Welcome to <span className="font-bold">uBacktest</span>. We value your privacy and are committed to protecting your personal information. This Privacy Policy explains how we collect, use, disclose, and safeguard your data when you visit our website or use our services.
                 </p>
 
                 <h5 className='font-semibold text-lg mt-8 mb-4'>2. Information We Collect</h5>

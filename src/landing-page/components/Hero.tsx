@@ -76,7 +76,7 @@ export default function Hero() {
               </div>
 
               {/* Second Image */}
-              <div className="rotate-[2deg] -mt-12 hover:rotate-[4deg] duration-700 z-20 pl-12">
+              <div className="rotate-[2deg] md:-mt-12 hover:rotate-[4deg] duration-700 z-20 pl-12">
                 <img
                   src={editor}
                   alt="editor"
@@ -85,7 +85,7 @@ export default function Hero() {
               </div>
 
               {/* Third Image */}
-              <div className="rotate-[-2deg] -mt-12 hover:rotate-[-4deg] duration-700 z-20 pr-12">
+              <div className="rotate-[-2deg] md:-mt-12 hover:rotate-[-4deg] duration-700 z-20 pr-12">
                 <img
                   src={results}
                   alt="results"

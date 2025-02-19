@@ -9,6 +9,7 @@ import { StrategyDropDown } from './HomePageDD';
 import { IoMdAddCircleOutline } from "react-icons/io";
 import NewProjectModal from '../playground/client/components/modals/NewProjectModal';
 import ContentWrapper from '../client/components/ContentWrapper';
+import LoadingScreen from '../client/components/LoadingScreen';
 
 export default function HomePage() {
 
@@ -39,7 +40,7 @@ export default function HomePage() {
 
             <div className="mt-12">
                 {isStrategiesLoading ? (
-                    <div className="text-2xl">Loading...</div>
+                    <LoadingScreen />
                 ) : strategies ? (
                     <ul>
                         {strategies.map((strategy: Strategy) => (

@@ -176,7 +176,7 @@ function Result({ selectedStrategy, formInputs, strategyResult, abilityToSaveNew
 
             {errorMsg && <ErrorModal msg={errorMsg} closeModal={() => setErrorMsg('')} />}
 
-            <div className="relative px-6 md:px-12 lg:px-24 bg-white">
+            <div className="relative px-0 md:px-12 lg:px-24 bg-white min-w-187.5">
 
                 {/* header and top button row */}
                 <div id='topOfResultPanel' className='items-center flex p-2 justify-between border-b-2 border-black'>

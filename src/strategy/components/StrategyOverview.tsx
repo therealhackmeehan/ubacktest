@@ -33,7 +33,7 @@ function StrategyOverview({ strategy }: { strategy: Strategy }) {
                     <span className="text-sm mr-3 text-sky-600 dark:text-blue-300">strategy</span>{nameToDisplay}<span className="text-sky-600 dark:text-blue-300">.</span>
                 </div>
 
-                <div className="text-end">
+                <div className="text-end mt-4 md:mt-0">
                     <button className='hover:text-slate-500 dark:text-white' onClick={() => setRenameModalOpen(true)}>
                         <MdOutlineEdit size='2rem' />
                     </button>
@@ -58,7 +58,7 @@ function StrategyOverview({ strategy }: { strategy: Strategy }) {
                     }
                 </div>
 
-                <div className="text-end font-light dark:text-blue-300">
+                <div className="text-end font-light text-xs md:text-base dark:text-blue-300">
                     <div>
                         created: {strategy.createdAt.toLocaleString()}
                     </div>

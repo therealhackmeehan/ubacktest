@@ -38,7 +38,7 @@ function StrategyCodeGen({ code }: { code: string | null }) {
         <div className="mt-10 p-4 rounded-lg bg-white border-2 border-sky-700 dark:border-0 dark:bg-boxdark">
             <div className="my-2 text-xl text-slate-800 tracking-tight font-extrabold dark:text-white">
                 <span className="text-sky-600 dark:text-blue-300">Deploy this Strategy</span> with Real or Paper Money
-                <span className="text-xs m-2 align-top p-1 rounded-md bg-sky-700 text-white dark:bg-blue-300 dark:text-black">BETA</span>
+                <span className="text-xs m-2 md:align-top p-1 rounded-md bg-sky-700 text-white dark:bg-blue-300 dark:text-black">BETA</span>
             </div>
             <div className="rounded-md bg-slate-100 border-slate-200 border-2 p-3 lg:flex justify-between dark:bg-boxdark-2 dark:border-0">
 

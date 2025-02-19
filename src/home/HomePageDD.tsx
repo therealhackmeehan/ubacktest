@@ -47,7 +47,7 @@ export function StrategyDropDown({ strategy }: { strategy: Strategy }) {
                     <div className='font-light text-slate-400 text-xs dark:text-white px-2'>
                         created {strategy.createdAt.toLocaleDateString()}
                     </div>
-                    <div className='font-light text-gray-700 text-sm dark:text-white px-2'>
+                    <div className='hidden md:flex font-light text-gray-700 text-sm dark:text-white px-2'>
                         last updated {strategy.updatedAt.toLocaleDateString()}
                     </div>
                 </div>

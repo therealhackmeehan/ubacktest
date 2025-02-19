@@ -19,7 +19,7 @@ function ResultList({ results }: { results: Result[] | null | undefined }) {
                     {results.length > 10 && (
                         <button
                             onClick={toggleShowAll}
-                            className="w-full px-2 py-1 rounded-md bg-slate-100 border-2 border-slate-500 hover:shadow hover:bg-slate-200 hover:italic duration-700"
+                            className="w-full px-2 py-1 rounded-md bg-slate-100 border-2 border-slate-500 hover:shadow hover:bg-slate-200 hover:italic duration-700 dark:bg-boxdark dark:text-white"
                         >
                             {showAll ? "Show Less" : "See All"}
                         </button>

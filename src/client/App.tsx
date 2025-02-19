@@ -45,7 +45,8 @@ export default function App() {
 
   return (
     <>
-      <div className='min-w-171.5 dark:bg-boxdark min-h-screen'>
+      {/* two global tailwind classes */}
+      <div className='dark:bg-boxdark min-h-screen'>
         {isAdminDashboard ? (
           <Outlet />
         ) : (

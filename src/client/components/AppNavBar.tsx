@@ -35,7 +35,7 @@ export default function AppNavBar() {
             <HiBars3 className='h-6 w-6' aria-hidden='true' />
           </button>
         </div>
-        <div className='hidden lg:flex lg:gap-x-10'>
+        <div className='hidden lg:flex lg:gap-x-8'>
           <Link
             to={"/editor"}
             className='text-sm font-semibold leading-6 text-gray-900 duration-300 ease-in-out hover:text-slate-500 dark:text-white'
@@ -61,8 +61,8 @@ export default function AppNavBar() {
             Leaderboard
           </Link>
         </div>
-        <div className='hidden lg:flex mx-12 border-r-2 py-4 border-black/80 dark:border-blue-300'></div>
-        <div className='hidden lg:flex lg:gap-x-10 lg:mr-4'>
+        <div className='hidden lg:flex mx-4 xl:mx-12 border-r-2 py-4 border-black/80 dark:border-blue-300'></div>
+        <div className='hidden lg:flex lg:gap-x-8 lg:mr-4'>
           <Link
             to={"/home"}
             className='text-sm leading-6 text-sky-700 duration-300 ease-in-out hover:text-slate-500 dark:text-white'
@@ -161,7 +161,7 @@ export default function AppNavBar() {
               </div>
               <div className='py-6'>
                 {isUserLoading ? null : !user ? (
-                  <Link to='/login'>
+                  <Link to='/login' onClick={() => setMobileMenuOpen(false)}>
                     <div className='flex justify-end items-center duration-300 ease-in-out text-gray-900 hover:text-slate-500 dark:text-white'>
                       Log in <BiLogIn size='1.1rem' className='ml-1' />
                     </div>

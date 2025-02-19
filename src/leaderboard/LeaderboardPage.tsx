@@ -5,6 +5,7 @@ import { useQuery } from "wasp/client/operations";
 import { getTopResults } from "wasp/client/operations";
 import LeaderboardItem from "./LeaderboardItem";
 import { ResultWithUsername } from "../playground/server/resultOperations";
+import logo from '../client/static/logo.png'
 
 export const softModernColors = [
     "bg-blue-300", "bg-teal-300", "bg-green-300",
@@ -34,13 +35,13 @@ function LeaderboardPage() {
         <ContentWrapper>
             <div className="max-w-5xl mx-auto min-w-3xl">
                 <div className="m-2 p-4 bg-slate-100 duration-1000 rounded-lg shadow-xl flex justify-between dark:text-white dark:bg-boxdark-2">
-                    <div className="font-extrabold tracking-tight p-2 bg-sky-700 rounded-md text-white dark:bg-boxdark dark:text-blue-300">uBacktest.</div>
+                    <img src={logo} className="h-12" />
                     <div className="text-3xl font-extrabold tracking-tight"><span className="text-xs">global </span>Leaderboard</div>
                 </div>
                 <div className="text-center text-sm font-light my-4 dark:text-white">
                     <p>Saved results are public by default, but your code is <span className="italic">never</span> public. Only your success.</p>
                 </div>
-                <div className="mt-12 p-8 rounded-lg bg-slate-100 dark:bg-boxdark-2">
+                <div className="mt-12 p-2 md:p-8 rounded-lg bg-slate-100 dark:bg-boxdark-2">
                     <button
                         className="p-1 mb-4 font-bold text-xs justify-self-center tracking-tight rounded-md bg-white flex dark:bg-boxdark-2"
                         onClick={() => setIsProfitLoss(!isProfitLoss)}

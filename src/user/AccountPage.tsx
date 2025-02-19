@@ -3,11 +3,15 @@ import { type SubscriptionStatus, prettyPaymentPlanName, parsePaymentPlanId } fr
 import { getCustomerPortalUrl, useQuery } from 'wasp/client/operations';
 import { Link } from 'wasp/client/router';
 import { logout } from 'wasp/client/auth';
+import logo from '../client/static/logo.png';
 
 export default function AccountPage({ user }: { user: User }) {
   return (
     <div className='mt-35 max-w-4xl mx-auto px-6'>
-      <div className='text-title-xl2 text-center text-sky-700 dark:text-blue-300 tracking-tight font-bold'>uBacktest.</div>
+      <div className='flex justify-between m-4 lg:m-8 items-center'>
+        <div className='text-title-xl2 text-sky-700 dark:text-blue-300 tracking-tight font-bold'>uBacktest.</div>
+        <img className='h-12 lg:h-16' src={logo} />
+      </div>
       <div className='overflow-hidden border border-gray-900/10 shadow-lg sm:rounded-lg mb-4 lg:m-8 dark:border-gray-100/10'>
         <div className='px-4 py-5 sm:px-6 lg:px-8'>
           <h3 className='text-xl font-semibold leading-6 text-sky-800 dark:text-white'>Account Information</h3>
@@ -20,7 +24,7 @@ export default function AccountPage({ user }: { user: User }) {
                 <dd className='mt-1 text-sm text-gray-900 dark:text-gray-400 sm:col-span-2 sm:mt-0'>{user.email}</dd>
               </div>
             )}
-            
+
             <div className='py-4 sm:grid sm:grid-cols-3 sm:gap-4 sm:py-5 sm:px-6'>
               <dt className='text-sm font-medium text-gray-500 dark:text-white'>Your Plan</dt>
               <UserCurrentPaymentPlan
@@ -36,7 +40,7 @@ export default function AccountPage({ user }: { user: User }) {
       <div className='inline-flex w-full justify-end'>
         <button
           onClick={logout}
-          className='inline-flex justify-center mx-8 py-2 px-4 border border-transparent shadow-md text-sm font-medium rounded-md text-white bg-sky-700 dark:bg-blue-300 dark:text-black hover:bg-slate-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500'
+          className='inline-flex justify-center mx-2 md:mx-8 py-2 px-4 border border-transparent shadow-md text-sm font-medium rounded-md text-white bg-sky-700 dark:bg-blue-300 dark:text-black hover:bg-slate-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500'
         >
           logout
         </button>

@@ -114,7 +114,7 @@ function MonacoEditor({ codeToDisplay, setCodeToDisplay }: MonacoEditorProps) {
         <>
             {errMsg && <ErrorModal msg={errMsg} closeModal={() => setErrMsg('')} />}
 
-            <div className="flex text-xs justify-start border-b-2 dark:border-0 border-black text-gray-800">
+            <div className="md:flex text-xs justify-start border-b-2 dark:border-0 border-black text-gray-800">
                 <button
                     disabled={saving}
                     type='button'
@@ -125,21 +125,20 @@ function MonacoEditor({ codeToDisplay, setCodeToDisplay }: MonacoEditorProps) {
                 </button>
                 <DownloadButton code={codeToDisplay} />
                 <UploadButton setCode={setCodeToDisplay} />
-                <button className='border-l-2 border-black dark:border-0 flex gap-x-1 px-3 py-1 hover:bg-slate-100 items-center text-center tracking-tight duration-300 dark:text-white dark:hover:text-slate-700'
+                <button className='md:border-l-2 border-black dark:border-0 flex gap-x-1 px-3 py-1 hover:bg-slate-100 items-center text-center tracking-tight duration-300 dark:text-white dark:hover:text-slate-700'
                     onClick={() => setPackagesModalOpen(true)}>
                     <MdLaunch />Included Packages
                 </button>
-                <button className='border-l-2 border-black dark:border-0 flex gap-x-1 px-3 py-1 hover:bg-slate-100 items-center text-center tracking-tight duration-300 dark:text-white dark:hover:text-slate-700'
+                <button className='md:border-l-2 border-black dark:border-0 flex gap-x-1 px-3 py-1 hover:bg-slate-100 items-center text-center tracking-tight duration-300 dark:text-white dark:hover:text-slate-700'
                     onClick={() => setExamplesModalOpen(true)}>
                     <BsQuestionOctagon />Examples
                 </button>
             </div>
             <Editor className="invert dark:invert-0 hue-rotate-180" defaultLanguage='python' theme="vs-dark" value={codeToDisplay} onChange={handleEditorChange} options={editorOpts}
-                loading={(<div className="text-white font-2xl tracking-tight">Loading...</div>)} />
+                loading={(<div className="text-white font-2xl tracking-tight animate-bounce">Loading...</div>)} />
             {packagesModalOpen &&
                 <PackagesModal closeModal={() => setPackagesModalOpen(false)} />
             }
-
             {examplesModalOpen &&
                 <ExamplesModal onSuccess={onSuccess} closeModal={() => setExamplesModalOpen(false)} />
             }

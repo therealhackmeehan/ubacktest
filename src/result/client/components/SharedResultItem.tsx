@@ -1,12 +1,12 @@
 import { useState } from "react";
-import { ResultHeader } from "./ResultListItem";
+import ResultHeader from "./ResultHeader";
 import { FiBookOpen } from "react-icons/fi";
 import OpenResult from "./OpenResult";
-import { BiTrash } from "react-icons/bi";
 import DeleteShareModal from "./modals/DeleteShareModal";
 import { GetSharedProps } from "../../server/shareOperations";
 import { FormInputProps } from "../../../shared/sharedTypes";
 import { acceptShare } from "wasp/client/operations";
+import { MdDeleteOutline } from "react-icons/md";
 
 interface SharedResultItemProps {
     result: GetSharedProps;
@@ -19,7 +19,7 @@ const SharedResultItem = ({ result }: SharedResultItemProps) => {
     return (
         <li key={result.id}>
             {result.accepted ? (
-                <div className="rounded-lg bg-white border-2 border-slate-500 items-center my-3 mx-1 px-2 flex justify-between dark:border-0 dark:bg-boxdark dark:text-white">
+                <div className="rounded-lg bg-white border-2 border-slate-500 items-center my-3 mx-1 px-2 py-2 md:py-0 md:flex justify-between dark:border-0 dark:bg-boxdark dark:text-white">
                     <ResultHeader result={result} setResultPanelOpen={setResultPanelOpen} />
                     <div className="flex gap-x-2 justify-between">
                         <div className="text-xs p-2 m-1">
@@ -29,7 +29,7 @@ const SharedResultItem = ({ result }: SharedResultItemProps) => {
                             className="hover:rotate-180 p-1 duration-500"
                             onClick={() => setDeleteSharedModalOpen(true)}
                         >
-                            <BiTrash />
+                            <MdDeleteOutline />
                         </button>
                         <button
                             className="px-3 py-1 flex rounded-lg bg-slate-100 m-1 hover:shadow-lg items-center gap-x-2 dark:bg-boxdark-2 dark:border-2 dark:border-blue-300"

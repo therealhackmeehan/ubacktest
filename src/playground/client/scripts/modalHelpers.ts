@@ -1,7 +1,7 @@
 export function validateNewName(newName: string): void {
     const trimmedName = newName.trim();
     const minLength = 3;
-    const maxLength = 24;
+    const maxLength = 13;
 
     if (trimmedName.length < minLength) {
         throw new Error(`Project name must be at least ${minLength} characters long.`);

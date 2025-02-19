@@ -1,7 +1,7 @@
 import { useState } from "react";
 import ContentWrapper from "../../client/components/ContentWrapper";
-import SharedWithMe from "./components/SharedWithMe";
 import MyResults from "./components/MyResults";
+import SharedList from "./components/SharedList";
 
 function ResultPage() {
 
@@ -26,7 +26,7 @@ function ResultPage() {
                 </button>
             </div>
             {
-                sharedWithMeTabOpen ? <SharedWithMe /> : <MyResults />
+                sharedWithMeTabOpen ? <SharedList /> : <MyResults />
             }
 
         </ContentWrapper>

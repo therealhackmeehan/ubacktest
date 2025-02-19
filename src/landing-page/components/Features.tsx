@@ -9,7 +9,7 @@ interface Feature {
 
 export default function Features({ features }: { features: Feature[] }) {
   return (
-    <div id='features' className='mx-auto mt-48 max-w-7xl px-6 lg:px-8'>
+    <div id='features' className='mx-auto mt-36 lg:mt-54 max-w-7xl px-6 lg:px-8'>
       <div className='mx-auto max-w-2xl text-center'>
         <p className='mt-2 text-4xl font-bold tracking-tight text-gray-900 sm:text-5xl dark:text-white'>
           All the <span className='text-sky-700 dark:text-blue-300'>features</span>.

@@ -38,7 +38,7 @@ export default function StrategyHeader() {
             <div className="flex gap-1">
                 <Link
                     title='go to strategy page'
-                    className="font-bold tracking-tight pb-1 text-3xl hover:text-sky-700 dark:text-white"
+                    className="font-bold tracking-tight pb-1 text-xl md:text-3xl hover:text-sky-700 dark:text-white"
                     key={selectedStrategy.id}
                     to="/strategy/:id"
                     params={{ id: selectedStrategy.id }}>

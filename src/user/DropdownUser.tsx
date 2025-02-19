@@ -42,7 +42,7 @@ const DropdownUser = ({ user }: { user: Partial<User> }) => {
         className='flex items-center gap-4 duration-300 ease-in-out text-gray-800 hover:text-slate-500'
       >
         <span className='hidden text-right lg:block'>
-          <span className='block text-sm font-medium dark:text-white'>{user.username}</span>
+          <span className='hidden xl:flex text-sm font-medium dark:text-white'>{user.username}</span>
         </span>
         <CgProfile size='1.1rem' className='ml-1 mt-[0.1rem] dark:text-white' />
         <svg

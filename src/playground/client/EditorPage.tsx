@@ -141,7 +141,7 @@ export default function EditorPage() {
 
 function NoStrategiesBanner({ isStrategiesLoading }: { isStrategiesLoading: boolean }) {
     return (
-        <>
+        <div className="overflow-y-hidden h-screen bg-blue-300/10">
             <div className="border-2 p-4 border-black font-extrabold mt-12 justify-self-center blur-sm text-5xl text-slate-800/30 tracking-tight dark:text-white dark:border-white">
                 {isStrategiesLoading ? "Loading..." : "No Strategies Exist (yet)"}
             </div>
@@ -167,7 +167,7 @@ function NoStrategiesBanner({ isStrategiesLoading }: { isStrategiesLoading: bool
                     }}
                 />
             </div>
-        </>
+        </div>
 
     )
 }

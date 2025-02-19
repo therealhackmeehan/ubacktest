@@ -3,15 +3,15 @@ import { FiBookOpen } from 'react-icons/fi';
 import { MdOutlineEdit, MdDeleteOutline } from 'react-icons/md';
 import { GoShare } from "react-icons/go";
 import { type Result } from 'wasp/entities';
-import { FormInputProps, StrategyResultProps } from '../../../shared/sharedTypes';
+import { FormInputProps } from '../../../shared/sharedTypes';
 import RenameResultModal from './modals/RenameResultModal';
 import DeleteResultModal from './modals/DeleteResultModal';
-import SmallPlot from './SmallPlot';
 import OpenResult from './OpenResult';
 import { togglePrivacy } from 'wasp/client/operations';
 import ShareResultModal from './modals/ShareResultModal';
 import { RxLockOpen2, RxLockClosed } from "react-icons/rx";
 import { AiOutlineLoading3Quarters } from 'react-icons/ai';
+import ResultHeader from './ResultHeader';
 
 export default function ResultListItem({ result }: { result: Result }) {
 
@@ -45,7 +45,7 @@ export default function ResultListItem({ result }: { result: Result }) {
 
     return (
         <>
-            <div className='md:flex justify-between my-3 mx-1 items-center p-2 rounded-lg bg-slate-100 border-slate-200 border-2 hover:shadow-lg duration-700 dark:border-0 dark:bg-boxdark dark:shadow-none'>
+            <div className='md:flex justify-between my-6 md:my-3 md:mx-1 items-center p-2 rounded-lg bg-slate-100 border-slate-200 border-2 hover:shadow-lg duration-700 dark:border-0 dark:bg-boxdark dark:shadow-none'>
                 <ResultHeader result={result} setResultPanelOpen={setResultPanelOpen} />
                 <div className='flex justify-between gap-x-3 items-center dark:text-white'>
                     <button className='px-3 py-1 flex rounded-lg bg-white hover:shadow-lg items-center gap-x-2 dark:bg-boxdark-2 dark:border-2 dark:border-blue-300'
@@ -84,30 +84,4 @@ export default function ResultListItem({ result }: { result: Result }) {
         </>
     )
 
-}
-
-interface ResultHeaderProps {
-    result: Result;
-    setResultPanelOpen: (val: boolean) => void;
-
-}
-export function ResultHeader({ result, setResultPanelOpen }: ResultHeaderProps) {
-    return (
-        <div className='md:flex justify-between gap-x-3'>
-            <button className='tracking-tight text-xl font-semibold hover:text-sky-700 dark:text-white' onClick={() => setResultPanelOpen(true)}>
-                {result.name}
-            </button>
-            <div className='text-xs border-l-2 border-black/40 px-2 bg-white dark:bg-boxdark-2 dark:text-white'>
-                profit/loss: <span className='text-lg'>{result.profitLoss.toFixed(2)}%</span>
-            </div>
-            {result.data ?
-                <div className='p-1 dark:brightness-200'>
-                    <SmallPlot data={result.data as unknown as StrategyResultProps} />
-                </div>
-                :
-                // for really large strategies, data is not stored but the api is called if clicked on.
-                <div className='text-xs tracking-tight p-1 font-extralight lowercase'>Open to view plot.</div>
-            }
-        </div>
-    )
 }
