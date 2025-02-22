@@ -74,8 +74,8 @@ export default function calculateStats(strategyResult: StrategyResultProps): Sta
 
     const maxGain = Math.max.apply(Math, strategyResult.portfolio) - 1;
     const formattedMaxGain = maxGain !== null ? (maxGain * 100).toFixed(2) + '%' : null;
-    const returns = strategyResult.returns;
-
+    const returns = strategyResult.returns.slice(1); // dont include the first 0% return
+    
     // Initialize variables for sum, max, min
     let sum = 0;
     let max = -Infinity;
@@ -112,10 +112,10 @@ export default function calculateStats(strategyResult: StrategyResultProps): Sta
     const riskFreeRate = 0;
 
     const sharpeRatio = (averageReturn - riskFreeRate) / stdDev;
-    const roundedSharpeRatio = sharpeRatio !== null ? sharpeRatio.toFixed(2) : null;
+    const roundedSharpeRatio = sharpeRatio !== null ? sharpeRatio.toFixed(3) : null;
 
     const sortinoRatio = (averageReturn - riskFreeRate) / downsideDev;
-    const roundedSortinoRatio = sortinoRatio !== null ? sortinoRatio.toFixed(2) : null;
+    const roundedSortinoRatio = sortinoRatio !== null ? sortinoRatio.toFixed(3) : null;
 
     return {
         length: length,

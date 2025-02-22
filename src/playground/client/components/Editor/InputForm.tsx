@@ -131,41 +131,45 @@ function InputForm({ formInputs, setFormInputs, run }: InputFormSubcomponentProp
         localStorage.setItem('inputFormHeight', JSON.stringify(position))
     }, [position])
 
-    const handleMouseDown = (e: React.MouseEvent) => {
+    const handleDown = (e: React.MouseEvent | React.TouchEvent) => {
         setIsDragging(true);
-        offset.current = {
-            y: e.clientY - position.y,
-        };
+
+        const clientY = "touches" in e ? e.touches[0].clientY : (e as React.MouseEvent).clientY;
+
+        offset.current = { y: clientY - position.y };
     };
 
-    const handleMouseMove = (e: MouseEvent) => {
+    const handleMove = (e: MouseEvent | TouchEvent) => {
         if (!isDragging) return;
 
-        const elementHeight = 100; // Set this to the actual height of your draggable component
-        const newY = e.clientY - offset.current.y;
-
-        // Clamp the position to stay within the viewport
-        const clampedY = Math.max(0, Math.min(newY, window.innerHeight - elementHeight));
+        const clientY = "touches" in e ? e.touches[0].clientY : (e as MouseEvent).clientY;
+        const newY = clientY - offset.current.y;
+        const clampedY = Math.max(0, Math.min(newY, window.innerHeight - window.innerHeight / 3));
 
         setPosition({ y: clampedY });
     };
 
-
-    const handleMouseUp = () => {
+    const handleUp = () => {
         setIsDragging(false);
     };
 
     useEffect(() => {
         if (isDragging) {
-            document.addEventListener("mousemove", handleMouseMove);
-            document.addEventListener("mouseup", handleMouseUp);
+            document.addEventListener("mousemove", handleMove);
+            document.addEventListener("mouseup", handleUp);
+            document.addEventListener("touchmove", handleMove);
+            document.addEventListener("touchend", handleUp);
         } else {
-            document.removeEventListener("mousemove", handleMouseMove);
-            document.removeEventListener("mouseup", handleMouseUp);
+            document.removeEventListener("mousemove", handleMove);
+            document.removeEventListener("mouseup", handleUp);
+            document.removeEventListener("touchmove", handleMove);
+            document.removeEventListener("touchend", handleUp);
         }
         return () => {
-            document.removeEventListener("mousemove", handleMouseMove);
-            document.removeEventListener("mouseup", handleMouseUp);
+            document.removeEventListener("mousemove", handleMove);
+            document.removeEventListener("mouseup", handleUp);
+            document.removeEventListener("touchmove", handleMove);
+            document.removeEventListener("touchend", handleUp);
         };
     }, [isDragging]);
 
@@ -175,12 +179,13 @@ function InputForm({ formInputs, setFormInputs, run }: InputFormSubcomponentProp
 
     return (
         <div
-            className="z-10 flex border-2 border-black flex-col shadow-lg justify-between rounded-lg fixed bg-gradient-to-br from-white to-slate-100 p-4 dark:bg-gradient-to-br dark:from-boxdark dark:to-boxdark-2 dark:text-white"
+            className="z-10 flex border-2 border-black dark:border-blue-300 flex-col shadow-lg justify-between rounded-lg fixed bg-gradient-to-br from-white to-slate-100 p-4 dark:bg-gradient-to-br dark:from-boxdark dark:to-boxdark-2 dark:text-white"
             style={{ right: "3rem", top: `${position.y}px`, position: "fixed", cursor: isDragging ? "grabbing" : "default" }}
         >
             <button
                 className="rounded-md -mt-3 mb-1 hover:cursor-grab active:cursor-grabbing"
-                onMouseDown={handleMouseDown}
+                onMouseDown={handleDown}
+                onTouchStart={handleDown}
             >
                 <VscGrabber className="justify-self-center" />
             </button>

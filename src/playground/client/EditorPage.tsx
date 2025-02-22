@@ -31,13 +31,18 @@ export default function EditorPage() {
     const isResized = useRef(false);
 
     useEffect(() => {
-        const handleMouseMove = (e: MouseEvent) => {
+        const handleMove = (e: MouseEvent | TouchEvent) => {
             if (!isResized.current) {
                 return;
             }
 
+            const clientX = (e as TouchEvent).touches
+                ? (e as TouchEvent).touches[0].clientX
+                : (e as MouseEvent).clientX;
+
             setWidth((previousWidth) => {
-                const newWidth = previousWidth + e.movementX / 2;
+                const deltaX = (e as MouseEvent).movementX ? (e as MouseEvent).movementX / 2 : 0;
+                const newWidth = (e as TouchEvent).touches ? clientX : previousWidth + deltaX;
 
                 const maxAllowedWidth = Math.min(window.innerWidth / 3, maxWidth);
                 if (newWidth > maxAllowedWidth) return maxAllowedWidth;
@@ -50,17 +55,21 @@ export default function EditorPage() {
             });
         };
 
-        const handleMouseUp = () => {
+        const handleEnd = () => {
             isResized.current = false;
             document.body.style.userSelect = ""; // Re-enable text selection
         };
 
-        window.addEventListener("mousemove", handleMouseMove);
-        window.addEventListener("mouseup", handleMouseUp);
+        window.addEventListener("mousemove", handleMove);
+        window.addEventListener("mouseup", handleEnd);
+        window.addEventListener("touchmove", handleMove);
+        window.addEventListener("touchend", handleEnd);
 
         return () => {
-            window.removeEventListener("mousemove", handleMouseMove);
-            window.removeEventListener("mouseup", handleMouseUp);
+            window.removeEventListener("mousemove", handleMove);
+            window.removeEventListener("mouseup", handleEnd);
+            window.removeEventListener("touchmove", handleMove);
+            window.removeEventListener("touchend", handleEnd);
         };
     }, []);
 
@@ -100,6 +109,11 @@ export default function EditorPage() {
         setWidth(widthToSet);
     }
 
+    const handleStart = () => {
+        isResized.current = true;
+        document.body.style.userSelect = "none"; // Disable text selection during resizing
+    };
+
     return (
 
         <div className='w-full h-screen grid grid-cols-[min-content_auto] border-t-2 border-black'>
@@ -114,10 +128,8 @@ export default function EditorPage() {
                         setSelectedStrategy={setSelectedStrategy} />
                 </div>
                 <div className="w-3 cursor-col-resize border-r-2 border-black bg-slate-200 dark:bg-black dark:text-white z-10"
-                    onMouseDown={() => {
-                        isResized.current = true;
-                        document.body.style.userSelect = "none";
-                    }}
+                    onMouseDown={handleStart}
+                    onTouchStart={handleStart}
                     onClick={setToAlternateWidth}
                 >
                     <BsThreeDotsVertical className="justify-self-center h-full py-auto" />

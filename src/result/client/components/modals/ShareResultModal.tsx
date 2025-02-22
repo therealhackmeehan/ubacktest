@@ -90,7 +90,7 @@ export default function ShareResultModal({ closeModal, id }: ShareResultModalPro
                     {errMsg}
                 </div>}
             {showSuccess &&
-                <div className="mt-4 p-2 text-sky-800 font-extralight text-center darl:text-white">
+                <div className="mt-4 p-2 text-sky-800 font-extralight text-center dark:text-white">
                     Success! You've shared the result with {email}.
                 </div>}
             {currentlyInTimeout && (

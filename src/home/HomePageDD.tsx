@@ -25,7 +25,7 @@ export function StrategyDropDown({ strategy }: { strategy: Strategy }) {
                     </Link>
                 </div>
                 <div className='flex items-end'>
-                    <button className='pl-3 hover:text-slate-500 dark:text-sky-300' title='Rename Strategy'
+                    <button className='pl-3 hover:text-slate-500 dark:text-blue-300' title='Rename Strategy'
                         onClick={() => setIsRenameModalOpen(true)}>
                         <MdOutlineEdit size='1.4rem' />
                     </button>
@@ -35,7 +35,7 @@ export function StrategyDropDown({ strategy }: { strategy: Strategy }) {
                         id={strategy.id}
                         currName={strategy.name} />}
 
-                    <button className='hover:text-slate-500 px-1 dark:text-sky-300' title='Delete Strategy'
+                    <button className='hover:text-slate-500 px-1 dark:text-blue-300' title='Delete Strategy'
                         onClick={() => setIsDeleteModalOpen(true)}>
                         <MdDeleteOutline size='1.2rem' />
                     </button>

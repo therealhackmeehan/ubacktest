@@ -91,7 +91,8 @@ function Result({ selectedStrategy, formInputs, strategyResult, abilityToSaveNew
         if (!strategyResult) return;
 
         // Get the headers (labels)
-        const headers = Object.keys(strategyResult);
+        let headers = Object.keys(strategyResult);
+        headers = headers.filter(header => header !== 'userDefinedData');        
 
         // Create rows by combining data from each key (label)
         const rowCount = strategyResult[headers[0]].length; // Get the number of rows based on the first label's length

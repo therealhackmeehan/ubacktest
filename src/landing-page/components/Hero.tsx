@@ -47,7 +47,7 @@ export default function Hero() {
               The rest is up to <span className='italic text-sky-700 dark:text-blue-300'>you</span>.
             </h1>
             <p className='mt-6 mx-auto max-w-2xl text-lg leading-8 text-gray-600 dark:text-white'>
-              Test your trading strategies effortlessly with our stock data and powerful tools.
+              Your one stop shop for all things <span className='italic'>algorithmic trading</span>. Test that strategy you've been thinking about!
             </p>
             <div className='mt-10 flex items-center justify-center gap-x-6'>
               <a
