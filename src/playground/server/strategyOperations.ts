@@ -143,8 +143,17 @@ export const runStrategy: RunStrategy<any, any> = async ({ formInputs, code }, c
 
   if (!context.user) throw new HttpError(401);
 
-  if (!context.user.credits && context.user.subscriptionPlan !== "active" && !context.user.isAdmin) {
-    throw new HttpError(402, "You must add more credits or purchase a basic monthly subscription to use this software.");
+  if (!context.user.isAdmin) { // charge/make sure subscription is valid prior to running!
+    const isProUser = context.user.subscriptionPlan == "pro";
+    const proOnlyFormInputs = ['1m', '2m', '5m', '15m', '30m', '1h', '90m'];
+
+    if (proOnlyFormInputs.includes(formInputs.intval) && !isProUser) {
+      throw new HttpError(402, "High frequency backtesting is only available to pro users. Consider upgrading to a pro subscription.")
+    }
+
+    if (!context.user.credits && !context.user.subscriptionPlan) {
+      throw new HttpError(402, "You must add more credits or purchase a basic monthly subscription to continue to use this software.");
+    }
   }
 
   if (isProcessing) {

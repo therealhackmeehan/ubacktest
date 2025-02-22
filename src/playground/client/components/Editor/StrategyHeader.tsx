@@ -73,12 +73,11 @@ export default function StrategyHeader() {
                         id={selectedStrategy.id} />
                 }
 
-                {(user?.subscriptionStatus != "active") &&
+                {(!user?.subscriptionStatus) &&
                     <Link className="place-self-center pl-3 font-bold hover:rotate-3 duration-700 hover:text-slate-900 dark:text-white"
                         to={"/pricing"}>{user?.credits}
                         <span className="text-xs font-extralight"> tests remaining</span>
                     </Link>}
-
             </div>
 
         </div>

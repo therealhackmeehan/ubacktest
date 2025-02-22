@@ -118,8 +118,8 @@ export default function EditorPage() {
 
         <div className='w-full h-screen grid grid-cols-[min-content_auto] border-t-2 border-black'>
 
-            <div className="flex overflow-x-hidden overflow-y-auto">
-                <div className="h-full bg-gray-50 dark:bg-boxdark"
+            <div className="flex overflow-x-hidden">
+                <div className="h-full bg-gray-50 dark:bg-boxdark overflow-y-auto"
                     style={{ width: `${width / 16}rem` }}>
                     <StrategyBrowser
                         strategies={strategies}

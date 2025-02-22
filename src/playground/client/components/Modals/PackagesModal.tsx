@@ -34,7 +34,7 @@ export default function PackagesModal({ closeModal }: { closeModal: () => void }
             </div>
 
             <div className="font-extralight p-4 text-xs text-center dark:text-white">
-                Note that versions are not updated daily and may lag behind actual available version.
+                Note that versions are not updated daily and may lag behind current available version.
             </div>
         </ModalLayout>
     );

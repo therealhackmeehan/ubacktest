@@ -1,3 +1,8 @@
+// { // code to run to get available packages
+//     "language_id": 25,
+//     "source_code": "import subprocess\ndef list_installed_packages():\n    result = subprocess.run([\"pip\", \"list\"], capture_output=True, text=True)\n    print(result.stdout)\nlist_installed_packages()"
+//   }
+
 const packages = {
     "stats and math": {
         "numpy": "1.23.5",
@@ -7,8 +12,7 @@ const packages = {
         "matplotlib": "3.9.2",
         "seaborn": "0.12.2",
         "sympy": "1.13.3",
-        "mlxtend": "0.22.0",
-        "statsmodels": null
+        "mlxtend": "0.22.0"
     },
     "deep learning": {
         "tensorflow": "2.12.0",
@@ -18,7 +22,10 @@ const packages = {
         "jaxlib": "0.4.30",
         "torch": "2.0.0+cpu",
         "torchvision": "0.15.1+cpu",
-        "torchaudio": "2.0.1+cu118"
+        "torchaudio": "2.0.1+cu118",
+        "tensorboard": "2.12.3",
+        "tensorboard-data-server": "0.7.2",
+        "tensorflow-io-gcs-filesystem": "0.37.1"
     },
     "data handling": {
         "h5py": "3.12.1",
@@ -31,7 +38,9 @@ const packages = {
     },
     "machine learning utilities": {
         "xgboost": "1.7.5",
-        "opt_einsum": "3.4.0"
+        "opt_einsum": "3.4.0",
+        "joblib": "1.4.2",
+        "threadpoolctl": "3.5.0"
     },
     "plotting and visualization": {
         "matplotlib-inline": "0.1.7",
@@ -47,14 +56,19 @@ const packages = {
         "six": "1.16.0",
         "setuptools": "75.1.0",
         "pip": "24.2",
-        "wheel": "0.44.0"
+        "wheel": "0.44.0",
+        "ipython": "8.12.0",
+        "pytest": "7.3.0",
+        "traitlets": "5.14.3"
     },
     "text processing": {
         "nltk": "3.8.1",
         "regex": "2024.9.11",
         "pyparsing": "3.2.0",
         "beautifulsoup4": "4.12.2",
-        "soupsieve": "2.6"
+        "soupsieve": "2.6",
+        "pdfminer.six": "20220524",
+        "py-pdf-parser": "0.12.0"
     },
     "other": {
         "urllib3": "1.26.20",
@@ -63,8 +77,15 @@ const packages = {
         "protobuf": "4.22.3",
         "rsa": "4.9",
         "pyasn1": "0.6.1",
-        "pyasn1_modules": "0.4.1"
+        "pyasn1_modules": "0.4.1",
+        "oauthlib": "3.2.2",
+        "requests-oauthlib": "2.0.0",
+        "platformdirs": "4.3.6",
+        "certifi": "2024.8.30",
+        "cryptography": "43.0.3",
+        "sniffio": "1.3.1",
+        "selenium": "4.8.3"
     }
-}
+};
 
 export default packages;

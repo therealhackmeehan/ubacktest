@@ -1,6 +1,7 @@
 import { TiDelete } from "react-icons/ti";
 import useEnterKey from "../../../../client/hooks/useEnterKey";
 import ModalLayout from "../../../../client/components/ModalLayout";
+import { Link } from "wasp/client/router";
 
 interface ErrorModalProps {
     closeModal: () => void;
@@ -10,6 +11,7 @@ interface ErrorModalProps {
 export default function ErrorModal({ closeModal, msg }: ErrorModalProps) {
 
     useEnterKey(closeModal);
+    const includePaymentLink = msg.toLowerCase().includes("purchase") || msg.toLowerCase().includes("subscription");
 
     return (
         <ModalLayout>
@@ -24,12 +26,19 @@ export default function ErrorModal({ closeModal, msg }: ErrorModalProps) {
             <textarea rows={7} className='w-full border-0 border-transparent resize-none bg-white font-mono text-xs text-red-700 dark:bg-black dark:text-red-200' readOnly={true} value={msg}>
             </textarea>
             <div className="flex justify-between mt-4 gap-x-3">
-                <button
-                    className="bg-slate-500 w-full text-white p-2 rounded hover:bg-slate-700"
-                    onClick={closeModal}
-                >
-                    OK
-                </button>
+                {!includePaymentLink ?
+                    <button
+                        className="bg-slate-500 w-full text-white p-2 rounded hover:bg-slate-700"
+                        onClick={closeModal}
+                    >
+                        OK
+                    </button> :
+                    <Link
+                        to="/pricing"
+                        className="bg-gradient-to-br from-sky-700 to-slate-600 w-full text-white text-center p-2 rounded hover:bg-slate-700"
+                    >
+                        Take a Look!
+                    </Link>}
             </div>
         </ModalLayout>
     );

@@ -11,12 +11,6 @@ function validateFormInputs({ formInputs }: any) {
         throw new Error("If utilizing the warm-up period, make sure to include a warm-up start date.")
     }
 
-    // Check for valid date format (assuming format is YYYY-MM-DD)
-    // const dateRegex = /^\d{4}-\d{2}-\d{2}$/;
-    // if (!dateRegex.test(startDate) || !dateRegex.test(endDate)) {
-    //     throw new Error("Invalid date format. Dates must be in the format 'YYYY-MM-DD'.");
-    // }
-
     // Check if start date is before end date
     if (new Date(startDate) > new Date(endDate)) {
         throw new Error("Start date cannot be later than the end date.");
@@ -52,15 +46,6 @@ function validateFormInputs({ formInputs }: any) {
             throw new Error("Warm-up date cannot come after the start date.");
         }
     }
-
-    // Check if start date and end date are at least 3 days apart
-    // const start = new Date(startDate).getTime();
-    // const end = new Date(endDate).getTime();
-    // const differenceInDays = (end - start) / (1000 * 60 * 60 * 24); // Convert milliseconds to days
-
-    // if (differenceInDays < 3) {
-    //     throw new Error("Start date and end date must be at least 3 days apart.");
-    // }
 
     // Check if startDate and endDate are not in the future
     if (new Date(startDate) > today || new Date(endDate) > today) {

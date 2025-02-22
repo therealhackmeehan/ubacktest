@@ -1,5 +1,5 @@
 import { useRef, useState, useEffect } from "react";
-import alpacaCode from "../scripts/alpacaCode";
+import { alpacaCode } from "../scripts/alpacaCode";
 import { Editor } from "@monaco-editor/react";
 import { miniEditorOpts } from "../StrategyPage";
 import copyToClipboard from "../../result/client/components/copyToClipboard";
@@ -10,12 +10,20 @@ function StrategyCodeGen({ code }: { code: string | null }) {
 
     const [generatedCode, setGeneratedCode] = useState<string | null>(null);
     const [intval, setIntval] = useState<string>('5d');
-    const [realMoney, setRealMoney] = useState<string>('false')
     const [symbol, setSymbol] = useState<string>('SPY');
-    const [daysBackToTest, setDaysBackToTest] = useState<number>(14);
+    const [daysBackToTest, setDaysBackToTest] = useState<number>(50);
 
     function generateCode() {
-        setGeneratedCode(code + alpacaCode);
+        if (!code) {
+            setGeneratedCode('Your strategy is empty.')
+            return;
+        };
+
+        setGeneratedCode(alpacaCode(code, symbol, daysBackToTest, intval));
+    }
+
+    function clearCode() {
+        setGeneratedCode(null);
     }
 
     useEffect(() => {
@@ -53,25 +61,19 @@ function StrategyCodeGen({ code }: { code: string | null }) {
                 </div>
 
                 <div className="md:flex gap-x-4">
-                    {/* <div>
-                        <div className="text-sm font-bold text-center">Trading Frequency</div>
+                    <div>
+                        <div className="text-sm font-bold text-center dark:text-white ">Trading Frequency</div>
                         <select
                             className="rounded-lg w-full text-xs"
                             value={intval}
                             onChange={(e) => setIntval(e.currentTarget.value)}
                         >
-                            <option value="1d">1d</option>
-                            <option value="5d">5d</option>
-                            <option value="1mo">1mo</option>
-                            <option value="3mo">3mo</option>
-                            <option value="6mo">6mo</option>
-                            <option value="1y">1y</option>
-                            <option value="2y">2y</option>
-                            <option value="5y">5y</option>
-                            <option value="ytd">ytd</option>
-                            <option value="max">max</option>
+                            <option value="1Min">1min</option>
+                            <option value="5Min">5min</option>
+                            <option value="15Min">15min</option>
+                            <option value="1D">1d</option>
                         </select>
-                    </div> */}
+                    </div>
 
                     <div>
                         <div className="text-sm font-bold text-center dark:text-white">Approx. Lookback Period</div>
@@ -82,25 +84,18 @@ function StrategyCodeGen({ code }: { code: string | null }) {
                             onChange={(e) => setDaysBackToTest(e.currentTarget.valueAsNumber)}
                         />
                     </div>
-
-                    <div>
-                        <div className="text-sm font-bold text-center dark:text-white">Use Real Money</div>
-                        <select
-                            className="rounded-lg w-full text-xs shadow-lg"
-                            value={realMoney}
-                            onChange={(e) => setRealMoney(e.currentTarget.value)}
-                        >
-                            <option value="true">true</option>
-                            <option value="false">false</option>
-                        </select>
-                    </div>
                 </div>
 
-
-                <button className="shadow-lg duration-500 mt-2 lg:m-0 rounded-md p-2 bg-sky-700 hover:bg-sky-600 text-white dark:text-blue-300 dark:bg-boxdark dark:border-2 dark:border-white"
-                    onClick={generateCode}>
-                    Generate Code
-                </button>
+                <div className="mt-2 lg:m-0 space-x-4 items-center align-bottom">
+                    <button className="shadow-lg duration-500 rounded-md p-2 bg-sky-500 hover:bg-sky-600 text-white dark:text-blue-300 dark:bg-boxdark dark:border-2 dark:border-white"
+                        onClick={clearCode}>
+                        Clear
+                    </button>
+                    <button className="shadow-lg duration-500 rounded-md p-2 bg-sky-700 hover:bg-sky-600 text-white dark:text-blue-300 dark:bg-boxdark dark:border-2 dark:border-white"
+                        onClick={generateCode}>
+                        Generate Code
+                    </button>
+                </div>
             </div>
 
             <div className="mt-2 border-2 border-slate-800">
@@ -118,16 +113,18 @@ function StrategyCodeGen({ code }: { code: string | null }) {
                     > copy
                     </button>
                 </div>
+                {generatedCode && <div className="text-red-500 dark:text-white shadow-lg tracking-tight font-bold text-xs p-2 text-center z-9999">
+                    Now that you've generated code, READ THE DOCS for how to best utilize it. Don't be reckless!
+                </div>}
                 <Editor
                     className="invert dark:invert-0 hue-rotate-180"
                     options={miniEditorOpts}
-                    height={"40vh"}
+                    height={generatedCode ? "80vh" : "40vh"}
                     defaultLanguage='python'
                     theme="vs-dark"
                     value={generatedCode || '# Generated code will appear here (:'}
                     loading={(<div className="text-white font-2xl tracking-tight">Loading...</div>)}
                 />
-
             </div>
         </div>
     )

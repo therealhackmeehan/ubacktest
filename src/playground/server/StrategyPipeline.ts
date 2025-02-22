@@ -32,7 +32,7 @@ class StrategyPipeline {
         userDefinedData: {},
     };
 
-    // save a copy of the data (not rounded, not truncated) for python
+    // save a copy of the data for python
     private toInsertInPython: PythonDataProps = {
         timestamp: [],
         open: [],
