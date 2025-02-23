@@ -7,14 +7,14 @@ app uBacktest {
 
   head: [
         "<meta property='og:type' content='website' />",
-        "<meta property='og:title' content='My Open SaaS App' />",
-        "<meta property='og:url' content='https://opensaas.sh' />",
-        "<meta property='og:description' content='I made a SaaS App. Buy my stuff.' />",
-        "<meta property='og:image' content='https://opensaas.sh/public-banner.png' />",
-        "<meta name='twitter:image' content='https://opensaas.sh/public-banner.png' />",
+        "<meta property='og:title' content='uBacktest' />",
+        "<meta property='og:url' content='https://ubacktest.com' />",
+        "<meta property='og:description' content='Test algorithmic trading strategies easily and effectively.' />",
+        "<meta property='og:image' content='https://ubacktest.com/editor.png' />",
+        "<meta name='twitter:image' content='https://ubacktest.com/editor.png' />",
         "<meta name='twitter:image:width' content='800' />",
         "<meta name='twitter:image:height' content='400' />",
-        "<meta name='twitter:card' content='summary_large_image' />",
+        "<meta name='twitter:card' content='example editor view' />",
         // TODO: You can put your Plausible analytics scripts below (https://docs.opensaas.sh/guides/analytics/):
         // NOTE: Plausible does not use Cookies, so you can simply add the scripts here.
         // Google, on the other hand, does, so you must instead add the script dynamically
@@ -81,9 +81,9 @@ app uBacktest {
     //   Once you are ready for production, switch to e.g. "SendGrid" or "Mailgun" providers. Check out https://docs.opensaas.sh/guides/email-sending/ .
     provider: Dummy,
     defaultFrom: {
-      name: "Open SaaS App",
+      name: "uBacktest",
       // When using a real provider, e.g. SendGrid, you must use the same email address that you configured your account to send out emails with!
-      email: "me@example.com"
+      email: "support@uBacktest.com"
     },
   },
 }

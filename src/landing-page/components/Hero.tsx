@@ -1,7 +1,9 @@
-import sp500 from '../../client/static/sp500.png';
+import beatsp from '../../client/static/beatsp.png';
 import editor from '../../client/static/editor.png';
-import engine from '../../client/static/engine.png';
+import basic from '../../client/static/basic.png';
 import results from '../../client/static/results.png';
+import editor_dark from '../../client/static/editor_dark.png';
+import results_dark from '../../client/static/results_dark.png';
 import { DocsUrl } from '../../shared/common';
 import { useInView } from 'react-intersection-observer';
 
@@ -65,41 +67,55 @@ export default function Hero() {
             </div>
           </div>
           <div className="m-4 lg:mx-auto">
-            <div className="mt-14 w-full">
-              {/* First Image */}
-              <div className="rotate-[-2deg] hover:rotate-[-4deg] duration-700 z-10 pr-12">
-                <img
-                  src={sp500}
-                  alt="backtestResult"
-                  className="rounded-md shadow-2xl ring-1 ring-gray-900/10"
-                />
-              </div>
+            <div className="mt-14 w-full grid grid-cols-5 gap-2">
 
-              {/* Second Image */}
-              <div className="rotate-[2deg] md:-mt-12 hover:rotate-[4deg] duration-700 z-20 pl-12">
+              <div className="dark:hidden col-span-4 hover:scale-90 duration-700 z-50">
                 <img
                   src={editor}
                   alt="editor"
-                  className="rounded-md shadow-2xl ring-1 ring-gray-900/10"
+                  className="rounded-md shadow-2xl ring-1 ring-gray-900/30"
                 />
               </div>
 
-              {/* Third Image */}
-              <div className="rotate-[-2deg] md:-mt-12 hover:rotate-[-4deg] duration-700 z-20 pr-12">
+              <div className="hidden dark:flex col-span-4 hover:scale-90 duration-700 z-50">
+                <img
+                  src={editor_dark}
+                  alt="editor"
+                  className="rounded-md shadow-2xl ring-1 ring-gray-900/30"
+                />
+              </div>
+
+              <div className="col-span-4 col-start-2 hover:scale-90 duration-700 z-50">
+                <img
+                  src={basic}
+                  alt="basic backtest result"
+                  className="rounded-md shadow-2xl ring-1 ring-gray-900/30"
+                />
+              </div>
+
+              <div className="dark:hidden col-span-4 hover:scale-90 duration-700 z-50">
                 <img
                   src={results}
                   alt="results"
-                  className="rounded-md shadow-2xl ring-1 ring-gray-900/10"
+                  className="rounded-md shadow-2xl ring-1 ring-gray-900/30"
                 />
               </div>
-              {/* 
-              <div className="rotate-[-2deg] -mt-12 hover:rotate-[-4deg] duration-700 z-20 pr-12">
+
+              <div className="hidden dark:flex col-span-4 hover:scale-90 duration-700 z-50">
                 <img
-                  src={engine}
+                  src={results_dark}
                   alt="results"
-                  className="rounded-md shadow-2xl ring-1 ring-gray-900/10"
+                  className="rounded-md shadow-2xl ring-1 ring-gray-900/30"
                 />
-              </div> */}
+              </div>
+
+              <div className="col-start-2 col-span-4 hover:scale-90 duration-700 z-50">
+                <img
+                  src={beatsp}
+                  alt="compare to sp500"
+                  className="rounded-md shadow-2xl ring-1 ring-gray-900/30"
+                />
+              </div>
             </div>
           </div>
 

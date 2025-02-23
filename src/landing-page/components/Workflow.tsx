@@ -1,5 +1,4 @@
 import { useInView } from "react-intersection-observer";
-import sp500 from '../../client/static/sp500.png';
 import results from '../../client/static/results.png';
 import editor from '../../client/static/editor.png';
 
@@ -47,7 +46,7 @@ export default function Workflow() {
                         <div className="border-2 border-slate-800 rounded-md w-full">
                             <div className="w-full">
                                 <img
-                                    src={sp500}
+                                    src={editor}
                                     height={height}
                                     alt="backtestResult"
                                     className="rounded-md shadow-2xl ring-1 ring-gray-900/10"
@@ -83,7 +82,7 @@ export default function Workflow() {
                         <div className="border-2 border-slate-800 rounded-md w-full">
                             <div className="w-full">
                                 <img
-                                    src={sp500}
+                                    src={editor}
                                     height={height}
                                     alt="backtestResult"
                                     className="rounded-md shadow-2xl ring-1 ring-gray-900/10"

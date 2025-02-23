@@ -32,7 +32,7 @@ export default function CheckoutPage() {
   }, [location]);
 
   return (
-    <div className='flex min-h-full flex-col justify-center mt-10 sm:px-6 lg:px-8'>
+    <div className='flex min-h-full flex-col justify-center mt-10 sm:px-6 lg:px-8 dark:text-white'>
       <div className='sm:mx-auto sm:w-full sm:max-w-md'>
         <div className='py-8 px-4 shadow-xl ring-1 ring-gray-900/10 dark:ring-gray-100/10 sm:rounded-lg sm:px-10'>
           <h1>

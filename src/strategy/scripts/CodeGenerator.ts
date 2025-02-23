@@ -1,5 +1,5 @@
 import { HttpError } from "wasp/server";
-import OpenAI from 'openai';
+import OpenAI from 'openai/index.mjs';
 
 class CodeGenerator {
     private strategyCode: string;

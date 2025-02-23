@@ -223,7 +223,7 @@ function InputForm({ formInputs, setFormInputs, run }: InputFormSubcomponentProp
                     </div>
 
                     {matches.length > 0 && (
-                        <ul className="text-xs z-10 bg-white border border-gray-300 rounded shadow-lg max-h-60 overflow-y-auto">
+                        <ul className="text-xs z-10 bg-white border border-gray-300 rounded shadow-lg max-h-60 overflow-y-auto text-black">
                             {matches.map((match) => (
                                 <li
                                     key={match["symbol"]}

@@ -18,7 +18,7 @@ interface PaymentPlanCard {
 export const paymentPlanCards: Record<PaymentPlanId, PaymentPlanCard> = {
   [PaymentPlanId.Hobby]: {
     name: prettyPaymentPlanName(PaymentPlanId.Hobby),
-    price: '$6.99',
+    price: '$5.99',
     description: 'All you need to get started',
     features: ['Unlimited Monthly Usage', 'Up to 1 day Trading Frequency'],
   },
@@ -158,9 +158,9 @@ const PricingPage = () => {
                   disabled={isCustomerPortalUrlLoading}
                   aria-describedby='manage-subscription'
                   className={cn(
-                    'mt-8 block rounded-md py-2 px-3 text-center text-sm font-semibold leading-6 focus-visible:outline focus-visible:outline-2 focus-visible:outline-sky-400',
+                    'mt-8 block rounded-md py-2 px-3 text-center text-sm dark:text-white font-semibold leading-6 focus-visible:outline focus-visible:outline-2 focus-visible:outline-sky-400',
                     {
-                      'bg-sky-700 text-white hover:text-white shadow-sm hover:bg-sky-400':
+                      'bg-sky-700 dark:bg-blue-300 text-white hover:text-white shadow-sm hover:bg-sky-400':
                         planId === bestDealPaymentPlanId,
                       'text-gray-600 ring-1 ring-inset ring-sky-200 hover:ring-sky-400':
                         planId !== bestDealPaymentPlanId,
