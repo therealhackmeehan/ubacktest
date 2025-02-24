@@ -109,8 +109,22 @@ export const getTopResults: GetTopResults<void, GetTopResultsProp> = async (_arg
         return { topByProfitLoss: null, topByAnnualizedProfitLoss: null };
     }
 
+    // Group results by user and keep only the best result per user
+    const bestResultsByUser = Object.values(
+        results.reduce((acc, result: any) => {
+            const userId = result.user?.id;
+            if (!userId) return acc;
+
+            // Replace only if the new result has a higher profit/loss
+            if (!acc[userId] || result.profitLoss > acc[userId].profitLoss) {
+                acc[userId] = result;
+            }
+            return acc;
+        }, {} as Record<string, any>)
+    );
+
     // Map results to include email
-    const resultsWithUsername = results.map((result: any) => ({
+    const resultsWithUsername = bestResultsByUser.map((result: any) => ({
         ...result,
         email: result.user?.email,
     }));
@@ -124,6 +138,7 @@ export const getTopResults: GetTopResults<void, GetTopResultsProp> = async (_arg
             .slice(0, 10),
     };
 };
+
 
 
 export const deleteResult: DeleteResult<Pick<Result, "id">, Result> = async ({ id }, context) => {

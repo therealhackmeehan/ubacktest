@@ -76,7 +76,7 @@ export default function OpenResult({ formInputs, setResultPanelOpen, result }: O
                     <div className="z-10 w-11/12 h-5/6 p-4 bg-white border-2 border-black rounded-lg shadow-xl overflow-y-auto">
                         <button
                             onClick={() => setResultPanelOpen(false)}
-                            className="flex justify-between items-center text-xs justify-self-center gap-x-6 text-center p-1 text-red-500 border-2 border-red-200 rounded-md hover:font-extrabold hover:bg-red-100 hover:text-red-400"
+                            className="flex justify-between items-center text-xs justify-self-center gap-x-12 text-center p-1 text-red-500 border-2 border-red-200 rounded-md hover:font-extrabold hover:bg-red-100 hover:text-red-400"
                         >
                             Close
                             <TiCancel />

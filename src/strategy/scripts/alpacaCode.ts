@@ -71,6 +71,9 @@ def validate_strategy(df: pd.DataFrame):
     if df["signal"].empty:
         raise ValueError("'signal' column is empty.")
 
+    if (df['signal'] > 1).any() or (df['signal'] < -1).any():
+        raise Exception("'signal' column contains values outside the range [-1, 1].")
+
     if not df.index.is_unique:
         raise ValueError("Table index must be unique.")
 

@@ -261,12 +261,12 @@ function Result({ selectedStrategy, formInputs, strategyResult, abilityToSaveNew
             </div>
 
             {/* invisible rendition for accurate PDF rendering! */}
-            <div ref={pdfRef} style={{ position: 'absolute', zIndex: -1, left: '-10000px', top: 'auto' }}>
+            <div ref={pdfRef} style={{ position: 'absolute', zIndex: -1, left: '-10000px', top: 'auto', width: '100%'}}>
                 <div className="tracking-tight text-2xl font-bold text-black text-end p-6">
                     Strategy Report, Traded on {formInputs.symbol.toUpperCase()}
                 </div>
                 <div className="m-1 text-xl tracking-tight text-slate-400 hover:text-slate-800 font-bold">Hypothetical Growth of $1</div>
-                <div className="rounded-t-md border-2 border-slate-300">
+                <div className="rounded-t-md border-2 border-slate-300 w-full">
                     <CandlePlot strategyResult={strategyResult} costPerTrade={formInputs.costPerTrade} minDate={minDate} symbol={formInputs.symbol} />
                 </div>
                 <FormInputHeader formInputs={formInputs} />
@@ -278,6 +278,14 @@ function Result({ selectedStrategy, formInputs, strategyResult, abilityToSaveNew
                 <div className="p-2 m-8 border-black border-2 rounded-lg bg-slate-100">
                     {stats && <DistributionOfReturns stockDataReturns={strategyResult.returns} mean={stats.meanReturn} stddev={stats.stddevReturn} max={stats.maxReturn} min={stats.minReturn} />}
                 </div>
+
+                {strategyResult.sp.length > 0 &&
+                    <div className="m-8">
+                        <div className="rounded-sm bg-white">
+                            <SPChart strategyResult={strategyResult} />
+                        </div>
+                    </div>
+                }
             </div>
             {/* End Invisible PDF Rendition */}
         </>

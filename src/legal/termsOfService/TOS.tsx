@@ -35,7 +35,7 @@ export default function TOS() {
 
                 <h5 className='font-semibold text-lg mt-8 mb-4'>5. Intellectual Property</h5>
                 <p>
-                    All content on our website, including but not limited to text, images, logos, and software, is owned by [Your Company Name] or its licensors and is protected by intellectual property laws. You may not use our content without our permission, except as allowed by law.
+                    All content on our website, including but not limited to text, images, logos, and software, is owned by uBacktest or its licensors and is protected by intellectual property laws. You may not use our content without our permission, except as allowed by law.
                 </p>
 
                 <h5 className='font-semibold text-lg mt-8 mb-4'>6. Privacy</h5>
@@ -55,7 +55,7 @@ export default function TOS() {
 
                 <h5 className='font-semibold text-lg mt-8 mb-4'>9. Disclaimers and Limitation of Liability</h5>
                 <p>
-                    Our services are provided "as is" without warranties of any kind. [Your Company Name] does not guarantee the accuracy or availability of the services. In no event will [Your Company Name] be liable for any damages arising from your use of the website or services.
+                    Our services are provided "as is" without warranties of any kind. uBacktest does not guarantee the accuracy or availability of the services. In no event will uBacktest be liable for any damages arising from your use of the website or services.
                 </p>
 
                 <h5 className='font-semibold text-lg mt-8 mb-4'>10. Termination</h5>

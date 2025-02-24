@@ -63,7 +63,7 @@ function LeaderboardPage() {
                                     ))}
                                 </ul>
                             ) : (
-                                <div>No public results found.</div>
+                                <div className="dark:text-white">No public results found.</div>
                             )
                         ) : (
                             topResults.topByAnnualizedProfitLoss && topResults.topByAnnualizedProfitLoss.length > 0 ? (
@@ -73,7 +73,7 @@ function LeaderboardPage() {
                                     ))}
                                 </ul>
                             ) : (
-                                <div>No public results found.</div>
+                                <div className="dark:text-white">No public results found.</div>
                             )
                         )
                     }

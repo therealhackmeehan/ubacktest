@@ -1,6 +1,12 @@
 import { useInView } from "react-intersection-observer";
 import results from '../../client/static/results.png';
 import editor from '../../client/static/editor.png';
+import editor_dark from '../../client/static/editor_dark.png';
+import results_dark from '../../client/static/results_dark.png';
+import basic from '../../client/static/basic.png';
+import deploy from '../../client/static/deploy.png';
+import deploy_dark from '../../client/static/deploy_dark.png';
+
 
 export default function Workflow() {
 
@@ -29,10 +35,16 @@ export default function Workflow() {
                         <div className="rounded-md bg-sky-700 dark:bg-boxdark text-white px-3 font-bold text-title-xl">1</div>
                         <div className="w-full">
                             <img
+                                src={editor_dark}
+                                height={height}
+                                alt="editor"
+                                className="hidden dark:flex rounded-md shadow-2xl ring-1 ring-gray-900/10"
+                            />
+                            <img
                                 src={editor}
                                 height={height}
-                                alt="backtestResult"
-                                className="rounded-md shadow-2xl ring-1 ring-gray-900/10"
+                                alt="editor"
+                                className="dark:hidden rounded-md shadow-2xl ring-1 ring-gray-900/10"
                             />
                         </div>
                     </div>
@@ -46,7 +58,7 @@ export default function Workflow() {
                         <div className="border-2 border-slate-800 rounded-md w-full">
                             <div className="w-full">
                                 <img
-                                    src={editor}
+                                    src={basic}
                                     height={height}
                                     alt="backtestResult"
                                     className="rounded-md shadow-2xl ring-1 ring-gray-900/10"
@@ -64,16 +76,22 @@ export default function Workflow() {
                         <div className="border-2 border-slate-800 rounded-md w-full">
                             <div className="w-full">
                                 <img
+                                    src={results_dark}
+                                    height={height}
+                                    alt="results"
+                                    className="hidden dark:flex rounded-md shadow-2xl ring-1 ring-gray-900/10"
+                                />
+                                <img
                                     src={results}
                                     height={height}
-                                    alt="backtestResult"
-                                    className="rounded-md shadow-2xl ring-1 ring-gray-900/10"
+                                    alt="results"
+                                    className="dark:hidden rounded-md shadow-2xl ring-1 ring-gray-900/10"
                                 />
                             </div>
                         </div>
                     </div>
                     <div className={`col-span-1 rounded-lg p-4 bg-slate-100 dark:bg-boxdark dark:border-2 dark:border-white dark:text-white duration-700 transform ${inView3 ? 'translate-x-0' : 'translate-x-full'}`}>
-                        <span className="font-extrabold">Save & Track</span> your strategies and results for future analysis. Resume, refine, and compare strategies anytime.
+                        <span className="font-extrabold">Save & Share</span> your strategies and results for future analysis. Resume, refine, and compare strategies anytime.
                     </div>
 
                     {/* Step 4 */}
@@ -81,11 +99,17 @@ export default function Workflow() {
                         <div className="rounded-md bg-sky-700 dark:bg-boxdark text-white px-3 font-bold text-title-xl">4</div>
                         <div className="border-2 border-slate-800 rounded-md w-full">
                             <div className="w-full">
-                                <img
-                                    src={editor}
+                            <img
+                                    src={deploy_dark}
                                     height={height}
-                                    alt="backtestResult"
-                                    className="rounded-md shadow-2xl ring-1 ring-gray-900/10"
+                                    alt="deployment"
+                                    className="hidden dark:flex rounded-md shadow-2xl ring-1 ring-gray-900/10"
+                                />
+                                <img
+                                    src={deploy}
+                                    height={height}
+                                    alt="deployment"
+                                    className="dark:hidden rounded-md shadow-2xl ring-1 ring-gray-900/10"
                                 />
                             </div>
                         </div>
