@@ -5,7 +5,8 @@ import math
 # -------------------------------
 # Alpaca API Credentials
 # -------------------------------
-
+api_key = "PKI39DIKVDM0DECMXBQO"
+api_secret = "JMVgdC48fBPZeu0x7zUQtGYQ3TSZetN9hII1L7U7"
 base_url = "https://paper-api.alpaca.markets" # Default is Paper Money
 # base_url = "https:/api.alpaca.markets" # Toggle to Real Money at your Own Risk
 

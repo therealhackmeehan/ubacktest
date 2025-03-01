@@ -11,7 +11,7 @@ interface ErrorModalProps {
 export default function ErrorModal({ closeModal, msg }: ErrorModalProps) {
 
     useEnterKey(closeModal);
-    const includePaymentLink = msg.toLowerCase().includes("purchase") || msg.toLowerCase().includes("subscription");
+    const includePaymentLink = msg.toLowerCase().includes("purchase") || msg.toLowerCase().includes("subscription") || msg.toLowerCase().includes("upgrad");
 
     return (
         <ModalLayout>

@@ -15,6 +15,7 @@ import { jsPDF } from "jspdf"
 import LoadingScreen from "../../../../client/components/LoadingScreen"
 import CandlePlot from "./CandlePlot"
 import ErrorModal from "../modals/ErrorModal"
+import CashEquity from "./CashEquity"
 
 interface ResultPanelProps {
     selectedStrategy: string | null;
@@ -92,7 +93,7 @@ function Result({ selectedStrategy, formInputs, strategyResult, abilityToSaveNew
 
         // Get the headers (labels)
         let headers = Object.keys(strategyResult);
-        headers = headers.filter(header => header !== 'userDefinedData');        
+        headers = headers.filter(header => header !== 'userDefinedData');
 
         // Create rows by combining data from each key (label)
         const rowCount = strategyResult[headers[0]].length; // Get the number of rows based on the first label's length
@@ -237,6 +238,12 @@ function Result({ selectedStrategy, formInputs, strategyResult, abilityToSaveNew
                     </div>
                 </div>
 
+                <div className="m-8">
+                    <div className="rounded-sm bg-white">
+                        <CashEquity strategyResult={strategyResult} />
+                    </div>
+                </div>
+
                 {/* Histogram of Charts */}
                 <div className="p-2 m-8 rounded-lg bg-slate-100">
                     {stats && <DistributionOfReturns stockDataReturns={strategyResult.returns} mean={stats.meanReturn} stddev={stats.stddevReturn} max={stats.maxReturn} min={stats.minReturn} />}
@@ -261,7 +268,7 @@ function Result({ selectedStrategy, formInputs, strategyResult, abilityToSaveNew
             </div>
 
             {/* invisible rendition for accurate PDF rendering! */}
-            <div ref={pdfRef} style={{ position: 'absolute', zIndex: -1, left: '-10000px', top: 'auto', width: '100%'}}>
+            <div ref={pdfRef} style={{ position: 'absolute', zIndex: -1, left: '-10000px', top: 'auto', width: '100%' }}>
                 <div className="tracking-tight text-2xl font-bold text-black text-end p-6">
                     Strategy Report, Traded on {formInputs.symbol.toUpperCase()}
                 </div>

@@ -38,7 +38,7 @@ function Editor({ formInputs, setStrategyResult, setResultOpen, setFormInputs, s
             handlePreRunValidations();
             charge();
 
-            const { strategyResult, debugOutput, stderr, warnings } =
+            const { strategyResult, debugOutput, stderr, warnings, feedforward } =
                 await runStrategy({ formInputs: formInputs, code: codeToDisplay });
 
             handleDebugOutput(debugOutput, stderr);

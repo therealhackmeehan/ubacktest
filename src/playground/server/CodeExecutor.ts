@@ -93,10 +93,13 @@ import pandas as pd
 jsonCodeUnformatted = '${JSON.stringify(toEmbedInMain)}'
 jsonCodeFormatted = json.loads(jsonCodeUnformatted)
 
-df = pd.DataFrame(jsonCodeFormatted)
-initHeight = df.shape[0]
+df_init = pd.DataFrame(jsonCodeFormatted)
+initHeight = df_init.shape[0]
 
-df = strategy(df)
+if initHeight <= 3:
+    raise Exception("Sorry, we detected less than 3 data points and had trouble applying your strategy.")
+
+df = strategy(df_init)
 
 if not isinstance(df, pd.DataFrame):
     raise Exception("You must return a dataframe from your strategy.")
@@ -124,13 +127,38 @@ if df.shape[0] != initHeight:
 df = df[df['timestamp'] >= ${dateToCompare}]
 
 df['signal'] = df['signal'].fillna(method='ffill').fillna(0)
+
+warning = ""
+warningMsg = "Potential feedforward bias detected. A past signal changed due to future data. This is expected with a random strategy but otherwise proceed with caution or reevaluate your strategy."
+
+# Check two rows back for feedforward bias
+secondToLastSignal = df['signal'].iloc[-2]
+thirdToLastSignal = df['signal'].iloc[-3]
+
+# Remove last row and reapply strategy
+df_trimmed1 = df.iloc[:-1].copy()
+df_trimmed1 = strategy(df_trimmed1)
+df_trimmed1['signal'] = df_trimmed1['signal'].fillna(method='ffill').fillna(0)
+
+if df_trimmed1['signal'].iloc[-1] != secondToLastSignal or df_trimmed1['signal'].iloc[-2] != thirdToLastSignal:
+    warning = warningMsg
+
+# Remove last two rows and reapply strategy
+df_trimmed2 = df.iloc[:-2].copy()
+df_trimmed2 = strategy(df_trimmed2)
+df_trimmed2['signal'] = df_trimmed2['signal'].fillna(method='ffill').fillna(0)
+
+if df_trimmed2['signal'].iloc[-1] != thirdToLastSignal:
+    warning = warningMsg
+
 signalToReturn = df[['signal']].round(3).to_dict('list')
 
 colsToExclude = {"open", "close", "high", "low", "volume", "timestamp", "signal"}
 
 middleOutput = {
     "result": signalToReturn,
-    "data": df.loc[:, ~df.columns.isin(colsToExclude)].fillna(0).round(3).to_dict('list')
+    "data": df.loc[:, ~df.columns.isin(colsToExclude)].fillna(0).round(4).to_dict('list'),
+    "warning": warning
 }
 
 output = "${uniqueKey}START${uniqueKey}" + json.dumps(middleOutput) + "${uniqueKey}END${uniqueKey}"

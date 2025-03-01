@@ -14,10 +14,11 @@ function MainStatistics({ stats }: { stats: StatProps }) {
             <Stat text={'number of trades'} stat={stats.numTrades} />
             <Stat text={'number of profitable trades'} stat={stats.numProfTrades} />
             <Stat text={'% trades profitable'} stat={stats.percTradesProfit} />
-            <Stat text={'sharpe ratio'} stat={stats.sharpeRatio} />
-            <Stat text={'sortino ratio'} stat={stats.sortinoRatio} />
             <Stat text={'max drawdown'} stat={stats.maxDrawdown} />
             <Stat text={'max gain'} stat={stats.maxGain} />
+            <br></br>
+            <Stat text={'sharpe ratio'} stat={stats.sharpeRatio} />
+            <Stat text={'sortino ratio'} stat={stats.sortinoRatio} />
         </div>
     )
 }

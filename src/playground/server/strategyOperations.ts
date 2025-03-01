@@ -144,6 +144,7 @@ export const runStrategy: RunStrategy<any, any> = async ({ formInputs, code }, c
   if (!context.user) throw new HttpError(401);
 
   if (!context.user.isAdmin) { // charge/make sure subscription is valid prior to running!
+
     const isProUser = context.user.subscriptionPlan == "pro";
     const proOnlyFormInputs = ['1m', '2m', '5m', '15m', '30m', '1h', '90m'];
 
@@ -154,6 +155,25 @@ export const runStrategy: RunStrategy<any, any> = async ({ formInputs, code }, c
     if (!context.user.credits && !context.user.subscriptionPlan) {
       throw new HttpError(402, "You must add more credits or purchase a basic monthly subscription to continue to use this software.");
     }
+
+    const status: string | null = context.user.subscriptionStatus;
+
+    if (status && !context.user.credits) {
+      if (status === "past_due") {
+        throw new HttpError(
+          402,
+          "Your subscription payment is past due, and you've run out of free credits. Please update your payment to continue using the service."
+        );
+      }
+
+      if (status === "deleted") {
+        throw new HttpError(
+          402,
+          "Your subscription has been deleted, and you have no remaining free credits. Consider subscribing again to regain access."
+        );
+      }
+    }
+
   }
 
   if (isProcessing) {
@@ -176,12 +196,13 @@ export const charge: Charge<void, void> = async (_args, context) => {
   if (!context.user) {
     throw new HttpError(401);
   }
+
   if (context.user.isAdmin) {
     console.log('Avoiding charge as admin.');
     return;
   }
 
-  if (context.user.credits) {
+  if (context.user.credits && !context.user.subscriptionPlan) {
     await context.entities.User.update({
       where: { id: context.user.id },
       data: { credits: { decrement: 1 } }, // for now increment while testing
@@ -193,12 +214,13 @@ export const uncharge: Uncharge<void, void> = async (_args, context) => {
   if (!context.user) {
     throw new HttpError(401);
   }
+
   if (context.user.isAdmin) {
     console.log('Avoiding uncharge charge as admin.');
     return;
   }
-
-  if (context.user.credits) {
+  
+  if (context.user.credits && !context.user.subscriptionPlan) {
     await context.entities.User.update({
       where: { id: context.user.id },
       data: { credits: { increment: 1 } }, // for now increment while testing

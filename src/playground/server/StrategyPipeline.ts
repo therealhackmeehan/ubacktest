@@ -50,6 +50,7 @@ class StrategyPipeline {
     private stderr: string = '';
     private stdout: string = '';
     private warning: string[] = [];
+    private feedforward: boolean = false;
 
     // decimals, for future consideration... (storage constraints)
     private decimalPlaces: number = 4;
@@ -77,6 +78,11 @@ class StrategyPipeline {
 
             const expectedLength = this.strategyResult.signal.length;
             const userDefinedData: UserDefinedData = parsedData.data;
+
+            if (parsedData.warning) { // if feedforward bias or other warning printed...
+                this.warning.push(parsedData.warning);
+                this.feedforward = true;
+            }
 
             // if user has defined any custom columns, save those
             // so that they can be viewed later in the result
@@ -113,6 +119,7 @@ class StrategyPipeline {
             debugOutput: this.stdout,
             stderr: this.stderr,
             warnings: [...new Set(this.warning)],
+            feedforward: this.feedforward,
         }
     }
 

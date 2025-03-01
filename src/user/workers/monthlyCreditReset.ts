@@ -4,7 +4,6 @@ export const monthlyCreditReset: MonthlyCreditReset<{}, number> = async (_args, 
 
     const updatedUsers = await context.entities.User.updateMany({
         where: {
-            subscriptionPlan: null,
             credits: { lte: 3 }
         },
         data: { credits: 3 }

@@ -28,7 +28,7 @@ export default function Workflow() {
                     Let's walk through the typical workflow.
                 </p>
             </div>
-            <div className='mx-auto mt-16 max-w-2xl sm:mt-20 lg:mt-24 lg:max-w-4xl'>
+            <div className='mx-auto mt-16 max-w-2xl sm:mt-20 lg:mt-24 lg:max-w-5xl'>
                 <div className="lg:grid grid-cols-3 gap-4">
                     {/* Step 1 */}
                     <div ref={ref1} className={`m-2 col-span-2 flex justify-start gap-x-2 transition-transform duration-1000 transform ${inView1 ? 'translate-x-0' : '-translate-x-full'}`}>
