@@ -62,6 +62,36 @@ function CandlePlot({ strategyResult, costPerTrade, minDate, symbol }: LinePlotP
                     tension: .05,
                 },
                 {
+                    type: 'line',
+                    label: 'Cash',
+                    data: strategyResult.timestamp.map((timestamp: number, index: number) => ({
+                        x: new Date(timestamp * 1000), // Use Date object for x
+                        y: strategyResult.cash[index], // Corresponding y value
+                    })),
+                    borderColor: 'rgba(0, 0, 100, .8)',
+                    backgroundColor: 'rgba(0, 0, 100, .8)',
+                    pointRadius: 0,
+                    hidden: true,
+                    borderWidth: 2,
+                    yAxisID: 'y1',
+                    tension: .05,
+                },
+                {
+                    type: 'line',
+                    label: 'Equity',
+                    data: strategyResult.timestamp.map((timestamp: number, index: number) => ({
+                        x: new Date(timestamp * 1000), // Use Date object for x
+                        y: Math.abs(strategyResult.equity[index]), // Corresponding y value
+                    })),
+                    borderColor: 'rgba(100, 0, 0, .8)',
+                    backgroundColor: 'rgba(100, 0, 0, .8)',
+                    pointRadius: 0,
+                    hidden: true,
+                    borderWidth: 2,
+                    yAxisID: 'y1',
+                    tension: .05,
+                },
+                {
                     type: 'candlestick',
                     label: symbol.toUpperCase(),
                     data: strategyResult.timestamp.map((timestamp: number, index: number) => ({

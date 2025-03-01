@@ -18,6 +18,9 @@ export interface StrategyResultProps {
     portfolio: number[];
     portfolioWithCosts: number[];
 
+    cash: number[];
+    equity: number[];
+
     userDefinedData: UserDefinedData;
 }
 

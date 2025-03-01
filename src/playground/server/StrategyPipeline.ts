@@ -8,6 +8,8 @@ import { HttpError } from "wasp/server";
 
     Returns some debug output, any warnings to display, and the JSON data
     describing the result of the strategy.
+
+    (c) Jack Meehan 2025, uBacktest.com
 */
 
 class StrategyPipeline {
@@ -27,6 +29,8 @@ class StrategyPipeline {
         sp: [],
         portfolio: [],
         portfolioWithCosts: [],
+        cash: [],
+        equity: [],
         signal: [],
         returns: [],
         userDefinedData: {},
@@ -113,47 +117,74 @@ class StrategyPipeline {
     }
 
     private calculatePortfolio() {
+
         this.strategyResult.portfolio[0] = 1;
         this.strategyResult.portfolioWithCosts[0] = 1;
         this.strategyResult.returns[0] = 0;
 
+        this.strategyResult.equity[0] = this.strategyResult.signal[0];
+        this.strategyResult.cash[0] = 1 - Math.abs(this.strategyResult.equity[0]);
+
         const timeOfDayKey: 'open' | 'close' | 'high' | 'low' = this.formInputs.timeOfDay;
         for (let i = 1; i < this.strategyResult.timestamp.length; i++) {
 
+            // calculate market return
             const curr = this.strategyResult[timeOfDayKey][i];
             const prev = this.strategyResult[timeOfDayKey][i - 1];
+            let stockRet = (curr - prev) / prev;
 
-            const prevSignal = this.strategyResult.signal[i - 1];
-            const prevPrevSignal = i === 1 ? 0 : this.strategyResult.signal[i - 2];
+            // calculate our equity return (flip if shorting)
+            if (this.strategyResult.equity[i - 1] < 0) {
+                stockRet = -1 * stockRet;
+            }
 
-            // use previous timepoints to create an array of daily returns
-            const ret = (curr - prev) / prev;
-            const curvedRet = ret * prevSignal;
-            this.strategyResult.returns[i] = curvedRet;
+            this.strategyResult.equity[i] = this.strategyResult.equity[i - 1] * (1 + stockRet);
 
-            // Update portfolio without costs according to return
-            this.strategyResult.portfolio[i] = this.strategyResult.portfolio[i - 1] * (1 + curvedRet);
+            // calculate portfolio value
+            const currPort = Math.abs(this.strategyResult.equity[i]) + this.strategyResult.cash[i - 1];
+            this.strategyResult.portfolio[i] = currPort;
+
+            // calculate timepoint return
+            const prevPort = this.strategyResult.portfolio[i - 1];
+            this.strategyResult.returns[i] = (currPort - prevPort) / prevPort;
+
+            // keep values real.
             if (this.strategyResult.portfolio[i] < 0) {
                 this.strategyResult.portfolio[i] = 0;
             }
 
-            // Calculate trade costs
-            const tradeValue = Math.abs(prevSignal - prevPrevSignal) * this.strategyResult.portfolioWithCosts[i - 1];
-            const tradeCost = tradeValue * this.formInputs.costPerTrade;
+            // append strategy costs 
+            this.strategyResult.portfolioWithCosts[i] = this.strategyResult.portfolio[i]; // do this!!
 
-            // Update portfolio with costs
-            this.strategyResult.portfolioWithCosts[i] = this.strategyResult.portfolioWithCosts[i - 1] * (1 + curvedRet) - tradeCost / 100;
-
-            // Prevent portfolio from going negative
+            // once again, keep values real.
             if (this.strategyResult.portfolioWithCosts[i] < 0) {
                 this.strategyResult.portfolioWithCosts[i] = 0;
             }
+
+            const currSignal = this.strategyResult.signal[i];
+            const prevSignal = this.strategyResult.signal[i - 1];
+
+            // if we did undergo a trade, rebalance our equity
+            if (currSignal != prevSignal) {
+                const newEquity = this.strategyResult.portfolio[i] * currSignal;
+                const tradeValue = Math.abs(newEquity - this.strategyResult.equity[i]);
+                this.strategyResult.portfolioWithCosts[i] = this.strategyResult.portfolioWithCosts[i] - (tradeValue * this.formInputs.costPerTrade);
+
+                this.strategyResult.equity[i] = newEquity;
+            }
+
+            // finally calculate remaining cash (after potential rebalancing)
+            this.strategyResult.cash[i] = Math.max(0, this.strategyResult.portfolio[i] - Math.abs(this.strategyResult.equity[i]));
+
         }
 
         // after completing calculations, round to specified decimal place
         this.strategyResult.returns = this.strategyResult.returns.map(val => this.roundTo(val));
         this.strategyResult.portfolio = this.strategyResult.portfolio.map(val => this.roundTo(val));
         this.strategyResult.portfolioWithCosts = this.strategyResult.portfolioWithCosts.map(val => this.roundTo(val));
+        this.strategyResult.cash = this.strategyResult.cash.map(val => this.roundTo(val));
+        this.strategyResult.equity = this.strategyResult.equity.map(val => this.roundTo(val));
+
     }
 
     private roundTo(value: number): number {
@@ -321,7 +352,7 @@ class StrategyPipeline {
         // mismatch in length between crucial columns
         if (!Array.isArray(timestamps) || timestamps.length !== closePrices.length)
             throw new HttpError(500, "Mismatch between timestamps and close prices.");
-        
+
         // non-array results
         if (!Array.isArray(highPrices) || !Array.isArray(lowPrices) || !Array.isArray(openPrices) || !Array.isArray(volumes))
             throw new HttpError(500, "Invalid structure for high, low, or open data. Expected arrays.");
@@ -384,7 +415,7 @@ class StrategyPipeline {
         if (shortenedIndex === -1) {
             throw new HttpError(400, "No data exists after the specified timestamp.");
         }
-        
+
         // chop data to typical range and proceed (only applicable for burn-in period)
         const shortenedHighPrices = highPrices.slice(shortenedIndex);
         const shortenedLowPrices = lowPrices.slice(shortenedIndex);

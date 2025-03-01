@@ -86,16 +86,22 @@ function InputForm({ formInputs, setFormInputs, run }: InputFormSubcomponentProp
     const randomFormInputs = () => {
         const randomStock = stocks[Math.floor(Math.random() * stocks.length)];
 
-        // Generate two random numbers between 1 and 25
-        const startOffset = 1 + Math.floor(Math.random() * 25);
-        const endOffset = 1 + Math.floor(Math.random() * 25);
+        const today = new Date();
+
+        // Generate two distinct random numbers between 1 and 25
+        let startOffset = 1 + Math.floor(Math.random() * 25);
+        let endOffset = 1 + Math.floor(Math.random() * 25);
+
+        // Ensure they are different
+        while (startOffset === endOffset) {
+            endOffset = 1 + Math.floor(Math.random() * 25);
+        }
 
         // Ensure start date is before end date
         const [newStartOffset, newEndOffset] = startOffset > endOffset
             ? [startOffset, endOffset]
             : [endOffset, startOffset];
 
-        const today = new Date();
         const newStartDate = formatDate(addMonths(today, -newStartOffset), useDatetimeLocal);
         const newEndDate = formatDate(addMonths(today, -newEndOffset), useDatetimeLocal);
         const newWarmupDate = formatDate(addMonths(new Date(newStartDate), -1), useDatetimeLocal);

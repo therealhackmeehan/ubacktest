@@ -86,59 +86,58 @@ def validate_strategy(df: pd.DataFrame):
 def execute_trade(symbol: str):
     """
     Executes a trade based on the latest signal from the strategy.
+    Maintains portfolio-relative allocation while ensuring no margin usage.
     """
     df = get_recent_data(symbol)  # Fetch recent market data
     df_with_signals = strategy(df)  # Apply strategy to generate signals
     validate_strategy(df_with_signals)  # Ensure strategy output is valid
 
-    # Fill missing signals with the previous value, and replace NaNs with 0
+    # Fill missing signals with previous value, replace NaNs with 0
     df_with_signals['signal'] = df_with_signals['signal'].ffill().fillna(0)
 
-    # Extract the last two signals
+    # Extract latest signal!
     new_signal = df_with_signals["signal"].iloc[-1]
-    last_signal = df_with_signals["signal"].iloc[-2]
-    to_trade_now = new_signal - last_signal  # Compute trade requirement
 
-    if new_signal == last_signal:
-        return  # No trade needed
-
-    # Get account details
-    account = api.get_account()
-    total_cash = float(account.cash)  # Available cash for trading
-
-    # Get the latest stock price
+    # Get latest stock price
     last_trade = api.get_latest_trade(symbol)
     stock_price = float(last_trade.p)
 
-    # Determine the target number of shares to hold based on the new signal
-    target_position_value = to_trade_now * total_cash
-    target_shares = target_position_value / stock_price
-
-    # Get the number of shares currently held
+    # Get account details
+    account = api.get_account()
+    cash = float(account.cash)  # Available cash for trading
     current_shares = get_strategy_position(symbol)
 
-    # Compute the number of shares to buy/sell
+    # Calculate total portfolio value
+    portfolio_value = cash + (current_shares * stock_price)
+
+    # Determine target value in stock
+    target_stock_value = new_signal * portfolio_value
+    target_shares = target_stock_value / stock_price
+
+    # Determine number of shares to trade
     shares_to_trade = target_shares - current_shares
 
-    # Ignore small trades and return if no trade is required
-    if abs(shares_to_trade) < 1:
-        return
+    # Determine buy/sell action
+    if shares_to_trade > 0:
+        order_side = "buy"
+    elif shares_to_trade < 0:
+        order_side = "sell"
+    else:
+        return  # No trade needed
 
-    # Determine buy or sell action
-    order_side = "buy" if shares_to_trade > 0 else "sell"
-
-    print(f"Placing {order_side} order for {abs(shares_to_trade)} shares of {symbol}")
+    print(f"Placing {order_side} order for {abs(int(shares_to_trade))} shares of {symbol}")
 
     # Submit order to Alpaca
     api.submit_order(
         symbol=symbol,
-        qty=abs(shares_to_trade),  # Must be an integer
+        qty=abs(int(shares_to_trade)),  # Convert to integer
         side=order_side,
         type="market",
         time_in_force="gtc",  # Good till canceled
     )
 
-    print(f"Successfully placed {order_side} order for {abs(shares_to_trade)} shares of {symbol}")
+    print(f"Successfully placed {order_side} order for {abs(int(shares_to_trade))} shares of {symbol}")
+
 
 # -------------------------------
 # Check If Market Is Open
@@ -156,6 +155,11 @@ def trade():
     """
     Entry point for executing trades. It first checks if the market is open before executing a trade.
     """
+    asset = api.get_asset(symbol)
+    if not asset.tradable:
+        print(f"{symbol} is not tradable at this time")
+        return
+    
     try:
         if is_market_open():
             execute_trade(symbol)

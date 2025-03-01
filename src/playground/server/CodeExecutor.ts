@@ -9,6 +9,8 @@ import { HttpError } from "wasp/server";
     that script, after given access to the stock data.
 
     simply returns the stdout and stderr of our code execution.
+
+    (c) 2025 Jack Meehan. uBacktest.
 */
 
 class CodeExecutor {
