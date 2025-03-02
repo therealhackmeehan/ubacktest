@@ -9,9 +9,19 @@ function StrategyCodeGen({ code }: { code: string | null }) {
     const linkRef = useRef<HTMLAnchorElement>(null);
 
     const [generatedCode, setGeneratedCode] = useState<string | null>(null);
-    const [intval, setIntval] = useState<string>('5d');
+    const [intval, setIntval] = useState<{ amount: string; timeframe: string }>({
+        amount: "1",
+        timeframe: "TimeFrameUnit.Day",
+    });
+
     const [symbol, setSymbol] = useState<string>('SPY');
-    const [daysBackToTest, setDaysBackToTest] = useState<number>(50);
+    const [daysBackToTest, setDaysBackToTest] = useState<number>(100);
+
+    // const monacoRef = useRef<any>(null);
+
+    // function handleEditorDidMount(editor, monaco) {
+    //     monacoRef.current = monaco;
+    // }
 
     function generateCode() {
         if (!code) {
@@ -19,7 +29,17 @@ function StrategyCodeGen({ code }: { code: string | null }) {
             return;
         };
 
-        setGeneratedCode(alpacaCode(code, symbol, daysBackToTest, intval));
+        const newCode = alpacaCode(code, symbol, daysBackToTest, intval.amount, intval.timeframe);
+        setGeneratedCode(newCode);
+
+        // if (monacoRef.current) {
+        //     setTimeout(() => {
+        //         if (monacoRef.current) {
+        //             monacoRef.current.setValue(newCode); // Update editor content
+        //             monacoRef.current.getAction("editor.foldAll")?.run(); // Collapse all code
+        //         }
+        //     }, 1000);
+        // }
     }
 
     function clearCode() {
@@ -65,13 +85,22 @@ function StrategyCodeGen({ code }: { code: string | null }) {
                         <div className="text-sm font-bold text-center dark:text-white ">Trading Frequency</div>
                         <select
                             className="rounded-lg w-full text-xs"
-                            value={intval}
-                            onChange={(e) => setIntval(e.currentTarget.value)}
+                            value={`${intval.amount}_${intval.timeframe}`}
+                            onChange={(e) => {
+                                const [amount, timeframe] = e.currentTarget.value.split("_");
+                                setIntval({ amount, timeframe });
+                            }}
                         >
-                            <option value="1Min">1min</option>
-                            <option value="5Min">5min</option>
-                            <option value="15Min">15min</option>
-                            <option value="1D">1d</option>
+                            <option value="1_TimeFrameUnit.Minute">1 min</option>
+                            <option value="3_TimeFrameUnit.Minute">3 min</option>
+                            <option value="5_TimeFrameUnit.Minute">5 min</option>
+                            <option value="15_TimeFrameUnit.Minute">15 min</option>
+                            <option value="30_TimeFrameUnit.Minute">30 min</option>
+                            <option value="1_TimeFrameUnit.Hour">1 hour</option>
+                            <option value="3_TimeFrameUnit.Hour">3 hours</option>
+                            <option value="12_TimeFrameUnit.Hour">12 hours</option>
+                            <option value="1_TimeFrameUnit.Day">1 day</option>
+                            <option value="1_TimeFrameUnit.Week">1 week</option>
                         </select>
                     </div>
 
@@ -123,6 +152,7 @@ function StrategyCodeGen({ code }: { code: string | null }) {
                     defaultLanguage='python'
                     theme="vs-dark"
                     value={generatedCode || '# Generated code will appear here (:'}
+                    // onMount={handleEditorDidMount}
                     loading={(<div className="text-white font-2xl tracking-tight">Loading...</div>)}
                 />
             </div>

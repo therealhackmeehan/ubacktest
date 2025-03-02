@@ -1,7 +1,4 @@
-
-export const alpacaCode = (strategyFcn: string, symbol: string, lookback: number, amount: string, timeUnit:string): string => {
-
-    return `from alpaca.trading.client import TradingClient
+from alpaca.trading.client import TradingClient
 from alpaca.trading.requests import MarketOrderRequest
 from alpaca.trading.enums import OrderSide, TimeInForce
 from alpaca.data.historical import StockHistoricalDataClient
@@ -13,13 +10,12 @@ import math
 from datetime import datetime, timedelta
 from zoneinfo import ZoneInfo
 
-'''
-    YOU CAN/SHOULD ONLY EDIT THE FOLLOWING TWO LINES.
-'''
-API_KEY = <insert_here>
-API_SECRET = <insert_here>
+API_KEY = "PKI39DIKVDM0DECMXBQO"
+API_SECRET = "JMVgdC48fBPZeu0x7zUQtGYQ3TSZetN9hII1L7U7"
 
-SYMBOL = ${symbol}
+SYMBOL = "1dd2"
+TIMEPOINTS = 100
+TRADING_FREQUENCY = TimeFrameUnit.Minute
 
 trading_client = TradingClient(API_KEY, API_SECRET, paper=True)
 historical_client = StockHistoricalDataClient(API_KEY, API_SECRET)
@@ -29,7 +25,10 @@ def log(message, level="INFO"):
     timestamp = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
     print(f"[{timestamp}] [{level}] {message}")
 
-${strategyFcn}
+def strategy(data):
+    log("Running strategy on historical data.")
+    data["signal"] = 1  # Simple strategy: always buy
+    return data
 
 def get_historical_data(symbol: str) -> pd.DataFrame:
     now = datetime.now(ZoneInfo("America/New_York"))
@@ -37,9 +36,9 @@ def get_historical_data(symbol: str) -> pd.DataFrame:
 
     historical_data_details = StockBarsRequest(
         symbol_or_symbols=[symbol],
-        timeframe=TimeFrame(amount=${amount}, unit=${timeUnit}),
+        timeframe=TimeFrame(amount=3, unit=TRADING_FREQUENCY),
         start=now - timedelta(days=365),
-        limit=${lookback},
+        limit=TIMEPOINTS,
     )
     
     bars = historical_client.get_stock_bars(historical_data_details).df
@@ -53,7 +52,7 @@ def get_position_value(symbol: str) -> float:
     try:
         position = trading_client.get_open_position(symbol)
         value = float(position.market_value)
-        log(f"Current position in {symbol}: \${value:.2f}")
+        log(f"Current position in {symbol}: ${value:.2f}")
         return value
     except Exception:
         log(f"No open position found for {symbol}.", level="WARNING")
@@ -87,10 +86,16 @@ def execute_trade(symbol: str):
     portfolio_value = float(trading_client.get_account().portfolio_value)
     target_equity = portfolio_value * new_signal
     money_to_move = current_equity - target_equity
-    log(f"Portfolio Value: \${portfolio_value:.2f}, Target Equity: \${target_equity:.2f}, Money to Move: \${money_to_move:.2f}")
+    log(f"Portfolio Value: ${portfolio_value:.2f}, Target Equity: ${target_equity:.2f}, Money to Move: ${money_to_move:.2f}")
+
+    if (current_equity > 0 and target_equity < 0) or (current_equity < 0 and target_equity > 0):
+        log(f"Because moving from a short->buy, or buy->short, we must first exit our current position. Closing position in {symbol}. ")
+        trading_client.close_position(symbol)
+        money_to_move += current_equity
+        log(f"Money to Move (updated): ${money_to_move:.2f}")
 
     if money_to_move > 0:
-        log(f"Placing BUY order for \${abs(money_to_move):.2f} of {symbol}.")
+        log(f"Placing BUY order for ${abs(money_to_move):.2f} of {symbol}.")
         order_details = MarketOrderRequest(
             symbol=symbol,
             notional=abs(money_to_move), 
@@ -98,7 +103,7 @@ def execute_trade(symbol: str):
             time_in_force=TimeInForce.DAY
         )
     elif money_to_move < 0:
-        log(f"Placing SELL order for \${abs(money_to_move):.2f} of {symbol}.")
+        log(f"Placing SELL order for ${abs(money_to_move):.2f} of {symbol}.")
         latest_bar_details = StockQuotesRequest(symbol_or_symbols=[symbol])
         latest_price = historical_client.get_stock_latest_bar(latest_bar_details).close
 
@@ -126,7 +131,7 @@ def trade():
         symbol = SYMBOL.upper()
         asset = trading_client.get_asset(symbol)
         if not asset.tradable or not asset.fractionable:
-            log(f"{SYMBOL} is not tradable or fractionable.", level="WARNING")
+            log(f"{SYMBOL} is not tradable or fractionable.", level="ERROR")
             return
         
         if trading_client.get_clock().is_open:
@@ -138,5 +143,4 @@ def trade():
         log(f"Error encountered: {e}. No trade will be placed.", level="ERROR")
 
 if __name__ == "__main__":
-    trade()`;
-}
+    trade()

@@ -101,7 +101,10 @@ export type GetTopResultsProp = {
 
 export const getTopResults: GetTopResults<void, GetTopResultsProp> = async (_args, context) => {
     const results = await context.entities.Result.findMany({
-        where: { public: true },
+        where: {
+            public: true,
+            timepoints: { gte: 15 },
+        },
         include: { user: true },
     });
 

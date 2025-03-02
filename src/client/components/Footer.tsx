@@ -3,9 +3,9 @@ import { routes } from 'wasp/client/router';
 
 const footerLinks = {
   app: [
-    { name: 'Documentation', href: DocsUrl },
-    { name: 'Contact Us', href: BlogUrl },
-    { name: 'Report an Issue', href: BlogUrl },
+    { name: 'Documentation', href: routes.AboutRoute.build() },
+    { name: 'Contact Us', href: routes.AboutRoute.build() },
+    { name: 'Report an Issue', href: routes.AboutRoute.build() },
   ],
   company: [
     { name: 'About', href: routes.AboutRoute.build() },

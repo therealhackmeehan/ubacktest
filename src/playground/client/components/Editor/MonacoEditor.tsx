@@ -134,7 +134,12 @@ function MonacoEditor({ codeToDisplay, setCodeToDisplay }: MonacoEditorProps) {
                     <BsQuestionOctagon />Examples
                 </button>
             </div>
-            <Editor className="invert dark:invert-0 hue-rotate-180" defaultLanguage='python' theme="vs-dark" value={codeToDisplay} onChange={handleEditorChange} options={editorOpts}
+            <Editor className="invert dark:invert-0 hue-rotate-180"
+                defaultLanguage='python'
+                theme="vs-dark"
+                value={codeToDisplay}
+                onChange={handleEditorChange}
+                options={editorOpts}
                 loading={(<div className="text-white font-2xl tracking-tight animate-bounce">Loading...</div>)} />
             {packagesModalOpen &&
                 <PackagesModal closeModal={() => setPackagesModalOpen(false)} />

@@ -111,23 +111,28 @@ def execute_trade(symbol: str):
     """
     Executes a trade based on the latest signal from the strategy.
     Ensures portfolio-relative allocation while preventing margin usage.
+
+    1. Get Historical Data.
+    2. Apply Strategy Function.
+    3. Grab Trading Signal.
+    4. Calculate Rebalancing of Portfolio, if Needed.
+    5. Execute Desired Rebalance.
     """
 
     # Fetch recent market data and apply the trading strategy
     df = get_recent_data(symbol)
     df_with_signals = strategy(df)
     
-    # Validate strategy output
-    validate_strategy(df_with_signals)
-
     # Forward-fill missing signals and replace NaNs with 0
     df_with_signals['signal'] = df_with_signals['signal'].ffill().fillna(0)
+
+    # Validate strategy output
+    validate_strategy(df_with_signals)
 
     # Extract the latest trading signal
     new_signal = df_with_signals["signal"].iloc[-1]
     last_signal = df_with_signals["signal"].iloc[-2]
 
-    new_signal = -.2
     print(f"Latest signal: {new_signal}")
 
     # Avoid making any trades if the signal persists
@@ -168,7 +173,7 @@ def execute_trade(symbol: str):
         order_side = "sell"
 
         # Alpaca does not support fractional share short selling
-        # shares_to_trade = math.floor(shares_to_trade)
+        shares_to_trade = math.floor(shares_to_trade)
     else:
         return  # No trade needed. Should have already returned regardless.
 
