@@ -142,8 +142,6 @@ export const getTopResults: GetTopResults<void, GetTopResultsProp> = async (_arg
     };
 };
 
-
-
 export const deleteResult: DeleteResult<Pick<Result, "id">, Result> = async ({ id }, context) => {
     if (!context.user) {
         throw new HttpError(401);

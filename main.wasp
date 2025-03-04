@@ -15,24 +15,16 @@ app uBacktest {
         "<meta name='twitter:image:width' content='800' />",
         "<meta name='twitter:image:height' content='400' />",
         "<meta name='twitter:card' content='example editor view' />",
-        // TODO: You can put your Plausible analytics scripts below (https://docs.opensaas.sh/guides/analytics/):
-        // NOTE: Plausible does not use Cookies, so you can simply add the scripts here.
-        // Google, on the other hand, does, so you must instead add the script dynamically
-        // via the Cookie Consent component after the user clicks the "Accept" cookies button.
-        "<script defer data-domain='<your-site-id>' src='https://plausible.io/js/script.js'></script>",  // for production
-        "<script defer data-domain='<your-site-id>' src='https://plausible.io/js/script.local.js'></script>",  // for development
   ],
 
   // 🔐 Auth out of the box! https://wasp-lang.dev/docs/auth/overview
   auth: {
     userEntity: User,
     methods: {
-      // NOTE: If you decide to not use email auth, make sure to also delete the related routes and pages below.
-      //   (RequestPasswordReset(Route|Page), PasswordReset(Route|Page), EmailVerification(Route|Page))
       email: {
         fromField: {
-          name: "Open SaaS App",
-          email: "me@example.com"
+          name: "Lucy @ uBacktest",
+          email: "support@ubacktest.com"
         },
         emailVerification: {
           clientRoute: EmailVerificationRoute,
@@ -80,10 +72,11 @@ app uBacktest {
     //   Make sure to check the server logs for the email confirmation url (it will not be sent to an address)!
     //   Once you are ready for production, switch to e.g. "SendGrid" or "Mailgun" providers. Check out https://docs.opensaas.sh/guides/email-sending/ .
     provider: Dummy,
+    // provider: SendGrid,
     defaultFrom: {
-      name: "uBacktest",
+      name: "Matt @ uBacktest",
       // When using a real provider, e.g. SendGrid, you must use the same email address that you configured your account to send out emails with!
-      email: "support@uBacktest.com"
+      email: "support@ubacktest.com"
     },
   },
 }

@@ -1,7 +1,24 @@
 
 export const alpacaCode = (strategyFcn: string, symbol: string, lookback: number, amount: string, timeUnit:string): string => {
 
-    return `from alpaca.trading.client import TradingClient
+    return `"""
+Alpaca Trading Script
+----------------------
+This script fetches historical stock data, applies a basic trading strategy, 
+and executes market orders based on the strategy's signals.
+
+Key Features:
+- Fetches historical stock data from Alpaca
+- Implements a simple buy-and-hold strategy
+- Manages trades and portfolio positions dynamically
+- Logs key actions for easier debugging and tracking
+
+Requirements:
+- An Alpaca API account with the necessary API keys
+- The \`alpaca-trade-api\` and \`pandas\` libraries, at a minumum
+"""
+
+from alpaca.trading.client import TradingClient
 from alpaca.trading.requests import MarketOrderRequest
 from alpaca.trading.enums import OrderSide, TimeInForce
 from alpaca.data.historical import StockHistoricalDataClient
@@ -13,43 +30,77 @@ import math
 from datetime import datetime, timedelta
 from zoneinfo import ZoneInfo
 
-'''
-    YOU CAN/SHOULD ONLY EDIT THE FOLLOWING TWO LINES.
-'''
-API_KEY = <insert_here>
-API_SECRET = <insert_here>
+# ---------------------------------
+# Configuration & API Credentials
+# ---------------------------------
+API_KEY = <place_your_key_here!>        # EDIT THIS LINE!
+API_SECRET = <place_your_secret_here!>  # EDIT THIS LINE!
 
-SYMBOL = ${symbol}
+SYMBOL = "${symbol}"  # Stock symbol to trade
+TIMEPOINTS = ${lookback}  # Number of historical data points to fetch
+TRADING_FREQUENCY = ${timeUnit}  # Trading frequency (e.g., minutes, hours, days)
 
-trading_client = TradingClient(API_KEY, API_SECRET, paper=True)
-historical_client = StockHistoricalDataClient(API_KEY, API_SECRET)
+# Alpaca API Clients
+trading_client = TradingClient(API_KEY, API_SECRET, paper=True)  # Paper trading client
+historical_client = StockHistoricalDataClient(API_KEY, API_SECRET)  # Historical data client
+
+# ---------------------------------
+# Utility Functions
+# ---------------------------------
 
 def log(message, level="INFO"):
-    """Helper function to print logs with timestamps."""
+    """
+    Logs messages with a timestamp for debugging and tracking.
+    """
     timestamp = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
     print(f"[{timestamp}] [{level}] {message}")
 
+# ---------------------------------
+# Trading Strategy
+# ---------------------------------
+
 ${strategyFcn}
 
+# ---------------------------------
+# Data Retrieval Functions
+# ---------------------------------
+
 def get_historical_data(symbol: str) -> pd.DataFrame:
+    """
+    Fetches historical market data for the given stock symbol.
+    
+    Parameters:
+    - symbol (str): Stock symbol to retrieve data for
+    
+    Returns:
+    - pd.DataFrame: Historical stock data
+    """
     now = datetime.now(ZoneInfo("America/New_York"))
     log(f"Fetching historical data for {symbol}...")
 
-    historical_data_details = StockBarsRequest(
+    request_params = StockBarsRequest(
         symbol_or_symbols=[symbol],
-        timeframe=TimeFrame(amount=${amount}, unit=${timeUnit}),
+        timeframe=TimeFrame(amount=${amount}, unit=TRADING_FREQUENCY),
         start=now - timedelta(days=365),
-        limit=${lookback},
+        limit=TIMEPOINTS,
     )
     
-    bars = historical_client.get_stock_bars(historical_data_details).df
+    bars = historical_client.get_stock_bars(request_params).df
     bars = bars.reset_index()
     
     log(f"Retrieved {len(bars)} bars for {symbol}.")
     return bars[["timestamp", "open", "high", "low", "close", "volume"]]  # Keep relevant columns
 
 def get_position_value(symbol: str) -> float:
-    """Gets the current market value of an open position."""
+    """
+    Retrieves the current market value of an open position.
+    
+    Parameters:
+    - symbol (str): Stock symbol to check position for
+    
+    Returns:
+    - float: Market value of the position, or 0 if no position exists
+    """
     try:
         position = trading_client.get_open_position(symbol)
         value = float(position.market_value)
@@ -59,9 +110,20 @@ def get_position_value(symbol: str) -> float:
         log(f"No open position found for {symbol}.", level="WARNING")
         return 0  # No position found
 
+# ---------------------------------
+# Trade Execution Functions
+# ---------------------------------
+
 def execute_trade(symbol: str):
+    """
+    Executes a trade based on the latest strategy signal.
+    
+    Parameters:
+    - symbol (str): Stock symbol to trade
+    """
     log(f"Executing trade for {symbol}...")
 
+    # Fetch historical data and apply strategy
     historical_data = get_historical_data(symbol)
     df = strategy(historical_data)
     
@@ -88,6 +150,13 @@ def execute_trade(symbol: str):
     target_equity = portfolio_value * new_signal
     money_to_move = current_equity - target_equity
     log(f"Portfolio Value: \${portfolio_value:.2f}, Target Equity: \${target_equity:.2f}, Money to Move: \${money_to_move:.2f}")
+
+    # If switching from long to short or vice versa, close existing position first
+    if (current_equity > 0 and target_equity < 0) or (current_equity < 0 and target_equity > 0):
+        log(f"Switching from long to short (or vice versa), closing existing position in {symbol}.")
+        trading_client.close_position(symbol)
+        money_to_move += current_equity
+        log(f"Money to Move (updated): \${money_to_move:.2f}")
 
     if money_to_move > 0:
         log(f"Placing BUY order for \${abs(money_to_move):.2f} of {symbol}.")
@@ -118,15 +187,21 @@ def execute_trade(symbol: str):
     except Exception as e:
         log(f"Failed to submit order: {e}", level="ERROR")
 
-def trade():
+# ---------------------------------
+# Main Trading Execution
+# ---------------------------------
 
+def trade():
+    """
+    Checks market status and executes a trade if the market is open.
+    """
     try:
         log("Checking market status...")
 
         symbol = SYMBOL.upper()
         asset = trading_client.get_asset(symbol)
         if not asset.tradable or not asset.fractionable:
-            log(f"{SYMBOL} is not tradable or fractionable.", level="WARNING")
+            log(f"{SYMBOL} is not tradable or fractionable.", level="ERROR")
             return
         
         if trading_client.get_clock().is_open:
@@ -137,6 +212,11 @@ def trade():
     except Exception as e:
         log(f"Error encountered: {e}. No trade will be placed.", level="ERROR")
 
+# ---------------------------------
+# Entry Point
+# ---------------------------------
+
 if __name__ == "__main__":
-    trade()`;
+    trade()
+`;
 }

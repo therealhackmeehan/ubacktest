@@ -10,7 +10,7 @@ import { useInView } from 'react-intersection-observer';
 export default function Hero() {
 
   const [ref1, inView1] = useInView({ triggerOnce: true });
-  const [ref2, inView3] = useInView({ triggerOnce: true });
+  const [ref2, inView2] = useInView({ triggerOnce: true });
 
   return (
     <div className='relative max-w-7xl mx-auto'>
@@ -48,10 +48,10 @@ export default function Hero() {
             <h1 ref={ref2} className={`text-4xl my-12 font-bold text-gray-900 sm:text-6xl dark:text-white duration-1000 tracking-tight ${inView3 ? 'opacity-100' : 'opacity-0 translate-y-3'}`}>
               The rest is up to <span className='italic text-sky-700 dark:text-blue-300'>you</span>.
             </h1> */}
-            <h1 ref={ref1} className={`text-4xl font-bold text-gray-900 sm:text-6xl dark:text-white duration-500 tracking-tight ${inView1 ? 'opacity-100' : 'opacity-0 translate-y-3'}`}>
+            <h1 ref={ref1} className={`text-4xl font-bold text-gray-900 sm:text-6xl dark:text-white duration-1000 tracking-tight ${inView1 ? 'opacity-100' : 'opacity-0 translate-y-3'}`}>
               Turn your ideas into trading <span className='text-sky-700 dark:text-blue-300'>strategies</span>.
             </h1>
-            <h1 ref={ref2} className={`text-4xl my-12 font-bold text-gray-900 sm:text-6xl dark:text-white duration-1000 tracking-tight ${inView3 ? 'opacity-100' : 'opacity-0 translate-y-3'}`}>
+            <h1 ref={ref2} className={`text-4xl my-12 font-bold text-gray-900 sm:text-6xl dark:text-white duration-1000 tracking-tight ${inView2 ? 'opacity-100' : 'opacity-0 translate-y-3'}`}>
               Backtest before you risk a <span className='italic text-sky-700 dark:text-blue-300'>cent</span>.
             </h1>
             <p className='mt-6 mx-auto max-w-2xl text-lg leading-8 text-gray-600 dark:text-white'>

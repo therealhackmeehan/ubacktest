@@ -66,7 +66,6 @@ function CashEquity({ strategyResult }: { strategyResult: StrategyResultProps })
                     backgroundColor: 'rgba(0, 128, 255, 1)',
                     pointRadius: 0,
                     borderWidth: 1,
-                    hidden: true,
                 },
             ],
         };
@@ -117,7 +116,7 @@ function CashEquity({ strategyResult }: { strategyResult: StrategyResultProps })
             <div className="text-lg tracking-tight font-bold text-sky-700">
                 Cash/Equity Breakdown
                 <span className="text-xs font-mono m-2 text-black/50">
-                    (Equity may be negative if you’ve shorted the stock. Portfolio value reflects the absolute value of equity.)
+                    (equity may be negative if you’ve shorted the stock)
                 </span>
             </div>
             <ChartWrapper height={40}>

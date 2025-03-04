@@ -256,7 +256,7 @@ class StrategyPipeline {
     private async addSPData() {
 
         // call the stock API for 'SPY'
-        const spResult = await this.stockAPIHelper('spy');
+        const spResult = await this.stockAPIHelper('^GSPC');
         const { shortenedNormalizedQuote } = this.validateStockDataFromAPI(spResult);
 
         const stockStamp = this.strategyResult.timestamp;

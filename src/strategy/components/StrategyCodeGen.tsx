@@ -17,11 +17,19 @@ function StrategyCodeGen({ code }: { code: string | null }) {
     const [symbol, setSymbol] = useState<string>('SPY');
     const [daysBackToTest, setDaysBackToTest] = useState<number>(100);
 
-    // const monacoRef = useRef<any>(null);
+    const [requirements, setRequirements] = useState<string | null>("pandas\nmath\nalpaca-py\ndatetime\n\n# add your own below");
 
-    // function handleEditorDidMount(editor, monaco) {
-    //     monacoRef.current = monaco;
-    // }
+    const editableMiniEditorOpts = {
+        ...miniEditorOpts,
+        readOnly: false,
+        domReadOnly: false,
+    };
+
+    const handleEditorChange = (value: string | undefined) => {
+        if (value !== undefined) {
+            setGeneratedCode(value);
+        }
+    };
 
     function generateCode() {
         if (!code) {
@@ -31,15 +39,6 @@ function StrategyCodeGen({ code }: { code: string | null }) {
 
         const newCode = alpacaCode(code, symbol, daysBackToTest, intval.amount, intval.timeframe);
         setGeneratedCode(newCode);
-
-        // if (monacoRef.current) {
-        //     setTimeout(() => {
-        //         if (monacoRef.current) {
-        //             monacoRef.current.setValue(newCode); // Update editor content
-        //             monacoRef.current.getAction("editor.foldAll")?.run(); // Collapse all code
-        //         }
-        //     }, 1000);
-        // }
     }
 
     function clearCode() {
@@ -84,7 +83,7 @@ function StrategyCodeGen({ code }: { code: string | null }) {
                     <div>
                         <div className="text-sm font-bold text-center dark:text-white ">Trading Frequency</div>
                         <select
-                            className="rounded-lg w-full text-xs"
+                            className="rounded-lg w-full text-xs shadow-lg"
                             value={`${intval.amount}_${intval.timeframe}`}
                             onChange={(e) => {
                                 const [amount, timeframe] = e.currentTarget.value.split("_");
@@ -126,6 +125,13 @@ function StrategyCodeGen({ code }: { code: string | null }) {
                     </button>
                 </div>
             </div>
+            <div className="rounded-md p-2 m-2">
+                <div className="flex justify-between">
+                    <div className="text-lg font-bold dark:text-white tracking-tight">What packages are you using?</div>
+                    <div className="text-xs font-mono opacity-40 dark:text-white tracking-tight">(requirements.txt)</div>
+                </div>
+                <textarea className="h-[20vh] max-h-40 resize-y w-full my-1 rounded-md text-xs font-mono dark:bg-black dark:text-white" value={requirements || ''} onChange={(e) => setRequirements(e.target.value)} />
+            </div>
 
             <div className="mt-2 border-2 border-slate-800">
                 <div className="flex text-xs justify-start bg-slate-600">
@@ -141,18 +147,24 @@ function StrategyCodeGen({ code }: { code: string | null }) {
                         className="flex px-3 py-1 items-center text-center tracking-tight text-white hover:bg-slate-800 hover:font-bold duration-700"
                     > copy
                     </button>
+                    <button
+                        type='button'
+                        onClick={() => copyToClipboard(generatedCode)} // Keep the existing button functionality
+                        className="flex px-3 py-1 items-center text-center tracking-tight text-white hover:bg-slate-800 hover:font-bold duration-700"
+                    > download as .zip
+                    </button>
                 </div>
-                {generatedCode && <div className="text-red-500 dark:text-white shadow-lg tracking-tight font-bold text-xs p-2 text-center z-9999">
-                    Now that you've generated code, READ THE DOCS for how to best utilize it. Don't be reckless!
+                {generatedCode && <div className="text-red-800 dark:text-white shadow-lg tracking-tight font-bold text-xs p-2 text-center z-9999">
+                    If you've generated code, READ THE DOCS for how to best utilize it. Don't be reckless!
                 </div>}
                 <Editor
                     className="invert dark:invert-0 hue-rotate-180"
-                    options={miniEditorOpts}
+                    options={editableMiniEditorOpts}
+                    onChange={handleEditorChange}
                     height={generatedCode ? "80vh" : "40vh"}
                     defaultLanguage='python'
                     theme="vs-dark"
                     value={generatedCode || '# Generated code will appear here (:'}
-                    // onMount={handleEditorDidMount}
                     loading={(<div className="text-white font-2xl tracking-tight">Loading...</div>)}
                 />
             </div>
