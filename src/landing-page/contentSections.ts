@@ -1,4 +1,4 @@
-import { DocsUrl, BlogUrl } from '../shared/common';
+import { DocsUrl } from '../shared/common';
 import { routes } from 'wasp/client/router';
 
 import { FaPython, FaSave } from 'react-icons/fa';
@@ -12,7 +12,6 @@ export const navigation = [
   { name: 'Features', href: '#features' },
   { name: 'Pricing', href: routes.PricingPageRoute.build() },
   { name: 'Documentation', href: DocsUrl },
-  { name: 'Blog', href: BlogUrl },
 ];
 
 export const features = [
@@ -28,7 +27,7 @@ export const features = [
   },
   {
     name: 'Seamless Library Integration',
-    description: 'Preloaded with essential statistics, machine learning, and finance libraries—ready to use out of the box.',
+    description: 'Preloaded with essential statistics, machine learning libraries to use out of the box.',
     icon: SiPandas,
   },
   {
@@ -43,7 +42,7 @@ export const features = [
   },
   {
     name: 'Comprehensive Docs & Examples',
-    description: 'Get started instantly with importable examples—just press go and see them in action.',
+    description: 'Get started instantly with pre-integrated examples—just press go and see them in action.',
     icon: SiReadthedocs,
   },
   {
@@ -61,7 +60,7 @@ export const features = [
 export const faqs = [
   {
     id: 1,
-    question: 'Does it cost anything to use?',
+    question: 'Does uBacktest cost anything to use?',
     answer: 'You can get started for free! For more frequent or advanced backtesting, consider a paid plan—stock data isn’t cheap!',
   },
   {

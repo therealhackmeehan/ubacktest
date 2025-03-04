@@ -1,11 +1,40 @@
-import beatsp from '../../client/static/beatsp.png';
-import editor from '../../client/static/editor.png';
-import basic from '../../client/static/basic.png';
-import results from '../../client/static/results.png';
-import editor_dark from '../../client/static/editor_dark.png';
-import results_dark from '../../client/static/results_dark.png';
 import { DocsUrl } from '../../shared/common';
 import { useInView } from 'react-intersection-observer';
+
+// general imports
+import result_stock1 from '../../client/static/result_stock1.png';
+
+// dark imports
+import dark_deploy from '../../client/static/dark_deploy.png';
+import dark_deployScript from '../../client/static/dark_deployScript.png';
+import dark_editorOnly from '../../client/static/dark_editorOnly.png';
+import dark_editorOnlyComplex from '../../client/static/dark_editorOnlyComplex.png';
+import dark_engine from '../../client/static/dark_engine.png';
+import dark_example from '../../client/static/dark_example.png';
+import dark_fullscreenEditor from '../../client/static/dark_fullscreenEditor.png';
+import dark_maximizedEditor from '../../client/static/dark_maximizedEditor.png';
+import dark_results from '../../client/static/dark_results.png';
+import dark_strategies from '../../client/static/dark_strategies.png';
+import dark_strategyHome from '../../client/static/dark_strategyHome.png';
+import dark_strategyHomeFull from '../../client/static/dark_strategyHomeFull.png';
+
+// light imports
+import light_cashEquity from '../../client/static/light_cashEquity.png';
+import light_dataTable from '../../client/static/light_dataTable.png';
+import light_deploy from '../../client/static/light_deploy.png';
+import light_deployScript from '../../client/static/light_deployScript.png';
+import light_editorOnly from '../../client/static/light_editorOnly.png';
+import light_editorOnlyComplex from '../../client/static/light_editorOnlyComplex.png';
+import light_engine from '../../client/static/light_engine.png';
+import light_example from '../../client/static/light_example.png';
+import light_fullscreenEditor from '../../client/static/light_fullscreenEditor.png';
+import light_maximizedEditor from '../../client/static/light_maximizedEditor.png';
+import light_results from '../../client/static/light_results.png';
+import light_SP from '../../client/static/light_SP.png';
+import light_stats from '../../client/static/light_stats.png';
+import light_strategies from '../../client/static/light_strategies.png';
+import light_strategyHome from '../../client/static/light_strategyHome.png';
+import light_strategyHomeFull from '../../client/static/light_strategyHomeFull.png';
 
 export default function Hero() {
 
@@ -41,21 +70,15 @@ export default function Hero() {
       <div className='py-24 sm:py-32'>
         <div className='mx-auto max-w-8xl px-6 lg:px-8'>
           <div className='lg:mb-18 mx-auto max-w-3xl text-center'>
-            {/* <h1 ref={ref1} className={`text-4xl font-bold text-gray-900 sm:text-6xl dark:text-white duration-500 tracking-tight ${inView1 ? 'opacity-100' : 'opacity-0 translate-y-3'}`}>
+            <h1 ref={ref1} className={`text-4xl font-bold text-gray-900 sm:text-6xl dark:text-white duration-500 tracking-tight ${inView1 ? 'opacity-100' : 'opacity-0 translate-y-3'}`}>
               1 is <span className='text-sky-700 dark:text-blue-300'>buy</span>.
               -1 is <span className='text-sky-700 dark:text-blue-300'>short</span>.
             </h1>
-            <h1 ref={ref2} className={`text-4xl my-12 font-bold text-gray-900 sm:text-6xl dark:text-white duration-1000 tracking-tight ${inView3 ? 'opacity-100' : 'opacity-0 translate-y-3'}`}>
-              The rest is up to <span className='italic text-sky-700 dark:text-blue-300'>you</span>.
-            </h1> */}
-            <h1 ref={ref1} className={`text-4xl font-bold text-gray-900 sm:text-6xl dark:text-white duration-1000 tracking-tight ${inView1 ? 'opacity-100' : 'opacity-0 translate-y-3'}`}>
-              Turn your ideas into trading <span className='text-sky-700 dark:text-blue-300'>strategies</span>.
-            </h1>
             <h1 ref={ref2} className={`text-4xl my-12 font-bold text-gray-900 sm:text-6xl dark:text-white duration-1000 tracking-tight ${inView2 ? 'opacity-100' : 'opacity-0 translate-y-3'}`}>
-              Backtest before you risk a <span className='italic text-sky-700 dark:text-blue-300'>cent</span>.
+              The rest is up to <span className='italic text-sky-700 dark:text-blue-300'>you</span>.
             </h1>
             <p className='mt-6 mx-auto max-w-2xl text-lg leading-8 text-gray-600 dark:text-white'>
-              Your one stop shop for all things <span className='italic text-sky-700 dark:text-blue-300'>algorithmic trading</span>. Test that strategy you've been thinking about!
+              All things <span className='italic text-sky-700 dark:text-blue-300'>algorithmic trading and testing</span>. Run that strategy you've been thinking about!
             </p>
             <div className='mt-10 flex items-center justify-center gap-x-6'>
               <a
@@ -73,55 +96,61 @@ export default function Hero() {
             </div>
           </div>
           <div className="m-4 lg:mx-auto">
-            <div className="mt-14 w-full grid grid-cols-5 gap-2">
+
+            <div className="mt-34 w-full grid grid-cols-5 gap-3 -space-y-36">
+
+              {/* image 1 */}
+              <div className="hidden dark:flex col-span-4 hover:scale-90 duration-700 z-50">
+                <img
+                  src={dark_editorOnly}
+                  alt="editor"
+                  className="rounded-md shadow-2xl ring-1 ring-gray-900/30"
+                />
+              </div>
 
               <div className="dark:hidden col-span-4 hover:scale-90 duration-700 z-50">
                 <img
-                  src={editor}
+                  src={light_editorOnly}
                   alt="editor"
                   className="rounded-md shadow-2xl ring-1 ring-gray-900/30"
                 />
               </div>
 
-              <div className="hidden dark:flex col-span-4 hover:scale-90 duration-700 z-50">
-                <img
-                  src={editor_dark}
-                  alt="editor"
-                  className="rounded-md shadow-2xl ring-1 ring-gray-900/30"
-                />
-              </div>
-
+              {/* image 2 */}
               <div className="col-span-4 col-start-2 hover:scale-90 duration-700 z-50">
                 <img
-                  src={basic}
+                  src={result_stock1}
                   alt="basic backtest result"
                   className="rounded-md shadow-2xl ring-1 ring-gray-900/30"
                 />
               </div>
 
-              <div className="dark:hidden col-span-4 hover:scale-90 duration-700 z-50">
+              {/* image 3 */}
+              <div className="dark:hidden col-span-4 col-start-1 hover:scale-90 duration-700 z-50">
                 <img
-                  src={results}
-                  alt="results"
-                  className="rounded-md shadow-2xl ring-1 ring-gray-900/30"
+                  src={light_engine}
+                  alt="backtest engine"
+                  className="rounded-md shadow-2xl ring-1 ring-gray-900/30 max-h-100"
                 />
               </div>
 
-              <div className="hidden dark:flex col-span-4 hover:scale-90 duration-700 z-50">
+              <div className="hidden dark:flex col-span-4 col-start-1 hover:scale-90 duration-700 z-50">
                 <img
-                  src={results_dark}
-                  alt="results"
-                  className="rounded-md shadow-2xl ring-1 ring-gray-900/30"
+                  src={dark_engine}
+                  alt="backtest engine"
+                  className="rounded-md shadow-2xl ring-1 ring-gray-900/30 max-h-100"
                 />
               </div>
 
+              {/* image 4 */}
               <div className="col-start-2 col-span-4 hover:scale-90 duration-700 z-50">
                 <img
-                  src={beatsp}
+                  src={light_SP}
                   alt="compare to sp500"
                   className="rounded-md shadow-2xl ring-1 ring-gray-900/30"
                 />
               </div>
+
             </div>
           </div>
 

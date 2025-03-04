@@ -1,9 +1,9 @@
-import { DocsUrl, BlogUrl } from '../../shared/common';
+import { DocsUrl } from '../../shared/common';
 import { routes } from 'wasp/client/router';
 
 const footerLinks = {
   app: [
-    { name: 'Documentation', href: routes.AboutRoute.build() },
+    { name: 'Documentation', href: DocsUrl },
     { name: 'Contact Us', href: routes.AboutRoute.build() },
     { name: 'Report an Issue', href: routes.AboutRoute.build() },
   ],
