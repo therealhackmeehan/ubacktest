@@ -1,9 +1,6 @@
-# Use AWS Lambda's Python 3.9 base image
-FROM public.ecr.aws/lambda/python:3.9
-
-# Install required Python libraries
-COPY requirements.txt  .
+FROM python:3.9-slim
+WORKDIR /app
+COPY requirements.txt .
 RUN pip install --no-cache-dir -r requirements.txt
-
-# Command is required but won't affect user-written Lambda functions
-CMD ["app.lambda_handler"]
+COPY script.py .
+CMD ["python", "script.py"]

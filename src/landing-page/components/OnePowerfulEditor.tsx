@@ -21,7 +21,7 @@ export default function OnePowerfulEditor() {
           <img
             src={dark_maximizedEditor}
             alt="editor"
-            className="rounded-md shadow-2xl dark:shadow-white/5 ring-1 ring-white/10"
+            className="rounded-md shadow-2xl dark:shadow-white/15 ring-1 ring-white/10"
           />
         </div>
       </div>

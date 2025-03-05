@@ -59,7 +59,7 @@ export default function Workflow() {
             <div className='mx-auto mt-16 sm:mt-20 lg:mt-24 max-w-6xl'>
                 <div className="lg:grid grid-cols-3 gap-4">
                     {/* Step 1 */}
-                    <div ref={ref1} className={`col-span-2 flex justify-start gap-x-2 transition-transform duration-1000 transform ${inView1 ? 'translate-x-0' : '-translate-x-full'}`}>
+                    <div ref={ref1} className={`col-span-2 flex justify-start gap-x-2 transition-transform duration-1000 transform ${inView1 ? 'translate-x-0' : '-translate-x-10'}`}>
                         <div className="rounded-md bg-sky-700 dark:bg-boxdark text-white px-3 font-bold text-title-xl">1</div>
                         <div className="border-2 border-slate-800 rounded-md w-full">
                             <div className="w-full max-h-80 overflow-clip">
@@ -78,12 +78,12 @@ export default function Workflow() {
                             </div>
                         </div>
                     </div>
-                    <div className={`col-span-1 rounded-lg p-4 dark:text-white duration-700 transform ${inView1 ? 'translate-x-0' : 'translate-x-full'}`}>
+                    <div className={`col-span-1 rounded-lg p-4 dark:text-white duration-700 transform ${inView1 ? 'translate-x-0' : 'translate-x-10'}`}>
                         <span className="font-extrabold text-title-xl text-sky-700 dark:text-blue-300 tracking-tight animate-pulse">Edit</span> your strategy in the strategy editor. Assign buy, sell, and hold signals using standard statistical techniques—or develop your own custom logic.
                     </div>
 
                     {/* Step 2 */}
-                    <div ref={ref2} className={`col-span-2 flex justify-start gap-x-2 transition-transform duration-1000 transform ${inView2 ? 'translate-x-0' : '-translate-x-full'}`}>
+                    <div ref={ref2} className={`col-span-2 flex justify-start gap-x-2 transition-transform duration-1000 transform ${inView2 ? 'translate-x-0' : '-translate-x-10'}`}>
                         <div className="rounded-md bg-sky-700 dark:bg-boxdark text-white px-3 font-bold text-title-xl">2</div>
                         <div className="border-2 border-slate-800 rounded-md w-full">
                             <div className="w-full max-h-80 overflow-clip">
@@ -96,12 +96,12 @@ export default function Workflow() {
                             </div>
                         </div>
                     </div>
-                    <div className={`col-span-1 rounded-lg p-4 dark:text-white duration-700 transform ${inView2 ? 'translate-x-0' : 'translate-x-full'}`}>
+                    <div className={`col-span-1 rounded-lg p-4 dark:text-white duration-700 transform ${inView2 ? 'translate-x-0' : 'translate-x-10'}`}>
                         <span className="font-extrabold text-title-xl text-sky-700 dark:text-blue-300 tracking-tight animate-pulse">Backtest</span> your strategy with full control. Adjust stocks, timeframes, trading frequency, and other parameters—all within the editor.
                     </div>
 
                     {/* Step 3 */}
-                    <div ref={ref3} className={`col-span-2 flex justify-start gap-x-2 transition-transform duration-1000 transform ${inView3 ? 'translate-x-0' : '-translate-x-full'}`}>
+                    <div ref={ref3} className={`col-span-2 flex justify-start gap-x-2 transition-transform duration-1000 transform ${inView3 ? 'translate-x-0' : '-translate-x-10'}`}>
                         <div className="rounded-md bg-sky-700 dark:bg-boxdark text-white px-3 font-bold text-title-xl">3</div>
                         <div className="border-2 border-slate-800 rounded-md w-full">
                             <div className="w-full">
@@ -120,12 +120,12 @@ export default function Workflow() {
                             </div>
                         </div>
                     </div>
-                    <div className={`col-span-1 rounded-lg p-4 dark:text-white duration-700 transform ${inView3 ? 'translate-x-0' : 'translate-x-full'}`}>
+                    <div className={`col-span-1 rounded-lg p-4 dark:text-white duration-700 transform ${inView3 ? 'translate-x-0' : 'translate-x-10'}`}>
                         <span className="font-extrabold text-title-xl text-sky-700 dark:text-blue-300 tracking-tight animate-pulse">Save & Share</span> your strategies and results for future analysis. Resume, refine, and compare strategies anytime.
                     </div>
 
                     {/* Step 4 */}
-                    <div ref={ref4} className={`col-span-2 flex justify-start gap-x-2 transition-transform duration-1000 transform ${inView4 ? 'translate-x-0' : '-translate-x-full'}`}>
+                    <div ref={ref4} className={`col-span-2 flex justify-start gap-x-2 transition-transform duration-1000 transform ${inView4 ? 'translate-x-0' : '-translate-x-10'}`}>
                         <div className="rounded-md bg-sky-700 dark:bg-boxdark text-white px-3 font-bold text-title-xl">4</div>
                         <div className="border-2 border-slate-800 rounded-md w-full">
                             <div className="w-full">
@@ -144,7 +144,7 @@ export default function Workflow() {
                             </div>
                         </div>
                     </div>
-                    <div className={`col-span-1 rounded-lg p-4 dark:text-white duration-700 transform ${inView4 ? 'translate-x-0' : 'translate-x-full'}`}>
+                    <div className={`col-span-1 rounded-lg p-4 dark:text-white duration-700 transform ${inView4 ? 'translate-x-0' : 'translate-x-10'}`}>
                         Found a winning strategy? <span className="font-extrabold text-title-xl text-sky-700 dark:text-blue-300 tracking-tight animate-pulse">Deploy</span> it to the cloud with auto-generated code—whether for further testing or real trading.
                     </div>
 
