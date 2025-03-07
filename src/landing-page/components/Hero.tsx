@@ -1,8 +1,6 @@
 import { DocsUrl } from '../../shared/common';
 import { useInView } from 'react-intersection-observer';
 
-import { useState, useEffect } from 'react';
-
 // general imports
 import result_stock1 from '../../client/static/result_stock1.png';
 
@@ -100,7 +98,7 @@ export default function Hero() {
           </div>
           <div className="m-4 lg:mx-auto">
 
-            <div className="mt-34 w-full grid grid-cols-5 gap-3 -space-y-36">
+            <div className="mt-34 w-full grid grid-cols-5 gap-3 md:-space-y-36">
 
               {/* image 1 */}
               <div ref={ref3} className={`col-span-4 hover:scale-90 duration-1000 z-50 transform ${inView3 ? 'translate-x-0' : 'translate-x-60'}`}>
@@ -130,7 +128,7 @@ export default function Hero() {
                 <img
                   src={light_engine}
                   alt="backtest engine"
-                  className="dark:hidden rounded-md shadow-2xl ring-1 ring-gray-900/30 max-h-100"
+                  className="dark:hidden rounded-md shadow-2xl ring-1 ring-gray-900/30 max-h-30 md:max-h-100"
                 />
                 <img
                   src={dark_engine}
@@ -156,25 +154,3 @@ export default function Hero() {
     </div>
   )
 }
-
-
-const TypewriterEffect = () => {
-  const [text, setText] = useState('');
-  const fullText = 'The rest is up to you';
-  const typingSpeed = 60; // Adjust typing speed here
-
-  useEffect(() => {
-    let i = 0;
-    const interval = setInterval(() => {
-      setText((prev) => prev + fullText[i]);
-      i++;
-      if (i === fullText.length) {
-        clearInterval(interval);
-      }
-    }, typingSpeed);
-
-    return () => clearInterval(interval); // Cleanup interval on component unmount
-  }, []);
-
-  return <span className="italic text-sky-700 dark:text-blue-300">{text}</span>;
-};

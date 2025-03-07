@@ -1,8 +1,8 @@
 export const rsiSma =
     `'''
-Buy Low, Sell High with Trend Confirmation.
+Buy Low, Sell/Short High with Trend Confirmation.
 
-Sell stock when RSI crosses above 70 **and** the stock is below its 50-day SMA.
+Short stock when RSI crosses above 70 **and** the stock is below its 50-day SMA.
 Buy stock when RSI crosses below 30 **and** the stock is above its 50-day SMA.
 This helps reduce false signals in volatile markets.
 '''

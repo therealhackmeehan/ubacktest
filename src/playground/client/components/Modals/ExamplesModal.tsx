@@ -1,5 +1,5 @@
 import { TiDelete } from "react-icons/ti";
-import { examples } from "../../../examples";
+import { examples } from "../../../../examples";
 import ModalLayout from "../../../../client/components/ModalLayout";
 
 interface ExamplesModalProps {

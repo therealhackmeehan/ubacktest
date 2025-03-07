@@ -17,8 +17,6 @@ function StrategyCodeGen({ code }: { code: string | null }) {
     const [symbol, setSymbol] = useState<string>('SPY');
     const [daysBackToTest, setDaysBackToTest] = useState<number>(100);
 
-    const [requirements, setRequirements] = useState<string | null>("pandas\nmath\nalpaca-py\ndatetime\n\n# add your own below");
-
     const editableMiniEditorOpts = {
         ...miniEditorOpts,
         readOnly: false,
@@ -125,13 +123,6 @@ function StrategyCodeGen({ code }: { code: string | null }) {
                     </button>
                 </div>
             </div>
-            <div className="rounded-md p-2 m-2">
-                <div className="flex justify-between">
-                    <div className="text-lg font-bold dark:text-white tracking-tight">What packages are you using?</div>
-                    <div className="text-xs font-mono opacity-40 dark:text-white tracking-tight">(requirements.txt)</div>
-                </div>
-                <textarea className="h-[20vh] max-h-40 resize-y w-full my-1 rounded-md text-xs font-mono dark:bg-black dark:text-white" value={requirements || ''} onChange={(e) => setRequirements(e.target.value)} />
-            </div>
 
             <div className="mt-2 border-2 border-slate-800">
                 <div className="flex text-xs justify-start bg-slate-600">
@@ -146,12 +137,6 @@ function StrategyCodeGen({ code }: { code: string | null }) {
                         onClick={() => copyToClipboard(generatedCode)} // Keep the existing button functionality
                         className="flex px-3 py-1 items-center text-center tracking-tight text-white hover:bg-slate-800 hover:font-bold duration-700"
                     > copy
-                    </button>
-                    <button
-                        type='button'
-                        onClick={() => copyToClipboard(generatedCode)} // Keep the existing button functionality
-                        className="flex px-3 py-1 items-center text-center tracking-tight text-white hover:bg-slate-800 hover:font-bold duration-700"
-                    > download as .zip
                     </button>
                 </div>
                 {generatedCode && <div className="text-red-800 dark:text-white shadow-lg tracking-tight font-bold text-xs p-2 text-center z-9999">

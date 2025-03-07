@@ -3,8 +3,8 @@ export const tema =
 TEMA Crossover Strategy.
 
 Buy when the price crosses above the Triple Exponential Moving Average (TEMA).
-Sell when the price crosses below the TEMA.
-TEMA smooths price data to give clearer signals and reduce lag.
+Short when the price crosses below the TEMA.
+TEMA smoothes price data to give clearer signals and reduce lag.
 '''
 
 import pandas as pd
@@ -22,7 +22,7 @@ def strategy(data):
     # Generate signals based on TEMA crossover
     data['signal'] = 0
     data.loc[data['close'] > data['TEMA'], 'signal'] = 1  # Buy signal (cross above)
-    data.loc[data['close'] < data['TEMA'], 'signal'] = -1  # Sell signal (cross below)
+    data.loc[data['close'] < data['TEMA'], 'signal'] = -1  # Short signal (cross below)
 
     return data
 `

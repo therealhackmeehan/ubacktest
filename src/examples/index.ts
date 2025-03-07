@@ -5,8 +5,6 @@ import { rsi } from "./RSI/rsi";
 import { scaledRsi } from "./RSI/scaledRsi";
 import { adaptiveRsi } from "./RSI/adaptiveRsi";
 import { rsiSma } from "./RSI/rsiSma";
-import { rsiEma } from "./RSI/rsiEma";
-import { rsiBollinger } from "./RSI/rsiBollinger";
 import { rsiVolume } from "./RSI/rsiVolume";
 import { bollinger } from "./bollinger/bollinger";
 import { bollingerBreakout } from "./bollinger/bollingerBreakout";
@@ -25,6 +23,8 @@ import { emaCrossover } from "./ma/emaCrossover";
 import { macd } from "./ma/macd";
 import { tema } from "./ma/tema";
 import { shortAndHold } from "./intro/shortAndHold";
+import { maEnvelope } from "./ma/maEnvelope";
+import { ama } from "./ma/ama";
 
 type Example = {
     name: string;
@@ -36,37 +36,53 @@ type StrategyExamples = {
 };
 
 export const examples: StrategyExamples = {
-    "Long-Term Strategies": [
+    "Intro": [
         {
-            name: "Buy and Hold Strategy",
+            name: "Buy and Hold Strategy", // GOOD!
             script: buyAndHold
         },
         {
-            name: "Short and Hold Strategy",
+            name: "Short and Hold Strategy", // GOOD!
             script: shortAndHold
+        },
+        {
+            name: "Random Strategy", // GOOD!
+            script: random
+        },
+        {
+            name: "(More) Random Strategy", // GOOD!
+            script: moreRandom
         }
     ],
-    "Market Timing Strategies": [
+    "Moving Averages": [
         {
-            name: "Simple Moving Average Crossover",
+            name: "Simple Moving Average Crossover", // GOOD!
             script: smaCrossover
         },
         {
-            name: "Exponential Moving Average Crossover",
+            name: "Exponential Moving Average Crossover", //GOOD!
             script: emaCrossover
         },
         {
-            name: "Triple Exponential Moving Average",
+            name: "Triple Exponential Moving Average", //GOOD!
             script: tema
         },
         {
-            name: "MACD Strategy",
+            name: "MACD Strategy", //GOOD!
             script: macd
+        },
+        {
+            name: "Moving Average Envelope Strategy", //GOOD!
+            script: maEnvelope
+        },
+        {
+            name: "Adaptive Moving Average", //GOOD!
+            script: ama
         }
     ],
     "RSI-Based Strategies": [
         {
-            name: "RSI Indicator Strategy",
+            name: "RSI Indicator Strategy", // WORKING ON THIS ONE.
             script: rsi
         },
         {
@@ -80,14 +96,6 @@ export const examples: StrategyExamples = {
         {
             name: "RSI with Moving Average Confirmation",
             script: rsiSma
-        },
-        {
-            name: "RSI with Exponential Moving Average Confirmation",
-            script: rsiEma
-        },
-        {
-            name: "RSI with Bollinger Bands Confirmation",
-            script: rsiBollinger
         },
         {
             name: "RSI with Volume Confirmation",
@@ -143,14 +151,6 @@ export const examples: StrategyExamples = {
             name: "Stochastic Oscillator Strategy",
             script: stochastic
         },
-        {
-            name: "Random Strategy",
-            script: random
-        },
-        {
-            name: "(More) Random Strategy",
-            script: moreRandom
-        }
     ],
     "Machine Learning Strategy": [
         {

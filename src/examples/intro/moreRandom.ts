@@ -9,7 +9,5 @@ import numpy as np
 
 def strategy(data):
 
-    numberOfDates = len(data)
-    data['signal'] = np.random.uniform(-1, 1, size=numberOfDates)
-
+    data['signal'] = np.random.uniform(-1, 1, size=len(data))
     return data`

@@ -13,6 +13,6 @@ import numpy as np
 
 def strategy(data):
 
-    # use the numpy.random function to choose from the three options.
+    # use the numpy.random function to choose from the three options
     data['signal'] = np.random.choice([-1, 0, 1], size=len(data))
     return data`

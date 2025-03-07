@@ -28,11 +28,14 @@ import time
 from datetime import datetime, timedelta
 from zoneinfo import ZoneInfo
 
+import os
+import functions_framework # Needed to interact with Google Cloud Run
+
 # ---------------------------------
 # Configuration & API Credentials
 # ---------------------------------
-API_KEY = "PKI39DIKVDM0DECMXBQO"
-API_SECRET = "JMVgdC48fBPZeu0x7zUQtGYQ3TSZetN9hII1L7U7"
+API_KEY = os.getenv("API_KEY")
+API_SECRET = os.getenv("API_SECRET")
 
 SYMBOL = "F"  # Stock symbol to trade
 TIMEPOINTS = 100  # Number of historical data points to fetch
@@ -50,25 +53,26 @@ def log(message, level="INFO"):
     """
     Logs messages with a timestamp for debugging and tracking.
     """
-    timestamp = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
-    print(f"[{timestamp}] [{level}] {message}")
+    print(f"FROM uBacktest: [{level}] {message}")
 
 # ---------------------------------
 # Trading Strategy
 # ---------------------------------
 
-def strategy(data: pd.DataFrame) -> pd.DataFrame:
-    """
-    A simple trading strategy that always signals to buy.
-    
-    Parameters:
-    - data (pd.DataFrame): Historical stock data
-    
-    Returns:
-    - pd.DataFrame: Modified data with trading signals
-    """
-    log("Running strategy on historical data.")
-    data["signal"] = 1  # Always buy
+'''
+Simple Moving Average Crossover Strategy
+
+Generates buy/short signals based on two SMAs.
+'''
+
+def strategy(data, short_window=10, long_window=50):
+    data['SMA_short'] = data['close'].rolling(window=short_window).mean()
+    data['SMA_long'] = data['close'].rolling(window=long_window).mean()
+
+    data['signal'] = 0  # Default to hold
+    data.loc[data['SMA_short'] > data['SMA_long'], 'signal'] = 1  # Buy
+    data.loc[data['SMA_short'] < data['SMA_long'], 'signal'] = -1  # Short
+
     return data
 
 # ---------------------------------
@@ -90,7 +94,7 @@ def get_historical_data(symbol: str) -> pd.DataFrame:
 
     request_params = StockBarsRequest(
         symbol_or_symbols=[symbol],
-        timeframe=TimeFrame(amount=3, unit=TRADING_FREQUENCY),
+        timeframe=TimeFrame(amount=1, unit=TRADING_FREQUENCY),
         start=now - timedelta(days=365),
         limit=TIMEPOINTS,
     )
@@ -254,5 +258,13 @@ def trade():
 # Entry Point
 # ---------------------------------
 
+# Register an HTTP function with the Functions Framework
+@functions_framework.http
+def my_http_function(request):
+  trade()
+  return 'OK'
+
+'''
 if __name__ == "__main__":
     trade()
+'''

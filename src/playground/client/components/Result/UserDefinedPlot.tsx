@@ -81,7 +81,7 @@ export default function UserDefinedPlot({ userDefinedData, timestamp }: UserDefi
         },
         plugins: {
             legend: {
-                position: 'bottom' as const,
+                position: 'right' as const,
             },
         },
         scales: {
