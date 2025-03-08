@@ -1,30 +1,30 @@
-import { buyAndHold } from "./intro/buyAndHold";
-import { random } from "./intro/random";
-import { moreRandom } from "./intro/moreRandom";
-import { rsi } from "./RSI/rsi";
-import { scaledRsi } from "./RSI/scaledRsi";
-import { adaptiveRsi } from "./RSI/adaptiveRsi";
-import { rsiSma } from "./RSI/rsiSma";
-import { rsiVolume } from "./RSI/rsiVolume";
-import { bollinger } from "./bollinger/bollinger";
-import { bollingerBreakout } from "./bollinger/bollingerBreakout";
-import { bollingerSma } from "./bollinger/bollingerSma";
-import { adx } from "./other/adx";
-import { atr } from "./other/atr";
-import { donchian } from "./other/donchian";
-import { ichimoku } from "./other/ichimoku";
-import { obv } from "./other/obv";
-import { sar } from "./other/sar";
-import { sarReversal } from "./other/sarReversal";
-import { stochastic } from "./other/stochastic";
-import { randomForest } from "./ml/randomForest";
-import { smaCrossover } from "./ma/smaCrossover";
-import { emaCrossover } from "./ma/emaCrossover";
-import { macd } from "./ma/macd";
-import { tema } from "./ma/tema";
-import { shortAndHold } from "./intro/shortAndHold";
-import { maEnvelope } from "./ma/maEnvelope";
-import { ama } from "./ma/ama";
+import { buyAndHold } from "./typescript/intro/buyAndHold";
+import { random } from "./typescript/intro/random";
+import { moreRandom } from "./typescript/intro/moreRandom";
+import { rsi } from "./typescript/RSI/rsi";
+import { scaledRsi } from "./typescript/RSI/scaledRsi";
+import { adaptiveRsi } from "./typescript/RSI/adaptiveRsi";
+import { rsiSma } from "./typescript/RSI/rsiSma";
+import { rsiVolume } from "./typescript/RSI/rsiVolume";
+import { bollinger } from "./typescript/bollinger/bollinger";
+import { bollingerSma } from "./typescript/bollinger/bollingerSma";
+import { adx } from "./typescript/other/adx";
+import { atr } from "./typescript/other/atr";
+import { ichimoku } from "./typescript/other/ichimoku";
+import { obv } from "./typescript/other/obv";
+import { sar } from "./typescript/other/sar";
+import { sarReversal } from "./typescript/other/sarReversal";
+import { stochastic } from "./typescript/other/stochastic";
+import { smaCrossover } from "./typescript/ma/smaCrossover";
+import { emaCrossover } from "./typescript/ma/emaCrossover";
+import { macd } from "./typescript/ma/macd";
+import { tema } from "./typescript/ma/tema";
+import { shortAndHold } from "./typescript/intro/shortAndHold";
+import { maEnvelope } from "./typescript/ma/maEnvelope";
+import { ama } from "./typescript/ma/ama";
+import { rsiBreakout } from "./typescript/RSI/rsiBreakout";
+import { bollingerBreakout } from "./typescript/bollinger/bollingerBreakout";
+import { randomForest } from "./typescript/ml/randomForest";
 
 type Example = {
     name: string;
@@ -72,7 +72,7 @@ export const examples: StrategyExamples = {
             script: macd
         },
         {
-            name: "Moving Average Envelope Strategy", //GOOD!
+            name: "Moving Average Envelope Strategy", // NOT GOOD......
             script: maEnvelope
         },
         {
@@ -82,80 +82,78 @@ export const examples: StrategyExamples = {
     ],
     "RSI-Based Strategies": [
         {
-            name: "RSI Indicator Strategy", // WORKING ON THIS ONE.
+            name: "RSI Indicator Strategy", //GOOD!
             script: rsi
         },
         {
-            name: 'RSI Indicator Strategy (Scaled)',
+            name: "RSI Breakout Strategy", //GOOD!
+            script: rsiBreakout
+        },
+        {
+            name: 'RSI Indicator Strategy (Scaled)', //HMMM, GOOD, BUT STUPID STRATEGY.
             script: scaledRsi,
         },
         {
-            name: 'RSI Indicator Strategy with Adaptive Bounds',
+            name: 'RSI Indicator Strategy with Adaptive Bounds', //GOOD!
             script: adaptiveRsi,
         },
         {
-            name: "RSI with Moving Average Confirmation",
+            name: "RSI with Moving Average Confirmation", //GOOD!
             script: rsiSma
         },
         {
-            name: "RSI with Volume Confirmation",
+            name: "RSI with Volume Confirmation", //GOOD!
             script: rsiVolume
         }
     ],
-    "Volatility and Range-Based Strategies": [
+    "Bollinger Band Strategies": [
         {
-            name: "Bollinger Bands Strategy",
+            name: "Bollinger Bands Strategy", //GOOD!
             script: bollinger
         },
         {
-            name: "Bollinger Bands Breakout",
+            name: "Bollinger Breakout", // TODO
             script: bollingerBreakout
         },
         {
-            name: "Bollinger Bands with Moving Average Confirmation",
+            name: "Bollinger Bands with Moving Average Confirmation", //GOOD!
             script: bollingerSma
         },
-        {
-            name: "Donchian Channel Strategy",
-            script: donchian
-        }
     ],
-    "Momentum and Trend Strategies": [
+    "Some Other Strategies": [
         {
-            name: "ADX Indicator Strategy",
+            name: "ADX Indicator Strategy", // TODO
             script: adx
         },
         {
-            name: "Average True Range Strategy",
+            name: "Average True Range Strategy", // TODO
             script: atr
         },
         {
-            name: "Ichimoku Cloud Strategy",
+            name: "Ichimoku Cloud Strategy", // TODO
             script: ichimoku
         },
         {
-            name: "On-Balance Volume Strategy",
+            name: "On-Balance Volume Strategy", // TODO
             script: obv
         },
         {
-            name: "Parabolic SAR Strategy",
+            name: "Parabolic SAR Strategy", // TODO
             script: sar
         },
         {
-            name: "Parabolic SAR Trend Reversal",
+            name: "Parabolic SAR Trend Reversal", // TODO
             script: sarReversal
-        }
-    ],
-    "Oscillator Strategies": [
+        },
         {
-            name: "Stochastic Oscillator Strategy",
+            name: "Stochastic Oscillator Strategy", // TODO
             script: stochastic
         },
     ],
-    "Machine Learning Strategy": [
+    "Machine Learning": [
         {
-            name: "Random Forest Classification Strategy",
+            name: "Random Forest Classifier", // TODO
             script: randomForest
-        }
+        },
     ]
 };

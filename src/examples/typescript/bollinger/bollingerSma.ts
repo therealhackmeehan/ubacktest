@@ -25,12 +25,15 @@ def strategy(data):
     data['Upper_Band'], data['Lower_Band'] = calculate_bollinger_bands(data['close'], window=20)
     data['SMA_50'] = calculate_sma(data['close'], window=50)
 
-    # Generate signals with trend confirmation
-    data['signal'] = data.apply(
-        lambda row: 1 if row['close'] <= row['Lower_Band'] and row['close'] > row['SMA_50'] 
-        else -1 if row['close'] >= row['Upper_Band'] and row['close'] < row['SMA_50'] 
-        else 0, axis=1
-    )
+    # Initialize 'signal' column
+    data['signal'] = np.nan  # Start with NaN
+
+    # Assign signals where RSI crosses threshold
+    data.loc[data['close'] < data['Lower_Band'] and data['close'] < data['SMA_50'], 'signal'] = 1
+    data.loc[data['close'] > data['Upper_Band'] and data['close' > data['SMA_50'], 'signal'] = -1
+
+    # Forward fill to propagate positions
+    data['signal'] = data['signal'].ffill().fillna(0)
 
     return data
 `

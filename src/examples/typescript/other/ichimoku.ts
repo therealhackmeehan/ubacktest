@@ -22,9 +22,19 @@ def strategy(data):
     data = calculate_ichimoku(data)
 
     # Generate signals based on Ichimoku Cloud breakout
+    #data['signal'] = 0
+    #data.loc[(data['Conversion_Line'] > data['Base_Line']) & (data['close'] > data['Conversion_Line']), 'signal'] = 1  # Buy signal
+    #data.loc[(data['Conversion_Line'] < data['Base_Line']) & (data['close'] < data['Base_Line']), 'signal'] = -1  # Sell signal
+
+    # Initialize signal column
     data['signal'] = 0
-    data.loc[(data['Conversion_Line'] > data['Base_Line']) & (data['close'] > data['Conversion_Line']), 'signal'] = 1  # Buy signal
-    data.loc[(data['Conversion_Line'] < data['Base_Line']) & (data['close'] < data['Base_Line']), 'signal'] = -1  # Sell signal
+
+    # hold the current position until the next crossing occurs.
+    for i in range(1, len(data)):
+        if (data['Conversion_Line'] > data['Base_Line']) and (data['close'] > data['Conversion_Line']):
+            data.loc[i:, 'signal'] = 1
+        elif (data['Conversion_Line'] < data['Base_Line']) and (data['close'] < data['Base_Line']):
+            data.loc[i:, 'signal'] = -1
 
     return data
 `

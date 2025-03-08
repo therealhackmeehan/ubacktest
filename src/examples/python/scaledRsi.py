@@ -1,5 +1,4 @@
-export const scaledRsi =
-    `'''
+'''
 Scaled Buy Low, Sell High.
 
 Buy/Sell proportional to how low or high the RSI is.
@@ -14,8 +13,8 @@ def calculate_rsi(series, window):
     gain = delta.where(delta > 0, 0)
     loss = -delta.where(delta < 0, 0)
 
-    avg_gain = gain.rolling(window=window, min_periods=1).mean()
-    avg_loss = loss.rolling(window=window, min_periods=1).mean()
+    avg_gain = gain.rolling(window=window).mean()
+    avg_loss = loss.rolling(window=window).mean()
 
     rs = avg_gain / avg_loss
     rsi = 100 - (100 / (1 + rs))
@@ -26,7 +25,6 @@ def strategy(data):
     data['RSI'] = calculate_rsi(data['close'], window=14)
 
     # Scaled signal: -1 to 1 range, based on RSI deviation from 50
-    data['signal'] = (50 - data['RSI']) / 50  # Closer to -1 is Strong Sell, Closer to 1 is Strong Buy
+    data['signal'] = (50 - data['RSI']) / 50
 
     return data
-`
