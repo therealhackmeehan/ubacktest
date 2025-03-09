@@ -1,9 +1,9 @@
 function validateFormInputs({ formInputs }: any) {
 
-    const { symbol, startDate, endDate, intval, timeOfDay, useWarmupDate, warmupDate } = formInputs;
+    const { symbol, startDate, endDate, intval, timeOfDay, useWarmupDate, warmupDate, costPerTrade } = formInputs;
 
     // Check for missing inputs
-    if (!startDate || !endDate || !symbol || !intval ) {
+    if (!startDate || !endDate || !symbol || !intval) {
         throw new Error("Missing input entries. Please provide 'symbol', 'start date', 'end date', and 'trading frequency'");
     }
 
@@ -17,9 +17,9 @@ function validateFormInputs({ formInputs }: any) {
     }
 
     // Check if symbol is alphanumeric and between 1 and 5 characters (typical for stock symbols)
-    const symbolRegex = /^[A-Za-z0-9]{1,5}$/;
+    const symbolRegex = /^[A-Za-z0-9^]{1,6}$/;
     if (!symbolRegex.test(symbol)) {
-        throw new Error("Symbol must be alphanumeric and between 1 to 5 characters.");
+        throw new Error("Symbol must be alphanumeric (or ^ for indices) and between 1 to 6 characters.");
     }
 
     // Define allowed interval values
@@ -49,8 +49,18 @@ function validateFormInputs({ formInputs }: any) {
 
     // Check if startDate and endDate are not in the future
     if (new Date(startDate) > today || new Date(endDate) > today) {
-            throw new Error("Dates cannot be in the future.");
-        }
+        throw new Error("Dates cannot be in the future.");
+    }
+
+    if (isNaN(Number(costPerTrade))) {
+        throw new Error("Trading Cost must be a number.")
+    }
+
+    if (costPerTrade > 10 || costPerTrade < 0) {
+        throw new Error("Trading Cost must fall between 0 and 10%.")
+    }
+
+
 }
 
 export default validateFormInputs;

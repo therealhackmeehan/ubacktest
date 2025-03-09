@@ -23,7 +23,6 @@ import { shortAndHold } from "./typescript/intro/shortAndHold";
 import { maEnvelope } from "./typescript/ma/maEnvelope";
 import { ama } from "./typescript/ma/ama";
 import { rsiBreakout } from "./typescript/RSI/rsiBreakout";
-import { bollingerBreakout } from "./typescript/bollinger/bollingerBreakout";
 import { randomForest } from "./typescript/ml/randomForest";
 
 type Example = {
@@ -38,121 +37,117 @@ type StrategyExamples = {
 export const examples: StrategyExamples = {
     "Intro": [
         {
-            name: "Buy and Hold Strategy", // GOOD!
+            name: "Buy and Hold Strategy", // GOOD
             script: buyAndHold
         },
         {
-            name: "Short and Hold Strategy", // GOOD!
+            name: "Short and Hold Strategy", // GOOD
             script: shortAndHold
         },
         {
-            name: "Random Strategy", // GOOD!
+            name: "Random Strategy", // GOOD
             script: random
         },
         {
-            name: "(More) Random Strategy", // GOOD!
+            name: "(More) Random Strategy", // GOOD
             script: moreRandom
         }
     ],
     "Moving Averages": [
         {
-            name: "Simple Moving Average Crossover", // GOOD!
+            name: "Simple Moving Average Crossover", // GOOD
             script: smaCrossover
         },
         {
-            name: "Exponential Moving Average Crossover", //GOOD!
+            name: "Exponential Moving Average Crossover", // GOOD
             script: emaCrossover
         },
         {
-            name: "Triple Exponential Moving Average", //GOOD!
+            name: "Triple Exponential Moving Average", // GOOD
             script: tema
         },
         {
-            name: "MACD Strategy", //GOOD!
+            name: "MACD Strategy", // GOOD
             script: macd
         },
         {
-            name: "Moving Average Envelope Strategy", // NOT GOOD......
+            name: "Moving Average Envelope Strategy", // GOOD
             script: maEnvelope
         },
         {
-            name: "Adaptive Moving Average", //GOOD!
+            name: "Adaptive Moving Average", // GOOD
             script: ama
         }
     ],
     "RSI-Based Strategies": [
         {
-            name: "RSI Indicator Strategy", //GOOD!
+            name: "RSI Indicator Strategy",  // GOOD
             script: rsi
         },
         {
-            name: "RSI Breakout Strategy", //GOOD!
+            name: "RSI Breakout Strategy", // GOOD
             script: rsiBreakout
         },
         {
-            name: 'RSI Indicator Strategy (Scaled)', //HMMM, GOOD, BUT STUPID STRATEGY.
+            name: 'RSI Indicator Strategy (Scaled)', // GOOD
             script: scaledRsi,
         },
         {
-            name: 'RSI Indicator Strategy with Adaptive Bounds', //GOOD!
+            name: 'RSI Indicator Strategy with Adaptive Bounds', // GOOD
             script: adaptiveRsi,
         },
         {
-            name: "RSI with Moving Average Confirmation", //GOOD!
+            name: "RSI with Moving Average Confirmation", // GOOD
             script: rsiSma
         },
         {
-            name: "RSI with Volume Confirmation", //GOOD!
+            name: "RSI with Volume Confirmation", // GOOD
             script: rsiVolume
         }
     ],
     "Bollinger Band Strategies": [
         {
-            name: "Bollinger Bands Strategy", //GOOD!
+            name: "Bollinger Bands Strategy",
             script: bollinger
         },
         {
-            name: "Bollinger Breakout", // TODO
-            script: bollingerBreakout
-        },
-        {
-            name: "Bollinger Bands with Moving Average Confirmation", //GOOD!
+            name: "Bollinger Bands with Moving Average Confirmation",
             script: bollingerSma
         },
     ],
     "Some Other Strategies": [
         {
-            name: "ADX Indicator Strategy", // TODO
+            name: "ADX Indicator Strategy",
             script: adx
         },
         {
-            name: "Average True Range Strategy", // TODO
+            name: "Average True Range Strategy",
             script: atr
         },
         {
-            name: "Ichimoku Cloud Strategy", // TODO
+            name: "Ichimoku Cloud Strategy",
             script: ichimoku
         },
         {
-            name: "On-Balance Volume Strategy", // TODO
+            name: "On-Balance Volume Strategy",
             script: obv
         },
         {
-            name: "Parabolic SAR Strategy", // TODO
+            name: "Parabolic SAR Strategy",
             script: sar
         },
         {
-            name: "Parabolic SAR Trend Reversal", // TODO
+            name: "Parabolic SAR Trend Reversal", 
             script: sarReversal
         },
         {
-            name: "Stochastic Oscillator Strategy", // TODO
+            name: "Stochastic Oscillator Strategy",
             script: stochastic
         },
     ],
     "Machine Learning": [
         {
-            name: "Random Forest Classifier", // TODO
+            name: "Random Forest Classifier",
             script: randomForest
         },
     ]

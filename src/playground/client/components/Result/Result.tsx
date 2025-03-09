@@ -195,26 +195,26 @@ function Result({ selectedStrategy, formInputs, strategyResult, abilityToSaveNew
                 <div className="m-8">
                     <div className="flex justify-between">
                         <div className="m-1 text-xl tracking-tight text-slate-400 hover:text-slate-800 font-bold">Hypothetical Growth of $1</div>
-                        <div className="font-extrabold text-xs text-sky-700/50">scroll to zoom</div>
+                        <div className="font-extrabold text-xs text-sky-700/50">scroll to zoom. click to reset.</div>
                     </div>
                     <CandlePlot strategyResult={strategyResult} costPerTrade={formInputs.costPerTrade} minDate={minDate} symbol={formInputs.symbol} />
                     {(strategyResult.userDefinedData && Object.keys(strategyResult.userDefinedData).length > 0) && (
-                        <div className="my-1">
+                        <div className="mt-1 mb-4 bg-slate-50 rounded-lg">
                             {userDefinedPlotOpen && (
                                 <div className="mt-2">
                                     <UserDefinedPlot
-                                        userDefinedData={strategyResult.userDefinedData}
+                                        strategyResult={strategyResult}
                                         timestamp={strategyResult.timestamp}
                                     />
                                 </div>
                             )}
                             <button
-                                className="w-full text-xs tracking-tight font-bold text-sky-800 hover:text-red-300 text-center animate-pulse"
+                                className="w-full tracking-tight font-bold text-sky-800 hover:text-red-300 text-center animate-pulse my-1 py-1"
                                 onClick={() => setUserDefinedPlotOpen(!userDefinedPlotOpen)}
                             >
                                 {userDefinedPlotOpen
                                     ? 'Show less'
-                                    : 'We found other columns in your dataframe. Click to view.'}
+                                    : 'We found other columns in your DataFrame. Click to view.'}
                             </button>
                         </div>
                     )}

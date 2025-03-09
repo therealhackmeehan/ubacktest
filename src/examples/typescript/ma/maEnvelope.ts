@@ -9,6 +9,7 @@ This strategy uses a percentage-based envelope around a moving average.
 '''
 
 import pandas as pd
+import numpy as np
 
 def calculate_moving_average_envelope(series, window=20, envelope_pct=2.0):
     sma = series.rolling(window=window).mean()

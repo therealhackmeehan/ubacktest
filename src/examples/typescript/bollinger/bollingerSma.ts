@@ -8,6 +8,7 @@ This ensures we trade in the direction of the larger trend.
 '''
 
 import pandas as pd
+import numpy as np
 
 def calculate_bollinger_bands(series, window=20, num_std=2):
     sma = series.rolling(window=window).mean()
@@ -28,9 +29,18 @@ def strategy(data):
     # Initialize 'signal' column
     data['signal'] = np.nan  # Start with NaN
 
-    # Assign signals where RSI crosses threshold
-    data.loc[data['close'] < data['Lower_Band'] and data['close'] < data['SMA_50'], 'signal'] = 1
-    data.loc[data['close'] > data['Upper_Band'] and data['close' > data['SMA_50'], 'signal'] = -1
+    # Buy signal: Price crosses below the upper band but remains under SMA_50
+    data.loc[
+        (data['close'] > data['Upper_Band'].shift(1)) & (data['close'] < data['Upper_Band']) &
+        (data['close'] < data['SMA_50']),
+        'signal'
+    ] = 1
+
+    # Sell signal: Price crosses above the lower band but remains above SMA_50
+    data.loc[(data['close'] < data['Lower_Band'].shift(1)) & (data['close'] < data['Lower_Band']) &
+        (data['close'] > data['SMA_50']),
+        'signal'
+    ] = -1
 
     # Forward fill to propagate positions
     data['signal'] = data['signal'].ffill().fillna(0)

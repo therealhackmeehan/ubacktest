@@ -22,7 +22,7 @@ function ResultHeader({ result, setResultPanelOpen }: ResultHeaderProps) {
                 </div>
                 :
                 // for really large strategies, data is not stored but the api is called if clicked on.
-                <div className='text-xs tracking-tight p-1 font-extralight lowercase'>Open to view plot.</div>
+                <div className='text-xs tracking-tight p-1 font-extralight lowercase dark:text-white'>Open to view plot.</div>
             }
         </div>
     )

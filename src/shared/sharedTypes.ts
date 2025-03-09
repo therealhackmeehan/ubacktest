@@ -21,6 +21,9 @@ export interface StrategyResultProps {
     cash: number[];
     equity: number[];
 
+    cashWithCosts: number[]
+    equityWithCosts: number[]
+
     userDefinedData: UserDefinedData;
 }
 

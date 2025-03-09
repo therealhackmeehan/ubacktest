@@ -1,5 +1,5 @@
 import { Chart } from 'react-chartjs-2';
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import 'chartjs-adapter-date-fns';
 import zoomPlugin from 'chartjs-plugin-zoom';
 import { StrategyResultProps } from '../../../../shared/sharedTypes';
@@ -42,6 +42,20 @@ interface LinePlotProps {
 function CandlePlot({ strategyResult, costPerTrade, minDate, symbol }: LinePlotProps) {
 
     const [chartData, setChartData] = useState<any | null>(null);
+    const chartRef = useRef<ChartJS | null>(null);
+
+    useEffect(() => {
+        const chart = chartRef.current;
+
+        if (chart) {
+            console.log('ChartJS', chart);
+        }
+    }, []);
+
+    const resetZ = () => {
+        const chart = chartRef.current;
+        if (chart) chart.resetZoom();
+    }
 
     useEffect(() => {
 
@@ -213,7 +227,7 @@ function CandlePlot({ strategyResult, costPerTrade, minDate, symbol }: LinePlotP
 
     return (
         <ChartWrapper height={65}>
-            <Chart type="candlestick" data={chartData} options={options} />
+            <Chart ref={chartRef} type="candlestick" data={chartData} options={options} onClick={resetZ} />
         </ChartWrapper>
     )
 }

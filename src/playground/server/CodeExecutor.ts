@@ -8,7 +8,7 @@ import { HttpError } from "wasp/server";
     Inserts user script into the body of a python script and executes
     that script, after given access to the stock data.
 
-    simply returns the stdout and stderr of our code execution.
+    simply returns the stdout and stderr of the execution.
 
     (c) 2025 Jack Meehan. uBacktest.
 */

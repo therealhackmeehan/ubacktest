@@ -27,12 +27,20 @@ class StrategyPipeline {
         low: [],
         volume: [],
         sp: [],
+
         portfolio: [],
         portfolioWithCosts: [],
+
         cash: [],
         equity: [],
+
         signal: [],
+
+        equityWithCosts: [],
+        cashWithCosts: [],
+
         returns: [],
+
         userDefinedData: {},
     };
 
@@ -125,12 +133,17 @@ class StrategyPipeline {
 
     private calculatePortfolio() {
 
+        const tradingCost = this.formInputs.costPerTrade/100;
+
         this.strategyResult.portfolio[0] = 1;
-        this.strategyResult.portfolioWithCosts[0] = 1;
+        this.strategyResult.portfolioWithCosts[0] = 1 - Math.abs(tradingCost * this.strategyResult.signal[0]);
         this.strategyResult.returns[0] = 0;
 
         this.strategyResult.equity[0] = this.strategyResult.signal[0];
         this.strategyResult.cash[0] = 1 - Math.abs(this.strategyResult.equity[0]);
+
+        this.strategyResult.equityWithCosts[0] = this.strategyResult.portfolioWithCosts[0] * this.strategyResult.signal[0];
+        this.strategyResult.cashWithCosts[0] = this.strategyResult.portfolioWithCosts[0] - Math.abs(this.strategyResult.equityWithCosts[0])
 
         const timeOfDayKey: 'open' | 'close' | 'high' | 'low' = this.formInputs.timeOfDay;
         for (let i = 1; i < this.strategyResult.timestamp.length; i++) {
@@ -146,42 +159,33 @@ class StrategyPipeline {
             }
 
             this.strategyResult.equity[i] = this.strategyResult.equity[i - 1] * (1 + stockRet);
+            this.strategyResult.equityWithCosts[i] = this.strategyResult.equityWithCosts[i - 1] * (1 + stockRet);
 
             // calculate portfolio value
             const currPort = Math.abs(this.strategyResult.equity[i]) + this.strategyResult.cash[i - 1];
             this.strategyResult.portfolio[i] = currPort;
+            this.strategyResult.portfolioWithCosts[i] = Math.abs(this.strategyResult.equityWithCosts[i]) + this.strategyResult.cashWithCosts[i - 1];
 
             // calculate timepoint return
             const prevPort = this.strategyResult.portfolio[i - 1];
             this.strategyResult.returns[i] = (currPort - prevPort) / prevPort;
 
-            // keep values real.
-            if (this.strategyResult.portfolio[i] < 0) {
-                this.strategyResult.portfolio[i] = 0;
-            }
-
-            // append strategy costs 
-            this.strategyResult.portfolioWithCosts[i] = this.strategyResult.portfolio[i]; // do this!!
-
-            // once again, keep values real.
-            if (this.strategyResult.portfolioWithCosts[i] < 0) {
-                this.strategyResult.portfolioWithCosts[i] = 0;
-            }
-
+            // determine current signal, should new trade be placed?
             const currSignal = this.strategyResult.signal[i];
             const prevSignal = this.strategyResult.signal[i - 1];
 
             // if we did undergo a trade, rebalance our equity
             if (currSignal != prevSignal) {
-                const newEquity = this.strategyResult.portfolio[i] * currSignal;
-                const tradeValue = Math.abs(newEquity - this.strategyResult.equity[i]);
-                this.strategyResult.portfolioWithCosts[i] = this.strategyResult.portfolioWithCosts[i] - (tradeValue * this.formInputs.costPerTrade);
+                this.strategyResult.equity[i] = this.strategyResult.portfolio[i] * currSignal;
 
-                this.strategyResult.equity[i] = newEquity;
+                const tradeValue = Math.abs(this.strategyResult.portfolioWithCosts[i] * (currSignal - prevSignal));
+                this.strategyResult.portfolioWithCosts[i] = this.strategyResult.portfolioWithCosts[i] - (tradeValue * tradingCost);
+                this.strategyResult.equityWithCosts[i] = this.strategyResult.portfolioWithCosts[i] * currSignal;
             }
 
             // finally calculate remaining cash (after potential rebalancing)
             this.strategyResult.cash[i] = Math.max(0, this.strategyResult.portfolio[i] - Math.abs(this.strategyResult.equity[i]));
+            this.strategyResult.cashWithCosts[i] = Math.max(0, this.strategyResult.portfolioWithCosts[i] - Math.abs(this.strategyResult.equityWithCosts[i]));
 
         }
 
@@ -216,6 +220,7 @@ class StrategyPipeline {
                 value => value !== null && value !== undefined && !Number.isNaN(value)
             );
         });
+
         if (!allDataIsValid) {
             throw new HttpError(500, 'Your portfolio contains invalid data (null, undefined, or NaN).');
         }

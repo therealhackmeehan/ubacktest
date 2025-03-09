@@ -44,6 +44,7 @@ function CashEquity({ strategyResult }: { strategyResult: StrategyResultProps })
                     backgroundColor: 'rgba(255, 69, 0, 1)',
                     pointRadius: 0,
                     borderWidth: 1,
+                    stepped: true,
                 },
                 {
                     label: 'Equity Value',
@@ -55,6 +56,7 @@ function CashEquity({ strategyResult }: { strategyResult: StrategyResultProps })
                     backgroundColor: 'rgba(34, 139, 34, 1)',
                     pointRadius: 0,
                     borderWidth: 1,
+                    stepped: true,
                 },
                 {
                     label: 'abs(Equity Value)',
@@ -66,6 +68,8 @@ function CashEquity({ strategyResult }: { strategyResult: StrategyResultProps })
                     backgroundColor: 'rgba(0, 128, 255, 1)',
                     pointRadius: 0,
                     borderWidth: 1,
+                    stepped: true,
+                    hidden: true,
                 },
             ],
         };
