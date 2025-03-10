@@ -112,10 +112,10 @@ export default function calculateStats(strategyResult: StrategyResultProps): Sta
     const riskFreeRate = 0;
 
     const sharpeRatio = (averageReturn - riskFreeRate) / stdDev;
-    const roundedSharpeRatio = sharpeRatio !== null ? sharpeRatio.toFixed(3) : null;
+    const roundedSharpeRatio = sharpeRatio !== null && !isNaN(sharpeRatio) ? sharpeRatio.toFixed(3) : null;
 
     const sortinoRatio = (averageReturn - riskFreeRate) / downsideDev;
-    const roundedSortinoRatio = sortinoRatio !== null ? sortinoRatio.toFixed(3) : null;
+    const roundedSortinoRatio = sortinoRatio !== null && !isNaN(sortinoRatio) ? sortinoRatio.toFixed(3) : null;
 
     return {
         length: length,
@@ -124,7 +124,7 @@ export default function calculateStats(strategyResult: StrategyResultProps): Sta
         annualizedPl: formattedAnnualizedPL,
         numTrades: numberOfTrades,
         numProfTrades: numberOfProfitableTrades,
-        percTradesProfit: ((numberOfProfitableTrades / numberOfTrades) * 100).toFixed(2) + '%',
+        percTradesProfit: numberOfTrades !== 0 ? ((numberOfProfitableTrades / numberOfTrades) * 100).toFixed(2) + '%' : null,
         sharpeRatio: roundedSharpeRatio,
         sortinoRatio: roundedSortinoRatio,
         maxDrawdown: formattedMaxDrawdown,

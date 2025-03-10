@@ -44,16 +44,16 @@ class CodeExecutor {
 
     private static async sendToJudge_simple(mainFileContent: string) {
 
-        const url = 'https://judge0-extra-ce.p.rapidapi.com/submissions?base64_encoded=false&wait=true&fields=*';
+        const url = 'https://judge0-extra-ce.p.sulu.sh/submissions?base64_encoded=false&wait=true';
         const options = {
             method: 'POST',
             headers: {
-                'x-rapidapi-key': process.env.JUDGE_APIKEY,
-                'x-rapidapi-host': 'judge0-extra-ce.p.rapidapi.com',
-                'Content-Type': 'application/json'
+                'Content-Type': 'application/json',
+                Accept: 'application/json',
+                Authorization: `Bearer ${process.env.JUDGE_APIKEY_SULU}`
             },
             body: JSON.stringify({
-                language_id: 25, // python for ML (base image)
+                language_id: 32, // python for ML (base image)
                 source_code: mainFileContent
             })
         };
@@ -67,7 +67,7 @@ class CodeExecutor {
             const errorMsg = fullResult?.error; // if error available, append to errMsg
             throw new HttpError(503, `In Executing Code, Unable to make that request: ${errorMsg || response.statusText}`);
         }
-        
+
         let { stdout, stderr } = fullResult;
 
         if (!stdout) stdout = '';
@@ -85,10 +85,14 @@ class CodeExecutor {
 
         // python string (where the magic happens)
         const m =
-`${code}
+            `${code}
 
 import json
 import pandas as pd
+import sys
+import os
+
+original_stdout = sys.stdout
 
 jsonCodeUnformatted = '${JSON.stringify(toEmbedInMain)}'
 jsonCodeFormatted = json.loads(jsonCodeUnformatted)
@@ -100,6 +104,8 @@ if initHeight <= 3:
     raise Exception("Sorry, we detected less than 3 data points and had trouble applying your strategy.")
 
 df = strategy(df_init)
+
+sys.stdout = open(os.devnull, 'w')
 
 if not isinstance(df, pd.DataFrame):
     raise Exception("You must return a dataframe from your strategy.")
@@ -124,9 +130,7 @@ if not df.index.is_unique:
 if df.shape[0] != initHeight:
     raise Exception("The height of the dataframe has changed upon applying your strategy.")
 
-df = df[df['timestamp'] >= ${dateToCompare}]
-
-df['signal'] = df['signal'].fillna(method='ffill').fillna(0)
+df['signal'] = df['signal'].ffill().fillna(0)
 
 warning = ""
 warningMsg = "Potential feedforward bias detected. A past signal changed due to future data. This is expected with a random strategy but otherwise proceed with caution or reevaluate your strategy."
@@ -138,7 +142,7 @@ thirdToLastSignal = df['signal'].iloc[-3]
 # Remove last row and reapply strategy
 df_trimmed1 = df.iloc[:-1].copy()
 df_trimmed1 = strategy(df_trimmed1)
-df_trimmed1['signal'] = df_trimmed1['signal'].fillna(method='ffill').fillna(0)
+df_trimmed1['signal'] = df_trimmed1['signal'].ffill().fillna(0)
 
 if df_trimmed1['signal'].iloc[-1] != secondToLastSignal or df_trimmed1['signal'].iloc[-2] != thirdToLastSignal:
     warning = warningMsg
@@ -146,10 +150,12 @@ if df_trimmed1['signal'].iloc[-1] != secondToLastSignal or df_trimmed1['signal']
 # Remove last two rows and reapply strategy
 df_trimmed2 = df.iloc[:-2].copy()
 df_trimmed2 = strategy(df_trimmed2)
-df_trimmed2['signal'] = df_trimmed2['signal'].fillna(method='ffill').fillna(0)
+df_trimmed2['signal'] = df_trimmed2['signal'].ffill().fillna(0)
 
 if df_trimmed2['signal'].iloc[-1] != thirdToLastSignal:
     warning = warningMsg
+
+df = df[df['timestamp'] >= ${dateToCompare}]
 
 signalToReturn = df[['signal']].round(3).to_dict('list')
 
@@ -160,8 +166,9 @@ middleOutput = {
     "data": df.loc[:, ~df.columns.isin(colsToExclude)].fillna(0).round(4).to_dict('list'),
     "warning": warning
 }
-
 output = "${uniqueKey}START${uniqueKey}" + json.dumps(middleOutput) + "${uniqueKey}END${uniqueKey}"
+
+sys.stdout = original_stdout
 print(output)`;
 
         return m;

@@ -1,7 +1,6 @@
 import { FaCaretDown, FaCaretUp } from "react-icons/fa";
 import React, { useState, useRef, useEffect } from "react";
 import { FormInputProps } from "../../../../shared/sharedTypes";
-import stocks from './stocks';
 import { IoMdReturnRight } from "react-icons/io";
 import { CgArrowUp } from "react-icons/cg";
 import { GiInvertedDice5 } from "react-icons/gi";
@@ -9,6 +8,7 @@ import { BiReset } from "react-icons/bi";
 import { initFormInputs } from "../StrategyEditor";
 import { addMonths } from "../StrategyEditor";
 import { VscGrabber } from "react-icons/vsc";
+import stocks from "./stocksInSP";
 
 interface InputFormSubcomponentProps {
     formInputs: FormInputProps;
@@ -16,14 +16,24 @@ interface InputFormSubcomponentProps {
     run: (value: any) => Promise<void>;
 }
 
+export interface Stock {
+    Symbol: string;
+    Security: string;
+    "GICS Sector": string;
+    "GICS Sub-Industry": string;
+    "Headquarters Location": string;
+    "Date added": string;
+    CIK: number;
+    Founded: number | string;
+}
+
 const LOCAL_STORAGE_KEY = "inputFormHeight";
 
 function InputForm({ formInputs, setFormInputs, run }: InputFormSubcomponentProps) {
 
     const [expanded, setExpanded] = useState<boolean>(true);
-
     const [displayAdvancedOptions, setDisplayAdvancedOptions] = useState<boolean>(false);
-    const [matches, setMatches] = useState<{ "symbol": string; "name": string }[]>([]);
+    const [matches, setMatches] = useState<Stock[]>([]);
     const [useDatetimeLocal, setUseDatetimeLocal] = useState<boolean>(false);
 
     const formatDate = (date: string | Date, includeTime: boolean): string => {
@@ -44,9 +54,7 @@ function InputForm({ formInputs, setFormInputs, run }: InputFormSubcomponentProp
 
             if (name === "intval") {
                 const currUseDatetime = ["1m", "2m"].includes(value);
-
                 if (currUseDatetime !== previousUseDatetime) {
-                    // Convert all date-related fields when switching formats
                     updatedInputs.startDate = formatDate(prevInputs.startDate, currUseDatetime);
                     updatedInputs.endDate = formatDate(prevInputs.endDate, currUseDatetime);
                     updatedInputs.warmupDate = formatDate(prevInputs.warmupDate, currUseDatetime);
@@ -60,10 +68,10 @@ function InputForm({ formInputs, setFormInputs, run }: InputFormSubcomponentProp
         // Symbol filtering logic (remains unchanged)
         if (name === "symbol") {
             if (value.trim()) {
-                const filteredMatches = stocks
-                    .filter((stock) =>
-                        stock["symbol"].toLowerCase().startsWith(value.toLowerCase()) ||
-                        stock["name"].toLowerCase().startsWith(value.toLowerCase())
+                const filteredMatches: Stock[] = stocks
+                    .filter((stock: Stock) =>
+                        stock["Symbol"].toLowerCase().startsWith(value.toLowerCase()) ||
+                        stock["Security"].toLowerCase().startsWith(value.toLowerCase())
                     )
                     .slice(0, 4);
                 setMatches(filteredMatches);
@@ -72,7 +80,6 @@ function InputForm({ formInputs, setFormInputs, run }: InputFormSubcomponentProp
             }
         }
     };
-
 
     const handleSelect = (symbol: string) => {
         // Update form inputs with selected symbol and clear matches
@@ -108,7 +115,7 @@ function InputForm({ formInputs, setFormInputs, run }: InputFormSubcomponentProp
 
         setFormInputs({
             ...formInputs,
-            symbol: randomStock["symbol"],
+            symbol: randomStock["Symbol"],
             startDate: newStartDate,
             endDate: newEndDate,
             warmupDate: newWarmupDate,
@@ -230,13 +237,13 @@ function InputForm({ formInputs, setFormInputs, run }: InputFormSubcomponentProp
 
                     {matches.length > 0 && (
                         <ul className="text-xs z-10 bg-white border border-gray-300 rounded shadow-lg max-h-60 overflow-y-auto text-black">
-                            {matches.map((match) => (
+                            {matches.map((match: Stock) => (
                                 <li
-                                    key={match["symbol"]}
-                                    onClick={() => handleSelect(match["symbol"])}
+                                    key={match["Symbol"]}
+                                    onClick={() => handleSelect(match["Symbol"])}
                                     className="p-2 hover:bg-gray-200 cursor-pointer"
                                 >
-                                    {match["symbol"]} - <span className="font-extralight">{match["name"]}</span>
+                                    {match["Symbol"]} - <span className="font-extralight">{match["Security"]}</span>
                                 </li>
                             ))}
                         </ul>

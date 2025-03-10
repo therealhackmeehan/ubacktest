@@ -1,10 +1,9 @@
 '''
-Bollinger Bands Breakout Strategy.
+Bollinger Bands Strategy.
 
-Buy stock when the price breaks above the upper Bollinger Band.
-Sell stock when the price breaks below the lower Bollinger Band.
-This strategy assumes trend continuation.
-
+Sell stock when the price touches or rises above the upper Bollinger Band.
+Buy stock when the price touches or drops below the lower Bollinger Band.
+This strategy assumes mean reversion.
 '''
 
 import pandas as pd
@@ -25,11 +24,9 @@ def strategy(data):
     # Initialize 'signal' column
     data['signal'] = np.nan  # Start with NaN
 
-    # Buy when price breaks above upper band
-    data.loc[(data['close'].shift(1) <= data['Upper_Band'].shift(1)) & (data['close'] > data['Upper_Band']), 'signal'] = 1
-
-    # Sell when price breaks below lower band
-    data.loc[(data['close'].shift(1) >= data['Lower_Band'].shift(1)) & (data['close'] < data['Lower_Band']), 'signal'] = -1
+    # Assign signals where close notches back across threshold
+    data.loc[(data['close'].shift(1) < data['Lower_Band'].shift(1)) & (data['close'] > data['Lower_Band']), 'signal'] = 1
+    data.loc[(data['close'].shift(1) > data['Upper_Band'].shift(1)) & (data['close'] < data['Upper_Band']), 'signal'] = -1
 
     # Forward fill to propagate positions
     data['signal'] = data['signal'].ffill().fillna(0)

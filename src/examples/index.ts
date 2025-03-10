@@ -107,29 +107,29 @@ export const examples: StrategyExamples = {
     ],
     "Bollinger Band Strategies": [
         {
-            name: "Bollinger Bands Strategy",
+            name: "Bollinger Bands Strategy", // GOOD
             script: bollinger
         },
         {
-            name: "Bollinger Bands with Moving Average Confirmation",
+            name: "Bollinger Bands with Moving Average Confirmation", // GOOD
             script: bollingerSma
         },
     ],
     "Some Other Strategies": [
         {
-            name: "ADX Indicator Strategy",
-            script: adx
+            name: "Average True Range (ATR) Strategy",
+            script: atr
         },
         {
-            name: "Average True Range Strategy",
-            script: atr
+            name: "ADX Indicator Strategy",
+            script: adx
         },
         {
             name: "Ichimoku Cloud Strategy",
             script: ichimoku
         },
         {
-            name: "On-Balance Volume Strategy",
+            name: "On-Balance Volume Strategy", // GOOD
             script: obv
         },
         {
@@ -141,7 +141,7 @@ export const examples: StrategyExamples = {
             script: sarReversal
         },
         {
-            name: "Stochastic Oscillator Strategy",
+            name: "Stochastic Oscillator Strategy", // GOOD
             script: stochastic
         },
     ],

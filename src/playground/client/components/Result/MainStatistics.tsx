@@ -36,7 +36,7 @@ function Stat({ text, stat }: StatItemProps) {
             </div>
 
             <div className="font-bold tracking-tight">
-                {stat !== null ? stat : "na"}
+                {stat !== null && !Number.isNaN(stat) ? stat : "-"}
             </div>
         </div>
     )

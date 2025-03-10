@@ -1,5 +1,6 @@
 import { DocsUrl } from '../../shared/common';
 import { useInView } from 'react-intersection-observer';
+import { Link } from 'wasp/client/router';
 
 // general imports
 import result_stock1 from '../../client/static/result_stock1.png';
@@ -82,12 +83,12 @@ export default function Hero() {
               Refine your <span className='italic text-sky-700 dark:text-blue-300'>algorithmic trading and testing</span> pipeline!
             </p>
             <div className='mt-10 flex items-center justify-center gap-x-6'>
-              <a
-                href={DocsUrl}
+              <Link
+                to="/editor"
                 className='rounded-md px-3.5 py-2.5 text-sm font-semibold text-gray-700 ring-1 ring-inset ring-gray-200 hover:ring-2 hover:ring-sky-600 dark:hover:ring-blue-300 shadow-sm focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600 dark:text-white'
               >
-                Sign me up! <span aria-hidden='true'>→</span>
-              </a>
+                Get Started For Free <span aria-hidden='true'>→</span>
+              </Link>
               <a
                 href={DocsUrl}
                 className='rounded-md px-3.5 py-2.5 text-sm font-semibold text-gray-700 ring-1 ring-inset ring-gray-200 hover:ring-2 hover:ring-sky-600 dark:hover:ring-blue-300 shadow-sm focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600 dark:text-white'

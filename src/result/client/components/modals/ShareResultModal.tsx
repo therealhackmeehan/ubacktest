@@ -47,8 +47,8 @@ export default function ShareResultModal({ closeModal, id }: ShareResultModalPro
                 setCurrentlyInTimeout(false);
             }, timeoutDuration);
         } catch (error: any) {
-            setErrMsg(error.message);
             setShowSuccess(false); // Ensure success message doesn't appear on error
+            setErrMsg(error.message);
         }
     };
 

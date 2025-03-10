@@ -3,7 +3,7 @@ export const stochastic =
 Stochastic Oscillator Strategy.
 
 Buy when the %K line crosses above the %D line below 20 (oversold condition).
-Sell when the %K line crosses below the %D line above 80 (overbought condition).
+Short when the %K line crosses below the %D line above 80 (overbought condition).
 This strategy helps capture momentum reversals.
 '''
 
@@ -20,9 +20,12 @@ def strategy(data):
     data['%K'], data['%D'] = calculate_stochastic_oscillator(data)
 
     # Generate signals based on stochastic crossover
-    data['signal'] = 0
+    data['signal'] = np.nan
     data.loc[(data['%K'] < 20) & (data['%K'] > data['%D']), 'signal'] = 1  # Buy signal
-    data.loc[(data['%K'] > 80) & (data['%K'] < data['%D']), 'signal'] = -1  # Sell signal
+    data.loc[(data['%K'] > 80) & (data['%K'] < data['%D']), 'signal'] = -1  # Short signal
+
+    # Forward fill to propagate positions
+    data['signal'] = data['signal'].ffill().fillna(0)   
 
     return data
 `

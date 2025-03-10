@@ -150,7 +150,7 @@ export default function UserDefinedPlot({ strategyResult, timestamp }: UserDefin
 
     if (!chartData) return <div className='w-full mt-4 text-center text-xl tracking-tight'>Loading...</div>;
     return (
-        <ChartWrapper height={65}>
+        <ChartWrapper height={60}>
             <Line data={chartData} options={options} />
         </ChartWrapper>
     );

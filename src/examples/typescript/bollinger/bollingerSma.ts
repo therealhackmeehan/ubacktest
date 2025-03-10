@@ -19,7 +19,7 @@ def calculate_bollinger_bands(series, window=20, num_std=2):
 
     return upper_band, lower_band
 
-def calculate_sma(series, window=50):
+def calculate_sma(series, window=12):
     return series.rolling(window=window).mean()
 
 def strategy(data):
@@ -29,15 +29,16 @@ def strategy(data):
     # Initialize 'signal' column
     data['signal'] = np.nan  # Start with NaN
 
-    # Buy signal: Price crosses below the upper band but remains under SMA_50
+    # Buy signal: Price crosses up through the lower band but remains under SMA_50
     data.loc[
-        (data['close'] > data['Upper_Band'].shift(1)) & (data['close'] < data['Upper_Band']) &
+        (data['close'].shift(1) < data['Lower_Band'].shift(1)) & (data['close'] > data['Lower_Band']) &
         (data['close'] < data['SMA_50']),
         'signal'
     ] = 1
 
-    # Sell signal: Price crosses above the lower band but remains above SMA_50
-    data.loc[(data['close'] < data['Lower_Band'].shift(1)) & (data['close'] < data['Lower_Band']) &
+    # Sell signal: Price crosses down from the upper band but remains above SMA_50
+    data.loc[
+        (data['close'].shift(1) > data['Upper_Band'].shift(1)) & (data['close'] < data['Upper_Band']) &
         (data['close'] > data['SMA_50']),
         'signal'
     ] = -1

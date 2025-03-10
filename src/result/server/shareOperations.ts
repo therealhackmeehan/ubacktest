@@ -44,6 +44,7 @@ export const shareResult: ShareResult<ShareResultProps, Share> = async ({ email,
         },
     });
 
+    // keep an eye on this... Somehow it made it through one time?
     if (existingShare) {
         throw new HttpError(400, "You have already shared the result with this user.")
     }

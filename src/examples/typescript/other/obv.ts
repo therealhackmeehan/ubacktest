@@ -3,7 +3,7 @@ export const obv =
 On-Balance Volume (OBV) Strategy.
 
 Buy when the OBV crosses above the 20-day SMA (bullish confirmation).
-Sell when the OBV crosses below the 20-day SMA (bearish confirmation).
+Short when the OBV crosses below the 20-day SMA (bearish confirmation).
 OBV helps to capture momentum with volume as a leading indicator.
 '''
 
@@ -30,7 +30,7 @@ def strategy(data):
     # Generate signals based on OBV crossover
     data['signal'] = 0
     data.loc[data['OBV'] > data['SMA_20'], 'signal'] = 1  # Buy signal
-    data.loc[data['OBV'] < data['SMA_20'], 'signal'] = -1  # Sell signal
+    data.loc[data['OBV'] < data['SMA_20'], 'signal'] = -1  # Short signal
 
     return data
 `

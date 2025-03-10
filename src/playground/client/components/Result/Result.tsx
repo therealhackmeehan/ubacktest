@@ -49,6 +49,7 @@ function Result({ selectedStrategy, formInputs, strategyResult, abilityToSaveNew
 
         const firstPoint = strategyResult.portfolio[0];
         const lastPoint = strategyResult.portfolio[timepoints - 1];
+
         if (firstPoint === 0 || lastPoint === 0) {
             throw new Error("Portfolio values cannot be zero.");
         }
@@ -63,12 +64,12 @@ function Result({ selectedStrategy, formInputs, strategyResult, abilityToSaveNew
             throw new Error("Invalid date range.");
         }
 
-        const annualizedPL = 100 * ((1 + profitLoss / 100) ** (365 / numberOfDays)) - 1;
+        const annualizedPL = 100 * ((1 + profitLoss/100) ** (365 / numberOfDays) - 1);
 
-        if (!profitLoss || !annualizedPL) {
+        if ((profitLoss == null || profitLoss === undefined) || (annualizedPL == null || annualizedPL === undefined)) {
             throw new Error("Something is wrong with your data. Unable to calculate Profit/Loss.");
         }
-
+        
         await createResult({
             name: name,
             code: connectedStrat.code,
@@ -93,7 +94,10 @@ function Result({ selectedStrategy, formInputs, strategyResult, abilityToSaveNew
 
         // Get the headers (labels)
         let headers = Object.keys(strategyResult);
-        headers = headers.filter(header => header !== 'userDefinedData');
+        headers = headers.filter(header => 
+            !['userDefinedData', 'equityWithCosts', 'cashWithCosts'].includes(header) &&
+            !(formInputs.costPerTrade === 0 && header === 'portfolioWithCosts')
+        );
 
         // Create rows by combining data from each key (label)
         const rowCount = strategyResult[headers[0]].length; // Get the number of rows based on the first label's length

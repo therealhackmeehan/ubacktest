@@ -2,11 +2,12 @@
 ADX Trend Strength Strategy.
 
 Buy when the +DI crosses above the -DI and the ADX is above 25 (strong uptrend).
-Sell when the -DI crosses above the +DI and the ADX is above 25 (strong downtrend).
+Short when the -DI crosses above the +DI and the ADX is above 25 (strong downtrend).
 The ADX helps to confirm the strength of a trend.
 '''
 
 import pandas as pd
+import numpy as np
 
 def calculate_adx(data, window=14):
     high = data['high']
@@ -32,8 +33,11 @@ def strategy(data):
     data['+DI'], data['-DI'], data['ADX'] = calculate_adx(data)
 
     # Generate signals based on ADX trend strength
-    data['signal'] = 0
+    data['signal'] = np.nan
     data.loc[(data['+DI'] > data['-DI']) & (data['ADX'] > 25), 'signal'] = 1  # Buy signal
-    data.loc[(data['-DI'] > data['+DI']) & (data['ADX'] > 25), 'signal'] = -1  # Sell signal
+    data.loc[(data['-DI'] > data['+DI']) & (data['ADX'] > 25), 'signal'] = -1  # Short signal
+
+    # Forward fill to propagate positions
+    data['signal'] = data['signal'].ffill().fillna(0)
 
     return data

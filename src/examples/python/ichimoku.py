@@ -2,11 +2,12 @@
 Ichimoku Cloud Breakout Strategy.
 
 Buy when the Conversion Line crosses above the Base Line and the price is above the cloud.
-Sell when the Conversion Line crosses below the Base Line and the price is below the cloud.
+Short when the Conversion Line crosses below the Base Line and the price is below the cloud.
 The Ichimoku Cloud provides insights into trend direction and momentum.
 '''
 
 import pandas as pd
+import numpy as np
 
 def calculate_ichimoku(data):
     nine_period_high = data['high'].rolling(window=9).max()
@@ -21,18 +22,11 @@ def strategy(data):
     data = calculate_ichimoku(data)
 
     # Generate signals based on Ichimoku Cloud breakout
-    #data['signal'] = 0
-    #data.loc[(data['Conversion_Line'] > data['Base_Line']) & (data['close'] > data['Conversion_Line']), 'signal'] = 1  # Buy signal
-    #data.loc[(data['Conversion_Line'] < data['Base_Line']) & (data['close'] < data['Base_Line']), 'signal'] = -1  # Sell signal
+    data['signal'] = np.nan
+    data.loc[(data['Conversion_Line'] > data['Base_Line']) & (data['close'] > data['Conversion_Line']), 'signal'] = 1  # Buy signal
+    data.loc[(data['Conversion_Line'] < data['Base_Line']) & (data['close'] < data['Base_Line']), 'signal'] = -1  # Short signal
 
-    # Initialize signal column
-    data['signal'] = 0
-
-    # hold the current position until the next crossing occurs.
-    for i in range(1, len(data)):
-        if (data['Conversion_Line'] > data['Base_Line']) and (data['close'] > data['Conversion_Line']):
-            data.loc[i:, 'signal'] = 1
-        elif (data['Conversion_Line'] < data['Base_Line']) and (data['close'] < data['Base_Line']):
-            data.loc[i:, 'signal'] = -1
+    # Forward fill to propagate positions
+    data['signal'] = data['signal'].ffill().fillna(0)    
 
     return data

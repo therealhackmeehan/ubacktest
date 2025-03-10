@@ -31,8 +31,8 @@ def strategy(data):
     data['signal'] = np.nan  # Start with NaN
 
     # Assign signals where RSI crosses threshold
-    data.loc[data['RSI'] < 30 and data['close'] < data['SMA_50'], 'signal'] = 1
-    data.loc[data['RSI'] > 70 and data['close'] > data['SMA_50'], 'signal'] = -1
+    data.loc[(data['RSI'] < 30) & (data['close'] < data['SMA_50']), 'signal'] = 1
+    data.loc[(data['RSI'] > 70) & (data['close'] > data['SMA_50']), 'signal'] = -1
 
     # Forward fill to propagate positions
     data['signal'] = data['signal'].ffill().fillna(0)

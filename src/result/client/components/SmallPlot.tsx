@@ -26,8 +26,9 @@ const SmallPlot: React.FC<PlotProps> = ({ data, width = 80, height = 20 }) => {
 
     // Scale data to fit SVG dimensions
     const scaleX = (value: number) => ((value - xMin) / (xMax - xMin)) * width;
-    const scaleY = (value: number) => height - ((value - yMin) / (yMax - yMin)) * height;
-    const color = y[y.length - 1] > y[0] ? "rgb(0, 100, 0, .7)" : "rgb(255, 105, 97, .7)";
+    const scaleY = (value: number) =>
+        yMax === yMin ? height / 2 : height - ((value - yMin) / (yMax - yMin)) * height;
+    const color = y[y.length - 1] < y[0] ? "rgb(255, 105, 97, .7)" : "rgb(0, 100, 0, .7)";
 
     return (
         <svg width={width} height={height}>

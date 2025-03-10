@@ -8,6 +8,7 @@ This adapts entry/exit points based on volatility.
 '''
 
 import pandas as pd
+import numpy as np
 
 def calculate_rsi(series, window):
     delta = series.diff()
@@ -38,7 +39,7 @@ def strategy(data):
 
     # Assign signals where RSI crosses threshold
     data.loc[data['RSI'] < data['lower_threshold'], 'signal'] = 1
-    data.loc[data['RSI'] > data['upper threshold'], 'signal'] = -1
+    data.loc[data['RSI'] > data['upper_threshold'], 'signal'] = -1
 
     # Forward fill to propagate positions
     data['signal'] = data['signal'].ffill().fillna(0)

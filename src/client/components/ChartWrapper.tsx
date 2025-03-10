@@ -13,5 +13,4 @@ function ChartWrapper({ children, height }: ChartWrapperProps) {
     );
 }
 
-
 export default ChartWrapper;
