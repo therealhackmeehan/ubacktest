@@ -10,11 +10,11 @@ import pandas as pd
 import numpy as np
 
 def calculate_ichimoku(data):
-    nine_period_high = data['high'].rolling(window=9).max()
-    nine_period_low = data['low'].rolling(window=9).min()
+    nine_period_high = data['high'].rolling(window=9).max().shift()
+    nine_period_low = data['low'].rolling(window=9).min().shift()
     data['Conversion_Line'] = (nine_period_high + nine_period_low) / 2  # Tenkan-sen
-    period26_high = data['high'].rolling(window=26).max()
-    period26_low = data['low'].rolling(window=26).min()
+    period26_high = data['high'].rolling(window=26).max().shift()
+    period26_low = data['low'].rolling(window=26).min().shift()
     data['Base_Line'] = (period26_high + period26_low) / 2  # Kijun-sen
     return data
 

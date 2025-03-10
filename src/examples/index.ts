@@ -24,6 +24,7 @@ import { maEnvelope } from "./typescript/ma/maEnvelope";
 import { ama } from "./typescript/ma/ama";
 import { rsiBreakout } from "./typescript/RSI/rsiBreakout";
 import { randomForest } from "./typescript/ml/randomForest";
+import { donchianChannel } from "./typescript/other/donchian";
 
 type Example = {
     name: string;
@@ -123,6 +124,10 @@ export const examples: StrategyExamples = {
         {
             name: "ADX Indicator Strategy",
             script: adx
+        },
+        {
+            name: "Donchian Channel Strategy", // GOOD
+            script: donchianChannel
         },
         {
             name: "Ichimoku Cloud Strategy",

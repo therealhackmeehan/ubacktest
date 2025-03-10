@@ -1,8 +1,8 @@
 '''
 Bollinger Bands Strategy.
 
-Sell stock when the price touches or rises above the upper Bollinger Band.
-Buy stock when the price touches or drops below the lower Bollinger Band.
+Buy stock when the price dips then moves up through the lower Bollinger Band.
+Short stock when the price pops and then falls below the upper Bollinger Band.
 This strategy assumes mean reversion.
 '''
 

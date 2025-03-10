@@ -10,8 +10,8 @@ This strategy helps capture momentum reversals.
 import pandas as pd
 
 def calculate_stochastic_oscillator(data, window=14):
-    low_min = data['low'].rolling(window=window).min()
-    high_max = data['high'].rolling(window=window).max()
+    low_min = data['low'].rolling(window=window).min().shift()
+    high_max = data['high'].rolling(window=window).max().shift()
     stoch_k = 100 * (data['close'] - low_min) / (high_max - low_min)
     stoch_d = stoch_k.rolling(window=3).mean()  # 3-day moving average of %K
     return stoch_k, stoch_d
