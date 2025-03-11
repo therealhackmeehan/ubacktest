@@ -1,6 +1,6 @@
 export const ichimoku =
     `'''
-Ichimoku Cloud Breakout Strategy.
+Ichimoku Cloud Strategy.
 
 Buy when the Conversion Line crosses above the Base Line and the price is above the cloud.
 Short when the Conversion Line crosses below the Base Line and the price is below the cloud.
@@ -11,24 +11,49 @@ import pandas as pd
 import numpy as np
 
 def calculate_ichimoku(data):
-    nine_period_high = data['high'].rolling(window=9).max().shift()
-    nine_period_low = data['low'].rolling(window=9).min().shift()
-    data['Conversion_Line'] = (nine_period_high + nine_period_low) / 2  # Tenkan-sen
-    period26_high = data['high'].rolling(window=26).max().shift()
-    period26_low = data['low'].rolling(window=26).min().shift()
-    data['Base_Line'] = (period26_high + period26_low) / 2  # Kijun-sen
+    """
+    Calculates Ichimoku Cloud components for a given stock dataset.
+    """
+
+    # Tenkan-sen (Conversion Line) - 9-period high/low midpoint
+    # Kijun-sen (Base Line) - 26-period high/low midpoint
+    # Senkou Span A (Leading Span A) - Midpoint of Tenkan-sen and Kijun-sen, shifted forward 26 periods
+    # Senkou Span B (Leading Span B) - 52-period high/low midpoint, shifted forward 26 periods
+    # Chikou Span (Lagging Span) - Closing price shifted 26 periods back
+
+    data['Tenkan_sen'] = (data['high'].rolling(9).max() + data['low'].rolling(9).min()) / 2
+    data['Kijun_sen'] = (data['high'].rolling(26).max() + data['low'].rolling(26).min()) / 2
+    data['Senkou_Span_A'] = ((data['Tenkan_sen'] + data['Kijun_sen']) / 2).shift(26)
+    data['Senkou_Span_B'] = ((data['high'].rolling(52).max() + data['low'].rolling(52).min()) / 2).shift(26)
+    data['Chikou_Span'] = data['close'].shift(-26)
+
     return data
 
 def strategy(data):
+    """
+    Implements an Ichimoku-based trading strategy.
+    """
     data = calculate_ichimoku(data)
 
-    # Generate signals based on Ichimoku Cloud breakout
+    # Generate signals based on Ichimoku Cloud principles
     data['signal'] = np.nan
-    data.loc[(data['Conversion_Line'] > data['Base_Line']) & (data['close'] > data['Conversion_Line']), 'signal'] = 1  # Buy signal
-    data.loc[(data['Conversion_Line'] < data['Base_Line']) & (data['close'] < data['Base_Line']), 'signal'] = -1  # Short signal
+    
+    # Bullish Signal: Price above cloud, Tenkan-sen above Kijun-sen, Chikou Span above price 26 days ago
+    data.loc[
+        (data['close'] > data['Senkou_Span_A']) &
+        (data['close'] > data['Senkou_Span_B']) &
+        (data['Tenkan_sen'] > data['Kijun_sen']) &
+        (data['Chikou_Span'] > data['close'].shift(26)),
+        'signal'
+    ] = 1  # Buy signal
 
-    # Forward fill to propagate positions
-    data['signal'] = data['signal'].ffill().fillna(0)    
+    # Bearish Signal: Price below cloud, Tenkan-sen below Kijun-sen, Chikou Span below price 26 days ago
+    data.loc[
+        (data['close'] < data['Senkou_Span_A']) &
+        (data['close'] < data['Senkou_Span_B']) &
+        (data['Tenkan_sen'] < data['Kijun_sen']) &
+        (data['Chikou_Span'] < data['close'].shift(26)),
+        'signal'
+    ] = -1  # Sell/Short signal
 
-    return data
-`
+    return data`

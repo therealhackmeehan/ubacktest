@@ -24,7 +24,4 @@ def strategy(data):
     data.loc[data['close'] <= data['Lower_Band'], 'signal'] = 1  # Buy
     data.loc[data['close'] >= data['Upper_Band'], 'signal'] = -1  # Short
 
-    # Forward fill to propagate positions
-    data['signal'] = data['signal'].ffill().fillna(0)
-
     return data

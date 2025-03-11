@@ -1,0 +1,52 @@
+
+'''
+Polynomial Regression.
+
+Built on the previous 5 days, then used to predict the next day using a quadratic curve.
+'''
+
+import pandas as pd
+from sklearn.linear_model import LinearRegression
+from sklearn.preprocessing import PolynomialFeatures
+import numpy as np
+
+def polynomial_regression(data, window=5, degree=2):
+    """
+    Function to implement Polynomial Regression strategy
+    for time series data (e.g., stock closing prices).
+    """
+    signals = np.zeros(len(data))  # Initialize signals array
+    
+    # Iterate over the data starting from the window index
+    for i in range(window, len(data)):
+        # Prepare the features (X) and target (y) for the regression model
+        X = np.array(range(i-window, i)).reshape(-1, 1)  # Time index for the last window days
+        y = data['close'][i-window:i].values  # Last window closing prices
+        
+        # Transform the features into polynomial features (degree=2 for quadratic)
+        poly = PolynomialFeatures(degree)
+        X_poly = poly.fit_transform(X)  # Transform the data to polynomial features
+        
+        # Fit the polynomial model (using LinearRegression)
+        model = LinearRegression()
+        model.fit(X_poly, y)
+        
+        # Predict the next value (for the current time period)
+        prediction = model.predict(poly.transform(np.array([[i]])))  # Predict the next point (i.e., the 6th day)
+        
+        # Signal generation based on prediction (uptrend or downtrend)
+        if prediction > data['close'][i-1]:
+            signals[i] = 1  # Buy signal
+        else:
+            signals[i] = -1  # Sell signal
+    
+    return signals
+
+def strategy(data, window=5, degree=2):
+    """
+    Implements a trading strategy that uses Polynomial Regression for signals.
+    """
+    # Call the polynomial_regression function to get the signals
+    data['signal'] = polynomial_regression(data, window, degree)
+
+    return data

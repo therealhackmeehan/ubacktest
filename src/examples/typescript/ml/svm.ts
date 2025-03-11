@@ -1,19 +1,19 @@
-const rfClassifier = `
+const svmClassifier = `
 '''
-Random Forest Classifier.
+Support Vector Machine (SVM) Classifier.
 
 Built on the previous 30 days, using multiple features to predict the next day's movement (up/down).
 '''
 
 import pandas as pd
-from sklearn.ensemble import RandomForestClassifier
+from sklearn.svm import SVC
 from sklearn.model_selection import train_test_split
 from sklearn.metrics import accuracy_score
 import numpy as np
 
 def create_features(data, window=30):
     """
-    Create features for Random Forest model, including closing price, volume, and SMA.
+    Create features for SVM model, including closing price, volume, and SMA.
     """
     data['SMA_30'] = data['close'].rolling(window=window).mean()  # Simple Moving Average
     data['volume_30'] = data['volume'].rolling(window=window).mean()  # 30-day moving average of volume
@@ -27,9 +27,9 @@ def create_features(data, window=30):
 
     return data
 
-def random_forest_classifier(data, window=30):
+def svm_classifier(data, window=30, kernel='linear'):
     """
-    Function to implement Random Forest Classifier strategy for time series data (e.g., stock closing prices).
+    Function to implement SVM Classifier strategy for time series data (e.g., stock closing prices).
     """
     # Create features
     data = create_features(data, window)
@@ -46,8 +46,8 @@ def random_forest_classifier(data, window=30):
     # Split the data into training and test sets
     X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
 
-    # Train the Random Forest Classifier
-    model = RandomForestClassifier(n_estimators=100, random_state=42)
+    # Train the SVM classifier
+    model = SVC(kernel=kernel)  # You can use 'linear', 'poly', 'rbf', etc.
     model.fit(X_train, y_train)
 
     # Make predictions on the test set
@@ -62,14 +62,14 @@ def random_forest_classifier(data, window=30):
     
     return data
 
-def strategy(data, window=30):
+def strategy(data, window=30, kernel='linear'):
     """
-    Implements a trading strategy that uses Random Forest Classifier for signals.
+    Implements a trading strategy that uses Support Vector Machine Classifier for signals.
     """
-    # Call the random_forest_classifier function to get the signals
-    data = random_forest_classifier(data, window)
+    # Call the svm_classifier function to get the signals
+    data = svm_classifier(data, window, kernel)
 
     return data
 `;
 
-export default rfClassifier;
+export default svmClassifier;

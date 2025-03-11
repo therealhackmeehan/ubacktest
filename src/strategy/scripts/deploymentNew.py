@@ -121,7 +121,7 @@ def get_position_value(symbol: str) -> float:
         log(f"Current position in {symbol}: ${value:.2f}")
         return value
     except Exception:
-        log(f"No open position found for {symbol}.", level="WARNING")
+        log(f"No open position found for {symbol}.")
         return 0  # No position found
 
 # ---------------------------------
@@ -145,8 +145,6 @@ def execute_trade(symbol: str):
 
     new_signal = df["signal"].iloc[-1]
     prev_signal = df["signal"].iloc[-2]
-
-    new_signal = 0
 
     log(f"New signal: {new_signal}, Previous signal: {prev_signal}")
 
@@ -260,7 +258,7 @@ def trade():
 
 # Register an HTTP function with the Functions Framework
 @functions_framework.http
-def my_http_function(request):
+def hello_http(request):
   trade()
   return 'OK'
 

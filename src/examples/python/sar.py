@@ -5,23 +5,61 @@ Buy when the Parabolic SAR is below the price (bullish trend).
 Sell when the Parabolic SAR is above the price (bearish trend).
 The Parabolic SAR helps capture strong trends by providing entry and exit signals.
 '''
-
 import pandas as pd
+import numpy as np
 
 def calculate_parabolic_sar(data, step=0.02, max_step=0.2):
-    sar = data['close'].copy()
-    af = step
-    ep = data['high'].max()
-    sar[0] = data['low'].iloc[0]  # Initial value of SAR
+    """
+    Compute the Parabolic SAR (PSAR) for given stock data.
+    """
+    sar = np.full(len(data), np.nan)  # Initialize SAR values
+    af = step  # Acceleration Factor starts at 0.02
+
+    # Determine initial trend direction
+    uptrend = data['close'][1] > data['close'][0]  # If close[1] > close[0], assume uptrend
+
+    # Set Initial SAR and Extreme Point (EP)
+    if uptrend:
+        sar[0] = data['low'][0]  # Start SAR at the first low
+        ep = data['high'][0]  # Highest high in the trend
+    else:
+        sar[0] = data['high'][0]  # Start SAR at the first high
+        ep = data['low'][0]  # Lowest low in the trend
+
     for i in range(1, len(data)):
-        sar[i] = sar[i-1] + af * (ep - sar[i-1])
-        if data['close'].iloc[i] > sar[i-1]:
-            ep = data['high'].iloc[i]
-            af = min(af + step, max_step)
+        # Update SAR
+        sar[i] = sar[i - 1] + af * (ep - sar[i - 1])
+
+        # Ensure SAR does not move beyond last two period's high/low
+        if uptrend:
+            sar[i] = min(sar[i], data['low'][i - 1], data['low'][i - 2])  # Cannot exceed prior lows
         else:
-            ep = data['low'].iloc[i]
-            af = min(af + step, max_step)
-    return sar
+            sar[i] = max(sar[i], data['high'][i - 1], data['high'][i - 2])  # Cannot drop below prior highs
+
+        # Update EP & AF if new extreme point is reached
+        if uptrend:
+            if data['high'][i] > ep:  # New high in an uptrend
+                ep = data['high'][i]
+                af = min(af + step, max_step)  # Increase AF
+        else:
+            if data['low'][i] < ep:  # New low in a downtrend
+                ep = data['low'][i]
+                af = min(af + step, max_step)  # Increase AF
+
+        # Check for trend reversal
+        if uptrend and data['low'][i] < sar[i]:
+            uptrend = False
+            sar[i] = ep  # Reset SAR to last EP
+            ep = data['low'][i]  # Start tracking new low
+            af = step  # Reset AF
+        elif not uptrend and data['high'][i] > sar[i]:
+            uptrend = True
+            sar[i] = ep  # Reset SAR to last EP
+            ep = data['high'][i]  # Start tracking new high
+            af = step  # Reset AF
+
+    data['SAR'] = sar
+    return data
 
 def strategy(data):
     data['SAR'] = calculate_parabolic_sar(data)

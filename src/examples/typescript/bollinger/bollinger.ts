@@ -29,8 +29,5 @@ def strategy(data):
     data.loc[(data['close'].shift(1) < data['Lower_Band'].shift(1)) & (data['close'] > data['Lower_Band']), 'signal'] = 1
     data.loc[(data['close'].shift(1) > data['Upper_Band'].shift(1)) & (data['close'] < data['Upper_Band']), 'signal'] = -1
 
-    # Forward fill to propagate positions
-    data['signal'] = data['signal'].ffill().fillna(0)
-
     return data
 `

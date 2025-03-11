@@ -42,7 +42,4 @@ def strategy(data):
         'signal'
     ] = -1
 
-    # Forward fill to propagate positions
-    data['signal'] = data['signal'].ffill().fillna(0)
-
     return data

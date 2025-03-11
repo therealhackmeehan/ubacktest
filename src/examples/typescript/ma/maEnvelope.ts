@@ -20,14 +20,10 @@ def calculate_moving_average_envelope(series, window=20, envelope_pct=2.0):
 def strategy(data):
     data['SMA'], data['Upper_Band'], data['Lower_Band'] = calculate_moving_average_envelope(data['close'])
 
-    # Generate signals based on price touching the envelope bands
     # Initialize 'signal' column
-    data['signal'] = np.nan  # Start with NaN
+    data['signal'] = np.nan
     data.loc[data['close'] <= data['Lower_Band'], 'signal'] = 1  # Buy
     data.loc[data['close'] >= data['Upper_Band'], 'signal'] = -1  # Short
-
-    # Forward fill to propagate positions
-    data['signal'] = data['signal'].ffill().fillna(0)
 
     return data
 `;

@@ -32,7 +32,4 @@ def strategy(data):
     data.loc[data['RSI'] < 30, 'signal'] = 1
     data.loc[data['RSI'] > 70, 'signal'] = -1
 
-    # Forward fill to propagate positions
-    data['signal'] = data['signal'].ffill().fillna(0)
-
     return data

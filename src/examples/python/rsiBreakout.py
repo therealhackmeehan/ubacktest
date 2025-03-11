@@ -38,7 +38,4 @@ def strategy(data):
     bearish_cross = (data['RSI'].shift(1) > 70) & (data['RSI'] < 70)
     data.loc[bearish_cross, 'signal'] = -1
     
-    # Forward fill to maintain positions
-    data['signal'] = data['signal'].ffill().fillna(0)
-
     return data
