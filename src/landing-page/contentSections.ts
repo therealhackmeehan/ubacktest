@@ -65,16 +65,21 @@ export const faqs = [
   },
   {
     id: 2,
+    question: 'Do you provide the stock data? Isn\'t that super pricey?',
+    answer: 'Yes, we obtain our data from XXXXXXXX. While it is very expensive for us, our goal is to offset the costs and offer low or no fees for our users.',
+  },
+  {
+    id: 3,
     question: 'What is the maximum backtesting frequency?',
     answer: 'Daily intervals are available for all users. With a paid plan, you can test at up to 1-minute intervals.',
   },
   {
-    id: 3,
+    id: 4,
     question: 'I know trading but not coding. Can I still use this?',
     answer: 'Absolutely! If you understand trading concepts, you’ll quickly pick up the workflow. Start with our example strategies to get familiar with Python functions and financial data structures (DataFrames).',
   },
   {
-    id: 4,
+    id: 5,
     question: 'I know coding but not trading. Will I struggle?',
     answer: 'Not at all! If you’re comfortable with Python—especially Pandas DataFrames—you’ll find it easy to assign buy, sell, and hold signals to stock data. The trading logic will come naturally as you experiment.',
   },

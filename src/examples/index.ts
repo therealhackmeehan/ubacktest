@@ -13,7 +13,6 @@ import { atr } from "./typescript/other/atr";
 import { ichimoku } from "./typescript/other/ichimoku";
 import { obv } from "./typescript/other/obv";
 import { sar } from "./typescript/other/sar";
-import { sarReversal } from "./typescript/other/sarReversal";
 import { stochastic } from "./typescript/other/stochastic";
 import { smaCrossover } from "./typescript/ma/smaCrossover";
 import { emaCrossover } from "./typescript/ma/emaCrossover";
@@ -23,7 +22,7 @@ import { shortAndHold } from "./typescript/intro/shortAndHold";
 import { maEnvelope } from "./typescript/ma/maEnvelope";
 import { ama } from "./typescript/ma/ama";
 import { rsiBreakout } from "./typescript/RSI/rsiBreakout";
-import { randomForest } from "./typescript/ml/randomForest";
+import rfClassifier from "./typescript/ml/randomForest";
 import { donchianChannel } from "./typescript/other/donchian";
 import linReg from "./typescript/regression/linearRegression";
 import expReg from "./typescript/regression/exponentialRegression";
@@ -123,7 +122,7 @@ export const examples: StrategyExamples = {
             script: bollingerSma
         },
     ],
-    "Some Other Strategies": [
+    "More Useful Indicators": [
         {
             name: "Average True Range (ATR) Strategy", 
             script: atr
@@ -147,10 +146,6 @@ export const examples: StrategyExamples = {
         {
             name: "Parabolic SAR Strategy",
             script: sar
-        },
-        {
-            name: "Parabolic SAR Trend Reversal", 
-            script: sarReversal
         },
         {
             name: "Stochastic Oscillator Strategy", //
@@ -190,7 +185,7 @@ export const examples: StrategyExamples = {
         },
         {
             name: "Random Forest Classifier",
-            script: randomForest
+            script: rfClassifier
         },
     ]
 };

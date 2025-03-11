@@ -20,7 +20,7 @@ def linear_regression(data, window=5):
     for i in range(window, len(data)):
         # Prepare the features (X) and target (y) for the regression model
         X = np.array(range(i-window, i)).reshape(-1, 1)  # Time index for the last window days
-        y = data['close'][i-window:i].values  # Last window closing prices
+        y = data['close'][i-window:i]  # Last window closing prices
         
         # Fit the model
         model = LinearRegression()

@@ -80,7 +80,7 @@ export default function Hero() {
               The rest is up to <span className='italic text-sky-700 dark:text-blue-300'>you</span>.
             </h1>
             <p className='mt-6 mx-auto max-w-2xl text-lg leading-8 text-gray-600 dark:text-white'>
-              Refine your <span className='italic text-sky-700 dark:text-blue-300'>algorithmic trading and testing</span> pipeline!
+              We got the data. Go ahead and get started on your <span className='italic text-sky-700 dark:text-blue-300'>million-dollar </span>idea!
             </p>
             <div className='mt-10 flex items-center justify-center gap-x-6'>
               <Link
