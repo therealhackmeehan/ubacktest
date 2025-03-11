@@ -2,7 +2,7 @@ const expReg = `
 '''
 Exponential Regression.
 
-Built on the previous 5 days, then used to predict the next day.
+Built on the previous 14 days, then used to predict the next day.
 '''
 
 import pandas as pd
@@ -15,6 +15,7 @@ def exponential_regression(data, window=5):
     for time series data (e.g., stock closing prices).
     """
     signals = np.zeros(len(data))  # Initialize signals array
+    predictions = np.zeros(len(data)) # Initialize predictions array
     
     # Iterate over the data starting from the window index
     for i in range(window, len(data)):
@@ -30,22 +31,23 @@ def exponential_regression(data, window=5):
         prediction_log = model.predict(np.array([[i]]))  # Predict the next point (i.e., the 6th day)
         
         # Transform the prediction back to the original space
-        prediction = np.exp(prediction_log)  # Apply exponential to get back to the original scale
-        
+        prediction = np.exp(prediction_log[0])  # Apply exponential to get back to the original scale
+        predictions[i] = prediction
+
         # Signal generation based on prediction (uptrend or downtrend)
         if prediction > data['close'][i-1]:
             signals[i] = 1  # Buy signal
         else:
             signals[i] = -1  # Sell signal
     
-    return signals
+    return signals, predictions
 
-def strategy(data, window=5):
+def strategy(data):
     """
     Implements a trading strategy that uses Exponential Regression for signals.
     """
     # Call the exponential_regression function to get the signals
-    data['signal'] = exponential_regression(data, window)
+    data['signal'], data['prediction'] = exponential_regression(data)
 
     return data
 `;

@@ -2,19 +2,20 @@ const linReg = `
 '''
 Simple Linear Regression.
 
-Built on the previous 5 days, then used to predict the next day.
+Built on the previous 14 days, then used to predict the next day.
 '''
 
 import pandas as pd
 from sklearn.linear_model import LinearRegression
 import numpy as np
 
-def linear_regression(data, window=5):
+def linear_regression(data, window=14):
     """
     Function to implement a simple Linear Regression strategy
     for time series data (e.g., stock closing prices).
     """
     signals = np.zeros(len(data))  # Initialize signals array
+    predictions = np.zeros(len(data)) # Initialize predictions array
     
     # Iterate over the data starting from the window index
     for i in range(window, len(data)):
@@ -27,7 +28,8 @@ def linear_regression(data, window=5):
         model.fit(X, y)
         
         # Predict the next value (for the current time period)
-        prediction = model.predict(np.array([[i]]))  # Predict the next point (i.e., the 6th day)
+        prediction = model.predict(np.array([[i]]))  # Predict the next point (i.e., the 15th day)
+        predictions[i] = prediction[0]
         
         # Signal generation based on prediction (uptrend or downtrend)
         if prediction > data['close'][i-1]:
@@ -35,14 +37,14 @@ def linear_regression(data, window=5):
         else:
             signals[i] = -1  # Sell signal
     
-    return signals
+    return signals, predictions
 
-def strategy(data, window=5):
+def strategy(data):
     """
     Implements a trading strategy that uses Linear Regression for signals.
     """
     # Call the linear_regression function to get the signals
-    data['signal'] = linear_regression(data, window)
+    data['signal'], data['prediction'] = linear_regression(data)
 
     return data
 `;

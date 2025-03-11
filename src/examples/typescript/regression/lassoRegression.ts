@@ -2,19 +2,20 @@ const lassoReg = `
 '''
 Lasso Regression.
 
-Built on the previous 5 days, then used to predict the next day using Lasso Regression (L1 Regularization).
+Built on the previous 14 days, then used to predict the next day using Lasso Regression (L1 Regularization).
 '''
 
 import pandas as pd
 from sklearn.linear_model import Lasso
 import numpy as np
 
-def lasso_regression(data, window=5, alpha=1.0):
+def lasso_regression(data, window=14, alpha=1.0):
     """
     Function to implement Lasso Regression strategy
     for time series data (e.g., stock closing prices).
     """
     signals = np.zeros(len(data))  # Initialize signals array
+    predictions = np.zeros(len(data)) # Initialize predictions array
     
     # Iterate over the data starting from the window index
     for i in range(window, len(data)):
@@ -28,21 +29,23 @@ def lasso_regression(data, window=5, alpha=1.0):
         
         # Predict the next value (for the current time period)
         prediction = model.predict(np.array([[i]]))  # Predict the next point (i.e., the 6th day)
-        
+        predictions[i] = prediction[0]
+
         # Signal generation based on prediction (uptrend or downtrend)
         if prediction > data['close'][i-1]:
             signals[i] = 1  # Buy signal
         else:
             signals[i] = -1  # Sell signal
     
-    return signals
+    return signals, predictions
 
-def strategy(data, window=5, alpha=1.0):
+def strategy(data):
     """
     Implements a trading strategy that uses Lasso Regression for signals.
     """
+
     # Call the lasso_regression function to get the signals
-    data['signal'] = lasso_regression(data, window, alpha)
+    data['signal'], data['prediction'] = lasso_regression(data)
 
     return data
 `;

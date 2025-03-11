@@ -35,6 +35,10 @@ class CodeExecutor {
         // send to the Judge0 API and grab both the stdout and stderr
         const { stdout, stderr } = await CodeExecutor.sendToJudge_simple(embeddedCode);
 
+        if (!stdout && !stderr) {
+            throw new HttpError(400, "Unable to illicit a response from the python engine. This may indicate your request timed out, so try again.");
+        }
+
         return {
             stdout: stdout,
             stderr: stderr,
@@ -90,9 +94,15 @@ class CodeExecutor {
 import json
 import pandas as pd
 import sys
+import warnings
 import os
 
 original_stdout = sys.stdout
+
+# Redirect warnings to stdout
+warnings.simplefilter("always")
+warnings.showwarning = lambda message, category, filename, lineno, file=None, line=None: \
+    print(f"{category.__name__}: {message}", file=sys.stdout)
 
 jsonCodeUnformatted = '${JSON.stringify(toEmbedInMain)}'
 jsonCodeFormatted = json.loads(jsonCodeUnformatted)
@@ -168,6 +178,7 @@ middleOutput = {
 }
 output = "${uniqueKey}START${uniqueKey}" + json.dumps(middleOutput) + "${uniqueKey}END${uniqueKey}"
 
+sys.stdout.close()
 sys.stdout = original_stdout
 print(output)`;
 

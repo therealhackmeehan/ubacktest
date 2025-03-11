@@ -174,7 +174,7 @@ export const examples: StrategyExamples = {
             script: lassoReg
         },
     ],
-    "Machine Learning": [
+    "Machine Learning & Deep Learning": [
         {
             name: "Logistic Regression",
             script: logReg
