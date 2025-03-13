@@ -1,27 +1,27 @@
-const rfClassifier = `
+const gradientBoostingClassifier = `
 '''
-Random Forest Classifier.
+Gradient Boosting Classifier.
 
 Built on the previous 30 days, using multiple features to predict the next day's movement (up/down).
 '''
 
 import pandas as pd
 import numpy as np
-from sklearn.ensemble import RandomForestClassifier
+from sklearn.ensemble import GradientBoostingClassifier
 from sklearn.preprocessing import StandardScaler
 
 def create_features(data, indicator_window=14):
     """
-    Create features for Random Forest model, including closing price, volume, and SMA.
+    Create features for Gradient Boosting model, including closing price, volume, and SMA.
     """
     data[f'SMA_{indicator_window}'] = data['close'].rolling(window=indicator_window).mean()  # Simple Moving Average
     data[f'volume_{indicator_window}'] = data['volume'].rolling(window=indicator_window).mean()  # 30-day moving average of volume
 
     return data
 
-def random_forest_classifier(data, training_window=30, indicator_window=14, n_estimators=100, max_depth=None):
+def gradient_boosting_classifier(data, training_window=30, indicator_window=14, n_estimators=100, learning_rate=0.1, max_depth=3):
     """
-    Implements a Random Forest Classifier with a sliding window approach.
+    Implements a Gradient Boosting Classifier with a sliding window approach.
     """
 
     # Create features
@@ -32,7 +32,7 @@ def random_forest_classifier(data, training_window=30, indicator_window=14, n_es
 
     features = ['close', 'volume', f'SMA_{indicator_window}', f'volume_{indicator_window}']
     
-    scaler = StandardScaler()  # Standardize features for better Random Forest performance
+    scaler = StandardScaler()  # Standardize features for better Gradient Boosting performance
     predictions = []
 
     for i in range(training_window+indicator_window, len(data)):
@@ -46,8 +46,8 @@ def random_forest_classifier(data, training_window=30, indicator_window=14, n_es
         X_train_scaled = scaler.fit_transform(X_train)
         X_test_scaled = scaler.transform(X_test)
 
-        # Train the Random Forest model
-        model = RandomForestClassifier(n_estimators=n_estimators, max_depth=max_depth, random_state=42)
+        # Train the Gradient Boosting model
+        model = GradientBoostingClassifier(n_estimators=n_estimators, learning_rate=learning_rate, max_depth=max_depth, random_state=42)
         model.fit(X_train_scaled, y_train)
 
         # Make prediction
@@ -61,12 +61,12 @@ def random_forest_classifier(data, training_window=30, indicator_window=14, n_es
 
 def strategy(data):
     """
-    Implements a trading strategy using the Random Forest Classifier.
+    Implements a trading strategy using the Gradient Boosting Classifier.
     """
     
-    # Call the random_forest_classifier function to get signals
-    data = random_forest_classifier(data)
+    # Call the gradient_boosting_classifier function to get signals
+    data = gradient_boosting_classifier(data)
 
     return data`;
 
-export default rfClassifier;
+export default gradientBoostingClassifier;

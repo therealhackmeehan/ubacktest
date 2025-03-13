@@ -57,14 +57,15 @@ class CodeExecutor {
                 Authorization: `Bearer ${process.env.JUDGE_APIKEY_SULU}`
             },
             body: JSON.stringify({
-                language_id: 32, // python for ML (base image)
+                language_id: 31, // python for ML (base image)
                 source_code: mainFileContent
             })
         };
 
         const response = await fetch(url, options);
-
-        const fullResult = await response.json();
+        console.log(response)
+         
+        const fullResult = await response.json(); // work on this
         console.log(fullResult);
 
         if (!response.ok) { // error right away if the response is not ok
@@ -73,9 +74,12 @@ class CodeExecutor {
         }
 
         let { stdout, stderr } = fullResult;
-
         if (!stdout) stdout = '';
         if (!stderr) stderr = '';
+
+        if (fullResult.message) {
+            stderr = `${fullResult.message} \n\n` + stderr;
+        }
 
         return { stdout, stderr };
     }
@@ -173,7 +177,7 @@ colsToExclude = {"open", "close", "high", "low", "volume", "timestamp", "signal"
 
 middleOutput = {
     "result": signalToReturn,
-    "data": df.loc[:, ~df.columns.isin(colsToExclude)].fillna(0).round(4).to_dict('list'),
+    "data": df.loc[:, ~df.columns.isin(colsToExclude)].iloc[:, :10].fillna(0).round(4).to_dict('list')
     "warning": warning
 }
 output = "${uniqueKey}START${uniqueKey}" + json.dumps(middleOutput) + "${uniqueKey}END${uniqueKey}"

@@ -1,111 +1,94 @@
-export const lstm = `'''
-LSTM Model for Stock Price Prediction.
+const deepLearningClassifier = `
+'''
+Deep Learning (LSTM) Classifier.
 
-For every date, use the previous 60 days' data to predict the 61st day's closing price.
-Iteratively predict future days by using the most recent prediction as part of the input for the next day's prediction.
+Built on the previous 30 days, using multiple features to predict the next day's movement (up/down).
 '''
 
-import numpy as np
 import pandas as pd
-from sklearn.preprocessing import MinMaxScaler
+import numpy as np
+import tensorflow as tf
 from tensorflow.keras.models import Sequential
-from tensorflow.keras.layers import LSTM, Dense
-from tensorflow.keras.optimizers import Adam
-import matplotlib.pyplot as plt
+from tensorflow.keras.layers import LSTM, Dense, Dropout
+from sklearn.preprocessing import StandardScaler
 
-def prepare_data(data, window=60):
+def create_features(data, indicator_window=14):
     """
-    Prepare the data for the LSTM model.
-    Create X (features) and y (target) based on the past 'window' days.
+    Create features for the LSTM model, including closing price, volume, and SMA.
     """
+    data[f'SMA_{indicator_window}'] = data['close'].rolling(window=indicator_window).mean()  # Simple Moving Average
+    data[f'volume_{indicator_window}'] = data['volume'].rolling(window=indicator_window).mean()  # 30-day moving average of volume
 
-    X, y = [], []
-    
-    for i in range(window, len(data)):
-        X.append(data[i-window:i, 0])  # Taking the past window days (e.g., 60 days of closing prices)
-        y.append(data[i, 0])  # The target is the next day's closing price
-    
-    return np.array(X), np.array(y)
+    return data
 
 def build_lstm_model(input_shape):
     """
-    Build and compile the LSTM model.
+    Build an LSTM model for stock prediction.
     """
-
-    model = Sequential()
-    model.add(LSTM(units=50, return_sequences=False, input_shape=input_shape))
-    model.add(Dense(units=1))  # Output layer: single prediction for the next day's closing price
-    model.compile(optimizer=Adam(learning_rate=0.001), loss='mean_squared_error')
+    model = Sequential([
+        LSTM(50, return_sequences=True, input_shape=input_shape),
+        Dropout(0.2),
+        LSTM(50, return_sequences=False),
+        Dropout(0.2),
+        Dense(25, activation='relu'),
+        Dense(1, activation='tanh')  # Output is between -1 and 1
+    ])
+    
+    model.compile(optimizer='adam', loss='mse', metrics=['accuracy'])
     return model
 
-def iterative_prediction(data, model, window=60, num_predictions=30):
+def deep_learning_classifier(data, training_window=30, indicator_window=14, epochs=20, batch_size=16):
     """
-    Generate predictions iteratively using the model.
-    Start with the last window days, and use predictions as part of the input for the next prediction.
+    Implements an LSTM-based Deep Learning Classifier with a sliding window approach.
     """
 
+    # Create features
+    data = create_features(data, indicator_window)
+
+    # Create the target variable: 1 if the next day's price is higher, -1 if it is lower
+    data['target'] = (data['close'].shift(-1) > data['close']).astype(int) * 2 - 1
+
+    features = ['close', 'volume', f'SMA_{indicator_window}', f'volume_{indicator_window}']
+    
+    scaler = StandardScaler()  # Standardize features for better neural network performance
     predictions = []
-    
-    # Prepare the initial input (last window days of data)
-    current_input = data[-window:]
-    
-    for _ in range(num_predictions):
-        # Reshape the input to the shape (1, window, 1) for the LSTM model
-        current_input = current_input.reshape((1, window, 1))
-        
-        # Predict the next day's closing price
-        prediction = model.predict(current_input)
-        predictions.append(prediction[0, 0])
-        
-        # Update the current_input to include the prediction as the next day's data
-        current_input = np.append(current_input[:, 1:, :], prediction.reshape(1, 1, 1), axis=1)
-    
-    return predictions
 
-def strategy(data, window=60, num_predictions=30):
-    """
-    Implements a trading strategy using the LSTM model to predict future stock prices.
-    The model uses the previous 60 days' data to predict the 61st day's closing price.
-    """
+    for i in range(training_window+indicator_window, len(data)):
+        train_data = data.iloc[i-training_window:i]  # Rolling window for training
+        test_data = data.iloc[[i]]  # Single test point (next day)
 
-    # Load and preprocess the data
-    scaler = MinMaxScaler(feature_range=(0, 1))
-    data_scaled = scaler.fit_transform(data[['close']].values)
+        X_train, y_train = train_data[features], train_data['target']
+        X_test = test_data[features]
 
-    # Prepare the dataset
-    X, y = prepare_data(data_scaled, window)
+        # Scale the data
+        X_train_scaled = scaler.fit_transform(X_train)
+        X_test_scaled = scaler.transform(X_test)
 
-    # Reshape the data for LSTM input (samples, time steps, features)
-    X = X.reshape(X.shape[0], X.shape[1], 1)
+        # Reshape for LSTM (samples, time steps, features)
+        X_train_reshaped = np.reshape(X_train_scaled, (X_train_scaled.shape[0], 1, X_train_scaled.shape[1]))
+        X_test_reshaped = np.reshape(X_test_scaled, (X_test_scaled.shape[0], 1, X_test_scaled.shape[1]))
 
-    # Split data into training and test sets (80% train, 20% test)
-    train_size = int(len(X) * 0.8)
-    X_train, X_test = X[:train_size], X[train_size:]
-    y_train, y_test = y[:train_size], y[train_size:]
+        # Build and train the LSTM model
+        model = build_lstm_model((1, X_train_scaled.shape[1]))
+        model.fit(X_train_reshaped, y_train, epochs=epochs, batch_size=batch_size, verbose=0)
 
-    # Build and train the LSTM model
-    model = build_lstm_model((X_train.shape[1], 1))
-    model.fit(X_train, y_train, epochs=10, batch_size=32, validation_data=(X_test, y_test))
+        # Make prediction
+        pred = model.predict(X_test_reshaped)[0][0]
+        predictions.append(1 if pred > 0 else -1)  # Convert output to -1 or 1
 
-    # Predict iteratively for the next 30 days (or however many days you want to predict)
-    predictions = iterative_prediction(data_scaled, model, window, num_predictions)
-
-    # Inverse the scaling of predictions to get back to the original price range
-    predictions = scaler.inverse_transform(np.array(predictions).reshape(-1, 1))
-
-    # Plot the predictions against the actual data
-    plt.plot(data.index[-window:], data['close'].values[-window:], label='Last 60 days of actual data')
-    plt.plot(range(len(data), len(data) + num_predictions), predictions, label='Predicted prices for next 30 days', color='red')
-    plt.title('Stock Price Prediction (Iterative LSTM)')
-    plt.legend()
-    plt.show()
-
-    # Print the predictions
-    print(f"Predictions for the next {num_predictions} days:")
-    print(predictions.flatten())
-
-    # Assign signals (1 for buying, -1 for holding, here just showing example of buy/sell)
-    data['signal'] = 1  # In a real strategy, this would be based on predicted direction or other criteria
+    # Assign predictions back to the data
+    data.loc[data.index[training_window+indicator_window:], 'signal'] = predictions
 
     return data
-`
+
+def strategy(data):
+    """
+    Implements a trading strategy using the LSTM-based Deep Learning Classifier.
+    """
+    
+    # Call the deep_learning_classifier function to get signals
+    data = deep_learning_classifier(data)
+
+    return data`;
+
+export default deepLearningClassifier;

@@ -16,14 +16,14 @@ def logistic_regression(data, window=30):
     """
     signals = np.zeros(len(data))  # Initialize signals array
 
-    # Create the target variable: 1 if price goes up the next day, 0 if it goes down
-    data['target'] = (data['close'].shift(-1) > data['close']).astype(int)
+    # Create the target variable: 1 if price goes up the next day, -1 if it goes down
+    data['target'] = (data['close'].shift(-1) > data['close']).astype(int) * 2 - 1
     
     # Iterate over the data starting from the window index
     for i in range(window, len(data)):
         # Prepare the features (X) and target (y) for the logistic regression model
         X = np.array(range(i-window, i)).reshape(-1, 1)  # Time index for the last window days
-        y = data['target'][i-window:i].values  # Target is whether the next day's price goes up (1) or down (0)
+        y = data['target'][i-window:i].values  # Target is whether the next day's price goes up (1) or down (-1)
         
         # Fit the Logistic Regression model
         model = LogisticRegression()

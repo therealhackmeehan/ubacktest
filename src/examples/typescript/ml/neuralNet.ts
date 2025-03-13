@@ -1,27 +1,27 @@
-const rfClassifier = `
+const neuralNetworkClassifier = `
 '''
-Random Forest Classifier.
+Neural Network (MLP) Classifier.
 
 Built on the previous 30 days, using multiple features to predict the next day's movement (up/down).
 '''
 
 import pandas as pd
 import numpy as np
-from sklearn.ensemble import RandomForestClassifier
+from sklearn.neural_network import MLPClassifier
 from sklearn.preprocessing import StandardScaler
 
 def create_features(data, indicator_window=14):
     """
-    Create features for Random Forest model, including closing price, volume, and SMA.
+    Create features for Neural Network model, including closing price, volume, and SMA.
     """
     data[f'SMA_{indicator_window}'] = data['close'].rolling(window=indicator_window).mean()  # Simple Moving Average
     data[f'volume_{indicator_window}'] = data['volume'].rolling(window=indicator_window).mean()  # 30-day moving average of volume
 
     return data
 
-def random_forest_classifier(data, training_window=30, indicator_window=14, n_estimators=100, max_depth=None):
+def neural_network_classifier(data, training_window=30, indicator_window=14, hidden_layer_sizes=(64, 32), max_iter=500):
     """
-    Implements a Random Forest Classifier with a sliding window approach.
+    Implements a Neural Network Classifier (MLP) with a sliding window approach.
     """
 
     # Create features
@@ -32,7 +32,7 @@ def random_forest_classifier(data, training_window=30, indicator_window=14, n_es
 
     features = ['close', 'volume', f'SMA_{indicator_window}', f'volume_{indicator_window}']
     
-    scaler = StandardScaler()  # Standardize features for better Random Forest performance
+    scaler = StandardScaler()  # Standardize features for better performance
     predictions = []
 
     for i in range(training_window+indicator_window, len(data)):
@@ -46,8 +46,8 @@ def random_forest_classifier(data, training_window=30, indicator_window=14, n_es
         X_train_scaled = scaler.fit_transform(X_train)
         X_test_scaled = scaler.transform(X_test)
 
-        # Train the Random Forest model
-        model = RandomForestClassifier(n_estimators=n_estimators, max_depth=max_depth, random_state=42)
+        # Train the Neural Network model
+        model = MLPClassifier(hidden_layer_sizes=hidden_layer_sizes, max_iter=max_iter, activation='relu', solver='adam', random_state=42)
         model.fit(X_train_scaled, y_train)
 
         # Make prediction
@@ -61,12 +61,12 @@ def random_forest_classifier(data, training_window=30, indicator_window=14, n_es
 
 def strategy(data):
     """
-    Implements a trading strategy using the Random Forest Classifier.
+    Implements a trading strategy using the Neural Network Classifier.
     """
     
-    # Call the random_forest_classifier function to get signals
-    data = random_forest_classifier(data)
+    # Call the neural_network_classifier function to get signals
+    data = neural_network_classifier(data)
 
     return data`;
 
-export default rfClassifier;
+export default neuralNetworkClassifier;

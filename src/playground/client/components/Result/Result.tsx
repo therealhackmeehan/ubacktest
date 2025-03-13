@@ -26,7 +26,7 @@ interface ResultPanelProps {
 
 function Result({ selectedStrategy, formInputs, strategyResult, abilityToSaveNew }: ResultPanelProps) {
 
-    const [userDefinedPlotOpen, setUserDefinedPlotOpen] = useState<boolean>(false);
+    const [userDefinedPlotOpen, setUserDefinedPlotOpen] = useState<boolean>(true);
     const [stats, setStats] = useState<StatProps | null>(null);
     const [loading, setLoading] = useState<boolean>(false);
     const [errorMsg, setErrorMsg] = useState<string | null>('');

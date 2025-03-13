@@ -31,6 +31,10 @@ import ridgeReg from "./typescript/regression/ridgeRegression";
 import lassoReg from "./typescript/regression/lassoRegression";
 import logReg from "./typescript/ml/logisticRegression";
 import svmClassifier from "./typescript/ml/svm";
+import gradientBoostingClassifier from "./typescript/ml/gradBoosting";
+import knnClassifier from "./typescript/ml/knn";
+import neuralNetworkClassifier from "./typescript/ml/neuralNet";
+import deepLearningClassifier from "./typescript/dl/lstm";
 
 type Example = {
     name: string;
@@ -184,8 +188,24 @@ export const examples: StrategyExamples = {
             script: svmClassifier
         },
         {
+            name: "Gradient Boosting Classifier",
+            script: gradientBoostingClassifier
+        },
+        {
             name: "Random Forest Classifier",
             script: rfClassifier
         },
+        {
+            name: "KNN Classifier",
+            script: knnClassifier
+        },
+        {
+            name: "Neural Network Classifier",
+            script: neuralNetworkClassifier
+        },
+        {
+            name: "Deep Learning (LSTM) Classifier",
+            script: deepLearningClassifier
+        }
     ]
 };

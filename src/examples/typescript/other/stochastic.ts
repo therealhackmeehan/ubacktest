@@ -8,6 +8,7 @@ This strategy helps capture momentum reversals.
 '''
 
 import pandas as pd
+import numpy as np
 
 def calculate_stochastic_oscillator(data, window=14):
 
