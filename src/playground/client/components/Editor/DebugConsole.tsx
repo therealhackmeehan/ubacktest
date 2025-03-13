@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { FaTerminal } from "react-icons/fa";
 
 interface DebugConsoleProps {
     userStdout: string;
@@ -11,31 +12,32 @@ function DebugConsole({ userStdout, userStderr }: DebugConsoleProps) {
 
     return (
         <>
-            {(userStdout || userStderr) &&
-                <div className="z-10 p-4 m-4 resize-x max-w-5xl min-w-2 bottom-0 rounded-lg fixed overflow-auto border-2 bg-gray-50 text-sm tracking-tight dark:bg-boxdark dark:text-white">
-                    Output Console
-                    <button className="p-1 m-2 bg-slate-400 hover:bg-slate-500 rounded-lg text-xs text-white"
-                        onClick={() => setIsMaximized(!isMaximized)}>
-                        show
-                        {isMaximized ? ' less' : ' more'}
-                    </button>
-                    <div className="border-b border-2 mb-2"></div>
-                    <div className="gap-x-3 grid grid-cols-4">
-                        {isMaximized &&
-                            <>
-                                <div className="col-span-2">
-                                    <div className="text-end tracking-tight font-bold text-xs">Debug Output</div>
-                                    <textarea rows={7} cols={50} className="max-h-96 w-full border-0 bg-white rounded-md text-xs/4 font-mono dark:bg-black" readOnly={true} value={userStdout}></textarea>
-                                </div>
-                                <div className="col-span-2">
-                                    <div className="text-end tracking-tight font-bold text-xs">Error Output</div>
-                                    <textarea rows={7} cols={50} className="max-h-96 w-full border-0 bg-white rounded-md text-xs/4 text-red-500 font-mono dark:bg-black" readOnly={true} value={userStderr}></textarea>
-                                </div>
-                            </>
-                        }
+            {(userStdout || userStderr) && (
+                <div className="z-10 w-full shadow-xl p-0.5 bottom-0 left-0 fixed overflow-auto bg-gray-50 text-xs dark:bg-boxdark-2 dark:text-white border-t-2 border-slate-300 dark:border-0">
+                    <div className="flex justify-center items-center gap-1">
+                        <FaTerminal /> Output Console
+                        <button
+                            className="py-0.5 px-4 m-1 bg-slate-400 hover:bg-slate-500 rounded-lg text-xs text-white"
+                            onClick={() => setIsMaximized(!isMaximized)}
+                        >
+                            show {isMaximized ? ' less' : ' more'}
+                        </button>
                     </div>
-                </div>}
-        </>)
+                    {isMaximized && (
+                        <pre className="max-h-96 w-full border-0 bg-white rounded-md text-xs text-start font-mono dark:bg-black p-2 overflow-auto">
+                            {userStdout && (
+                                <span className="text-black dark:text-white">{userStdout + '\n'}</span>
+                            )}
+                            {userStderr && (
+                                <span className="text-red-500">{userStderr}</span>
+                            )}
+                        </pre>
+                    )}
+                </div>
+            )}
+        </>
+    );
 }
+
 
 export default DebugConsole;

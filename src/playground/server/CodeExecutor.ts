@@ -177,7 +177,7 @@ colsToExclude = {"open", "close", "high", "low", "volume", "timestamp", "signal"
 
 middleOutput = {
     "result": signalToReturn,
-    "data": df.loc[:, ~df.columns.isin(colsToExclude)].iloc[:, :10].fillna(0).round(4).to_dict('list')
+    "data": df.loc[:, ~df.columns.isin(colsToExclude)].iloc[:, :10].fillna(0).round(4).to_dict('list'),
     "warning": warning
 }
 output = "${uniqueKey}START${uniqueKey}" + json.dumps(middleOutput) + "${uniqueKey}END${uniqueKey}"

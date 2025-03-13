@@ -128,11 +128,11 @@ export const examples: StrategyExamples = {
     ],
     "More Useful Indicators": [
         {
-            name: "Average True Range (ATR) Strategy", 
+            name: "Average True Range (ATR) Strategy",
             script: atr
         },
         {
-            name: "ADX Indicator Strategy", 
+            name: "ADX Indicator Strategy",
             script: adx
         },
         {
@@ -178,7 +178,7 @@ export const examples: StrategyExamples = {
             script: lassoReg
         },
     ],
-    "Machine Learning & Deep Learning": [
+    "Machine Learning": [
         {
             name: "Logistic Regression",
             script: logReg
@@ -203,9 +203,6 @@ export const examples: StrategyExamples = {
             name: "Neural Network Classifier",
             script: neuralNetworkClassifier
         },
-        {
-            name: "Deep Learning (LSTM) Classifier",
-            script: deepLearningClassifier
-        }
-    ]
+    ],
+    "Deep Learning (Coming Soon...)": [],
 };
