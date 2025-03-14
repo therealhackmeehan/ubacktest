@@ -8,8 +8,8 @@ import validateFormInputs from "../../scripts/validateFormInputs";
 import validatePythonCode from "../../scripts/validatePythonCode";
 import { FormInputProps, StrategyResultProps } from "../../../../shared/sharedTypes";
 import { type stdProps } from "../StrategyEditor";
-import LoadingScreen from "../../../../client/components/LoadingScreen";
 import { StrategyContext } from "../../EditorPage";
+import LongLoadingScreen from "../../../../client/components/LongLoadingScreen";
 
 interface EditorProps {
     formInputs: FormInputProps;
@@ -98,7 +98,7 @@ function Editor({ formInputs, setStrategyResult, setResultOpen, setFormInputs, s
         <>
             <InputForm formInputs={formInputs} setFormInputs={setFormInputs} run={run} />
 
-            {loading && <LoadingScreen />}
+            {loading && <LongLoadingScreen />}
 
             {errorModalMessage && <ErrorModal closeModal={() => setErrorModalMessage('')} msg={errorModalMessage} />}
 

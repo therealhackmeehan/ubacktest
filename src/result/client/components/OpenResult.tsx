@@ -89,7 +89,7 @@ export default function OpenResult({ formInputs, setResultPanelOpen, result }: O
                         />
                         <div onClick={() => copyToClipboard(result.code)} className="px-8 mx-auto min-w-187.5">
                             <textarea
-                                className="w-full h-72 p-4 text-xs font-mono bg-slate-100 border border-white rounded-lg resize-none hover:bg-slate-200 hover:cursor-pointer"
+                                className="w-full h-100 p-4 text-xs font-mono bg-slate-100 border border-white rounded-lg resize-none hover:bg-slate-200 hover:cursor-pointer"
                                 value={result.code}
                                 readOnly
                             />

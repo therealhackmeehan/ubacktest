@@ -24,7 +24,7 @@ function DebugConsole({ userStdout, userStderr }: DebugConsoleProps) {
                         </button>
                     </div>
                     {isMaximized && (
-                        <pre className="max-h-96 w-full border-0 bg-white rounded-md text-xs text-start font-mono dark:bg-black p-2 overflow-auto">
+                        <pre className="max-h-96 min-h-32 w-full border-0 bg-white rounded-md text-xs text-start font-mono dark:bg-black py-2 px-5 overflow-auto overscroll-contain">
                             {userStdout && (
                                 <span className="text-black dark:text-white">{userStdout + '\n'}</span>
                             )}
@@ -33,8 +33,9 @@ function DebugConsole({ userStdout, userStderr }: DebugConsoleProps) {
                             )}
                         </pre>
                     )}
-                </div>
-            )}
+                </div >
+            )
+            }
         </>
     );
 }

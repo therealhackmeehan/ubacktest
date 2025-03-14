@@ -69,7 +69,6 @@ function CashEquity({ strategyResult }: { strategyResult: StrategyResultProps })
                     pointRadius: 0,
                     borderWidth: 1,
                     stepped: true,
-                    hidden: true,
                 },
             ],
         };

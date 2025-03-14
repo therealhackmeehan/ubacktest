@@ -36,7 +36,7 @@ export default function PackagesModal({ closeModal }: { closeModal: () => void }
                 ))}
             </div>}
 
-            <button className="my-2 text-start bg-white dark:bg-boxdark text-xs hover:underline hover:invert border-2 w-full rounded-lg border-slate-300 dark:border-white dark:text-white p-1" onClick={() => setDetailsOpen(!detailsOpen)}>{detailsOpen ? "Go Back" : "Click for More Details on Packages:"}</button>
+            <button className="my-2 text-start bg-white dark:bg-boxdark text-xs duration-700 hover:underline hover:invert border-2 w-full rounded-lg border-slate-300 dark:border-white dark:text-white p-1" onClick={() => setDetailsOpen(!detailsOpen)}>{detailsOpen ? "Go Back" : "Click for More Details on Packages:"}</button>
             {detailsOpen && (
                 <div className="text-xs dark:text-white p-4 font-extralight">
                     <p>Package versions may lag behind the latest releases. To check the current installed versions, run the following above/below a strategy:</p>

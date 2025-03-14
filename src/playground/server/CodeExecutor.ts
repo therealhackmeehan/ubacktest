@@ -58,27 +58,26 @@ class CodeExecutor {
             },
             body: JSON.stringify({
                 language_id: 31, // python for ML (base image)
-                source_code: mainFileContent
+                source_code: mainFileContent,
+                wall_time_limit: 70,
+                cpu_time_limit: 60,
             })
         };
 
         const response = await fetch(url, options);
-        console.log(response)
-         
-        const fullResult = await response.json(); // work on this
-        console.log(fullResult);
-
-        if (!response.ok) { // error right away if the response is not ok
-            const errorMsg = fullResult?.error; // if error available, append to errMsg
-            throw new HttpError(503, `In Executing Code, Unable to make that request: ${errorMsg || response.statusText}`);
+        if (!response.ok) {
+            throw new HttpError(503, `Code Execution Failed:\n\n"${response.statusText}"`)
         }
+
+        const fullResult = await response.json();
+        console.log(fullResult);
 
         let { stdout, stderr } = fullResult;
         if (!stdout) stdout = '';
         if (!stderr) stderr = '';
 
         if (fullResult.message) {
-            stderr = `${fullResult.message} \n\n` + stderr;
+            stderr = stderr + `Error:\n\n"${fullResult.message}"`;
         }
 
         return { stdout, stderr };
