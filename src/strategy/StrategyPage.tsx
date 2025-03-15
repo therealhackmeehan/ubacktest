@@ -24,7 +24,7 @@ export const miniEditorOpts = {
 function StrategyPage() {
     const { id } = useParams<'id'>();
     const { data: strategy, isLoading: isStrategyLoading, error: getStrategyError } = useQuery(getSpecificStrategy, {
-        id: id
+        id: id || ''
     });
 
     if (isStrategyLoading) return <LoadingScreen />

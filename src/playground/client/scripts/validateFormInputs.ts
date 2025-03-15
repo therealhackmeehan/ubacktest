@@ -1,9 +1,9 @@
 function validateFormInputs({ formInputs }: any) {
 
-    const { symbol, startDate, endDate, intval, timeOfDay, useWarmupDate, warmupDate, costPerTrade } = formInputs;
+    const { symbol, startDate, endDate, intval, timeout, useWarmupDate, warmupDate, costPerTrade } = formInputs;
 
     // Check for missing inputs
-    if (!startDate || !endDate || !symbol || !intval) {
+    if (!startDate || !endDate || !symbol || !intval || !timeout) {
         throw new Error("Missing input entries. Please provide 'symbol', 'start date', 'end date', and 'trading frequency'");
     }
 
@@ -28,10 +28,17 @@ function validateFormInputs({ formInputs }: any) {
         throw new Error(`Invalid interval. Allowed values are: ${allowedIntervals.join(", ")}.`);
     }
 
-    // allowed timeOfDay
-    const allowedTimeOfDay = ['open', 'close', 'high', 'low'];
-    if (!allowedTimeOfDay.includes(timeOfDay)) {
-        throw new Error(`Invalid executution time. Allowed values are: ${allowedTimeOfDay.join(", ")}.`)
+    if (isNaN(Number(timeout))) {
+        throw new Error("Execution time limit must be a number.")
+    }
+
+    // Check timeout is a valid integer
+    if (!Number.isInteger(Number(timeout))) {
+        throw new Error("Execution time limit must be an integer.");
+    }
+
+    if (timeout < 1 || timeout > 60) {
+        throw new Error("Execution time limit must fall between 1 and 60 seconds.");
     }
 
     // Check if start date and end date are within a reasonable range (e.g., within the last 20 years)
@@ -52,6 +59,7 @@ function validateFormInputs({ formInputs }: any) {
         throw new Error("Dates cannot be in the future.");
     }
 
+    // Validate costpertrade value
     if (isNaN(Number(costPerTrade))) {
         throw new Error("Trading Cost must be a number.")
     }

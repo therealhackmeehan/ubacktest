@@ -19,11 +19,13 @@ class CodeExecutor {
     private userCode: string;
     private dataToEmbedInPython: PythonDataProps;
     private startDate: string;
+    private timeout: number;
 
-    constructor(userCode: string, toInsertInPython: PythonDataProps, startDate: string) {
+    constructor(userCode: string, toInsertInPython: PythonDataProps, startDate: string, timeout: number) {
         this.userCode = userCode;
         this.dataToEmbedInPython = toInsertInPython;
         this.startDate = startDate;
+        this.timeout = timeout
     }
 
     public async execute() {
@@ -33,7 +35,7 @@ class CodeExecutor {
         const embeddedCode = CodeExecutor.embedUserCode(this.userCode, uniqueKey, this.dataToEmbedInPython, this.startDate);
 
         // send to the Judge0 API and grab both the stdout and stderr
-        const { stdout, stderr } = await CodeExecutor.sendToJudge_simple(embeddedCode);
+        const { stdout, stderr } = await CodeExecutor.sendToJudge_simple(embeddedCode, this.timeout);
 
         if (!stdout && !stderr) {
             throw new HttpError(400, "Unable to illicit a response from the python engine. This may indicate your request timed out, so try again.");
@@ -46,7 +48,7 @@ class CodeExecutor {
         }
     }
 
-    private static async sendToJudge_simple(mainFileContent: string) {
+    private static async sendToJudge_simple(mainFileContent: string, timeout: number) {
 
         const url = 'https://judge0-extra-ce.p.sulu.sh/submissions?base64_encoded=false&wait=true';
         const options = {
@@ -59,8 +61,7 @@ class CodeExecutor {
             body: JSON.stringify({
                 language_id: 31, // python for ML (base image)
                 source_code: mainFileContent,
-                wall_time_limit: 70,
-                cpu_time_limit: 60,
+                wall_time_limit: timeout,
             })
         };
 
@@ -76,8 +77,21 @@ class CodeExecutor {
         if (!stdout) stdout = '';
         if (!stderr) stderr = '';
 
+        const lenLim = 10000;
+        if (stdout.length > lenLim) {
+            stdout = stdout.slice(0, lenLim) + `... (${stdout.length - lenLim} more characters)`;
+        }
+
+        if (stderr.length > lenLim) {
+            stderr = stderr.slice(0, lenLim) + `... (${stderr.length - lenLim} more characters)`;
+        }
+
         if (fullResult.message) {
-            stderr = stderr + `Error:\n\n"${fullResult.message}"`;
+            stderr = stderr + `"${fullResult.message}"`;
+        }
+
+        if (stderr.length === 0 && stdout.length === 0) {
+            throw new HttpError(503, 'Something went wrong. No stdout or stderr generated from that execution. Please try again.')
         }
 
         return { stdout, stderr };

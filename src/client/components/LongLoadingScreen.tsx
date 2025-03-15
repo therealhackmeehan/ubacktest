@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 
 const messages = [
+    "",
     "Analyzing market trends... 📈",
     "Optimizing trading strategy... ⚡",
     "Simulating historical trades... ⏳",

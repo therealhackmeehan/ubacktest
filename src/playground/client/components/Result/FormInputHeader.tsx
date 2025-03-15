@@ -21,16 +21,13 @@ function FormInputHeader({ formInputs }: { formInputs: FormInputProps }) {
                 <div className="font-extralight flex justify-between items-center">
                     trading cost @ <span className="font-bold tracking-tight text-sky-700 px-2">{formInputs.costPerTrade}%</span>
                 </div>
-                <div className="font-extralight flex justify-between items-center">
-                    trades executed @ <span className="font-bold tracking-tight text-sky-700 px-2">{formInputs.timeOfDay}</span>
-                </div>
             </div>
             <div className="p-2 text-sky-800">
                 <div className="font-extralight flex justify-between items-center">
-                    Using a burnin period? <span className="font-bold tracking-tight text-sky-700 px-2">{formInputs.useWarmupDate ? "Y" : "N"}</span>
+                    Using a burn-in period? <span className="font-bold tracking-tight text-sky-700 px-2">{formInputs.useWarmupDate ? "Y" : "N"}</span>
                 </div>
                 <div className="font-extralight flex justify-between items-center">
-                    burnin start @ <span className="font-bold tracking-tight text-sky-700 px-2">{formInputs.useWarmupDate ? formInputs.warmupDate : "N/A"}</span>
+                    burn-in start @ <span className="font-bold tracking-tight text-sky-700 px-2">{formInputs.useWarmupDate ? formInputs.warmupDate : "N/A"}</span>
                 </div>
             </div>
         </div>

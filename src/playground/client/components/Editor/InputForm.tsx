@@ -321,21 +321,24 @@ function InputForm({ formInputs, setFormInputs, run }: InputFormSubcomponentProp
                             <div className="space-y-1 border-2 border-white bg-slate-100 rounded-md p-2 dark:bg-boxdark-2">
                                 <div className='flex items-center justify-between gap-3'>
                                     <div className="tracking-tight text-xs font-light">
-                                        Execute Trade @
+                                        Exec. Time Limit
                                     </div>
-                                    <select
-                                        className='text-xs text-gray-600 rounded-md border border-gray-200 shadow-md focus:outline-none focus:border-transparent focus:shadow-none duration-200 ease-in-out hover:shadow-none'
-                                        value={formInputs.timeOfDay}
-                                        onChange={handleChange}
-                                        name="timeOfDay"
-                                    >
-                                        <option value="close">close</option>
-                                        <option value="open">open</option>
-                                        <option value="high">high</option>
-                                        <option value="low">low</option>
-                                    </select>
+                                    <div className="flex items-center gap-x-1">
+                                        <input
+                                            type='number'
+                                            step={1}
+                                            min={2}
+                                            max={60}
+                                            className='text-xs text-gray-600 rounded-md border border-gray-200 shadow-md focus:outline-none focus:border-transparent focus:shadow-none duration-200 ease-in-out hover:shadow-none'
+                                            value={formInputs.timeout}
+                                            onChange={handleChange}
+                                            name="timeout"
+                                        />
+                                        <div className="font-extralight">
+                                            s
+                                        </div>
+                                    </div>
                                 </div>
-
                                 <div className='flex items-center justify-between gap-3'>
                                     <div className="tracking-tight text-xs font-light">
                                         Cost Per Trade

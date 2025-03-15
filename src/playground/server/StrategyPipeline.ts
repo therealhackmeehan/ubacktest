@@ -75,7 +75,7 @@ class StrategyPipeline {
         await this.getStrategyStockData();
 
         // With data already gathered, execute user code
-        const { stdout, stderr, uniqueKey } = await new CodeExecutor(this.code, this.toInsertInPython, this.formInputs.startDate).execute();
+        const { stdout, stderr, uniqueKey } = await new CodeExecutor(this.code, this.toInsertInPython, this.formInputs.startDate, this.formInputs.timeout).execute();
 
         this.stderr = stderr;
 
@@ -145,12 +145,11 @@ class StrategyPipeline {
         this.strategyResult.equityWithCosts[0] = this.strategyResult.portfolioWithCosts[0] * this.strategyResult.signal[0];
         this.strategyResult.cashWithCosts[0] = this.strategyResult.portfolioWithCosts[0] - Math.abs(this.strategyResult.equityWithCosts[0])
 
-        const timeOfDayKey: 'open' | 'close' | 'high' | 'low' = this.formInputs.timeOfDay;
         for (let i = 1; i < this.strategyResult.timestamp.length; i++) {
 
             // calculate market return
-            const curr = this.strategyResult[timeOfDayKey][i];
-            const prev = this.strategyResult[timeOfDayKey][i - 1];
+            const curr = this.strategyResult['close'][i];
+            const prev = this.strategyResult['close'][i - 1];
             let stockRet = (curr - prev) / prev;
 
             // calculate our equity return (flip if shorting)
@@ -269,7 +268,7 @@ class StrategyPipeline {
 
         // if the s&p data aligns as expected, add it to the final result
         if (StrategyPipeline.arraysAreEqual(stockStamp, spStamp)) {
-            this.strategyResult.sp = shortenedNormalizedQuote[this.formInputs.timeOfDay];
+            this.strategyResult.sp = shortenedNormalizedQuote['close'];
         }
     }
 
@@ -405,7 +404,7 @@ class StrategyPipeline {
             this.warning.push(lowVolumeMsg);
         }
 
-        const firstPrice = quote?.[this.formInputs.timeOfDay][0];
+        const firstPrice = quote?.['close'][0];
         if (!firstPrice || typeof firstPrice !== "number" || isNaN(firstPrice)) {
             throw new HttpError(500, "First close price is invalid. Cannot normalize data.");
         }
@@ -437,7 +436,7 @@ class StrategyPipeline {
         const shortenedTimestamps = timestamps.slice(shortenedIndex);
 
         // recalculate the first price for shortened data
-        const newFirstPrice = shortenedIndex >= 0 ? quote[this.formInputs.timeOfDay][shortenedIndex] : null;
+        const newFirstPrice = shortenedIndex >= 0 ? quote['close'][shortenedIndex] : null;
         if (!newFirstPrice || typeof newFirstPrice !== "number" || isNaN(newFirstPrice)) {
             throw new HttpError(500, "First price of shortened data is invalid. Cannot normalize shortened data.");
         }

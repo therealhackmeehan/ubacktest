@@ -32,7 +32,7 @@ export interface FormInputProps {
     startDate: string;
     endDate: string;
     intval: string;
-    timeOfDay: "open" | "close" | "high" | "low";
+    timeout: number;
     costPerTrade: number;
     useWarmupDate: boolean;
     warmupDate: string;

@@ -22,10 +22,10 @@ export const shareResult: ShareResult<ShareResultProps, Share> = async ({ email,
         throw new HttpError(401);
     }
 
+    if (!email) throw new HttpError(400, "Email must not be null.");
+
     const recipient = await context.entities.User.findUnique({
-        where: {
-            email,
-        },
+        where: { email, },
     });
 
     if (!recipient) {
