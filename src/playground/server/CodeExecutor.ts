@@ -62,6 +62,7 @@ class CodeExecutor {
                 language_id: 31, // python for ML (base image)
                 source_code: mainFileContent,
                 wall_time_limit: timeout,
+                cpu_time_limit: timeout,
             })
         };
 
@@ -159,28 +160,28 @@ if df.shape[0] != initHeight:
 
 df['signal'] = df['signal'].ffill().fillna(0)
 
-warning = ""
-warningMsg = "Potential feedforward bias detected. A past signal changed due to future data. This is expected with a random strategy but otherwise proceed with caution or reevaluate your strategy."
+#warning = ""
+#warningMsg = "Potential feedforward bias detected. A past signal changed due to future data. This is expected with a random strategy but otherwise proceed with caution or reevaluate your strategy."
 
 # Check two rows back for feedforward bias
-secondToLastSignal = df['signal'].iloc[-2]
-thirdToLastSignal = df['signal'].iloc[-3]
+#secondToLastSignal = df['signal'].iloc[-2]
+#thirdToLastSignal = df['signal'].iloc[-3]
 
 # Remove last row and reapply strategy
-df_trimmed1 = df.iloc[:-1].copy()
-df_trimmed1 = strategy(df_trimmed1)
-df_trimmed1['signal'] = df_trimmed1['signal'].ffill().fillna(0)
+#df_trimmed1 = df.iloc[:-1].copy()
+#df_trimmed1 = strategy(df_trimmed1)
+#df_trimmed1['signal'] = df_trimmed1['signal'].ffill().fillna(0)
 
-if df_trimmed1['signal'].iloc[-1] != secondToLastSignal or df_trimmed1['signal'].iloc[-2] != thirdToLastSignal:
-    warning = warningMsg
+#if df_trimmed1['signal'].iloc[-1] != secondToLastSignal or df_trimmed1['signal'].iloc[-2] != thirdToLastSignal:
+#    warning = warningMsg
 
 # Remove last two rows and reapply strategy
-df_trimmed2 = df.iloc[:-2].copy()
-df_trimmed2 = strategy(df_trimmed2)
-df_trimmed2['signal'] = df_trimmed2['signal'].ffill().fillna(0)
+#df_trimmed2 = df.iloc[:-2].copy()
+#df_trimmed2 = strategy(df_trimmed2)
+#df_trimmed2['signal'] = df_trimmed2['signal'].ffill().fillna(0)
 
-if df_trimmed2['signal'].iloc[-1] != thirdToLastSignal:
-    warning = warningMsg
+#if df_trimmed2['signal'].iloc[-1] != thirdToLastSignal:
+#    warning = warningMsg
 
 df = df[df['timestamp'] >= ${dateToCompare}]
 
@@ -190,8 +191,8 @@ colsToExclude = {"open", "close", "high", "low", "volume", "timestamp", "signal"
 
 middleOutput = {
     "result": signalToReturn,
-    "data": df.loc[:, ~df.columns.isin(colsToExclude)].iloc[:, :10].fillna(0).round(4).to_dict('list'),
-    "warning": warning
+    "data": df.loc[:, ~df.columns.isin(colsToExclude)].iloc[:, :3].fillna(0).round(4).to_dict('list'),
+   # "warning": warning
 }
 output = "${uniqueKey}START${uniqueKey}" + json.dumps(middleOutput) + "${uniqueKey}END${uniqueKey}"
 

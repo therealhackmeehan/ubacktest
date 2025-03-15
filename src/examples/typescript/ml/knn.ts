@@ -12,11 +12,23 @@ from sklearn.preprocessing import StandardScaler
 
 def create_features(data, indicator_window=14):
     """
-    Create features for KNN model, including closing price, volume, and SMA.
+    Create a bunch of features to train our classifier with!
     """
-    data[f'SMA_{indicator_window}'] = data['close'].rolling(window=indicator_window).mean()  # Simple Moving Average
-    data[f'volume_{indicator_window}'] = data['volume'].rolling(window=indicator_window).mean()  # 30-day moving average of volume
 
+    data[f'SMA_{indicator_window}'] = data['close'].rolling(window=indicator_window).mean()
+    data[f'volume_{indicator_window}'] = data['volume'].rolling(window=indicator_window).mean()
+    delta = data['close'].diff()
+    gain = (delta.where(delta > 0, 0)).rolling(window=indicator_window).mean()
+    loss = (-delta.where(delta < 0, 0)).rolling(window=indicator_window).mean()
+    data[f'RSI_{indicator_window}'] = 100 - (100 / (1 + gain / loss))
+    data[f'EMA_{indicator_window}'] = data['close'].ewm(span=indicator_window, adjust=False).mean()
+    data['EMA_12'] = data['close'].ewm(span=12, adjust=False).mean()
+    data['EMA_26'] = data['close'].ewm(span=26, adjust=False).mean()
+    data['MACD'] = data['EMA_12'] - data['EMA_26']
+    data['MACD_signal'] = data['MACD'].ewm(span=9, adjust=False).mean()  # Signal line for MACD
+    data['bollinger_upper'] = data[f'SMA_{indicator_window}'] + (data['close'].rolling(window=indicator_window).std() * 2)
+    data['bollinger_lower'] = data[f'SMA_{indicator_window}'] - (data['close'].rolling(window=indicator_window).std() * 2)
+    
     return data
 
 def knn_classifier(data, training_window=30, indicator_window=14, n_neighbors=5):
@@ -30,8 +42,19 @@ def knn_classifier(data, training_window=30, indicator_window=14, n_neighbors=5)
     # Create the target variable: 1 if the next day's price is higher, -1 if it is lower
     data['target'] = (data['close'].shift(-1) > data['close']).astype(int) * 2 - 1
 
-    features = ['close', 'volume', f'SMA_{indicator_window}', f'volume_{indicator_window}']
-    
+    features = [
+        'close', 
+        'volume', 
+        f'SMA_{indicator_window}', 
+        f'volume_{indicator_window}', 
+        f'RSI_{indicator_window}', 
+        f'EMA_{indicator_window}', 
+        'MACD', 
+        'MACD_signal', 
+        'bollinger_upper', 
+        'bollinger_lower', 
+    ]
+            
     scaler = StandardScaler()  # Standardize features for better KNN performance
     predictions = []
 

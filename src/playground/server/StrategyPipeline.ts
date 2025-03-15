@@ -79,7 +79,6 @@ class StrategyPipeline {
 
         this.stderr = stderr;
 
-        // if code executed successfully, extract the important output
         const parsedData = StrategyPipeline.parsePythonOutput(stdout, uniqueKey);
         if (parsedData) {
             Object.assign(this.strategyResult, parsedData.result);
@@ -101,7 +100,9 @@ class StrategyPipeline {
                     value.every(item => typeof item === 'number')
                 )
             )
-        };
+        } else if (!parsedData && !stderr) {
+            throw new HttpError(503, "No output extracted from the execution engine. This usually means you're working with too much data.")
+        }
 
         this.stdout = StrategyPipeline.stripDebugOutput(stdout, uniqueKey);
 
@@ -247,8 +248,10 @@ class StrategyPipeline {
     }
 
     private static parsePythonOutput(stdout: string, uniqueKey: string) {
+
         const regex = new RegExp(`${uniqueKey}START${uniqueKey}(.*?)${uniqueKey}END${uniqueKey}`, "s");
         const match = stdout.match(regex);
+
         return match ? JSON.parse(match[1]) : null;
     }
 
