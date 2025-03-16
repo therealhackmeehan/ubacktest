@@ -5,6 +5,7 @@ TEMA Crossover Strategy.
 Buy when the price crosses above the Triple Exponential Moving Average (TEMA).
 Short when the price crosses below the TEMA.
 TEMA smoothes price data to give clearer signals and reduce lag.
+Learn more @ docs.ubacktest.com/examples/
 '''
 
 import pandas as pd

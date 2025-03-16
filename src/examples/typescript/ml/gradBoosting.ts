@@ -1,8 +1,10 @@
 const gradientBoostingClassifier = `
 '''
-Gradient Boosting Classifier.
+Gradient Boosting Classifier Strategy.
 
-Built on the previous 30 days, using multiple features to predict the next day's movement (up/down).
+Trains a Gradient Boosting Classifier using the past 30 days of data to predict the next day's action. 
+The model leverages basic technical indicators as features to make predictions.
+Learn more @ docs.ubacktest.com/examples/
 '''
 
 import pandas as pd
@@ -11,9 +13,6 @@ from sklearn.ensemble import GradientBoostingClassifier
 from sklearn.preprocessing import StandardScaler
 
 def create_features(data, indicator_window=14):
-    """
-    Create a bunch of features to train our classifier with!
-    """
 
     data[f'SMA_{indicator_window}'] = data['close'].rolling(window=indicator_window).mean()
     data[f'volume_{indicator_window}'] = data['volume'].rolling(window=indicator_window).mean()
@@ -32,9 +31,6 @@ def create_features(data, indicator_window=14):
     return data
 
 def gradient_boosting_classifier(data, training_window=30, indicator_window=14, n_estimators=100, learning_rate=0.1, max_depth=3):
-    """
-    Implements a Gradient Boosting Classifier with a sliding window approach.
-    """
 
     # Create features
     data = create_features(data, indicator_window)
@@ -83,10 +79,7 @@ def gradient_boosting_classifier(data, training_window=30, indicator_window=14, 
     return data
 
 def strategy(data):
-    """
-    Implements a trading strategy using the Gradient Boosting Classifier.
-    """
-    
+
     # Call the gradient_boosting_classifier function to get signals
     data = gradient_boosting_classifier(data)
 

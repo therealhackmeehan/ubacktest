@@ -66,7 +66,26 @@ model Result {
   fromStrategy              Strategy?     @relation(fields: [fromStrategyID], references: [id], onDelete: Cascade)   
   fromStrategyID            String? 
 
-  data                      Json
+  // data                      Json
+
+  timestamp                 Float[]
+
+  open                      Float[]
+  close                     Float[]
+  high                      Float[]
+  low                       Float[]
+  volume                    Float[]
+  signal                    Float[]
+  returns                   Float[]
+  sp                        Float[]
+  portfolio                 Float[]
+  portfolioWithCosts        Float[]
+  cash                      Float[]
+  equity                    Float[]
+  cashWithCosts             Float[]
+  equityWithCosts           Float[]
+  userDefinedData           Json?
+  
   formInputs                Json
 
   shares                    Share[]

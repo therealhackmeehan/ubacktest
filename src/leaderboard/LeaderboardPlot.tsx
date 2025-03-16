@@ -1,6 +1,6 @@
 import CandlePlot from "../playground/client/components/result/CandlePlot";
 import { Result } from "wasp/entities";
-import { FormInputProps, StrategyResultProps } from "../shared/sharedTypes";
+import { FormInputProps, StrategyResultProps, UserDefinedData } from "../shared/sharedTypes";
 import { MdExitToApp } from "react-icons/md";
 
 interface LeaderboardPlotProps {
@@ -11,6 +11,32 @@ interface LeaderboardPlotProps {
 function LeaderboardPlot({ result, setLeaderboardPlotOpen, index }: LeaderboardPlotProps) {
 
     const formInputsLocal = result.formInputs as unknown as FormInputProps;
+
+    const joinedInfo: StrategyResultProps = {
+        timestamp: result.timestamp,
+        open: result.open,
+        close: result.close,
+        high: result.high,
+        low: result.low,
+        volume: result.volume,
+
+        signal: result.signal,
+        returns: result.returns,
+
+        sp: result.sp,
+
+        portfolio: result.portfolio,
+        portfolioWithCosts: result.portfolioWithCosts,
+
+        cash: result.cash,
+        equity: result.equity,
+
+        cashWithCosts: result.cashWithCosts,
+        equityWithCosts: result.equityWithCosts,
+
+        userDefinedData: result.userDefinedData as unknown as UserDefinedData,
+    };
+
 
     return (
         <div className="fixed inset-0 flex items-center justify-center overflow-y-auto z-50">
@@ -36,17 +62,10 @@ function LeaderboardPlot({ result, setLeaderboardPlotOpen, index }: LeaderboardP
                             </button>
                         </div>
                     </div>
-                    {(result.data)
-                        ?
-                        <CandlePlot strategyResult={result.data as unknown as StrategyResultProps}
-                            costPerTrade={formInputsLocal.costPerTrade}
-                            minDate={formInputsLocal.useWarmupDate ? formInputsLocal.warmupDate : formInputsLocal.startDate}
-                            symbol={formInputsLocal.symbol} />
-                        :
-                        <div className="m-auto font-bold tracking-tight p-8">
-                            Sorry, unable to view this strategy currently because it is too large and something went wrong on our end.
-                        </div>
-                    }
+                    <CandlePlot strategyResult={joinedInfo as unknown as StrategyResultProps}
+                        costPerTrade={formInputsLocal.costPerTrade}
+                        minDate={formInputsLocal.useWarmupDate ? formInputsLocal.warmupDate : formInputsLocal.startDate}
+                        symbol={formInputsLocal.symbol} />
                 </div>
             </div>
 

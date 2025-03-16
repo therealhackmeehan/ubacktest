@@ -31,7 +31,7 @@ export const initFormInputs: FormInputProps = {
 
 function StrategyEditor() {
 
-    const { selectedStrategy } = useContext(StrategyContext);
+    const { selectedStrategy, hasSaved } = useContext(StrategyContext);
 
     const [codeToDisplay, setCodeToDisplay] = useState<string>(selectedStrategy.code);
     useEffect(() => {
@@ -49,6 +49,23 @@ function StrategyEditor() {
         out: '',
         err: '',
     });
+
+    useEffect(() => {
+        // Define the beforeunload event handler
+        // Don't auto-refresh if unsaved result!
+        const handleBeforeUnload = (event: BeforeUnloadEvent) => {
+            if (!hasSaved && strategyResult) {
+                event.preventDefault();
+                return "";
+            }
+        };
+    
+        window.addEventListener('beforeunload', handleBeforeUnload);
+    
+        return () => {
+            window.removeEventListener('beforeunload', handleBeforeUnload);
+        };
+    }, [hasSaved, strategyResult]); // Re-run if `hasSaved` changes
 
     return (
         <div className="h-full flex flex-col bg-white dark:bg-boxdark">
@@ -78,6 +95,7 @@ function StrategyEditor() {
                 />
             ) : (
                 <Editor
+                    strategyResult={strategyResult}
                     setStrategyResult={setStrategyResult}
                     setResultOpen={setResultOpen}
                     formInputs={formInputs}

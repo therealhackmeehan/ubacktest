@@ -34,7 +34,6 @@ import svmClassifier from "./typescript/ml/svm";
 import gradientBoostingClassifier from "./typescript/ml/gradBoosting";
 import knnClassifier from "./typescript/ml/knn";
 import neuralNetworkClassifier from "./typescript/ml/neuralNet";
-import deepLearningClassifier from "./typescript/dl/lstm";
 
 type Example = {
     name: string;
@@ -48,81 +47,81 @@ type StrategyExamples = {
 export const examples: StrategyExamples = {
     "Intro": [
         {
-            name: "Buy and Hold Strategy", //GOOD
+            name: "Buy and Hold Strategy",
             script: buyAndHold
         },
         {
-            name: "Short and Hold Strategy", //GOOD
+            name: "Short and Hold Strategy",
             script: shortAndHold
         },
         {
-            name: "Random Strategy", //GOOD
+            name: "Random Strategy",
             script: random
         },
         {
-            name: "(More) Random Strategy", //GOOD
+            name: "(More) Random Strategy",
             script: moreRandom
         }
     ],
     "Moving Averages": [
         {
-            name: "Simple Moving Average Crossover", //s
+            name: "Simple Moving Average Crossover",
             script: smaCrossover
         },
         {
-            name: "Exponential Moving Average Crossover", //
+            name: "Exponential Moving Average Crossover",
             script: emaCrossover
         },
         {
-            name: "Triple Exponential Moving Average", //
+            name: "Triple Exponential Moving Average",
             script: tema
         },
         {
-            name: "MACD Strategy", //
+            name: "MACD Strategy",
             script: macd
         },
         {
-            name: "Moving Average Envelope Strategy", //
+            name: "Moving Average Envelope Strategy",
             script: maEnvelope
         },
         {
-            name: "Adaptive Moving Average", //
+            name: "Adaptive Moving Average",
             script: ama
         }
     ],
     "RSI-Based Strategies": [
         {
-            name: "RSI Indicator Strategy",  //
+            name: "RSI Indicator Strategy",
             script: rsi
         },
         {
-            name: "RSI Breakout Strategy", //
+            name: "RSI Breakout Strategy",
             script: rsiBreakout
         },
         {
-            name: 'RSI Indicator Strategy (Scaled)', //
+            name: 'RSI Indicator Strategy (Scaled)',
             script: scaledRsi,
         },
         {
-            name: 'RSI Indicator Strategy with Adaptive Bounds', //
+            name: 'RSI Indicator Strategy with Adaptive Bounds',
             script: adaptiveRsi,
         },
         {
-            name: "RSI with Moving Average Confirmation", //
+            name: "RSI with Moving Average Confirmation",
             script: rsiSma
         },
         {
-            name: "RSI with Volume Confirmation", //
+            name: "RSI with Volume Confirmation",
             script: rsiVolume
         }
     ],
     "Bollinger Band Strategies": [
         {
-            name: "Bollinger Bands Strategy", //
+            name: "Bollinger Bands Strategy",
             script: bollinger
         },
         {
-            name: "Bollinger Bands with Moving Average Confirmation", //
+            name: "Bollinger Bands with Moving Average Confirmation",
             script: bollingerSma
         },
     ],
@@ -144,7 +143,7 @@ export const examples: StrategyExamples = {
             script: ichimoku
         },
         {
-            name: "On-Balance Volume Strategy", //
+            name: "On-Balance Volume Strategy",
             script: obv
         },
         {
@@ -152,7 +151,7 @@ export const examples: StrategyExamples = {
             script: sar
         },
         {
-            name: "Stochastic Oscillator Strategy", //
+            name: "Stochastic Oscillator Strategy",
             script: stochastic
         },
     ],

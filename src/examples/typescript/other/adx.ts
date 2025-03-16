@@ -5,6 +5,7 @@ ADX Trend Strength Strategy.
 Buy when the +DI crosses above the -DI and the ADX is above 25 (strong uptrend).
 Short when the -DI crosses above the +DI and the ADX is above 25 (strong downtrend).
 The ADX helps to confirm the strength of a trend.
+Learn more @ docs.ubacktest.com/examples/
 '''
 
 import pandas as pd

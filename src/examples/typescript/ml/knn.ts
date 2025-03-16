@@ -2,7 +2,9 @@ const knnClassifier = `
 '''
 K-Nearest Neighbors (KNN) Classifier.
 
-Built on the previous 30 days, using multiple features to predict the next day's movement (up/down).
+Trains a K-Nearest Neighbors Classifier using the past 30 days of data to predict the next day's action. 
+The model leverages basic technical indicators as features to make predictions.
+Learn more @ docs.ubacktest.com/examples/
 '''
 
 import pandas as pd
@@ -11,9 +13,6 @@ from sklearn.neighbors import KNeighborsClassifier
 from sklearn.preprocessing import StandardScaler
 
 def create_features(data, indicator_window=14):
-    """
-    Create a bunch of features to train our classifier with!
-    """
 
     data[f'SMA_{indicator_window}'] = data['close'].rolling(window=indicator_window).mean()
     data[f'volume_{indicator_window}'] = data['volume'].rolling(window=indicator_window).mean()
@@ -32,9 +31,6 @@ def create_features(data, indicator_window=14):
     return data
 
 def knn_classifier(data, training_window=30, indicator_window=14, n_neighbors=5):
-    """
-    Implements a K-Nearest Neighbors Classifier with a sliding window approach.
-    """
 
     # Create features
     data = create_features(data, indicator_window)
@@ -73,7 +69,7 @@ def knn_classifier(data, training_window=30, indicator_window=14, n_neighbors=5)
         model = KNeighborsClassifier(n_neighbors=n_neighbors)
         model.fit(X_train_scaled, y_train)
 
-        # Make prediction
+        # Make predictions
         pred = model.predict(X_test_scaled)[0]
         predictions.append(pred)
 
@@ -83,9 +79,6 @@ def knn_classifier(data, training_window=30, indicator_window=14, n_neighbors=5)
     return data
 
 def strategy(data):
-    """
-    Implements a trading strategy using the K-Nearest Neighbors Classifier.
-    """
     
     # Call the knn_classifier function to get signals
     data = knn_classifier(data)

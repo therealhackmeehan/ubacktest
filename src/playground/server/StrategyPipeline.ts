@@ -101,10 +101,15 @@ class StrategyPipeline {
                 )
             )
         } else if (!parsedData && !stderr) {
-            throw new HttpError(503, "No output extracted from the execution engine. This usually means you're working with too much data.")
+            throw new HttpError(503, "No output extracted from the execution engine. This usually means you're printing too much to stdout.")
         }
 
         this.stdout = StrategyPipeline.stripDebugOutput(stdout, uniqueKey);
+        const lenLim = 10000;
+
+        this.stdout = this.stdout.length > lenLim
+            ? `${this.stdout.slice(0, lenLim)}... (${this.stdout.length - lenLim} more characters)`
+            : this.stdout;
 
         // if code did not execute successfully, return and error
         if (this.stderr) return this.sendJSONtoFrontend();
@@ -134,7 +139,7 @@ class StrategyPipeline {
 
     private calculatePortfolio() {
 
-        const tradingCost = this.formInputs.costPerTrade/100;
+        const tradingCost = this.formInputs.costPerTrade / 100;
 
         this.strategyResult.portfolio[0] = 1;
         this.strategyResult.portfolioWithCosts[0] = 1 - Math.abs(tradingCost * this.strategyResult.signal[0]);
@@ -407,25 +412,8 @@ class StrategyPipeline {
             this.warning.push(lowVolumeMsg);
         }
 
-        const firstPrice = quote?.['close'][0];
-        if (!firstPrice || typeof firstPrice !== "number" || isNaN(firstPrice)) {
-            throw new HttpError(500, "First close price is invalid. Cannot normalize data.");
-        }
-
-        const normalizedPrices = (prices: number[]) => prices.map(price => Math.round((price / firstPrice) * 10 ** this.decimalPlaces) / 10 ** this.decimalPlaces);
-
-        // round and normalize all data based on the first value (with burn-in period)
-        const normalizedQuote = {
-            high: normalizedPrices(highPrices),
-            low: normalizedPrices(lowPrices),
-            open: normalizedPrices(openPrices),
-            close: normalizedPrices(closePrices),
-            volume: volumes,
-            timestamp: timestamps,
-        };
-
         // filter data for shortened version based on timestamp limit
-        const shortenedIndex = normalizedQuote.timestamp.findIndex(ts => ts >= new Date(this.formInputs.startDate).getTime() / 1000);
+        const shortenedIndex = timestamps.findIndex(ts => ts >= new Date(this.formInputs.startDate).getTime() / 1000);
         if (shortenedIndex === -1) {
             throw new HttpError(400, "No data exists after the specified timestamp.");
         }
@@ -444,8 +432,7 @@ class StrategyPipeline {
             throw new HttpError(500, "First price of shortened data is invalid. Cannot normalize shortened data.");
         }
 
-        const shortenedNormalizedPrices = (prices: number[]) =>
-            prices.map(price => Math.round((price / newFirstPrice) * 10 ** this.decimalPlaces) / 10 ** this.decimalPlaces);
+        const shortenedNormalizedPrices = (prices: number[]) => prices.map(price => Math.round((price / newFirstPrice) * 10 ** this.decimalPlaces) / 10 ** this.decimalPlaces);
 
         // round and normalize the standard trading period's data (without burn-in period)
         const shortenedNormalizedQuote = {
@@ -455,6 +442,16 @@ class StrategyPipeline {
             close: shortenedNormalizedPrices(shortenedClosePrices),
             volume: shortenedVolumes,
             timestamp: shortenedTimestamps,
+        };
+
+        // round and normalize all data based on the first value (with burn-in period)
+        const normalizedQuote = {
+            high: shortenedNormalizedPrices(highPrices),
+            low: shortenedNormalizedPrices(lowPrices),
+            open: shortenedNormalizedPrices(openPrices),
+            close: shortenedNormalizedPrices(closePrices),
+            volume: volumes,
+            timestamp: timestamps,
         };
 
         return { normalizedQuote, shortenedNormalizedQuote };

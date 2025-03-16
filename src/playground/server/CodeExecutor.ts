@@ -1,5 +1,6 @@
 import { PythonDataProps } from "../../shared/sharedTypes";
 import { HttpError } from "wasp/server";
+import { Buffer } from 'buffer'; // Node.js global
 
 /*
     Backend endpoint for executing python code in an isolated,
@@ -50,7 +51,7 @@ class CodeExecutor {
 
     private static async sendToJudge_simple(mainFileContent: string, timeout: number) {
 
-        const url = 'https://judge0-extra-ce.p.sulu.sh/submissions?base64_encoded=false&wait=true';
+        const url = 'https://judge0-extra-ce.p.sulu.sh/submissions?base64_encoded=true&wait=true';
         const options = {
             method: 'POST',
             headers: {
@@ -59,8 +60,8 @@ class CodeExecutor {
                 Authorization: `Bearer ${process.env.JUDGE_APIKEY_SULU}`
             },
             body: JSON.stringify({
-                language_id: 31, // python for ML (base image)
-                source_code: mainFileContent,
+                language_id: 31, // Python for ML (base image)
+                source_code: Buffer.from(mainFileContent).toString('base64'), // Encode source code
                 wall_time_limit: timeout,
                 cpu_time_limit: timeout,
             })
@@ -75,20 +76,11 @@ class CodeExecutor {
         console.log(fullResult);
 
         let { stdout, stderr } = fullResult;
-        if (!stdout) stdout = '';
-        if (!stderr) stderr = '';
-
-        const lenLim = 10000;
-        if (stdout.length > lenLim) {
-            stdout = stdout.slice(0, lenLim) + `... (${stdout.length - lenLim} more characters)`;
-        }
-
-        if (stderr.length > lenLim) {
-            stderr = stderr.slice(0, lenLim) + `... (${stderr.length - lenLim} more characters)`;
-        }
-
+        if (!stdout) { stdout = '' } else { stdout = Buffer.from(stdout, 'base64').toString('utf-8') };
+        if (!stderr) { stderr = '' } else { stderr = Buffer.from(stderr, 'base64').toString('utf-8') };
+        
         if (fullResult.message) {
-            stderr = stderr + `"${fullResult.message}"`;
+            stderr = stderr + `"${Buffer.from(fullResult.message, 'base64').toString('utf-8')}"`;
         }
 
         if (stderr.length === 0 && stdout.length === 0) {
@@ -191,7 +183,7 @@ colsToExclude = {"open", "close", "high", "low", "volume", "timestamp", "signal"
 
 middleOutput = {
     "result": signalToReturn,
-    "data": df.loc[:, ~df.columns.isin(colsToExclude)].iloc[:, :3].fillna(0).round(4).to_dict('list'),
+    "data": df.loc[:, ~df.columns.isin(colsToExclude)].iloc[:, :6].fillna(0).round(4).to_dict('list'),
    # "warning": warning
 }
 output = "${uniqueKey}START${uniqueKey}" + json.dumps(middleOutput) + "${uniqueKey}END${uniqueKey}"

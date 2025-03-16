@@ -9,6 +9,7 @@ import {
     type GetTopResults,
     type TogglePrivacy,
 } from "wasp/server/operations";
+import { StrategyResultProps } from "../../shared/sharedTypes";
 
 type ResultCreationInfo = {
     name: string;
@@ -38,11 +39,29 @@ export const createResult: CreateResult<ResultCreationInfo, Result> = async ({ n
         throw new HttpError(400, "A result with this name already exists.");
     }
 
+    // break down data into arrays
+    const {timestamp, open, close, high, low, volume, signal, returns, sp, portfolio, portfolioWithCosts, cash, equity, cashWithCosts, equityWithCosts, userDefinedData}: StrategyResultProps = data;
+
     return await context.entities.Result.create({
         data: {
             name,
             code,
-            data,
+            timestamp,
+            open,
+            close,
+            high,
+            low,
+            volume,
+            signal,
+            returns,
+            sp,
+            portfolio,
+            portfolioWithCosts,
+            cash,
+            equity,
+            cashWithCosts,
+            equityWithCosts,
+            userDefinedData,
             formInputs,
             timepoints,
             profitLoss,

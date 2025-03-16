@@ -1,16 +1,16 @@
 import React from 'react';
-import { StrategyResultProps } from '../../../shared/sharedTypes';
 
 type PlotProps = {
-    data: StrategyResultProps;
+    timestamp: number[];
+    portfolio: number[];
     width?: number;
     height?: number;
 };
 
-const SmallPlot: React.FC<PlotProps> = ({ data, width = 80, height = 20 }) => {
+const SmallPlot: React.FC<PlotProps> = ({ timestamp, portfolio, width = 80, height = 20 }) => {
 
-    const x = data.timestamp;
-    const y = data.portfolio;
+    const x = timestamp;
+    const y = portfolio;
 
     // Ensure x and y arrays have the same length
     if (x.length !== y.length) {

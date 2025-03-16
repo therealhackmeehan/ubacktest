@@ -41,7 +41,7 @@ function Result({ selectedStrategy, formInputs, strategyResult, abilityToSaveNew
 
         let dataToUse: StrategyResultProps | null = strategyResult;
 
-        const maxTimepoints = 366;
+        const maxTimepoints = 10000;
         const timepoints = strategyResult.timestamp.length;
         if (timepoints > maxTimepoints) {
             dataToUse = null;

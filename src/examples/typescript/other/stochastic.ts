@@ -5,6 +5,7 @@ Stochastic Oscillator Strategy.
 Buy when the %K line crosses above the %D line below 20 (oversold condition).
 Short when the %K line crosses below the %D line above 80 (overbought condition).
 This strategy helps capture momentum reversals.
+Learn more @ docs.ubacktest.com/examples/
 '''
 
 import pandas as pd

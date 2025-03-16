@@ -1,10 +1,14 @@
 import os
 import re
+import shutil
 
 def extract_code_snippets(source_dir, output_dir="python"):
     if not os.path.exists(output_dir):
         os.makedirs(output_dir)
-    
+    else:
+        shutil.rmtree(output_dir)
+        os.makedirs(output_dir)
+
     for root, _, files in os.walk(source_dir):
         for file in files:
             file_path = os.path.join(root, file)

@@ -326,8 +326,8 @@ function InputForm({ formInputs, setFormInputs, run }: InputFormSubcomponentProp
                                     <div className="flex items-center gap-x-1">
                                         <input
                                             type='number'
-                                            step={1}
-                                            min={2}
+                                            step={5}
+                                            min={1}
                                             max={60}
                                             className='text-xs text-gray-600 rounded-md border border-gray-200 shadow-md focus:outline-none focus:border-transparent focus:shadow-none duration-200 ease-in-out hover:shadow-none'
                                             value={formInputs.timeout}

@@ -17,6 +17,7 @@ export default function EditorPage() {
 
     // strategy to focus in on or display
     const [selectedStrategy, setSelectedStrategy] = useState<Strategy | null>(null);
+    const [hasSaved, setHasSaved] = useState<boolean>(false);
 
     // strategy database contents
     const { data: strategies, isLoading: isStrategiesLoading } = useQuery(getStrategies);
@@ -138,7 +139,7 @@ export default function EditorPage() {
 
             <div className='h-full overflow-x-auto'>
                 {selectedStrategy ? (
-                    <StrategyContext.Provider value={{ selectedStrategy, setSelectedStrategy }}>
+                    <StrategyContext.Provider value={{ selectedStrategy, setSelectedStrategy, hasSaved, setHasSaved }}>
                         <StrategyEditor />
                     </StrategyContext.Provider>
                 ) : (

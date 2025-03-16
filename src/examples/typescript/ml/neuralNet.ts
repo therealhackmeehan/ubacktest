@@ -2,7 +2,9 @@ const neuralNetworkClassifier = `
 '''
 Neural Network (MLP) Classifier.
 
-Built on the previous 30 days, using multiple features to predict the next day's movement (up/down).
+Trains a NN Classifier using the past 30 days of data to predict the next day's action. 
+The model leverages basic technical indicators as features to make predictions.
+Learn more @ docs.ubacktest.com/examples/
 '''
 
 import pandas as pd
@@ -11,9 +13,6 @@ from sklearn.neural_network import MLPClassifier
 from sklearn.preprocessing import StandardScaler
 
 def create_features(data, indicator_window=14):
-    """
-    Create a bunch of features to train our classifier with!
-    """
 
     data[f'SMA_{indicator_window}'] = data['close'].rolling(window=indicator_window).mean()
     data[f'volume_{indicator_window}'] = data['volume'].rolling(window=indicator_window).mean()
@@ -32,9 +31,6 @@ def create_features(data, indicator_window=14):
     return data
 
 def neural_network_classifier(data, training_window=30, indicator_window=14, hidden_layer_sizes=(64, 32), max_iter=500):
-    """
-    Implements a Neural Network Classifier (MLP) with a sliding window approach.
-    """
 
     # Create features
     data = create_features(data, indicator_window)
@@ -83,9 +79,6 @@ def neural_network_classifier(data, training_window=30, indicator_window=14, hid
     return data
 
 def strategy(data):
-    """
-    Implements a trading strategy using the Neural Network Classifier.
-    """
     
     # Call the neural_network_classifier function to get signals
     data = neural_network_classifier(data)

@@ -4,12 +4,15 @@ Adaptive Moving Average (AMA) Strategy.
 Buy when the AMA turns upward.
 Short when the AMA turns downward.
 This strategy adjusts dynamically to market volatility using an efficiency ratio.
+Learn more @ docs.ubacktest.com/examples/
 '''
 
 import pandas as pd
 import numpy as np
 
 def calculate_ama(series, window=10, fast_ema=2, slow_ema=30):
+
+    # calculate efficiency ratio from price diffs / volatility
     price_change = abs(series.diff(window))
     volatility = series.diff().abs().rolling(window=window).sum()
     
@@ -18,6 +21,8 @@ def calculate_ama(series, window=10, fast_ema=2, slow_ema=30):
 
     smoothing_constant = (efficiency_ratio * (2 / (fast_ema + 1) - 2 / (slow_ema + 1)) + 2 / (slow_ema + 1)) ** 2
     ama = series.copy()
+
+    # build a series of ama values to correspond with the smoothed ama
     for i in range(1, len(series)):
         ama.iloc[i] = ama.iloc[i - 1] + smoothing_constant.iloc[i] * (series.iloc[i] - ama.iloc[i - 1])
 

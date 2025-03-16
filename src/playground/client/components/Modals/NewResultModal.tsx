@@ -1,8 +1,9 @@
-import { useState } from 'react';
+import { useState, useContext } from 'react';
 import { validateNewName } from '../../scripts/modalHelpers';
 import useEnterKey from '../../../../client/hooks/useEnterKey';
 import ModalLayout from '../../../../client/components/ModalLayout';
 import { TiDelete } from 'react-icons/ti';
+import { StrategyContext } from '../../EditorPage';
 
 interface NewProjectModalProps {
     onSuccess: (name: string) => Promise<void>;
@@ -15,6 +16,8 @@ export default function NewResultModal({ onSuccess, closeModal, symbol }: NewPro
     const currDate = new Date();
     const currDateString: string = currDate.toLocaleDateString().replaceAll('/', '_')
     const fullPlaceholderName = symbol + '_result_' + currDateString;
+
+    const { hasSaved, setHasSaved } = useContext(StrategyContext);
 
     const [newResultName, setNewResultName] = useState<string>(fullPlaceholderName);
     const [errMsg, setErrMsg] = useState<string>('');
@@ -29,6 +32,8 @@ export default function NewResultModal({ onSuccess, closeModal, symbol }: NewPro
         setShowSuccess(false); // Reset success state
 
         try {
+            if (hasSaved) throw new Error("You have already saved this result.");
+
             validateNewName(newResultName); // This should throw an error if invalid
             await onSuccess(newResultName); // Ensure success before showing success UI
 
@@ -45,6 +50,8 @@ export default function NewResultModal({ onSuccess, closeModal, symbol }: NewPro
                     clearInterval(progressInterval);
                 }
             }, 50);
+
+            setHasSaved(true);
 
             // Set timeout to close the modal after 3 seconds
             setTimeout(() => {

@@ -5,15 +5,13 @@ Ichimoku Cloud Strategy.
 Buy when the Conversion Line crosses above the Base Line and the price is above the cloud.
 Short when the Conversion Line crosses below the Base Line and the price is below the cloud.
 The Ichimoku Cloud provides insights into trend direction and momentum.
+Learn more @ docs.ubacktest.com/examples/
 '''
 
 import pandas as pd
 import numpy as np
 
 def calculate_ichimoku(data):
-    """
-    Calculates Ichimoku Cloud components for a given stock dataset.
-    """
 
     # Tenkan-sen (Conversion Line) - 9-period high/low midpoint
     # Kijun-sen (Base Line) - 26-period high/low midpoint
@@ -30,9 +28,7 @@ def calculate_ichimoku(data):
     return data
 
 def strategy(data):
-    """
-    Implements an Ichimoku-based trading strategy.
-    """
+
     data = calculate_ichimoku(data)
 
     # Generate signals based on Ichimoku Cloud principles

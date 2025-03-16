@@ -1,8 +1,9 @@
 const logReg = `
 '''
-Logistic Regression.
+Logistic Regression Strategy.
 
-Built on the previous 30 days, then used to predict the next day's movement (up/down).
+Trains a Logistic Regression model using the past 30 days of data to predict the next day's price movement (up/down).
+Learn more @ docs.ubacktest.com/examples/
 '''
 
 import pandas as pd
@@ -10,10 +11,7 @@ from sklearn.linear_model import LogisticRegression
 import numpy as np
 
 def logistic_regression(data, window=30):
-    """
-    Function to implement Logistic Regression strategy
-    for time series data (e.g., stock closing prices).
-    """
+
     signals = np.zeros(len(data))  # Initialize signals array
 
     # Create the target variable: 1 if price goes up the next day, -1 if it goes down
@@ -38,9 +36,7 @@ def logistic_regression(data, window=30):
     return signals
 
 def strategy(data):
-    """
-    Implements a trading strategy that uses Logistic Regression for signals.
-    """
+
     # Call the logistic_regression function to get the signals
     data['signal'] = logistic_regression(data)
 

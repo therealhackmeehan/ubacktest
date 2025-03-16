@@ -1,11 +1,12 @@
 export const rsiBreakout =
     `'''
-Buy Low, Sell/Short High.
+Buy Low, Sell/Short High upon RSI exit.
 
 Buy when RSI crosses above 30 (instead of below).
 Sell when RSI crosses below 70 (instead of above).
 
 More conservative than classic RSI because it waits for confirmation.
+Learn more @ docs.ubacktest.com/examples/
 '''
 
 import pandas as pd

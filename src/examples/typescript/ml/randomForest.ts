@@ -2,7 +2,9 @@ const rfClassifier = `
 '''
 Random Forest Classifier.
 
-Built on the previous 30 days, using multiple features to predict the next day's movement (up/down).
+Trains a Random Forest Classifier using the past 30 days of data to predict the next day's action. 
+The model leverages basic technical indicators as features to make predictions.
+Learn more @ docs.ubacktest.com/examples/
 '''
 
 import pandas as pd
@@ -11,9 +13,6 @@ from sklearn.ensemble import RandomForestClassifier
 from sklearn.preprocessing import StandardScaler
 
 def create_features(data, indicator_window=14):
-    """
-    Create a bunch of features to train our classifier with!
-    """
 
     data[f'SMA_{indicator_window}'] = data['close'].rolling(window=indicator_window).mean()
     data[f'volume_{indicator_window}'] = data['volume'].rolling(window=indicator_window).mean()
@@ -32,9 +31,6 @@ def create_features(data, indicator_window=14):
     return data
 
 def random_forest_classifier(data, training_window=30, indicator_window=14, n_estimators=100, max_depth=None):
-    """
-    Implements a Random Forest Classifier with a sliding window approach.
-    """
 
     # Create features
     data = create_features(data, indicator_window)
@@ -83,9 +79,6 @@ def random_forest_classifier(data, training_window=30, indicator_window=14, n_es
     return data
 
 def strategy(data):
-    """
-    Implements a trading strategy using the Random Forest Classifier.
-    """
     
     # Call the random_forest_classifier function to get signals
     data = random_forest_classifier(data)

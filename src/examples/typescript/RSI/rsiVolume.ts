@@ -6,6 +6,7 @@ Buy Low, Sell//Short High with Volume Confirmation.
 Short stock when RSI crosses above 70 **and** volume is above its 50-day average.
 Buy stock when RSI crosses below 30 **and** volume is above its 50-day average.
 This ensures strong momentum behind the signals.
+Learn more @ docs.ubacktest.com/examples/
 '''
 
 import pandas as pd

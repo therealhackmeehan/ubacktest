@@ -47,7 +47,6 @@ export default function UserDefinedPlot({ strategyResult, timestamp }: UserDefin
         if (!strategyResult.userDefinedData || !strategyResult.signal || !strategyResult.close || !timestamp) return;
 
         const datasets = Object.entries(strategyResult.userDefinedData)
-            .slice(0, 5)
             .map(([key, values], index) => {
                 return {
                     label: key,

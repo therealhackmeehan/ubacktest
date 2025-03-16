@@ -9,10 +9,11 @@ import validatePythonCode from "../../scripts/validatePythonCode";
 import { FormInputProps, StrategyResultProps } from "../../../../shared/sharedTypes";
 import { type stdProps } from "../StrategyEditor";
 import { StrategyContext } from "../../EditorPage";
-import LongLoadingScreen from "../../../../client/components/LongLoadingScreen";
+import LongLoadingScreen from "./LongLoadingScreen";
 
 interface EditorProps {
     formInputs: FormInputProps;
+    strategyResult: StrategyResultProps | null;
     setStrategyResult: (value: StrategyResultProps | null) => void;
     setResultOpen: (value: boolean) => void;
     setFormInputs: (value: any) => void;
@@ -24,17 +25,17 @@ interface EditorProps {
     setWarningMsg: (value: string | null) => void;
 }
 
-function Editor({ formInputs, setStrategyResult, setResultOpen, setFormInputs, setStrategyResultIsConnectedTo, std, setStd, codeToDisplay, setCodeToDisplay, setWarningMsg }: EditorProps) {
+function Editor({ formInputs, strategyResult, setStrategyResult, setResultOpen, setFormInputs, setStrategyResultIsConnectedTo, std, setStd, codeToDisplay, setCodeToDisplay, setWarningMsg }: EditorProps) {
 
-    const { selectedStrategy } = useContext(StrategyContext);
+    const { selectedStrategy, hasSaved, setHasSaved } = useContext(StrategyContext);
 
     const [errorModalMessage, setErrorModalMessage] = useState<string>('');
     const [loading, setLoading] = useState<boolean>(false);
 
     async function run() {
-        setInitialState();
 
         try {
+            setInitialState();
             handlePreRunValidations();
             charge();
 
@@ -51,6 +52,8 @@ function Editor({ formInputs, setStrategyResult, setResultOpen, setFormInputs, s
             if (warnings && warnings.length > 0) {
                 setWarningMsg(warnings.map((str: string) => `WARNING: ${str}`).join('\n\n'));
             }
+
+            setHasSaved(false);
 
         } catch (error: any) {
             uncharge();
@@ -76,6 +79,9 @@ function Editor({ formInputs, setStrategyResult, setResultOpen, setFormInputs, s
 
     // Helper Functions
     function setInitialState() {
+        // if (!hasSaved && strategyResult) {
+        //     throw new Error("Have not saved currently loaded result.")
+        // }
         setUserStderr('');
         setUserStdout('');
         setStrategyResult(null);

@@ -5,12 +5,14 @@ Donchian Channel Breakout Strategy.
 Buy when the price breaks above the 20-day high.
 Short when the price breaks below the 20-day low.
 This strategy aims to capture breakout momentum.
+Learn more @ docs.ubacktest.com/examples/
 '''
 
 import pandas as pd
 import numpy as np
 
 def calculate_donchian(series, window):
+
     # Calculate both high and low Donchian Channel values and shift them by 1 to capture previous n days' high/low
     return series.rolling(window=window).max().shift(1), series.rolling(window=window).min().shift(1)
 

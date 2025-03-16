@@ -1,5 +1,4 @@
 import SmallPlot from "./SmallPlot";
-import { StrategyResultProps } from '../../../shared/sharedTypes';
 import { type Result } from 'wasp/entities';
 
 interface ResultHeaderProps {
@@ -16,14 +15,9 @@ function ResultHeader({ result, setResultPanelOpen }: ResultHeaderProps) {
             <div className='text-xs border-l-2 border-black/40 px-2 bg-white dark:bg-boxdark-2 dark:text-white'>
                 profit/loss: <span className='md:text-lg'>{result.profitLoss.toFixed(2)}%</span>
             </div>
-            {result.data ?
-                <div className='p-1 dark:brightness-200 hidden md:flex'>
-                    <SmallPlot data={result.data as unknown as StrategyResultProps} />
-                </div>
-                :
-                // for really large strategies, data is not stored but the api is called if clicked on.
-                <div className='text-xs tracking-tight p-1 font-extralight lowercase dark:text-white'>Open to view plot.</div>
-            }
+            <div className='p-1 dark:brightness-200 hidden md:flex'>
+                <SmallPlot timestamp={result.timestamp} portfolio={result.portfolio} />
+            </div>
         </div>
     )
 }

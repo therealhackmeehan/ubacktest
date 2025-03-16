@@ -2,7 +2,8 @@ const linReg = `
 '''
 Simple Linear Regression.
 
-Built on the previous 14 days, then used to predict the next day.
+Trains an Linear Regression model using the past 14 days of data to predict the next day's price movement (up/down).
+Learn more @ docs.ubacktest.com/examples/
 '''
 
 import pandas as pd
@@ -10,10 +11,7 @@ from sklearn.linear_model import LinearRegression
 import numpy as np
 
 def linear_regression(data, window=14):
-    """
-    Function to implement a simple Linear Regression strategy
-    for time series data (e.g., stock closing prices).
-    """
+
     signals = np.zeros(len(data))  # Initialize signals array
     predictions = np.zeros(len(data)) # Initialize predictions array
     
@@ -40,9 +38,7 @@ def linear_regression(data, window=14):
     return signals, predictions
 
 def strategy(data):
-    """
-    Implements a trading strategy that uses Linear Regression for signals.
-    """
+
     # Call the linear_regression function to get the signals
     data['signal'], data['prediction'] = linear_regression(data)
 

@@ -11,6 +11,8 @@ import pandas as pd
 import numpy as np
 
 def calculate_bollinger_bands(series, window=20, num_std=2):
+
+    # construct bollinger bands (moving avg +/- std)
     sma = series.rolling(window=window).mean()
     std = series.rolling(window=window).std()
     

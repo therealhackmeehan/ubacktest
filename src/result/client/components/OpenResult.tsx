@@ -1,5 +1,5 @@
 import { useState, useRef, useEffect } from "react";
-import { FormInputProps, StrategyResultProps } from "../../../shared/sharedTypes";
+import { FormInputProps, StrategyResultProps, UserDefinedData } from "../../../shared/sharedTypes";
 import copyToClipboard from "./copyToClipboard";
 import { Result } from "wasp/entities";
 import LoadingScreen from "../../../client/components/LoadingScreen";
@@ -31,15 +31,45 @@ export default function OpenResult({ formInputs, setResultPanelOpen, result }: O
             setErrMsg(""); // Reset error on new fetch
 
             try {
-                if (result.data) {
-                    setStrategyResult(result.data as unknown as StrategyResultProps);
-                } else {
-                    const { strategyResult } = await runStrategy({ formInputs, code: result.code });
-                    if (!strategyResult) {
-                        throw new Error("That result could not be found. The strategy result could not be regenerated.");
-                    }
-                    setStrategyResult(strategyResult);
+                if (!result.open || !result.close || !result.portfolio) {
+                    throw new Error("This result was not correctly loaded and is missing critical data arrays.");
                 }
+                const joinedInfo: StrategyResultProps = {
+                    timestamp: result.timestamp,
+                    open: result.open,
+                    close: result.close,
+                    high: result.high,
+                    low: result.low,
+                    volume: result.volume,
+
+                    signal: result.signal,
+                    returns: result.returns,
+
+                    sp: result.sp,
+
+                    portfolio: result.portfolio,
+                    portfolioWithCosts: result.portfolioWithCosts,
+
+                    cash: result.cash,
+                    equity: result.equity,
+
+                    cashWithCosts: result.cashWithCosts,
+                    equityWithCosts: result.equityWithCosts,
+
+                    userDefinedData: result.userDefinedData as unknown as UserDefinedData,
+                };
+                setStrategyResult(joinedInfo);
+
+                // if (result.data) {
+                //     setStrategyResult(result.data as unknown as StrategyResultProps);
+                // } else {
+                //     const { strategyResult } = await runStrategy({ formInputs, code: result.code });
+                //     if (!strategyResult) {
+                //         throw new Error("That result could not be found. The strategy result could not be regenerated.");
+                //     }
+                //     setStrategyResult(strategyResult);
+                // }
+
             } catch (error: any) {
                 setErrMsg(`Error running strategy: ${error.message || error}`);
             } finally {
