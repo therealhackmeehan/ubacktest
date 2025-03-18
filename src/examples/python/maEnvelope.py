@@ -4,7 +4,7 @@ Moving Average Envelope Strategy.
 Buy when the price touches the lower envelope band and moves up.
 Short when the price touches the upper envelope band and moves down.
 This strategy uses a percentage-based envelope around a moving average.
-Learn more @ docs.ubacktest.com/examples/
+Learn more @ docs.ubacktest.com/examples/moving-averages/maenvelope
 '''
 
 import pandas as pd

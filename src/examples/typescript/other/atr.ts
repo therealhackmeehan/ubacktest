@@ -5,7 +5,7 @@ ATR Breakout Strategy.
 Buy when the price breaks above the previous high + ATR * multiplier.
 Short when the price breaks below the previous low - ATR * multiplier.
 This strategy captures volatility breakouts with dynamic stop-loss levels.
-Learn more @ docs.ubacktest.com/examples/
+Learn more @ docs.ubacktest.com/examples/other-indicators/atr
 '''
 
 import pandas as pd

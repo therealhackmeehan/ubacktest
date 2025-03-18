@@ -5,6 +5,7 @@ Bollinger Bands Strategy.
 Buy stock when the price dips then moves up through the lower Bollinger Band.
 Short stock when the price pops and then falls below the upper Bollinger Band.
 This strategy assumes mean reversion.
+Learn more @ docs.ubacktest.com/examples/bollinger-bands/bollinger
 '''
 
 import pandas as pd

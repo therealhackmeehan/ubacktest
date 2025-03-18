@@ -5,7 +5,7 @@ Exponential Moving Average (EMA) Crossover Strategy.
 Buy when the 12-day EMA crosses above the 26-day EMA.
 Sell when the 12-day EMA crosses below the 26-day EMA.
 EMAs respond faster than SMAs, making this strategy better for short-term trends.
-Learn more @ docs.ubacktest.com/examples/
+Learn more @ docs.ubacktest.com/examples/moving-averages/emacrossover
 '''
 
 import pandas as pd

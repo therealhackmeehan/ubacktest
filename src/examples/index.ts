@@ -31,9 +31,9 @@ import ridgeReg from "./typescript/regression/ridgeRegression";
 import lassoReg from "./typescript/regression/lassoRegression";
 import logReg from "./typescript/ml/logisticRegression";
 import svmClassifier from "./typescript/ml/svm";
-import gradientBoostingClassifier from "./typescript/ml/gradBoosting";
+import gbClassifier from "./typescript/ml/gradBoosting";
 import knnClassifier from "./typescript/ml/knn";
-import neuralNetworkClassifier from "./typescript/ml/neuralNet";
+import nnClassifier from "./typescript/ml/neuralNet";
 
 type Example = {
     name: string;
@@ -135,7 +135,7 @@ export const examples: StrategyExamples = {
             script: adx
         },
         {
-            name: "Donchian Channel Strategy", //
+            name: "Donchian Channel Strategy",
             script: donchianChannel
         },
         {
@@ -188,7 +188,7 @@ export const examples: StrategyExamples = {
         },
         {
             name: "Gradient Boosting Classifier",
-            script: gradientBoostingClassifier
+            script: gbClassifier
         },
         {
             name: "Random Forest Classifier",
@@ -200,7 +200,7 @@ export const examples: StrategyExamples = {
         },
         {
             name: "Neural Network Classifier",
-            script: neuralNetworkClassifier
+            script: nnClassifier
         },
     ],
     "Deep Learning (Coming Soon...)": [],

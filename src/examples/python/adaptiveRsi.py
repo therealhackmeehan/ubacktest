@@ -5,7 +5,7 @@ Buy Low, Sell/Short High with Adaptive RSI Levels.
 Short stock when RSI exceeds a dynamic upper threshold (mean RSI + standard deviation).
 Buy stock when RSI drops below a dynamic lower threshold (mean RSI - standard deviation).
 This adapts entry/exit points based on volatility.
-Learn more @ docs.ubacktest.com/examples/
+Learn more @ docs.ubacktest.com/examples/rsi/adaptiversi
 '''
 
 import pandas as pd

@@ -5,7 +5,7 @@ Buy Low, Sell/Short High with Trend Confirmation.
 Short stock when RSI crosses above 70 **and** the stock is below its 50-day SMA.
 Buy stock when RSI crosses below 30 **and** the stock is above its 50-day SMA.
 This helps reduce false signals in volatile markets.
-Learn more @ docs.ubacktest.com/examples/
+Learn more @ docs.ubacktest.com/examples/rsi/rsisma
 '''
 
 import pandas as pd

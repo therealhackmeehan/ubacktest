@@ -4,7 +4,7 @@ MACD Crossover Strategy.
 Buy when the MACD crosses above the signal line.
 Short when the MACD crosses below the signal line.
 This strategy uses the MACD for identifying momentum changes.
-Learn more @ docs.ubacktest.com/examples/
+Learn more @ docs.ubacktest.com/examples/moving-averages/macd
 '''
 
 import pandas as pd

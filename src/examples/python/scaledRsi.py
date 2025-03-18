@@ -3,7 +3,7 @@ Scaled Buy Low, Sell High.
 
 Buy/Sell proportional to how low or high the RSI is.
 I.E. buy a lot when really low, sell a lot when really high.
-Learn more @ docs.ubacktest.com/examples/
+Learn more @ docs.ubacktest.com/examples/rsi/scaledrsi
 '''
 
 import pandas as pd

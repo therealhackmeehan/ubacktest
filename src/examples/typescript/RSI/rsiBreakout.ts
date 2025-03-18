@@ -6,7 +6,7 @@ Buy when RSI crosses above 30 (instead of below).
 Sell when RSI crosses below 70 (instead of above).
 
 More conservative than classic RSI because it waits for confirmation.
-Learn more @ docs.ubacktest.com/examples/
+Learn more @ docs.ubacktest.com/examples/rsi/rsibreakout
 '''
 
 import pandas as pd

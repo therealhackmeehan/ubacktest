@@ -5,7 +5,7 @@ Parabolic SAR Strategy.
 Buy when the Parabolic SAR is below the price (bullish trend).
 Sell when the Parabolic SAR is above the price (bearish trend).
 The Parabolic SAR helps capture strong trends by providing entry and exit signals.
-Learn more @ docs.ubacktest.com/examples/
+Learn more @ docs.ubacktest.com/examples/other-indicators/sar
 '''
 
 import pandas as pd

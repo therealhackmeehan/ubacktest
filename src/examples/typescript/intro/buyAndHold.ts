@@ -3,7 +3,7 @@ export const buyAndHold =
 Classic Buy & Hold Strategy. 
 
 Set a buy signal to every date.
-Learn more @ docs.ubacktest.com/examples/
+Learn more @ docs.ubacktest.com/examples/intro/buyandhold
 '''
 
 def strategy(data):

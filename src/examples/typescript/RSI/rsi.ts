@@ -4,7 +4,7 @@ Buy Low, Sell/Short High.
 
 Buy stock when the RSI breaks below 30.
 Short stock when the Relative Strength Index (RSI) cracks above 70.
-Learn more @ docs.ubacktest.com/examples/
+Learn more @ docs.ubacktest.com/examples/rsi/rsi
 '''
 
 import pandas as pd

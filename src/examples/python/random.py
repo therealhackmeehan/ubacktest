@@ -6,7 +6,7 @@ For every date in the table, randomly assign either a
 buy (1),
 hold (0),
 or short (-1).
-Learn more @ docs.ubacktest.com/examples/
+Learn more @ docs.ubacktest.com/examples/intro/random
 '''
 
 import numpy as np

@@ -4,7 +4,7 @@ Random Forest Classifier.
 
 Trains a Random Forest Classifier using the past 30 days of data to predict the next day's action. 
 The model leverages basic technical indicators as features to make predictions.
-Learn more @ docs.ubacktest.com/examples/
+Learn more @ docs.ubacktest.com/examples/machine-learning/rfclassifier
 '''
 
 import pandas as pd

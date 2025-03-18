@@ -4,7 +4,7 @@ Simple Moving Average (SMA) Crossover Strategy.
 Buy when the 10-day SMA crosses above the 50-day SMA (golden cross).
 Short when the 10-day SMA crosses below the 50-day SMA (death cross).
 This strategy captures long-term trends.
-Learn more @ docs.ubacktest.com/examples/
+Learn more @ docs.ubacktest.com/examples/moving-averages/smacrossover
 '''
 
 import pandas as pd

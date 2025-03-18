@@ -1,10 +1,10 @@
-const gradientBoostingClassifier = `
+const gbClassifier = `
 '''
 Gradient Boosting Classifier Strategy.
 
 Trains a Gradient Boosting Classifier using the past 30 days of data to predict the next day's action. 
 The model leverages basic technical indicators as features to make predictions.
-Learn more @ docs.ubacktest.com/examples/
+Learn more @ docs.ubacktest.com/examples/machine-learning/gbclassifier
 '''
 
 import pandas as pd
@@ -85,4 +85,4 @@ def strategy(data):
 
     return data`;
 
-export default gradientBoostingClassifier;
+export default gbClassifier;

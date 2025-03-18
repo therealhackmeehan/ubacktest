@@ -4,7 +4,7 @@ Ichimoku Cloud Strategy.
 Buy when the Conversion Line crosses above the Base Line and the price is above the cloud.
 Short when the Conversion Line crosses below the Base Line and the price is below the cloud.
 The Ichimoku Cloud provides insights into trend direction and momentum.
-Learn more @ docs.ubacktest.com/examples/
+Learn more @ docs.ubacktest.com/examples/other-indicators/ichimoku
 '''
 
 import pandas as pd

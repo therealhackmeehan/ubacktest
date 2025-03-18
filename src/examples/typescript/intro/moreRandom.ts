@@ -3,7 +3,7 @@ export const moreRandom =
 (More) Random Strategy.
 
 For every date, choose a random float value between -1 and 1.
-Learn more @ docs.ubacktest.com/examples/
+Learn more @ docs.ubacktest.com/examples/intro/morerandom
 '''
 
 import numpy as np

@@ -5,7 +5,7 @@ On-Balance Volume (OBV) Strategy.
 Buy when the OBV crosses above the 20-day SMA (bullish confirmation).
 Short when the OBV crosses below the 20-day SMA (bearish confirmation).
 OBV helps to capture momentum with volume as a leading indicator.
-Learn more @ docs.ubacktest.com/examples/
+Learn more @ docs.ubacktest.com/examples/other-indicators/obv
 '''
 
 import pandas as pd

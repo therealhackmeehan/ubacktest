@@ -5,6 +5,7 @@ Bollinger Bands Strategy with Moving Average Confirmation.
 Sell stock when the price is above the upper Bollinger Band **and** below the 50-day SMA.
 Buy stock when the price is below the lower Bollinger Band **and** above the 50-day SMA.
 This ensures we trade in the direction of the larger trend.
+Learn more @ docs.ubacktest.com/examples/bollinger-bands/bollingersma
 '''
 
 import pandas as pd

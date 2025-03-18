@@ -5,7 +5,7 @@ Donchian Channel Breakout Strategy.
 Buy when the price breaks above the 20-day high.
 Short when the price breaks below the 20-day low.
 This strategy aims to capture breakout momentum.
-Learn more @ docs.ubacktest.com/examples/
+Learn more @ docs.ubacktest.com/examples/other-indicators/donchianchannel
 '''
 
 import pandas as pd

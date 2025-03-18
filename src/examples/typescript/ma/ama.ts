@@ -4,7 +4,7 @@ Adaptive Moving Average (AMA) Strategy.
 Buy when the AMA turns upward.
 Short when the AMA turns downward.
 This strategy adjusts dynamically to market volatility using an efficiency ratio.
-Learn more @ docs.ubacktest.com/examples/
+Learn more @ docs.ubacktest.com/examples/moving-averages/ama
 '''
 
 import pandas as pd

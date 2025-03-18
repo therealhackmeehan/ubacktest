@@ -3,7 +3,7 @@ const linReg = `
 Simple Linear Regression.
 
 Trains an Linear Regression model using the past 14 days of data to predict the next day's price movement (up/down).
-Learn more @ docs.ubacktest.com/examples/
+Learn more @ docs.ubacktest.com/examples/regression/linreg
 '''
 
 import pandas as pd

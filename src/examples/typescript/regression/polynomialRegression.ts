@@ -3,7 +3,7 @@ const polyReg = `
 Polynomial Regression Strategy.
 
 Trains a Polynomial Regression model using the past 14 days of data to predict the next day's price movement (up/down).
-Learn more @ docs.ubacktest.com/examples/
+Learn more @ docs.ubacktest.com/examples/regression/polyreg
 '''
 
 import pandas as pd
