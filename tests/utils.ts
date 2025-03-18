@@ -11,17 +11,13 @@ const DEFAULT_PASSWORD = 'password123';
 
 export const logUserIn = async ({ page, user }: { page: Page; user: User }) => {
   await page.goto('/');
-
   await page.getByRole('link', { name: 'Log in' }).click();
-
   await page.waitForURL('**/login', {
     waitUntil: 'domcontentloaded',
   });
 
   await page.fill('input[name="email"]', user.email);
-
   await page.fill('input[name="password"]', DEFAULT_PASSWORD);
-
   const clickLogin = page.click('button:has-text("Log in")');
 
   await Promise.all([
@@ -37,19 +33,15 @@ export const logUserIn = async ({ page, user }: { page: Page; user: User }) => {
   await page.waitForURL('**/demo-app');
 };
 
+
+
 export const signUserUp = async ({ page, user }: { page: Page; user: User }) => {
   await page.goto('/');
-
   await page.getByRole('link', { name: 'Log in' }).click();
-
   await page.click('text="go to signup"');
-
   await page.fill('input[name="email"]', user.email);
-
   await page.fill('input[name="password"]', DEFAULT_PASSWORD);
-
   await page.click('button:has-text("Sign up")');
-
   await page
     .waitForResponse((response) => {
       return response.url().includes('signup') && response.status() === 200;
@@ -57,10 +49,14 @@ export const signUserUp = async ({ page, user }: { page: Page; user: User }) => 
     .catch((err) => console.error(err.message));
 };
 
+
+
 export const createRandomUser = () => {
   const email = `${randomUUID()}@test.com`;
   return { email, password: DEFAULT_PASSWORD } as User;
 };
+
+
 
 export const makeStripePayment = async ({ test, page, planName }: { test: any; page: Page; planName: string }) => {
   test.slow(); // Stripe payments take a long time to confirm and can cause tests to fail so we use a longer timeout

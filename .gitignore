@@ -3,3 +3,4 @@
 /.cache/
 /node_modules/
 prisma/
+.DS_Store
