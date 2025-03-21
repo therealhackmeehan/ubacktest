@@ -15,11 +15,9 @@ export const logUserIn = async ({ page, user }: { page: Page; user: User }) => {
   await page.waitForURL('**/login', {
     waitUntil: 'domcontentloaded',
   });
-
   await page.fill('input[name="email"]', user.email);
   await page.fill('input[name="password"]', DEFAULT_PASSWORD);
   const clickLogin = page.click('button:has-text("Log in")');
-
   await Promise.all([
     page
       .waitForResponse((response) => {
@@ -29,11 +27,8 @@ export const logUserIn = async ({ page, user }: { page: Page; user: User }) => {
     ,
     clickLogin,
   ]);
-
-  await page.waitForURL('**/demo-app');
+  await page.waitForURL('**/editor');
 };
-
-
 
 export const signUserUp = async ({ page, user }: { page: Page; user: User }) => {
   await page.goto('/');
@@ -49,14 +44,10 @@ export const signUserUp = async ({ page, user }: { page: Page; user: User }) => 
     .catch((err) => console.error(err.message));
 };
 
-
-
 export const createRandomUser = () => {
   const email = `${randomUUID()}@test.com`;
   return { email, password: DEFAULT_PASSWORD } as User;
 };
-
-
 
 export const makeStripePayment = async ({ test, page, planName }: { test: any; page: Page; planName: string }) => {
   test.slow(); // Stripe payments take a long time to confirm and can cause tests to fail so we use a longer timeout
@@ -70,6 +61,8 @@ export const makeStripePayment = async ({ test, page, planName }: { test: any; p
   await buyBtn.click();
 
   await page.waitForURL('https://checkout.stripe.com/**', { waitUntil: 'domcontentloaded' });
+  await page.locator('.PaymentMethodFormAccordionItemTitle div:has-text("Card")').first().click({ force: true });
+
   await page.fill('input[name="cardNumber"]', '4242424242424242');
   await page.getByPlaceholder('MM / YY').fill('1225');
   await page.getByPlaceholder('CVC').fill('123');

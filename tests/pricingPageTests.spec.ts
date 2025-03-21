@@ -45,6 +45,7 @@ test('User should see the Buy Plan button before payment', async () => {
 
 test('Make test payment with Stripe', async () => {
   const PLAN_NAME = 'Hobby';
+  // await logNewUserIn();
   await page.goto('/');
   await makeStripePayment({ test, page, planName: PLAN_NAME });
 });
