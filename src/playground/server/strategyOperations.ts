@@ -136,14 +136,11 @@ interface BacktestResultProps {
   warnings: string[];
 };
 
-let isProcessing = false;
-const delay = 1000; // 1 second delay between execution (rate-limiting)
-
 export const runStrategy: RunStrategy<any, any> = async ({ formInputs, code }, context): Promise<BacktestResultProps> => {
 
   if (!context.user) throw new HttpError(401);
 
-  if (!context.user.isAdmin) { 
+  if (!context.user.isAdmin) {
     // charge/make sure subscription is valid prior to running!
 
     const isProUser = context.user.subscriptionPlan == "pro";
@@ -177,20 +174,9 @@ export const runStrategy: RunStrategy<any, any> = async ({ formInputs, code }, c
 
   }
 
-  if (isProcessing) {
-    throw new HttpError(429, "Please wait before running another strategy.");
-  }
+  const strategyInstance = new StrategyPipeline(formInputs, code);
+  return await strategyInstance.run();
 
-  isProcessing = true;
-
-  try {
-    const strategyInstance = new StrategyPipeline(formInputs, code);
-    return await strategyInstance.run();
-  } finally {
-    setTimeout(() => {
-      isProcessing = false;
-    }, delay);
-  }
 };
 
 export const charge: Charge<void, void> = async (_args, context) => {
@@ -206,7 +192,7 @@ export const charge: Charge<void, void> = async (_args, context) => {
   if (context.user.credits && !context.user.subscriptionPlan) {
     await context.entities.User.update({
       where: { id: context.user.id },
-      data: { credits: { decrement: 1 } }, // for now increment while testing
+      data: { credits: { decrement: 1 } },
     });
   }
 };
@@ -220,11 +206,11 @@ export const uncharge: Uncharge<void, void> = async (_args, context) => {
     console.log('Avoiding uncharge charge as admin.');
     return;
   }
-  
+
   if (context.user.credits && !context.user.subscriptionPlan) {
     await context.entities.User.update({
       where: { id: context.user.id },
-      data: { credits: { increment: 1 } }, // for now increment while testing
+      data: { credits: { increment: 1 } },
     });
   }
 };

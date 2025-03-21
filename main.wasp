@@ -322,7 +322,7 @@ job monthlyCreditReset {
     fn: import { monthlyCreditReset } from "@src/user/workers/monthlyCreditReset"
   },
   schedule: {
-    cron: "* * * * *"
+    cron: "0 * * * *"
   },
   entities: [User],
 }

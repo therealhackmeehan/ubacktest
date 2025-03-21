@@ -37,7 +37,6 @@ function Editor({ formInputs, strategyResult, setStrategyResult, setResultOpen, 
         try {
             setInitialState();
             handlePreRunValidations();
-            charge();
 
             const { strategyResult, debugOutput, stderr, warnings, feedforward } =
                 await runStrategy({ formInputs: formInputs, code: codeToDisplay });
@@ -54,9 +53,10 @@ function Editor({ formInputs, strategyResult, setStrategyResult, setResultOpen, 
             }
 
             setHasSaved(false);
+            charge();
 
         } catch (error: any) {
-            uncharge();
+            //uncharge();
             setErrorModalMessage(error.message);
         } finally {
             setLoading(false);
