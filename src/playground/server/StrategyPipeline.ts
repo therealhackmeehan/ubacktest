@@ -58,7 +58,6 @@ class StrategyPipeline {
     private stderr: string = '';
     private stdout: string = '';
     private warning: string[] = [];
-    private feedforward: boolean = false;
 
     // decimals, for future consideration... (storage constraints)
     private decimalPlaces: number = 4;
@@ -85,11 +84,6 @@ class StrategyPipeline {
 
             const expectedLength = this.strategyResult.signal.length;
             const userDefinedData: UserDefinedData = parsedData.data;
-
-            if (parsedData.warning) { // if feedforward bias or other warning printed...
-                this.warning.push(parsedData.warning);
-                this.feedforward = true;
-            }
 
             // if user has defined any custom columns, save those
             // so that they can be viewed later in the result
@@ -133,7 +127,6 @@ class StrategyPipeline {
             debugOutput: this.stdout,
             stderr: this.stderr,
             warnings: [...new Set(this.warning)],
-            feedforward: this.feedforward,
         }
     }
 
@@ -385,16 +378,22 @@ class StrategyPipeline {
             throw new HttpError(400, "Sorry, we don't support backtests that are more than 1000 timepoints.");
         }
 
-        // Check for missing data based on user-selected dates
-        const startInput = this.formInputs.useWarmupDate ? new Date(this.formInputs.warmupDate).getDay() : new Date(this.formInputs.startDate).getDay();
-        const endInput = new Date(this.formInputs.endDate).getDay();
+        // Convert to timestamps (milliseconds since epoch)
+        const startInput = this.formInputs.useWarmupDate
+            ? new Date(this.formInputs.warmupDate).getTime()
+            : new Date(this.formInputs.startDate).getTime();
+        const endInput = new Date(this.formInputs.endDate).getTime();
 
-        const startInData = new Date(timestamps[0]).getDay();
-        const endInData = new Date(timestamps[timestamps.length - 1]).getDay();
+        const startInData = new Date(timestamps[0]).getTime();
+        const endInData = new Date(timestamps[timestamps.length - 1]).getTime();
         const isFrequentTrading = this.formInputs.intval === '1d' || this.formInputs.intval === '5d';
 
-        // append a warning if there are large chunks of data missing
-        if (isFrequentTrading && (Math.abs(startInData - startInput) > 7 || Math.abs(endInData - endInput) > 7)) {
+        // Convert 5 days to milliseconds
+        let fiveDaysMs = 5 * 24 * 60 * 60 * 1000;
+        fiveDaysMs = this.formInputs.intval === '5d' ? fiveDaysMs * 5 : fiveDaysMs;
+
+        // Append a warning if there are large chunks of data missing
+        if (isFrequentTrading && (Math.abs(startInData - startInput) > fiveDaysMs || Math.abs(endInData - endInput) > fiveDaysMs)) {
             const missingDataMsg =
                 'There appears to be a significant discrepancy between the available data and your selected start and end dates. ' +
                 'This may indicate that the stock’s data is incomplete due to an IPO occurring after the specified start date, ' +

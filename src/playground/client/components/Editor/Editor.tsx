@@ -3,7 +3,7 @@ import MonacoEditor from "./MonacoEditor";
 import ErrorModal from "../modals/ErrorModal";
 import DebugConsole from "./DebugConsole";
 import InputForm from "./InputForm";
-import { runStrategy, charge, uncharge, updateStrategy } from "wasp/client/operations";
+import { runStrategy, charge, updateStrategy } from "wasp/client/operations";
 import validateFormInputs from "../../scripts/validateFormInputs";
 import validatePythonCode from "../../scripts/validatePythonCode";
 import { FormInputProps, StrategyResultProps } from "../../../../shared/sharedTypes";
@@ -38,7 +38,7 @@ function Editor({ formInputs, strategyResult, setStrategyResult, setResultOpen, 
             setInitialState();
             handlePreRunValidations();
 
-            const { strategyResult, debugOutput, stderr, warnings, feedforward } =
+            const { strategyResult, debugOutput, stderr, warnings } =
                 await runStrategy({ formInputs: formInputs, code: codeToDisplay });
 
             handleDebugOutput(debugOutput, stderr);
@@ -56,7 +56,6 @@ function Editor({ formInputs, strategyResult, setStrategyResult, setResultOpen, 
             charge();
 
         } catch (error: any) {
-            //uncharge();
             setErrorModalMessage(error.message);
         } finally {
             setLoading(false);

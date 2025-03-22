@@ -79,7 +79,7 @@ export default function Workflow() {
                         </div>
                     </div>
                     <div className={`col-span-1 rounded-lg p-4 dark:text-white duration-700 transform ${inView1 ? 'translate-x-0' : 'translate-x-10'}`}>
-                        <span className="font-extrabold text-title-xl text-sky-700 dark:text-blue-300 tracking-tight animate-pulse">Edit</span> your strategy in the strategy editor. Assign buy, sell, and hold signals using standard statistical techniques—or develop your own custom logic.
+                        <span className="font-extrabold text-title-xl text-sky-700 dark:text-blue-300 tracking-tight">Edit</span> your strategy in the strategy editor. Assign buy, sell, and hold signals using standard statistical techniques—or develop your own custom logic.
                     </div>
 
                     {/* Step 2 */}
@@ -97,7 +97,7 @@ export default function Workflow() {
                         </div>
                     </div>
                     <div className={`col-span-1 rounded-lg p-4 dark:text-white duration-700 transform ${inView2 ? 'translate-x-0' : 'translate-x-10'}`}>
-                        <span className="font-extrabold text-title-xl text-sky-700 dark:text-blue-300 tracking-tight animate-pulse">Backtest</span> your strategy with full control. Adjust stocks, timeframes, trading frequency, and other parameters—all within the editor.
+                        <span className="font-extrabold text-title-xl text-sky-700 dark:text-blue-300 tracking-tight">Backtest</span> your strategy with full control. Adjust stocks, timeframes, trading frequency, and other parameters—all within the editor.
                     </div>
 
                     {/* Step 3 */}
@@ -121,7 +121,7 @@ export default function Workflow() {
                         </div>
                     </div>
                     <div className={`col-span-1 rounded-lg p-4 dark:text-white duration-700 transform ${inView3 ? 'translate-x-0' : 'translate-x-10'}`}>
-                        <span className="font-extrabold text-title-xl text-sky-700 dark:text-blue-300 tracking-tight animate-pulse">Save & Share</span> your strategies and results for future analysis. Resume, refine, and compare strategies anytime.
+                        <span className="font-extrabold text-title-xl text-sky-700 dark:text-blue-300 tracking-tight">Save & Share</span> your strategies and results for future analysis. Resume, refine, and compare strategies anytime.
                     </div>
 
                     {/* Step 4 */}
@@ -145,7 +145,7 @@ export default function Workflow() {
                         </div>
                     </div>
                     <div className={`col-span-1 rounded-lg p-4 dark:text-white duration-700 transform ${inView4 ? 'translate-x-0' : 'translate-x-10'}`}>
-                        Found a winning strategy? <span className="font-extrabold text-title-xl text-sky-700 dark:text-blue-300 tracking-tight animate-pulse">Deploy</span> it to the cloud with auto-generated code—whether for further testing or real trading.
+                        Found a winning strategy? <span className="font-extrabold text-title-xl text-sky-700 dark:text-blue-300 tracking-tight">Deploy</span> it to the cloud with auto-generated code—whether for further testing or real trading.
                     </div>
 
                 </div>

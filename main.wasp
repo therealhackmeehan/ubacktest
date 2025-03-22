@@ -210,10 +210,6 @@ action charge {
   fn: import { charge } from "@src/playground/server/strategyOperations",
   entities: [User]
 }
-action uncharge {
-  fn: import { uncharge } from "@src/playground/server/strategyOperations",
-  entities: [User]
-}
 // end runStrategy
 
 //region Auth Pages

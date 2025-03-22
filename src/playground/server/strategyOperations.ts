@@ -8,7 +8,6 @@ import {
   type RenameStrategy,
   type GetSpecificStrategy,
   type Charge,
-  type Uncharge,
   type RunStrategy,
 } from 'wasp/server/operations';
 import { StrategyResultProps } from '../../shared/sharedTypes';
@@ -150,6 +149,8 @@ export const runStrategy: RunStrategy<any, any> = async ({ formInputs, code }, c
       throw new HttpError(402, "High frequency backtesting is only available to pro users. Consider upgrading to a pro subscription.")
     }
 
+    console.log(context.user.credits)
+
     if (!context.user.credits && !context.user.subscriptionPlan) {
       throw new HttpError(402, "You must add more credits or purchase a basic monthly subscription to continue to use this software.");
     }
@@ -171,7 +172,6 @@ export const runStrategy: RunStrategy<any, any> = async ({ formInputs, code }, c
         );
       }
     }
-
   }
 
   const strategyInstance = new StrategyPipeline(formInputs, code);
@@ -193,24 +193,6 @@ export const charge: Charge<void, void> = async (_args, context) => {
     await context.entities.User.update({
       where: { id: context.user.id },
       data: { credits: { decrement: 1 } },
-    });
-  }
-};
-
-export const uncharge: Uncharge<void, void> = async (_args, context) => {
-  if (!context.user) {
-    throw new HttpError(401);
-  }
-
-  if (context.user.isAdmin) {
-    console.log('Avoiding uncharge charge as admin.');
-    return;
-  }
-
-  if (context.user.credits && !context.user.subscriptionPlan) {
-    await context.entities.User.update({
-      where: { id: context.user.id },
-      data: { credits: { increment: 1 } },
     });
   }
 };
