@@ -44,6 +44,16 @@ export const signUserUp = async ({ page, user }: { page: Page; user: User }) => 
     .catch((err) => console.error(err.message));
 };
 
+export const initEmptyStrategy = async ({ page }: { page: Page }) => {
+  await page.goto('/editor');
+  await page.getByText('new').click();
+  await page.getByPlaceholder('Enter strategy name').fill('randomStrategyName');
+  await page.getByText('Confirm').click();
+
+  await page.getByText('Reject all').click();
+  await page.getByText('advanced options').click();
+}
+
 export const createRandomUser = () => {
   const email = `${randomUUID()}@test.com`;
   return { email, password: DEFAULT_PASSWORD } as User;
