@@ -18,7 +18,7 @@ export default function WarningModal({ closeModal, msg }: ErrorModalProps) {
                     Just a heads up...
                 </div>
                 <button onClick={closeModal}>
-                    <TiDelete size='1.8rem' className='hover:rotate-6 text-gray-900 hover:scale-110' />
+                    <TiDelete size='1.8rem' className='hover:rotate-6 text-gray-900 hover:scale-110 dark:text-white' />
                 </button>
             </div>
             <textarea rows={7} className='w-full border-0 border-transparent resize-none bg-white font-mono text-xs text-orange-700 dark:bg-boxdark-2 dark:text-orange-200' readOnly={true} value={msg}>

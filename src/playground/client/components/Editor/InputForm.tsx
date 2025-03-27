@@ -27,7 +27,7 @@ export interface Stock {
     Founded: number | string;
 }
 
-const LOCAL_STORAGE_KEY = "inputFormHeight";
+const INPUT_FORM_HEIGHT = "inputFormHeight";
 
 function InputForm({ formInputs, setFormInputs, run }: InputFormSubcomponentProps) {
 
@@ -128,7 +128,7 @@ function InputForm({ formInputs, setFormInputs, run }: InputFormSubcomponentProp
     }
 
     const [position, setPosition] = useState<{ y: number }>(() => {
-        const savedPosition = localStorage.getItem(LOCAL_STORAGE_KEY);
+        const savedPosition = localStorage.getItem(INPUT_FORM_HEIGHT);
         const initialPosition = savedPosition ? JSON.parse(savedPosition) : { y: 0 };
 
         // Ensure y is within the visible screen bounds
@@ -141,7 +141,7 @@ function InputForm({ formInputs, setFormInputs, run }: InputFormSubcomponentProp
     const offset = useRef({ y: 0 });
 
     useEffect(() => {
-        localStorage.setItem('inputFormHeight', JSON.stringify(position))
+        localStorage.setItem(INPUT_FORM_HEIGHT, JSON.stringify(position))
     }, [position])
 
     const handleDown = (e: React.MouseEvent | React.TouchEvent) => {
@@ -187,7 +187,7 @@ function InputForm({ formInputs, setFormInputs, run }: InputFormSubcomponentProp
     }, [isDragging]);
 
     useEffect(() => {
-        localStorage.setItem(LOCAL_STORAGE_KEY, JSON.stringify(position));
+        localStorage.setItem(INPUT_FORM_HEIGHT, JSON.stringify(position));
     }, [position]);
 
     return (

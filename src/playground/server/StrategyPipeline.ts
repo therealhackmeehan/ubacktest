@@ -384,8 +384,8 @@ class StrategyPipeline {
             : new Date(this.formInputs.startDate).getTime();
         const endInput = new Date(this.formInputs.endDate).getTime();
 
-        const startInData = new Date(timestamps[0]).getTime();
-        const endInData = new Date(timestamps[timestamps.length - 1]).getTime();
+        const startInData = new Date(timestamps[0]).getTime() * 1000;
+        const endInData = new Date(timestamps[timestamps.length - 1]).getTime() * 1000;
         const isFrequentTrading = this.formInputs.intval === '1d' || this.formInputs.intval === '5d';
 
         // Convert 5 days to milliseconds
