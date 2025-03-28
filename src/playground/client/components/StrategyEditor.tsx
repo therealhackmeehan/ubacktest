@@ -23,7 +23,7 @@ export const initFormInputs: FormInputProps = {
     startDate: addMonths(new Date(), -12), // 12 months ago
     endDate: addMonths(new Date(), -6), // 6 months ago
     intval: '1d',
-    timeout: 5,
+    timeout: 12,
     costPerTrade: 0,
     useWarmupDate: false,
     warmupDate: addMonths(new Date(), -13),

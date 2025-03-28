@@ -16,6 +16,12 @@ function validateFormInputs({ formInputs }: any) {
         throw new Error("Start date cannot be later than the end date.");
     }
 
+    // Check to make sure date starts in legit range
+    const cutoff = new Date('1970-01-01').getTime();
+    if (new Date(startDate).getTime() < cutoff || new Date(endDate).getTime() < cutoff) {
+        throw new Error("Start date or end date cannot fall before 1970.");
+    }
+
     // Check if symbol is alphanumeric and between 1 and 5 characters (typical for stock symbols)
     const symbolRegex = /^[A-Za-z0-9^]{1,6}$/;
     if (!symbolRegex.test(symbol)) {
@@ -67,7 +73,6 @@ function validateFormInputs({ formInputs }: any) {
     if (costPerTrade > 10 || costPerTrade < 0) {
         throw new Error("Trading Cost must fall between 0 and 10%.")
     }
-
 
 }
 

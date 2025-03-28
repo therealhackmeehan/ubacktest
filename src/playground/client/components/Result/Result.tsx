@@ -228,7 +228,7 @@ function Result({ selectedStrategy, formInputs, strategyResult, abilityToSaveNew
                 {/* Stats and Data Table of All Trades */}
                 <div className="grid grid-cols-3 gap-x-6 justify-stretch m-8">
                     {stats && <MainStatistics stats={stats} />}
-                    <div className="col-span-2 bg-slate-100 rounded-lg max-h-132.5 overflow-y-auto shadow-sm">
+                    <div className="col-span-2 bg-slate-100 rounded-lg max-h-132.5 overflow-y-auto shadow-sm border-2 border-slate-300">
                         <div className="flex justify-between m-2">
                             <div className="text-sky-700">Trade Log</div>
                             <button
