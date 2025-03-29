@@ -44,11 +44,23 @@ function StrategyEditor() {
     const [resultOpen, setResultOpen] = useState<boolean>(false);
     const [strategyResult, setStrategyResult] = useState<StrategyResultProps | null>(null);
     const [strategyResultIsConnectedTo, setStrategyResultIsConnectedTo] = useState<string>('');
-    const [formInputs, setFormInputs] = useState<FormInputProps>(initFormInputs);
+    
+    const loadFormInputs = () => {
+        const savedInputs = localStorage.getItem('formInputs');
+        return savedInputs ? JSON.parse(savedInputs) : initFormInputs;
+    };
+
+    const [formInputs, setFormInputs] = useState<FormInputProps>(loadFormInputs);
+
     const [std, setStd] = useState<stdProps>({
         out: '',
         err: '',
     });
+
+    // Save to localStorage whenever formInputs changes
+    useEffect(() => {
+        localStorage.setItem('formInputs', JSON.stringify(formInputs));
+    }, [formInputs]);
 
     useEffect(() => {
         // Define the beforeunload event handler
@@ -59,9 +71,9 @@ function StrategyEditor() {
                 return "";
             }
         };
-    
+
         window.addEventListener('beforeunload', handleBeforeUnload);
-    
+
         return () => {
             window.removeEventListener('beforeunload', handleBeforeUnload);
         };

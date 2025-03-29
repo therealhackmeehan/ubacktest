@@ -9,7 +9,7 @@ interface ExamplesModalProps {
 
 export default function ExamplesModal({ onSuccess, closeModal }: ExamplesModalProps) {
     return (
-        <ModalLayout>
+        <ModalLayout closeModal={closeModal}>
             <div className='flex justify-between mb-4'>
                 <h2 className="text-sky-700 dark:text-blue-300 font-semibold">Import an Example <span className="text-slate-800 dark:text-white">Strategy</span></h2>
                 <button onClick={closeModal}>

@@ -12,7 +12,7 @@ export default function ConfirmModal({ msg, onConfirm, closeModal }: ConfirmModa
     useEnterKey(onConfirm);
 
     return (
-        <ModalLayout>
+        <ModalLayout closeModal={closeModal}>
             <div className='flex justify-between'>
                 <h2 className="text-base text-slate-500 font-semibold dark:text-white">{msg}</h2>
             </div>

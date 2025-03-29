@@ -26,7 +26,7 @@ export default function DeleteShareModal({ closeModal, id }: DeleteResultModalPr
     useEnterKey(handleShareDelete);
 
     return (
-        <ModalLayout>
+        <ModalLayout closeModal={closeModal}>
             <div className='flex justify-between'>
                 <h2 className="text-base text-slate-500 font-semibold dark:text-white">Are you sure you'd like to remove yourself from this <span className="text-slate-800 dark:text-blue-300">Saved Result</span>?</h2>
                 <button onClick={closeModal}>

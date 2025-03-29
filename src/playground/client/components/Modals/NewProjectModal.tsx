@@ -31,7 +31,7 @@ export default function NewProjectModal({ onSuccess, closeModal }: NewProjectMod
     useEnterKey(handleNewProject);
 
     return (
-        <ModalLayout>
+        <ModalLayout closeModal={closeModal}>
             <div className='flex justify-between'>
                 <h2 className="text-base text-slate-500 font-semibold dark:text-white">Create New <span className="text-slate-800 dark:text-blue-300">Strategy</span></h2>
                 <button onClick={closeModal}>

@@ -30,7 +30,7 @@ export default function RenameResultModal({ closeModal, id, currResultName }: Re
     useEnterKey(handleResultRename);
 
     return (
-        <ModalLayout>
+        <ModalLayout closeModal={closeModal}>
             <div className='flex justify-between'>
                 <h2 className="text-base text-slate-500 font-semibold dark:text-white">Rename Your <span className="text-slate-800 dark:text-blue-300">Saved Result</span></h2>
                 <button onClick={closeModal}>

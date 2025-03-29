@@ -68,7 +68,7 @@ export default function NewResultModal({ onSuccess, closeModal, symbol }: NewPro
     useEnterKey(handleNewResult);
 
     return (
-        <ModalLayout>
+        <ModalLayout closeModal={closeModal}>
             <div className='flex justify-between'>
                 <h2 className="text-base text-slate-500 font-semibold dark:text-white">Save Result <span className="text-slate-800 dark:text-blue-300">To My Results</span></h2>
                 <button onClick={closeModal}>

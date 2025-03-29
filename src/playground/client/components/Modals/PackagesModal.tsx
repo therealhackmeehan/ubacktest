@@ -11,7 +11,7 @@ export default function PackagesModal({ closeModal }: { closeModal: () => void }
     useEnterKey(closeModal);
 
     return (
-        <ModalLayout>
+        <ModalLayout closeModal={closeModal}>
             <div className='flex justify-between'>
                 <h2 className="text-base text-slate-500 font-semibold dark:text-white">What packges can I use<span className="text-slate-800 dark:text-blue-300"> ?</span></h2>
                 <button onClick={closeModal}>

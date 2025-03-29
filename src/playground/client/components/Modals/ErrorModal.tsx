@@ -14,7 +14,7 @@ export default function ErrorModal({ closeModal, msg }: ErrorModalProps) {
     const includePaymentLink = msg.toLowerCase().includes("purchase") || msg.toLowerCase().includes("subscription") || msg.toLowerCase().includes("upgrad");
 
     return (
-        <ModalLayout>
+        <ModalLayout closeModal={closeModal}>
             <div className='flex justify-between text-gray-800 dark:text-white'>
                 <div className='p-3 tracking-tight font-bold'>
                     We've Encountered an Error...

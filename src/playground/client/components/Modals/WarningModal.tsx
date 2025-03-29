@@ -12,7 +12,7 @@ export default function WarningModal({ closeModal, msg }: ErrorModalProps) {
     useEnterKey(closeModal);
 
     return (
-        <ModalLayout>
+        <ModalLayout closeModal={closeModal}>
             <div className='flex justify-between'>
                 <div className='p-3 tracking-tight font-bold text-gray-800 dark:text-white'>
                     Just a heads up...

@@ -34,7 +34,7 @@ export default function DeleteModal({ onSuccess, closeModal, id }: DeleteModalPr
     useEnterKey(handleStrategyDelete);
 
     return (
-        <ModalLayout>
+        <ModalLayout closeModal={closeModal}>
             <div className='flex justify-between'>
                 <h2 className="text-base text-slate-500 font-semibold dark:text-white">Are you sure you'd like to delete your <span className="text-slate-800 dark:text-blue-300">strategy</span>?</h2>
                 <button onClick={closeModal}>

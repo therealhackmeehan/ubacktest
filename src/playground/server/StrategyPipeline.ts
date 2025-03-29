@@ -92,7 +92,6 @@ class StrategyPipeline {
                 this.strategyResult.sp = shortenedNormalizedQuote.close;
             }
         } catch (Error: any) {
-            this.warning = this.warning || []; // Ensure `this.warning` is an array
             this.warning.push("An issue occurred with fetching S&P Comparison Data, so it will be excluded from this backtest.");
         }
 

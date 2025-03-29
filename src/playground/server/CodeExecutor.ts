@@ -40,11 +40,13 @@ class CodeExecutor {
         };
 
         const response = await fetch(url, options);
+        console.log(response);
         if (!response.ok) {
-            throw new HttpError(503, `Code Execution Failed:\n\n"${response.statusText}"`)
+            throw new HttpError(503, `Code Execution Failed:\n\nStatus ${response.status}: "${response.statusText}"`)
         }
 
         const fullResult = await response.json();
+        console.log(fullResult);
 
         let { stdout, stderr } = fullResult;
         if (!stdout) { stdout = '' } else { stdout = Buffer.from(stdout, 'base64').toString('utf-8') };

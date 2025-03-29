@@ -56,7 +56,7 @@ export default function ShareResultModal({ closeModal, id }: ShareResultModalPro
     useEnterKey(handleResultDelete);
 
     return (
-        <ModalLayout>
+        <ModalLayout closeModal={closeModal}>
             <div className='flex justify-between'>
                 <h2 className="text-base text-slate-500 font-semibold dark:text-white">Share your result with <span className='dark:text-blue-300'>another user</span>!</h2>
                 <button onClick={closeModal}>
