@@ -65,7 +65,14 @@ export const makeStripePayment = async ({ test, page, planName }: { test: any; p
   await page.click('text="Pricing"');
   await page.waitForURL('**/pricing');
 
-  const buyBtn = page.getByRole('button', { name: 'Buy plan' }).first(); // "Hobby Plan" is the first of three plans
+  let idx = 0;
+  if (planName == 'credits10') {
+    idx = 2;
+  } else if (planName == 'pro') {
+    idx = 1;
+  }
+
+  const buyBtn = page.getByRole('button', { name: 'Buy plan' }).nth(idx);
   await expect(buyBtn).toBeVisible();
   await expect(buyBtn).toBeEnabled();
   await buyBtn.click();
@@ -91,5 +98,12 @@ export const makeStripePayment = async ({ test, page, planName }: { test: any; p
 
   await page.waitForURL('**/checkout?success=true');
   await page.waitForURL('**/account');
-  await expect(page.getByText(planName)).toBeVisible();
+  if (planName != "credits10") await expect(page.getByText(planName)).toBeVisible();
 };
+
+export async function fillEditor(page: Page, content: string) {
+  await page.evaluate((code) => {
+      const editor = (window as any).monaco.editor.getEditors()[0];
+      editor.setValue(code);
+  }, content);
+}
