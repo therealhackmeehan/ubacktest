@@ -1,4 +1,3 @@
-
 '''
 Support Vector Machine (SVM) Classifier.
 

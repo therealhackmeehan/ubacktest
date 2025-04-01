@@ -1,5 +1,4 @@
-const gbClassifier = `
-'''
+const gbClassifier = `'''
 Gradient Boosting Classifier Strategy.
 
 Trains a Gradient Boosting Classifier using the past 30 days of data to predict the next day's action. 

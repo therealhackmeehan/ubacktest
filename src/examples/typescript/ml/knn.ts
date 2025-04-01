@@ -1,5 +1,4 @@
-const knnClassifier = `
-'''
+const knnClassifier = `'''
 K-Nearest Neighbors (KNN) Classifier.
 
 Trains a K-Nearest Neighbors Classifier using the past 30 days of data to predict the next day's action. 

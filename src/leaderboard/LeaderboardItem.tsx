@@ -24,7 +24,7 @@ function LeaderboardItem({ result, index }: LeaderboardItemProps) {
                 ref={ref}
                 className={`border-2 md:border-0 md:border-l-8 border-sky-700/50 dark:border-blue-300 rounded-md my-6 md:my-2 bg-white p-2 justify-between md:flex duration-700 dark:bg-black`}
                 style={{
-                    transform: inView ? "translateX(0)" : (((index % 2) === 0) ? `translateX(-${(index + 1) * 10}px)` : `translateX(${(index + 1) * 10}px)`),
+                    transform: inView ? `translateX(${10-2*(index+1)})` : (((index % 2) === 0) ? `translateX(-${(index + 1) * 10}px)` : `translateX(${(index + 1) * 10}px)`),
                 }}
             >
                 <div className='px-3 mt-6 md:mt-0 flex items-center gap-x-3'>

@@ -1,4 +1,3 @@
-
 '''
 Logistic Regression Strategy.
 

@@ -1,5 +1,4 @@
-const nnClassifier = `
-'''
+const nnClassifier = `'''
 Neural Network (MLP) Classifier.
 
 Trains a NN Classifier using the past 30 days of data to predict the next day's action. 

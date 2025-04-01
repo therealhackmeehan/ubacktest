@@ -1,5 +1,4 @@
-const rfClassifier = `
-'''
+const rfClassifier = `'''
 Random Forest Classifier.
 
 Trains a Random Forest Classifier using the past 30 days of data to predict the next day's action. 

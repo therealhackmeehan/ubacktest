@@ -1,6 +1,5 @@
 export const rsiVolume =
-    `
-'''
+    `'''
 Buy Low, Sell//Short High with Volume Confirmation.
 
 Short stock when RSI crosses above 70 **and** volume is above its 50-day average.

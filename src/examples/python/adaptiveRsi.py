@@ -1,4 +1,3 @@
-
 '''
 Buy Low, Sell/Short High with Adaptive RSI Levels.
 

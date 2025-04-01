@@ -1,4 +1,3 @@
-
 '''
 K-Nearest Neighbors (KNN) Classifier.
 

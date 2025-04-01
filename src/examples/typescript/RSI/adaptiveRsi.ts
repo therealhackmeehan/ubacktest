@@ -1,6 +1,5 @@
 export const adaptiveRsi =
-    `
-'''
+    `'''
 Buy Low, Sell/Short High with Adaptive RSI Levels.
 
 Short stock when RSI exceeds a dynamic upper threshold (mean RSI + standard deviation).

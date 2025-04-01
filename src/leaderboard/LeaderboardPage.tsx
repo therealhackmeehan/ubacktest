@@ -36,7 +36,7 @@ function LeaderboardPage() {
             <div className="max-w-5xl mx-auto min-w-3xl">
                 <div className="m-2 p-4 bg-slate-100 duration-1000 rounded-lg shadow-xl flex justify-between dark:text-white dark:bg-boxdark-2">
                     <img src={logo} className="h-12" />
-                    <div className="text-3xl font-extrabold tracking-tight"><span className="text-xs">global </span>Leaderboard</div>
+                    <div className="text-3xl font-extrabold tracking-tight"><span className="text-xs">weekly global </span>Leaderboard</div>
                 </div>
                 <div className="text-center text-sm font-light my-4 dark:text-white">
                     <p>Saved results are public by default, but your code is <span className="italic">never</span> public. Only your success.</p>

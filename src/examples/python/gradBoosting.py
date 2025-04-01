@@ -1,4 +1,3 @@
-
 '''
 Gradient Boosting Classifier Strategy.
 

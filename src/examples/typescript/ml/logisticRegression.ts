@@ -1,5 +1,4 @@
-const logReg = `
-'''
+const logReg = `'''
 Logistic Regression Strategy.
 
 Trains a Logistic Regression model using the past 30 days of data to predict the next day's price movement (up/down).
