@@ -46,5 +46,3 @@ test('Strategy successfully runs a mildly complicated example', async () => {
     // Assert that the expected text is visible
     await expect(page.getByText('Stock Data and Simulated Backtest Result for')).toBeVisible();
 });
-
-// Once data is bought, put specific test in here!

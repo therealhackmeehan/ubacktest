@@ -42,9 +42,9 @@ test('Stock exists but does not have COMPLETE data in the selected date range', 
     await expect(page.getByText(WARNING_MISSING_DATA)).toBeVisible();
 });
 
-const WARNING_LOW_VOLUME =
-    'The selected stock exhibits low trading volume, which may result in increased price volatility and unpredictable behavior. ' +
-    'Exercise caution when testing your strategy with this stock.';
+// const WARNING_LOW_VOLUME =
+//     'The selected stock exhibits low trading volume, which may result in increased price volatility and unpredictable behavior. ' +
+//     'Exercise caution when testing your strategy with this stock.';
 // test('Stock exists but has strangely low volume', async () => {
 //     const startDate = '2020-03-01';
 //     const endDate = '2021-03-01';
