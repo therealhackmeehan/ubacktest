@@ -18,11 +18,9 @@ export const randomColor = () => {
 
 function LeaderboardPage() {
     const { data: topResults, isLoading: isLeaderboardLoading, error: leaderboardError } = useQuery(getTopResults);
-
     const [isProfitLoss, setIsProfitLoss] = useState(true); // Track which leaderboard is active
 
     if (isLeaderboardLoading) return <LoadingScreen />;
-
     if ((!isLeaderboardLoading && leaderboardError) || !topResults) {
         return (
             <ContentWrapper>

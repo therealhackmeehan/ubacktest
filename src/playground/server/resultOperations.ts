@@ -40,7 +40,7 @@ export const createResult: CreateResult<ResultCreationInfo, Result> = async ({ n
     }
 
     // break down data into arrays
-    const {timestamp, open, close, high, low, volume, signal, returns, sp, portfolio, portfolioWithCosts, cash, equity, cashWithCosts, equityWithCosts, userDefinedData}: StrategyResultProps = data;
+    const { timestamp, open, close, high, low, volume, signal, returns, sp, portfolio, portfolioWithCosts, cash, equity, cashWithCosts, equityWithCosts, userDefinedData }: StrategyResultProps = data;
 
     return await context.entities.Result.create({
         data: {
@@ -119,10 +119,14 @@ export type GetTopResultsProp = {
 }
 
 export const getTopResults: GetTopResults<void, GetTopResultsProp> = async (_args, context) => {
+
+    const oneWeekAgo = new Date();
+    oneWeekAgo.setDate(oneWeekAgo.getDate() - 7);
     const results = await context.entities.Result.findMany({
         where: {
             public: true,
             timepoints: { gte: 15 },
+            createdAt: { gte: oneWeekAgo },
         },
         include: { user: true },
     });
@@ -148,7 +152,8 @@ export const getTopResults: GetTopResults<void, GetTopResultsProp> = async (_arg
     // Map results to include email
     const resultsWithUsername = bestResultsByUser.map((result: any) => ({
         ...result,
-        email: result.user?.email,
+        code: "obfuscated for privacy.",
+        email: result.user?.email.split('@')[0],
     }));
 
     return {
