@@ -24,7 +24,7 @@ function LeaderboardPage() {
     if ((!isLeaderboardLoading && leaderboardError) || !topResults) {
         return (
             <ContentWrapper>
-                <div className="m-8 font-bold text-center">Something went wrong.</div>
+                <div className="m-8 font-bold text-center dark:text-white">Something went wrong.</div>
             </ContentWrapper>
         );
     }

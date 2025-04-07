@@ -6,6 +6,7 @@ import SharedList from "./components/SharedList";
 function ResultPage() {
 
     const [sharedWithMeTabOpen, setSharedWithMeTabOpen] = useState<boolean>(false);
+    // todo create context here with checked status
 
     return (
         <ContentWrapper>

@@ -1,17 +1,17 @@
 import { useState } from "react";
 import { Result } from "wasp/entities";
 import ResultListItem from "./ResultListItem";
+import { ResultWithStrategyName } from "../../../playground/server/resultOperations";
 
-function ResultList({ results }: { results: Result[] | null | undefined }) {
+function ResultList({ results }: { results: ResultWithStrategyName[] | null | undefined }) {
 
     const [showAll, setShowAll] = useState(false);
     const toggleShowAll = () => setShowAll((prev) => !prev);
 
     const [groupByStrategy, setGroupByStrategy] = useState<boolean>(false);
-
-    const groupResultsByStrategy = (results: Result[]) => {
+    const groupResultsByStrategy = (results: ResultWithStrategyName[]) => {
         const groups: {
-            [key: string]: { results: Result[]; avgPL: number };
+            [key: string]: { results: ResultWithStrategyName[]; avgPL: number };
         } = {};
 
         results.forEach((result) => {
@@ -38,37 +38,42 @@ function ResultList({ results }: { results: Result[] | null | undefined }) {
         <>
             {(results && results.length > 0) ? (
                 <>
-                    <div className="flex justify-end gap-x-4 items-center">
-                        <div className="text-lg tracking-tight text-center dark:text-white">
-                            Group by Strategy
-                        </div>
-                        <input type="checkbox" checked={groupByStrategy} onChange={() => setGroupByStrategy(!groupByStrategy)}>
-                        </input>
+                    <div className="text-end">
+                        <label className="inline-flex items-center cursor-pointer">
+                            <input type="checkbox" value="" className="sr-only peer" checked={groupByStrategy} onChange={() => setGroupByStrategy(!groupByStrategy)}></input>
+                            <div className="relative w-11 h-6 bg-gray-200 dark:bg-black rounded-full peer peer-focus:ring-4 peer-focus:ring-blue-300 peer-checked:after:translate-x-full rtl:peer-checked:after:-translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-0.5 after:start-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all dark:border-gray-600 peer-checked:bg-sky-700 dark:peer-checked:bg-blue-300"></div>
+                            <span className="ms-3 text-sm font-medium text-gray-900 dark:text-blue-300">Group By Strategy</span>
+                        </label>
                     </div>
                     {groupByStrategy ? (
-                        Object.entries(groupResultsByStrategy(showAll ? results : results.slice(0, 10)))
+                        Object.entries(groupResultsByStrategy(showAll ? results : results
+                            .slice(0, 10)))
                             .sort(([a], [b]) => a.localeCompare(b))
-                            .map(([strategyID, group]) => (
-                                <div key={strategyID} className="mb-4">
-                                    <h3 className="text-md font-semibold text-slate-600 dark:text-slate-200 mb-2">
-                                        Strategy: {strategyID} (Avg P/L: {group.avgPL.toFixed(2)})
+                            .map(([strategyId, group]) => (
+                                <div key={strategyId} className="mb-4">
+                                    <h3 className="font-semibold text-slate-700 dark:text-white mb-2 pb-1 flex justify-start items-center gap-x-2 border-b-2 border-black/30 dark:border-white/30">
+                                        <div className="text-sm font-light">strategy</div>
+                                        <div className="italic text-lg">{group.results[0]?.strategyName ?? "Unknown"}</div>
+                                        <div className="font-mono text-sm text-sky-700 dark:text-blue-300">
+                                            average P/L: {group.avgPL.toFixed(2)}%
+                                        </div>
                                     </h3>
                                     <ul className="space-y-2">
-                                        {group.results.map((result) => (
-                                            <ResultListItem key={result.id} result={result} />
+                                        {group.results.map(({ strategyName, ...rest }) => (
+                                            <ResultListItem key={rest.id} result={rest} />
                                         ))}
                                     </ul>
                                 </div>
                             ))
                     ) : (
                         <ul className="space-y-2">
-                            {(showAll ? results : results.slice(0, 10)).map((result) => (
-                                <ResultListItem key={result.id} result={result} />
-                            ))}
+                            {(showAll ? results : results
+                                .slice(0, 10))
+                                .map(({ strategyName, ...rest }) => (
+                                    <ResultListItem key={rest.id} result={rest} />
+                                ))}
                         </ul>
                     )}
-
-
                     {results.length > 10 && (
                         <button
                             onClick={toggleShowAll}

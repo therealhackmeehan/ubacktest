@@ -76,7 +76,11 @@ export const createResult: CreateResult<ResultCreationInfo, Result> = async ({ n
     });
 };
 
-export const getResults: GetResults<void, Result[] | null> = async (_args, context) => {
+export type ResultWithStrategyName = Result & {
+    strategyName: string;
+};
+
+export const getResults: GetResults<void, ResultWithStrategyName[] | null> = async (_args, context) => {
     if (!context.user) {
         throw new HttpError(401);
     }
@@ -88,9 +92,15 @@ export const getResults: GetResults<void, Result[] | null> = async (_args, conte
         orderBy: {
             createdAt: "desc",
         },
+        include: { fromStrategy: true },
     });
 
-    return results.length > 0 ? results : null;
+    const resultsWithStrategyName: ResultWithStrategyName[] = results.map(({ fromStrategy, ...rest }) => ({
+        ...rest,
+        strategyName: fromStrategy?.name ?? "",
+    }));
+
+    return resultsWithStrategyName.length > 0 ? resultsWithStrategyName : null;
 };
 
 export const getResultsForStrategy: GetResultsForStrategy<Pick<Result, "fromStrategyID">, Result[] | null> = async ({ fromStrategyID }, context) => {
@@ -122,6 +132,7 @@ export const getTopResults: GetTopResults<void, GetTopResultsProp> = async (_arg
 
     const oneWeekAgo = new Date();
     oneWeekAgo.setDate(oneWeekAgo.getDate() - 7);
+
     const results = await context.entities.Result.findMany({
         where: {
             public: true,
@@ -136,27 +147,26 @@ export const getTopResults: GetTopResults<void, GetTopResultsProp> = async (_arg
     }
 
     // Group results by user and keep only the best result per user
-    const bestResultsByUser = Object.values(
-        results.reduce((acc, result: any) => {
-            const userId = result.user?.id;
-            if (!userId) return acc;
+    // const bestResultsByUser = Object.values(
+    //     results.reduce((acc, result: any) => {
+    //         const userId = result.user?.id;
+    //         if (!userId) return acc;
 
-            // Replace only if the new result has a higher profit/loss
-            if (!acc[userId] || result.profitLoss > acc[userId].profitLoss) {
-                acc[userId] = result;
-            }
-            return acc;
-        }, {} as Record<string, any>)
-    );
+    //         // Replace only if the new result has a higher profit/loss
+    //         if (!acc[userId] || result.profitLoss > acc[userId].profitLoss) {
+    //             acc[userId] = result;
+    //         }
+    //         return acc;
+    //     }, {} as Record<string, any>)
+    // );
 
-    // Map results to include email
-    const resultsWithUsername = bestResultsByUser.map((result: any) => ({
-        ...result,
+    const resultsWithUsername: ResultWithUsername[] = results.map(({ user, ...rest }) => ({
+        ...rest,
         code: "obfuscated for privacy.",
-        email: result.user?.email.split('@')[0],
+        email: user?.email ? user.email.split('@')[0] : "",
     }));
 
-    return {
+    const toReturn: GetTopResultsProp = {
         topByProfitLoss: resultsWithUsername
             .sort((a, b) => b.profitLoss - a.profitLoss)
             .slice(0, 10),
@@ -164,6 +174,8 @@ export const getTopResults: GetTopResults<void, GetTopResultsProp> = async (_arg
             .sort((a, b) => b.profitLossAnnualized - a.profitLossAnnualized)
             .slice(0, 10),
     };
+
+    return toReturn;
 };
 
 export const deleteResult: DeleteResult<Pick<Result, "id">, Result> = async ({ id }, context) => {
@@ -203,7 +215,6 @@ export const togglePrivacy: TogglePrivacy<Partial<Result>, Result> = async ({ id
         data: { public: !result.public },
     });
 };
-
 
 export const renameResult: RenameResult<Partial<Result>, Result> = async ({ id, name }, context) => {
     if (!context.user) {

@@ -13,7 +13,14 @@ function StrategyResults({ strategy }: { strategy: Strategy }) {
             <div className="text-xl font-extrabold my-2 dark:text-white">
                 Saved Results from <span className="text-sky-600 dark:text-blue-300 italic font-normal">{strategy.name}</span>
             </div>
-            {!isResultsLoading && <ResultList results={results} />}
+            {!isResultsLoading && (
+                <ResultList
+                    results={results?.map((result) => ({
+                        ...result,
+                        strategyName: "Unknown", // Add strategyName as "Unknown"
+                    }))}
+                />
+            )}
         </div>
     )
 }
