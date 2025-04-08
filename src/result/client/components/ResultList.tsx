@@ -1,7 +1,20 @@
 import { useState } from "react";
-import { Result } from "wasp/entities";
 import ResultListItem from "./ResultListItem";
 import { ResultWithStrategyName } from "../../../playground/server/resultOperations";
+import GroupedResultsSummary from "./GroupedResultSummary";
+import { FormInputProps } from "../../../shared/sharedTypes";
+
+export interface GroupEntryProps {
+    [key: string]: {
+        results: ResultWithStrategyName[];
+        avgPL: number;
+        symbols: string[];
+        testRanges: {
+            startDate: string;
+            endDate: string;
+        }[];
+    };
+}
 
 function ResultList({ results }: { results: ResultWithStrategyName[] | null | undefined }) {
 
@@ -10,28 +23,39 @@ function ResultList({ results }: { results: ResultWithStrategyName[] | null | un
 
     const [groupByStrategy, setGroupByStrategy] = useState<boolean>(false);
     const groupResultsByStrategy = (results: ResultWithStrategyName[]) => {
-        const groups: {
-            [key: string]: { results: ResultWithStrategyName[]; avgPL: number };
-        } = {};
+        const groupsByStrategy: GroupEntryProps = {};
 
         results.forEach((result) => {
             const key = result.fromStrategyID;
             if (key) {
-                if (!groups[key]) {
-                    groups[key] = { results: [], avgPL: 0 };
+                if (!groupsByStrategy[key]) {
+                    groupsByStrategy[key] = {
+                        results: [],
+                        avgPL: 0,
+                        symbols: [],
+                        testRanges: [],
+                    };
                 }
-                groups[key].results.push(result);
+
+                const group = groupsByStrategy[key];
+                group.results.push(result);
+                const formInputs = result.formInputs as unknown as FormInputProps;
+                group.symbols.push(formInputs.symbol);
+                group.testRanges.push({
+                    startDate: formInputs.startDate,
+                    endDate: formInputs.endDate,
+                });
             }
         });
 
-        // Now calculate avgPL for each group
-        for (const key in groups) {
-            const group = groups[key];
+        // Calculate avgPL for each group
+        for (const key in groupsByStrategy) {
+            const group = groupsByStrategy[key];
             const total = group.results.reduce((sum, r) => sum + r.profitLoss, 0);
             group.avgPL = group.results.length ? total / group.results.length : 0;
         }
 
-        return groups;
+        return groupsByStrategy;
     };
 
     return (
@@ -41,25 +65,19 @@ function ResultList({ results }: { results: ResultWithStrategyName[] | null | un
                     <div className="text-end">
                         <label className="inline-flex items-center cursor-pointer">
                             <input type="checkbox" value="" className="sr-only peer" checked={groupByStrategy} onChange={() => setGroupByStrategy(!groupByStrategy)}></input>
-                            <div className="relative w-11 h-6 bg-gray-200 dark:bg-black rounded-full peer peer-focus:ring-4 peer-focus:ring-blue-300 peer-checked:after:translate-x-full rtl:peer-checked:after:-translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-0.5 after:start-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all dark:border-gray-600 peer-checked:bg-sky-700 dark:peer-checked:bg-blue-300"></div>
-                            <span className="ms-3 text-sm font-medium text-gray-900 dark:text-blue-300">Group By Strategy</span>
+                            <div className="relative w-11 h-6 bg-gray-200 rounded-full peer peer-focus:ring-4 peer-focus:ring-blue-300 peer-checked:after:translate-x-full rtl:peer-checked:after:-translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-0.5 after:start-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all dark:border-gray-600 peer-checked:bg-sky-700 dark:peer-checked:bg-blue-300"></div>
+                            <span className="ms-3 text-sm font-medium text-gray-900 dark:text-blue-300">Group By Parent Strategy</span>
                         </label>
                     </div>
                     {groupByStrategy ? (
                         Object.entries(groupResultsByStrategy(showAll ? results : results
                             .slice(0, 10)))
                             .sort(([a], [b]) => a.localeCompare(b))
-                            .map(([strategyId, group]) => (
-                                <div key={strategyId} className="mb-4">
-                                    <h3 className="font-semibold text-slate-700 dark:text-white mb-2 pb-1 flex justify-start items-center gap-x-2 border-b-2 border-black/30 dark:border-white/30">
-                                        <div className="text-sm font-light">strategy</div>
-                                        <div className="italic text-lg">{group.results[0]?.strategyName ?? "Unknown"}</div>
-                                        <div className="font-mono text-sm text-sky-700 dark:text-blue-300">
-                                            average P/L: {group.avgPL.toFixed(2)}%
-                                        </div>
-                                    </h3>
+                            .map(([strategyId, groupsByStrategy]) => (
+                                <div key={strategyId} className="mb-4 lg:mb-8">
+                                    <GroupedResultsSummary groupsByStrategy={groupsByStrategy} />
                                     <ul className="space-y-2">
-                                        {group.results.map(({ strategyName, ...rest }) => (
+                                        {groupsByStrategy.results.map(({ strategyName, ...rest }) => (
                                             <ResultListItem key={rest.id} result={rest} />
                                         ))}
                                     </ul>
