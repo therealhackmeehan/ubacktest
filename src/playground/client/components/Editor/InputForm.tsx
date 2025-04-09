@@ -129,7 +129,7 @@ function InputForm({ formInputs, setFormInputs, run }: InputFormSubcomponentProp
 
     const [position, setPosition] = useState<{ y: number }>(() => {
         const savedPosition = localStorage.getItem(INPUT_FORM_HEIGHT);
-        const initialPosition = savedPosition ? JSON.parse(savedPosition) : { y: 0 };
+        const initialPosition = savedPosition ? JSON.parse(savedPosition) : { y: (window.innerHeight + window.outerHeight) / 2 };
 
         // Ensure y is within the visible screen bounds
         const clampedY = Math.min(Math.max(initialPosition.y, 0), window.innerHeight - 100); // 50px buffer

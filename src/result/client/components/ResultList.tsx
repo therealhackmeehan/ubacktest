@@ -1,8 +1,9 @@
-import { useState } from "react";
+import { useContext, useState } from "react";
 import ResultListItem from "./ResultListItem";
 import { ResultWithStrategyName } from "../../../playground/server/resultOperations";
 import GroupedResultsSummary from "./GroupedResultSummary";
 import { FormInputProps } from "../../../shared/sharedTypes";
+import { GroupedResultContext } from "../ResultPage";
 
 export interface GroupEntryProps {
     [key: string]: {
@@ -20,11 +21,10 @@ function ResultList({ results }: { results: ResultWithStrategyName[] | null | un
 
     const [showAll, setShowAll] = useState(false);
     const toggleShowAll = () => setShowAll((prev) => !prev);
+    const { groupByStrategy, setGroupByStrategy } = useContext(GroupedResultContext);
 
-    const [groupByStrategy, setGroupByStrategy] = useState<boolean>(false);
     const groupResultsByStrategy = (results: ResultWithStrategyName[]) => {
         const groupsByStrategy: GroupEntryProps = {};
-
         results.forEach((result) => {
             const key = result.fromStrategyID;
             if (key) {
@@ -36,7 +36,6 @@ function ResultList({ results }: { results: ResultWithStrategyName[] | null | un
                         testRanges: [],
                     };
                 }
-
                 const group = groupsByStrategy[key];
                 group.results.push(result);
                 const formInputs = result.formInputs as unknown as FormInputProps;
@@ -95,7 +94,7 @@ function ResultList({ results }: { results: ResultWithStrategyName[] | null | un
                     {results.length > 10 && (
                         <button
                             onClick={toggleShowAll}
-                            className="w-full px-2 py-1 rounded-md bg-slate-100 border-2 border-slate-500 hover:shadow hover:bg-slate-200 hover:italic duration-700 dark:bg-boxdark dark:text-white"
+                            className="w-full my-3 px-2 py-1 rounded-md bg-slate-100 border-2 border-slate-500 hover:shadow hover:bg-slate-200 hover:italic duration-700 dark:bg-boxdark dark:text-white"
                         >
                             {showAll ? "Show Less" : "See All"}
                         </button>

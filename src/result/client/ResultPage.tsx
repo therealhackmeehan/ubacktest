@@ -2,11 +2,14 @@ import { useState } from "react";
 import ContentWrapper from "../../client/components/ContentWrapper";
 import MyResults from "./components/MyResults";
 import SharedList from "./components/SharedList";
+import { createContext } from "react";
+
+export const GroupedResultContext = createContext<any>(null);
 
 function ResultPage() {
 
     const [sharedWithMeTabOpen, setSharedWithMeTabOpen] = useState<boolean>(false);
-    // todo create context here with checked status
+    const [groupByStrategy, setGroupByStrategy] = useState<boolean>(false);
 
     return (
         <ContentWrapper>
@@ -27,7 +30,10 @@ function ResultPage() {
                 </button>
             </div>
             {
-                sharedWithMeTabOpen ? <SharedList /> : <MyResults />
+                sharedWithMeTabOpen ? <SharedList /> :
+                    <GroupedResultContext.Provider value={{ groupByStrategy, setGroupByStrategy }}>
+                        <MyResults />
+                    </GroupedResultContext.Provider>
             }
 
         </ContentWrapper>
