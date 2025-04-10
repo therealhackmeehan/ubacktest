@@ -13,7 +13,12 @@ import { RxLockOpen2, RxLockClosed } from "react-icons/rx";
 import { AiOutlineLoading3Quarters } from 'react-icons/ai';
 import ResultHeader from './ResultHeader';
 
-export default function ResultListItem({ result }: { result: Result }) {
+interface ResultListItemProps {
+    result: Result;
+    highlight?: boolean; // Optional, defaults to false
+}
+
+export default function ResultListItem({ result, highlight = false }: ResultListItemProps) {
 
     const formInputs = result.formInputs as unknown as FormInputProps;
     const [resultPanelOpen, setResultPanelOpen] = useState<boolean>(false);
@@ -23,7 +28,6 @@ export default function ResultListItem({ result }: { result: Result }) {
     const [shareResultModalOpen, setShareResultModalOpen] = useState<boolean>(false);
 
     const [loading, setLoading] = useState<boolean>(false);
-
     const [isPublic, setIsPublic] = useState<boolean>(result.public);
 
     async function togglePublicPrivate() {
@@ -45,7 +49,7 @@ export default function ResultListItem({ result }: { result: Result }) {
 
     return (
         <>
-            <div className='md:flex justify-between my-6 md:my-3 md:mx-1 items-center p-2 rounded-lg bg-slate-100 border-slate-200 border-2 hover:shadow-lg duration-700 dark:border-0 dark:bg-boxdark dark:shadow-none'>
+            <div className={`md:flex justify-between my-6 md:my-3 md:mx-1 items-center p-2 rounded-lg bg-slate-100 border-slate-200 border-2 hover:shadow-lg duration-700 dark:border-0 dark:bg-boxdark dark:shadow-none ${highlight ? "translate-x-10 shadow-lg" : ""}`}>
                 <ResultHeader result={result} setResultPanelOpen={setResultPanelOpen} />
                 <div className='flex justify-between gap-x-3 items-center dark:text-white'>
                     <button className='px-3 py-1 flex rounded-lg bg-white hover:shadow-lg items-center gap-x-2 dark:bg-boxdark-2 dark:border-2 dark:border-blue-300'

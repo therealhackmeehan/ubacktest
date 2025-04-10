@@ -5,56 +5,29 @@ import GroupedResultsSummary from "./GroupedResultSummary";
 import { FormInputProps } from "../../../shared/sharedTypes";
 import { GroupedResultContext } from "../ResultPage";
 
-export interface GroupEntryProps {
-    [key: string]: {
-        results: ResultWithStrategyName[];
-        avgPL: number;
-        symbols: string[];
-        testRanges: {
-            startDate: string;
-            endDate: string;
-        }[];
-    };
+export interface ResultByStrategyProps {
+    [key: string]: ResultWithStrategyName[];
 }
 
 function ResultList({ results }: { results: ResultWithStrategyName[] | null | undefined }) {
 
-    const [showAll, setShowAll] = useState(false);
-    const toggleShowAll = () => setShowAll((prev) => !prev);
     const { groupByStrategy, setGroupByStrategy } = useContext(GroupedResultContext);
+    const [resultToHighlight, setResultToHighlight] = useState<string>('');
 
+    // create a dictionary with each strategies' results
     const groupResultsByStrategy = (results: ResultWithStrategyName[]) => {
-        const groupsByStrategy: GroupEntryProps = {};
+        const resultsByStrategy: ResultByStrategyProps = {};
         results.forEach((result) => {
             const key = result.fromStrategyID;
             if (key) {
-                if (!groupsByStrategy[key]) {
-                    groupsByStrategy[key] = {
-                        results: [],
-                        avgPL: 0,
-                        symbols: [],
-                        testRanges: [],
-                    };
+                if (!resultsByStrategy[key]) {
+                    resultsByStrategy[key] = [];
                 }
-                const group = groupsByStrategy[key];
-                group.results.push(result);
-                const formInputs = result.formInputs as unknown as FormInputProps;
-                group.symbols.push(formInputs.symbol);
-                group.testRanges.push({
-                    startDate: formInputs.startDate,
-                    endDate: formInputs.endDate,
-                });
+                resultsByStrategy[key].push(result);
             }
         });
 
-        // Calculate avgPL for each group
-        for (const key in groupsByStrategy) {
-            const group = groupsByStrategy[key];
-            const total = group.results.reduce((sum, r) => sum + r.profitLoss, 0);
-            group.avgPL = group.results.length ? total / group.results.length : 0;
-        }
-
-        return groupsByStrategy;
+        return resultsByStrategy;
     };
 
     return (
@@ -69,35 +42,22 @@ function ResultList({ results }: { results: ResultWithStrategyName[] | null | un
                         </label>
                     </div>
                     {groupByStrategy ? (
-                        Object.entries(groupResultsByStrategy(showAll ? results : results
-                            .slice(0, 10)))
-                            .sort(([a], [b]) => a.localeCompare(b))
-                            .map(([strategyId, groupsByStrategy]) => (
-                                <div key={strategyId} className="mb-4 lg:mb-8">
-                                    <GroupedResultsSummary groupsByStrategy={groupsByStrategy} />
-                                    <ul className="space-y-2">
-                                        {groupsByStrategy.results.map(({ strategyName, ...rest }) => (
-                                            <ResultListItem key={rest.id} result={rest} />
-                                        ))}
-                                    </ul>
-                                </div>
-                            ))
+                        Object.entries(groupResultsByStrategy(results)).map(([strategyId, resultsByStrategy]) => (
+                            <div key={strategyId} className="mb-4 lg:mb-8">
+                                <GroupedResultsSummary resultsByStrategy={resultsByStrategy} setResultToHighlight={setResultToHighlight} />
+                                <ul className="space-y-2">
+                                    {resultsByStrategy.map(({ strategyName, ...rest }) => (
+                                        <ResultListItem key={rest.id} result={rest} highlight={rest.id === resultToHighlight} />
+                                    ))}
+                                </ul>
+                            </div>
+                        ))
                     ) : (
                         <ul className="space-y-2">
-                            {(showAll ? results : results
-                                .slice(0, 10))
-                                .map(({ strategyName, ...rest }) => (
-                                    <ResultListItem key={rest.id} result={rest} />
-                                ))}
+                            {results.map(({ strategyName, ...rest }) => (
+                                <ResultListItem key={rest.id} result={rest} />
+                            ))}
                         </ul>
-                    )}
-                    {results.length > 10 && (
-                        <button
-                            onClick={toggleShowAll}
-                            className="w-full my-3 px-2 py-1 rounded-md bg-slate-100 border-2 border-slate-500 hover:shadow hover:bg-slate-200 hover:italic duration-700 dark:bg-boxdark dark:text-white"
-                        >
-                            {showAll ? "Show Less" : "See All"}
-                        </button>
                     )}
                 </>
             ) : (
