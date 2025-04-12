@@ -6,7 +6,7 @@ import InputForm from "./InputForm";
 import { runStrategy, charge, updateStrategy } from "wasp/client/operations";
 import validateFormInputs from "../../scripts/validateFormInputs";
 import validatePythonCode from "../../scripts/validatePythonCode";
-import { FormInputProps, StrategyResultProps } from "../../../../shared/sharedTypes";
+import { FormInputProps, StatProps, StrategyResultProps } from "../../../../shared/sharedTypes";
 import { type stdProps } from "../StrategyEditor";
 import { StrategyContext } from "../../EditorPage";
 import LongLoadingScreen from "./LongLoadingScreen";
@@ -23,9 +23,10 @@ interface EditorProps {
     codeToDisplay: string;
     setCodeToDisplay: (value: string) => void;
     setWarningMsg: (value: string | null) => void;
+    setStats: (value: StatProps | null) => void;
 }
 
-function Editor({ formInputs, strategyResult, setStrategyResult, setResultOpen, setFormInputs, setStrategyResultIsConnectedTo, std, setStd, codeToDisplay, setCodeToDisplay, setWarningMsg }: EditorProps) {
+function Editor({ formInputs, strategyResult, setStrategyResult, setResultOpen, setFormInputs, setStrategyResultIsConnectedTo, std, setStd, codeToDisplay, setCodeToDisplay, setWarningMsg, setStats }: EditorProps) {
 
     const { selectedStrategy, hasSaved, setHasSaved } = useContext(StrategyContext);
 
@@ -38,13 +39,14 @@ function Editor({ formInputs, strategyResult, setStrategyResult, setResultOpen, 
             setInitialState();
             handlePreRunValidations();
 
-            const { strategyResult, debugOutput, stderr, warnings } =
+            const { strategyResult, statistics, debugOutput, stderr, warnings } =
                 await runStrategy({ formInputs: formInputs, code: codeToDisplay });
 
             handleDebugOutput(debugOutput, stderr);
             if (stderr) return;
 
             setStrategyResult(strategyResult);
+            setStats(statistics);
             setResultOpen(true);
             setStrategyResultIsConnectedTo(selectedStrategy.id);
 
@@ -84,6 +86,7 @@ function Editor({ formInputs, strategyResult, setStrategyResult, setResultOpen, 
         setUserStderr('');
         setUserStdout('');
         setStrategyResult(null);
+        setStats(null);
         setErrorModalMessage('');
         setLoading(true);
     }

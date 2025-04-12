@@ -5,7 +5,7 @@ import ResultValidator from "./ResultValidator";
 import STDParser from "./STDParser";
 import PortfolioCalculator from "./PortfolioCalculator";
 import APIDataConnector from "./APIDataConnector";
-
+import { StatProps } from "../../shared/sharedTypes";
 /*
     Main backend endpoint for processing of the stock trading strategy.
     Will search for data and apply the given python strategy.
@@ -41,6 +41,24 @@ class StrategyPipeline {
         returns: [],
         userDefinedData: {},
     };
+
+    private statistics: StatProps = {
+        length: 0,
+        pl: null,
+        plWCosts: null,
+        cagr: null,
+        numTrades: 0,
+        numProfTrades: 0,
+        percTradesProf: null,
+        sharpeRatio: null,
+        sortinoRatio: null,
+        maxDrawdown: null,
+        maxGain: null,
+        meanReturn: null,
+        stddevReturn: null,
+        maxReturn: null,
+        minReturn: null,
+    }
 
     // store code execution outputs
     private stderr: string = '';
@@ -96,8 +114,11 @@ class StrategyPipeline {
         }
 
         // Calculate final portfolio results
-        this.strategyResult = new PortfolioCalculator(this.formInputs.costPerTrade, this.strategyResult).calculate();
+        const calc = new PortfolioCalculator(this.formInputs.costPerTrade, this.strategyResult);
+        this.strategyResult = calc.calculate();
+
         ResultValidator.validatePortfolio(this.strategyResult);
+        this.statistics = calc.statistics();
 
         return this.sendJSONtoFrontend();
     }
@@ -107,6 +128,7 @@ class StrategyPipeline {
     private sendJSONtoFrontend() {
         return {
             strategyResult: this.strategyResult,
+            statistics: this.statistics,
             debugOutput: this.stdout,
             stderr: this.stderr,
             warnings: [...new Set(this.warning)],

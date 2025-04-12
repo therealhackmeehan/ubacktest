@@ -1,7 +1,7 @@
 import { useState, useContext, useEffect } from "react";
 import Editor from "./editor/Editor";
 import ResultLayout from "./result/ResultLayout";
-import { FormInputProps, StrategyResultProps } from "../../../shared/sharedTypes";
+import { FormInputProps, StatProps, StrategyResultProps } from "../../../shared/sharedTypes";
 import { StrategyContext } from "../EditorPage";
 import StrategyHeader from "./editor/StrategyHeader";
 import WarningModal from "./modals/WarningModal";
@@ -44,6 +44,8 @@ function StrategyEditor() {
     const [resultOpen, setResultOpen] = useState<boolean>(false);
     const [strategyResult, setStrategyResult] = useState<StrategyResultProps | null>(null);
     const [strategyResultIsConnectedTo, setStrategyResultIsConnectedTo] = useState<string>('');
+
+    const[stats, setStats] = useState<StatProps | null>(null);
     
     const loadFormInputs = () => {
         const savedInputs = localStorage.getItem('formInputs');
@@ -104,6 +106,7 @@ function StrategyEditor() {
                     formInputs={formInputs}
                     strategyResultIsConnectedTo={strategyResultIsConnectedTo}
                     selectedStrategy={selectedStrategy.id}
+                    stats={stats}
                 />
             ) : (
                 <Editor
@@ -118,6 +121,7 @@ function StrategyEditor() {
                     codeToDisplay={codeToDisplay}
                     setCodeToDisplay={setCodeToDisplay}
                     setWarningMsg={setWarningMsg}
+                    setStats={setStats}
                 />
             )}
         </div>

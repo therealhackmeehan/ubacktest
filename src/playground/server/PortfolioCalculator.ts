@@ -1,4 +1,5 @@
 import { StrategyResultProps } from "../../shared/sharedTypes";
+import { StatProps } from "../../shared/sharedTypes";
 
 class PortfolioCalculator {
 
@@ -73,6 +74,102 @@ class PortfolioCalculator {
 
     private roundTo(value: number): number {
         return Math.round(value * 10 ** this.decimalPlaces) / (10 ** this.decimalPlaces);
+    }
+
+    public statistics(): StatProps {
+        const length = this.strategyResult.portfolio.length - 1;
+
+        // Calculate total profit/loss
+        const pl = (this.strategyResult.portfolio[length] - this.strategyResult.portfolio[0]) / this.strategyResult.portfolio[0];
+        const plWCosts = (this.strategyResult.portfolioWithCosts[length] - this.strategyResult.portfolioWithCosts[0]) / this.strategyResult.portfolio[0];
+
+        // Convert Unix timestamps to JavaScript Date objects
+        const firstDate = new Date(this.strategyResult.timestamp[0] * 1000).getTime();
+        const lastDate = new Date(this.strategyResult.timestamp[length] * 1000).getTime();
+
+        const numberOfDays = (lastDate - firstDate) / (1000 * 60 * 60 * 24);
+        const cagr = ((this.strategyResult.portfolio[length] / this.strategyResult.portfolio[0]) ** (365 / numberOfDays)) - 1;
+
+        let numberOfTrades = 0;
+        let numberOfProfitableTrades = 0;
+        let peak = this.strategyResult.portfolio[0];
+        let maxDrawdown = 0;
+
+        const hasInitialTrade = this.strategyResult.signal[0] !== 0;
+        let buyPrice = this.strategyResult.portfolio[0];
+
+        for (let i = 1; i < length; i++) {
+            if (this.strategyResult.signal[i] !== this.strategyResult.signal[i - 1]) {
+                numberOfTrades++;
+
+                if (this.strategyResult.portfolio[i] > buyPrice) {
+                    numberOfProfitableTrades++;
+                }
+
+                buyPrice = this.strategyResult.portfolio[i];
+            }
+
+            if (this.strategyResult.portfolio[i] > peak) {
+                peak = this.strategyResult.portfolio[i];
+            }
+
+            const drawdown = (peak - this.strategyResult.portfolio[i]) / peak;
+            maxDrawdown = Math.max(maxDrawdown, drawdown);
+        }
+
+        if (hasInitialTrade && numberOfTrades === 0) {
+            numberOfTrades = 1;
+            if (this.strategyResult.portfolio[length] > this.strategyResult.portfolio[0]) {
+                numberOfProfitableTrades++;
+            }
+        }
+
+        const percTradesProf = numberOfTrades !== 0 ? numberOfProfitableTrades / numberOfTrades : null;
+        const maxGain = Math.max.apply(Math, this.strategyResult.portfolio) - 1;
+        const returns = this.strategyResult.returns.slice(1); // dont include the first 0% return
+
+        // Initialize variables for sum, max, min
+        let sum = 0;
+        let max = -Infinity;
+        let min = Infinity;
+
+        // First pass: calculate sum, max, and min
+        for (const ret of returns) {
+            sum += ret;
+            if (ret > max) max = ret;
+            if (ret < min) min = ret;
+        }
+
+        // Calculate average return
+        const meanReturn = sum / returns.length;
+
+        // Second pass: calculate variance and ratios
+        const variance = returns.reduce((sum: number, ret: number) => sum + Math.pow(ret - meanReturn, 2), 0) / (returns.length - 1);
+        const stdDev = Math.sqrt(variance);
+        const negativeReturns = returns.filter((ret: number) => ret < 0);
+        const downsideVariance = negativeReturns.reduce((sum: number, ret: number) => sum + Math.pow(ret, 2), 0) / (negativeReturns.length || 1);
+        const downsideDev = Math.sqrt(downsideVariance);
+        const riskFreeRate = 0;
+        const sharpeRatio = (meanReturn - riskFreeRate) / stdDev;
+        const sortinoRatio = (meanReturn - riskFreeRate) / downsideDev;
+
+        return {
+            length: length,
+            pl: pl,
+            plWCosts: plWCosts,
+            cagr: cagr,
+            numTrades: numberOfTrades,
+            numProfTrades: numberOfProfitableTrades,
+            percTradesProf: percTradesProf,
+            sharpeRatio: sharpeRatio,
+            sortinoRatio: sortinoRatio,
+            maxDrawdown: maxDrawdown,
+            maxGain: maxGain,
+            meanReturn: meanReturn,
+            stddevReturn: stdDev,
+            maxReturn: max,
+            minReturn: min,
+        };
     }
 }
 

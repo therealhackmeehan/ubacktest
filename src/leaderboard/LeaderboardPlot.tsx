@@ -37,7 +37,6 @@ function LeaderboardPlot({ result, setLeaderboardPlotOpen, index }: LeaderboardP
         userDefinedData: result.userDefinedData as unknown as UserDefinedData,
     };
 
-
     return (
         <div className="fixed inset-0 flex items-center justify-center overflow-y-auto z-50">
             <div className="fixed inset-0 w-full bg-black/70"></div>
@@ -52,17 +51,17 @@ function LeaderboardPlot({ result, setLeaderboardPlotOpen, index }: LeaderboardP
                                 Rank: <span className='bg-sky-700 text-white rounded-lg py-1 px-2 m-1'>{index}</span>
                             </div>
                             <div>
-                                P/L: <span className='bg-sky-700 text-white rounded-lg p-1 m-1'>{result.profitLoss.toFixed(2)}%</span>
+                                P/L: <span className='bg-sky-700 text-white rounded-lg p-1 m-1'>{result.pl?.toFixed(2)}%</span>
                             </div>
                             <div>
-                                Annualized P/L: <span className='bg-sky-700 text-white rounded-lg p-1 m-1'>{result.profitLossAnnualized.toFixed(2)}%</span>
+                                CAGR: <span className='bg-sky-700 text-white rounded-lg p-1 m-1'>{result.cagr?.toFixed(2)}%</span>
                             </div>
                             <button className="text-red-500 hover:-rotate-90 duration-700" onClick={() => setLeaderboardPlotOpen(false)}>
                                 <MdExitToApp size="1.5rem" />
                             </button>
                         </div>
                     </div>
-                    <CandlePlot strategyResult={joinedInfo as unknown as StrategyResultProps}
+                    <CandlePlot strategyResult={joinedInfo}
                         costPerTrade={formInputsLocal.costPerTrade}
                         minDate={formInputsLocal.useWarmupDate ? formInputsLocal.warmupDate : formInputsLocal.startDate}
                         symbol={formInputsLocal.symbol} />

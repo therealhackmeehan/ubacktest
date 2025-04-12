@@ -1,4 +1,4 @@
-import { FormInputProps, StrategyResultProps } from "../../../../shared/sharedTypes";
+import { FormInputProps, StrategyResultProps, StatProps } from "../../../../shared/sharedTypes";
 import Result from "./Result";
 
 interface ResultProps {
@@ -6,11 +6,12 @@ interface ResultProps {
     formInputs: FormInputProps;
     strategyResultIsConnectedTo: string;
     selectedStrategy: string;
+    stats: StatProps | null;
 }
 
-export default function ResultLayout({ strategyResult, formInputs, strategyResultIsConnectedTo, selectedStrategy }: ResultProps) {
+export default function ResultLayout({ strategyResult, formInputs, strategyResultIsConnectedTo, selectedStrategy, stats }: ResultProps) {
 
-    if ((!strategyResult) || (strategyResultIsConnectedTo !== selectedStrategy)) {
+    if ((!strategyResult) || (!stats) || (strategyResultIsConnectedTo !== selectedStrategy)) {
         return (
             <div className="border-2 p-4 border-black font-extrabold m-4 lg:m-12 blur-sm text-5xl text-slate-800/30 tracking-tight dark:text-white dark:border-white">
                 No Current Result to Display for This Strategy
@@ -20,7 +21,7 @@ export default function ResultLayout({ strategyResult, formInputs, strategyResul
 
     return (
         <div className='overflow-auto'>
-            <Result selectedStrategy={selectedStrategy} formInputs={formInputs} strategyResult={strategyResult} abilityToSaveNew={true} />
+            <Result selectedStrategy={selectedStrategy} formInputs={formInputs} strategyResult={strategyResult} stats={stats} abilityToSaveNew={true} />
         </div>
     );
 };

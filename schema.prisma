@@ -58,18 +58,28 @@ model Result {
   name                      String
   code                      String
 
-  profitLoss                Float
-  profitLossAnnualized      Float
-  timepoints                Int   
   public                    Boolean       @default(true)    
 
   fromStrategy              Strategy?     @relation(fields: [fromStrategyID], references: [id], onDelete: Cascade)   
   fromStrategyID            String? 
 
-  // data                      Json
+  length                    Int
+  pl                        Float?
+  plWCosts                  Float?
+  cagr                      Float?
+  numTrades                 Int
+  numProfTrades             Int
+  percTradesProf            Float?
+  sharpeRatio               Float?
+  sortinoRatio              Float?
+  maxDrawdown               Float?
+  maxGain                   Float?
+  meanReturn                Float?
+  stddevReturn              Float?
+  maxReturn                 Float?
+  minReturn                 Float?
 
   timestamp                 Float[]
-
   open                      Float[]
   close                     Float[]
   high                      Float[]

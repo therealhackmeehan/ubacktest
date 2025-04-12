@@ -1,4 +1,4 @@
-import { StatProps } from "../../scripts/calculateStats";
+import { StatProps } from "../../../../shared/sharedTypes";
 
 function MainStatistics({ stats }: { stats: StatProps }) {
 
@@ -8,25 +8,26 @@ function MainStatistics({ stats }: { stats: StatProps }) {
                 Stats
             </div>
             <Stat text={'# of timepoints'} stat={stats.length} />
-            <Stat text={'profit/loss'} stat={stats.pl} />
-            {(stats.pl !== stats.plWCosts) && <Stat text={'profit/loss (w/ trading costs)'} stat={stats.plWCosts} />}
-            <Stat text={'approx. annualized profit/loss'} stat={stats.annualizedPl} />
+            <Stat text={'profit/loss'} stat={stats.pl?.toFixed(2) + "%"} />
+            {(stats.pl !== stats.plWCosts) && <Stat text={'profit/loss (w/ trading costs)'} stat={stats.plWCosts?.toFixed(2) + "%"} />}
+            <Stat text={'CAGR'} stat={stats.cagr?.toFixed(2) + "%"} />
             <Stat text={'number of trades'} stat={stats.numTrades} />
             <Stat text={'number of profitable trades'} stat={stats.numProfTrades} />
-            <Stat text={'% trades profitable'} stat={stats.percTradesProfit} />
-            <Stat text={'max drawdown'} stat={stats.maxDrawdown} />
-            <Stat text={'max gain'} stat={stats.maxGain} />
+            <Stat text={'% trades profitable'} stat={stats.percTradesProf?.toFixed(2) + "%"} />
+            <Stat text={'max drawdown'} stat={stats.maxDrawdown?.toFixed(2) + "%"} />
+            <Stat text={'max gain'} stat={stats.maxGain?.toFixed(2) + "%"} />
             <br></br>
-            <Stat text={'sharpe ratio'} stat={stats.sharpeRatio} />
-            <Stat text={'sortino ratio'} stat={stats.sortinoRatio} />
+            <Stat text={'sharpe ratio'} stat={stats.sharpeRatio?.toFixed(3)} />
+            <Stat text={'sortino ratio'} stat={stats.sortinoRatio?.toFixed(3)} />
         </div>
     )
 }
 
 interface StatItemProps {
     text: string;
-    stat: number | string | null;
+    stat: number | string | null | undefined;
 }
+
 function Stat({ text, stat }: StatItemProps) {
 
     return (

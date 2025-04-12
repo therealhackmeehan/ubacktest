@@ -9,7 +9,7 @@ import {
     type GetTopResults,
     type TogglePrivacy,
 } from "wasp/server/operations";
-import { StrategyResultProps } from "../../shared/sharedTypes";
+import { StatProps, StrategyResultProps } from "../../shared/sharedTypes";
 
 type ResultCreationInfo = {
     name: string;
@@ -17,13 +17,10 @@ type ResultCreationInfo = {
     data: any;
     formInputs: any;
     strategyId: string;
-
-    timepoints: number;
-    profitLoss: number;
-    profitLossAnnualized: number;
+    stats: any;
 };
 
-export const createResult: CreateResult<ResultCreationInfo, Result> = async ({ name, code, data, formInputs, strategyId, profitLoss, profitLossAnnualized, timepoints }, context) => {
+export const createResult: CreateResult<ResultCreationInfo, Result> = async ({ name, code, data, formInputs, strategyId, stats }, context) => {
     if (!context.user) {
         throw new HttpError(401);
     }
@@ -41,11 +38,12 @@ export const createResult: CreateResult<ResultCreationInfo, Result> = async ({ n
 
     // break down data into arrays
     const { timestamp, open, close, high, low, volume, signal, returns, sp, portfolio, portfolioWithCosts, cash, equity, cashWithCosts, equityWithCosts, userDefinedData }: StrategyResultProps = data;
-
+    const { length, pl, plWCosts, cagr, numTrades, numProfTrades, percTradesProf, sharpeRatio, sortinoRatio, maxDrawdown, maxGain, meanReturn, stddevReturn, maxReturn, minReturn }: StatProps = stats;
     return await context.entities.Result.create({
         data: {
             name,
             code,
+
             timestamp,
             open,
             close,
@@ -63,9 +61,23 @@ export const createResult: CreateResult<ResultCreationInfo, Result> = async ({ n
             equityWithCosts,
             userDefinedData,
             formInputs,
-            timepoints,
-            profitLoss,
-            profitLossAnnualized,
+
+            length,
+            pl,
+            plWCosts,
+            cagr,
+            numTrades,
+            numProfTrades,
+            percTradesProf,
+            sharpeRatio,
+            sortinoRatio,
+            maxDrawdown,
+            maxGain,
+            meanReturn,
+            stddevReturn,
+            maxReturn,
+            minReturn,
+
             user: {
                 connect: { id: context.user.id },
             },
@@ -136,8 +148,10 @@ export const getTopResults: GetTopResults<void, GetTopResultsProp> = async (_arg
     const results = await context.entities.Result.findMany({
         where: {
             public: true,
-            timepoints: { gte: 15 },
+            length: { gte: 15 },
             createdAt: { gte: oneWeekAgo },
+            pl: { not: null },
+            cagr: { not: null },
         },
         include: { user: true },
     });
@@ -145,20 +159,6 @@ export const getTopResults: GetTopResults<void, GetTopResultsProp> = async (_arg
     if (results.length === 0) {
         return { topByProfitLoss: null, topByAnnualizedProfitLoss: null };
     }
-
-    // Group results by user and keep only the best result per user
-    // const bestResultsByUser = Object.values(
-    //     results.reduce((acc, result: any) => {
-    //         const userId = result.user?.id;
-    //         if (!userId) return acc;
-
-    //         // Replace only if the new result has a higher profit/loss
-    //         if (!acc[userId] || result.profitLoss > acc[userId].profitLoss) {
-    //             acc[userId] = result;
-    //         }
-    //         return acc;
-    //     }, {} as Record<string, any>)
-    // );
 
     const resultsWithUsername: ResultWithUsername[] = results.map(({ user, ...rest }) => ({
         ...rest,
@@ -168,10 +168,11 @@ export const getTopResults: GetTopResults<void, GetTopResultsProp> = async (_arg
 
     const toReturn: GetTopResultsProp = {
         topByProfitLoss: resultsWithUsername
-            .sort((a, b) => b.profitLoss - a.profitLoss)
+            .sort((a, b) => (b.pl ?? 0) - (a.pl ?? 0))
             .slice(0, 10),
+
         topByAnnualizedProfitLoss: resultsWithUsername
-            .sort((a, b) => b.profitLossAnnualized - a.profitLossAnnualized)
+            .sort((a, b) => (b.cagr ?? 0) - (a.cagr ?? 0))
             .slice(0, 10),
     };
 

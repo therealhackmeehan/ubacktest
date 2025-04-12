@@ -46,3 +46,21 @@ export interface PythonDataProps {
     low: number[],
     volume: number[],
 }
+
+export interface StatProps {
+    length: number;
+    pl: number | null;
+    plWCosts: number | null;
+    cagr: number | null;
+    numTrades: number;
+    numProfTrades: number;
+    percTradesProf: number | null;
+    sharpeRatio: number | null;
+    sortinoRatio: number | null;
+    maxDrawdown: number | null;
+    maxGain: number | null;
+    meanReturn: number | null;
+    stddevReturn: number | null;
+    maxReturn: number | null;
+    minReturn: number | null;
+}

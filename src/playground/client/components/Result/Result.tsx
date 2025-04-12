@@ -4,8 +4,7 @@ import DataTable from "./DataTable"
 import DistributionOfReturns from "./DistributionOfReturns"
 import { FiArrowUp } from "react-icons/fi"
 import ResultButtonGroup from "./ResultButtonGroup"
-import { FormInputProps, StrategyResultProps } from "../../../../shared/sharedTypes"
-import calculateStats, { StatProps } from "../../scripts/calculateStats"
+import { FormInputProps, StatProps, StrategyResultProps } from "../../../../shared/sharedTypes"
 import { createResult, getSpecificStrategy } from "wasp/client/operations"
 import SPChart from "./SPChart"
 import UserDefinedPlot from "./UserDefinedPlot"
@@ -21,13 +20,13 @@ interface ResultPanelProps {
     selectedStrategy: string | null;
     formInputs: FormInputProps;
     strategyResult: StrategyResultProps;
+    stats: StatProps;
     abilityToSaveNew: boolean;
 }
 
-function Result({ selectedStrategy, formInputs, strategyResult, abilityToSaveNew }: ResultPanelProps) {
+function Result({ selectedStrategy, formInputs, strategyResult, stats, abilityToSaveNew }: ResultPanelProps) {
 
     const [userDefinedPlotOpen, setUserDefinedPlotOpen] = useState<boolean>(true);
-    const [stats, setStats] = useState<StatProps | null>(null);
     const [loading, setLoading] = useState<boolean>(false);
     const [errorMsg, setErrorMsg] = useState<string | null>('');
 
@@ -39,62 +38,22 @@ function Result({ selectedStrategy, formInputs, strategyResult, abilityToSaveNew
             throw new Error('No strategy with that result.');
         }
 
-        let dataToUse: StrategyResultProps | null = strategyResult;
-
-        const maxTimepoints = 10000;
-        const timepoints = strategyResult.timestamp.length;
-        if (timepoints > maxTimepoints) {
-            dataToUse = null;
-        }
-
-        const firstPoint = strategyResult.portfolio[0];
-        const lastPoint = strategyResult.portfolio[timepoints - 1];
-
-        if (firstPoint === 0 || lastPoint === 0) {
-            throw new Error("Portfolio values cannot be zero.");
-        }
-
-        const profitLoss = 100 * (lastPoint - firstPoint) / firstPoint;
-
-        const firstDate = new Date(strategyResult.timestamp[0] * 1000).getTime();
-        const lastDate = new Date(strategyResult.timestamp[timepoints - 1] * 1000).getTime();
-
-        const numberOfDays = (lastDate - firstDate) / (1000 * 60 * 60 * 24);
-        if (numberOfDays <= 0) {
-            throw new Error("Invalid date range.");
-        }
-
-        const annualizedPL = 100 * ((1 + profitLoss/100) ** (365 / numberOfDays) - 1);
-
-        if ((profitLoss == null || profitLoss === undefined) || (annualizedPL == null || annualizedPL === undefined)) {
-            throw new Error("Something is wrong with your data. Unable to calculate Profit/Loss.");
-        }
-        
         await createResult({
             name: name,
             code: connectedStrat.code,
             formInputs: formInputs,
-            data: dataToUse,
+            data: strategyResult,
             strategyId: selectedStrategy,
-            timepoints: timepoints,
-            profitLoss: profitLoss,
-            profitLossAnnualized: annualizedPL,
+            stats: stats
         })
     }
-
-    useEffect(() => {
-        if (strategyResult) {
-            const stats: StatProps = calculateStats(strategyResult);
-            setStats(stats);
-        }
-    }, [strategyResult])
 
     const downloadCSV = () => {
         if (!strategyResult) return;
 
         // Get the headers (labels)
         let headers = Object.keys(strategyResult);
-        headers = headers.filter(header => 
+        headers = headers.filter(header =>
             !['userDefinedData', 'equityWithCosts', 'cashWithCosts'].includes(header) &&
             !(formInputs.costPerTrade === 0 && header === 'portfolioWithCosts')
         );

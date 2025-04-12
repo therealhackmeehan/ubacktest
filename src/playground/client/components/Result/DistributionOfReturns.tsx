@@ -16,10 +16,10 @@ ChartJS.register(CategoryScale, LinearScale, BarElement, Title, Tooltip, Legend)
 
 interface DistributionOfReturnsProps {
     stockDataReturns: number[];
-    mean: string | null;
-    stddev: string | null;
-    max: string | null;
-    min: string | null;
+    mean: number | null;
+    stddev: number | null;
+    max: number | null;
+    min: number | null;
 }
 
 export default function DistributionOfReturns({ stockDataReturns, mean, stddev, max, min }: DistributionOfReturnsProps) {
@@ -138,16 +138,16 @@ export default function DistributionOfReturns({ stockDataReturns, mean, stddev, 
                 <div className="text-lg tracking-tight font-bold">Distribution of Returns</div>
                 <div className="flex justify-items-center gap-x-2">
                     {max && <div className="text-xs p-1 bg-white rounded-md font-light hover:border-2 border-slate-200 duration-100">
-                        max = {max}%
+                        max = {(100 * max).toFixed(2)}%
                     </div>}
                     {min && <div className="text-xs p-1 bg-white rounded-md font-light hover:border-2 border-slate-200 duration-100">
-                        min = {min}%
+                        min = {(100 * min).toFixed(2)}%
                     </div>}
                     {mean && <div className="text-xs p-1 bg-white rounded-md font-light hover:border-2 border-slate-200 duration-100">
-                        &mu; = {mean}%
+                        &mu; = {(100 * mean).toFixed(2)}%
                     </div>}
                     {stddev && <div className="text-xs p-1 bg-white rounded-md font-light hover:border-2 border-slate-200 duration-100">
-                        &sigma; = {stddev}%
+                        &sigma; = {(100 * stddev).toFixed(2)}%
                     </div>}
                 </div>
             </div>

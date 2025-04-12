@@ -1,5 +1,5 @@
 import { useState, useRef, useEffect } from "react";
-import { FormInputProps, StrategyResultProps, UserDefinedData } from "../../../shared/sharedTypes";
+import { FormInputProps, StatProps, StrategyResultProps, UserDefinedData } from "../../../shared/sharedTypes";
 import copyToClipboard from "./copyToClipboard";
 import { Result } from "wasp/entities";
 import LoadingScreen from "../../../client/components/LoadingScreen";
@@ -16,10 +16,19 @@ interface OpenResultProps {
 
 export default function OpenResult({ formInputs, setResultPanelOpen, result }: OpenResultProps) {
     const [strategyResult, setStrategyResult] = useState<StrategyResultProps | null>(null);
+    const [statResult, setStatResult] = useState<StatProps | null>(null);
     const [loading, setLoading] = useState(true);
     const [errMsg, setErrMsg] = useState("");
 
     const hasRun = useRef(false); // Track if useEffect has run
+
+    function pick<T>(obj: any, keys: (keyof T)[]): T {
+        const picked: Partial<T> = {};
+        for (const key of keys) {
+            picked[key] = obj[key];
+        }
+        return picked as T;
+    }
 
     useEffect(() => {
 
@@ -34,41 +43,66 @@ export default function OpenResult({ formInputs, setResultPanelOpen, result }: O
                 if (!result.open || !result.close || !result.portfolio) {
                     throw new Error("This result was not correctly loaded and is missing critical data arrays.");
                 }
-                const joinedInfo: StrategyResultProps = {
-                    timestamp: result.timestamp,
-                    open: result.open,
-                    close: result.close,
-                    high: result.high,
-                    low: result.low,
-                    volume: result.volume,
+                // const joinedInfo: StrategyResultProps = {
+                //     timestamp: result.timestamp,
+                //     open: result.open,
+                //     close: result.close,
+                //     high: result.high,
+                //     low: result.low,
+                //     volume: result.volume,
 
-                    signal: result.signal,
-                    returns: result.returns,
+                //     signal: result.signal,
+                //     returns: result.returns,
 
-                    sp: result.sp,
+                //     sp: result.sp,
 
-                    portfolio: result.portfolio,
-                    portfolioWithCosts: result.portfolioWithCosts,
+                //     portfolio: result.portfolio,
+                //     portfolioWithCosts: result.portfolioWithCosts,
 
-                    cash: result.cash,
-                    equity: result.equity,
+                //     cash: result.cash,
+                //     equity: result.equity,
 
-                    cashWithCosts: result.cashWithCosts,
-                    equityWithCosts: result.equityWithCosts,
+                //     cashWithCosts: result.cashWithCosts,
+                //     equityWithCosts: result.equityWithCosts,
 
-                    userDefinedData: result.userDefinedData as unknown as UserDefinedData,
-                };
-                setStrategyResult(joinedInfo);
+                //     userDefinedData: result.userDefinedData as unknown as UserDefinedData,
+                // };
+                // setStrategyResult(joinedInfo);
 
-                // if (result.data) {
-                //     setStrategyResult(result.data as unknown as StrategyResultProps);
-                // } else {
-                //     const { strategyResult } = await runStrategy({ formInputs, code: result.code });
-                //     if (!strategyResult) {
-                //         throw new Error("That result could not be found. The strategy result could not be regenerated.");
-                //     }
-                //     setStrategyResult(strategyResult);
-                // }
+                // const joinedStats: StatProps = {
+                //     length: result.length,
+                //     pl: result.pl,
+                //     plWCosts: result.plWCosts,
+                //     cagr: result.cagr,
+                //     numTrades: result.numTrades,
+                //     numProfTrades: result.numProfTrades,
+                //     percTradesProf: result.percTradesProf,
+                //     sharpeRatio: result.sharpeRatio,
+                //     sortinoRatio: result.sortinoRatio,
+                //     maxDrawdown: result.maxDrawdown,
+                //     maxGain: result.maxGain,
+                //     meanReturn: result.meanReturn,
+                //     stddevReturn: result.stddevReturn,
+                //     maxReturn: result.maxReturn,
+                //     minReturn: result.minReturn,
+                // };
+
+                // setStatResult(joinedStats);
+
+                const strategyKeys: (keyof StrategyResultProps)[] = [
+                    "timestamp", "open", "close", "high", "low", "volume",
+                    "signal", "returns", "sp", "portfolio", "portfolioWithCosts",
+                    "cash", "equity", "cashWithCosts", "equityWithCosts", "userDefinedData"
+                ];
+
+                const statKeys: (keyof StatProps)[] = [
+                    "length", "pl", "plWCosts", "cagr", "numTrades", "numProfTrades",
+                    "percTradesProf", "sharpeRatio", "sortinoRatio", "maxDrawdown",
+                    "maxGain", "meanReturn", "stddevReturn", "maxReturn", "minReturn"
+                ];
+
+                setStrategyResult(pick<StrategyResultProps>(result, strategyKeys));
+                setStatResult(pick<StatProps>(result, statKeys));
 
             } catch (error: any) {
                 setErrMsg(`Error running strategy: ${error.message || error}`);
@@ -79,7 +113,6 @@ export default function OpenResult({ formInputs, setResultPanelOpen, result }: O
 
         fetchStrategyResult();
     }, []); // Empty dependency array ensures it runs only once
-
 
     useEffect(() => {
         if (strategyResult) {
@@ -93,14 +126,13 @@ export default function OpenResult({ formInputs, setResultPanelOpen, result }: O
         };
     }, [strategyResult]);
 
-
     return (
         <>
             {errMsg && <ErrorModal msg={errMsg} closeModal={() => setErrMsg("")} />}
 
             {loading && !errMsg && <LoadingScreen />}
 
-            {strategyResult && (
+            {strategyResult && statResult && (
                 <div className="fixed inset-0 flex items-center justify-center z-50">
                     <div className="fixed inset-0 w-full bg-gray-800 opacity-50"></div>
                     <div className="z-10 w-11/12 h-5/6 p-4 bg-white border-2 border-black rounded-lg shadow-xl overflow-y-auto">
@@ -115,6 +147,7 @@ export default function OpenResult({ formInputs, setResultPanelOpen, result }: O
                             strategyResult={strategyResult}
                             formInputs={formInputs}
                             selectedStrategy={result.fromStrategyID}
+                            stats={statResult}
                             abilityToSaveNew={false}
                         />
                         <div onClick={() => copyToClipboard(result.code)} className="px-8 mx-auto min-w-187.5">
