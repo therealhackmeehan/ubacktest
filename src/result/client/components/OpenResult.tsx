@@ -134,7 +134,7 @@ export default function OpenResult({ formInputs, setResultPanelOpen, result }: O
 
             {strategyResult && statResult && (
                 <div className="fixed inset-0 flex items-center justify-center z-50">
-                    <div className="fixed inset-0 w-full bg-gray-800 opacity-50"></div>
+                    <div className="fixed inset-0 w-full bg-gray-800 opacity-50" onClick={() => setResultPanelOpen(false)}></div>
                     <div className="z-10 w-11/12 h-5/6 p-4 bg-white border-2 border-black rounded-lg shadow-xl overflow-y-auto">
                         <button
                             onClick={() => setResultPanelOpen(false)}

@@ -44,8 +44,11 @@ function LeaderboardPage() {
                         className="p-1 mb-4 font-bold text-xs justify-self-center tracking-tight rounded-md bg-white flex dark:bg-boxdark-2"
                         onClick={() => setIsProfitLoss(!isProfitLoss)}
                     >
+                        <div className="mx-2 dark:text-blue-300">
+                            rank by
+                        </div>
                         <div className={`duration-1000 ${!isProfitLoss ? "text-black dark:text-white dark:underline dark:font-extrabold" : "text-slate-200 dark:font-light"}`}>
-                            Annualized Profit/Loss
+                            CAGR
                         </div>
                         <div className="border-2 border-sky-700 mx-2 dark:border-blue-300"></div>
                         <div className={`duration-1000 ${isProfitLoss ? "text-black dark:text-white dark:underline dark:font-extrabold" : "text-slate-200 dark:font-light"}`}>

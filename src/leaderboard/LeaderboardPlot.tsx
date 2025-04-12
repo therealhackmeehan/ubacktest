@@ -39,7 +39,7 @@ function LeaderboardPlot({ result, setLeaderboardPlotOpen, index }: LeaderboardP
 
     return (
         <div className="fixed inset-0 flex items-center justify-center overflow-y-auto z-50">
-            <div className="fixed inset-0 w-full bg-black/70"></div>
+            <div className="fixed inset-0 w-full bg-black/70" onClick={() => setLeaderboardPlotOpen(false)}></div>
             <div className="relative z-10 w-11/12 p-4 m-8 bg-white border-2 border-black rounded-lg shadow-xl overflow-y-auto">
                 <div className="min-w-187.5">
                     <div className="flex justify-between m-2 p-4 bg-gradient-to-r from-sky-700 to-white shadow-lg rounded-md">

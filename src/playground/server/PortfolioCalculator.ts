@@ -80,15 +80,15 @@ class PortfolioCalculator {
         const length = this.strategyResult.portfolio.length - 1;
 
         // Calculate total profit/loss
-        const pl = (this.strategyResult.portfolio[length] - this.strategyResult.portfolio[0]) / this.strategyResult.portfolio[0];
-        const plWCosts = (this.strategyResult.portfolioWithCosts[length] - this.strategyResult.portfolioWithCosts[0]) / this.strategyResult.portfolio[0];
+        const pl = 100 * (this.strategyResult.portfolio[length] - this.strategyResult.portfolio[0]) / this.strategyResult.portfolio[0];
+        const plWCosts = 100 * (this.strategyResult.portfolioWithCosts[length] - this.strategyResult.portfolioWithCosts[0]) / this.strategyResult.portfolio[0];
 
         // Convert Unix timestamps to JavaScript Date objects
         const firstDate = new Date(this.strategyResult.timestamp[0] * 1000).getTime();
         const lastDate = new Date(this.strategyResult.timestamp[length] * 1000).getTime();
 
         const numberOfDays = (lastDate - firstDate) / (1000 * 60 * 60 * 24);
-        const cagr = ((this.strategyResult.portfolio[length] / this.strategyResult.portfolio[0]) ** (365 / numberOfDays)) - 1;
+        const cagr = ((this.strategyResult.portfolio[length] / this.strategyResult.portfolio[0]) ** (365 / numberOfDays) - 1) * 100;
 
         let numberOfTrades = 0;
         let numberOfProfitableTrades = 0;
@@ -124,8 +124,8 @@ class PortfolioCalculator {
             }
         }
 
-        const percTradesProf = numberOfTrades !== 0 ? numberOfProfitableTrades / numberOfTrades : null;
-        const maxGain = Math.max.apply(Math, this.strategyResult.portfolio) - 1;
+        const percTradesProf = numberOfTrades !== 0 ? 100 * numberOfProfitableTrades / numberOfTrades : null;
+        const maxGain = 100 * (Math.max(...this.strategyResult.portfolio) - this.strategyResult.portfolio[0]) / this.strategyResult.portfolio[0];
         const returns = this.strategyResult.returns.slice(1); // dont include the first 0% return
 
         // Initialize variables for sum, max, min
@@ -163,12 +163,12 @@ class PortfolioCalculator {
             percTradesProf: percTradesProf,
             sharpeRatio: sharpeRatio,
             sortinoRatio: sortinoRatio,
-            maxDrawdown: maxDrawdown,
+            maxDrawdown: 100 * maxDrawdown,
             maxGain: maxGain,
-            meanReturn: meanReturn,
-            stddevReturn: stdDev,
-            maxReturn: max,
-            minReturn: min,
+            meanReturn: 100 * meanReturn,
+            stddevReturn: 100 * stdDev,
+            maxReturn: 100 * max,
+            minReturn: 100 * min,
         };
     }
 }

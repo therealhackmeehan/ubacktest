@@ -189,7 +189,7 @@ function Result({ selectedStrategy, formInputs, strategyResult, stats, abilityTo
                     {stats && <MainStatistics stats={stats} />}
                     <div className="col-span-2 bg-slate-100 rounded-lg max-h-132.5 overflow-y-auto shadow-sm border-2 border-slate-300">
                         <div className="flex justify-between m-2">
-                            <div className="text-sky-700">Trade Log</div>
+                            <div className="text-sky-700 font-extrabold tracking-tight text-lg">Trade Log</div>
                             <button
                                 className="text-xs border-2 border-slate-600 p-1 rounded-lg bg-white font-light hover:shadow-lg hover:bg-slate-200"
                                 onClick={downloadCSV} // Trigger the download on click
@@ -208,9 +208,18 @@ function Result({ selectedStrategy, formInputs, strategyResult, stats, abilityTo
                 </div>
 
                 {/* Histogram of Charts */}
-                <div className="p-2 m-8 rounded-lg bg-slate-100">
-                    {stats && <DistributionOfReturns stockDataReturns={strategyResult.returns} mean={stats.meanReturn} stddev={stats.stddevReturn} max={stats.maxReturn} min={stats.minReturn} />}
-                </div>
+                {stats && strategyResult.returns.some(r => r !== 0) && (
+                    <div className="p-2 m-8 rounded-lg bg-slate-100">
+
+                        <DistributionOfReturns
+                            stockDataReturns={strategyResult.returns}
+                            mean={stats.meanReturn}
+                            stddev={stats.stddevReturn}
+                            max={stats.maxReturn}
+                            min={stats.minReturn}
+                        />
+                    </div>
+                )}
 
                 {strategyResult.sp.length > 0 &&
                     <div className="m-8">
@@ -246,7 +255,15 @@ function Result({ selectedStrategy, formInputs, strategyResult, stats, abilityTo
                 </div>
 
                 <div className="p-2 m-8 border-black border-2 rounded-lg bg-slate-100">
-                    {stats && <DistributionOfReturns stockDataReturns={strategyResult.returns} mean={stats.meanReturn} stddev={stats.stddevReturn} max={stats.maxReturn} min={stats.minReturn} />}
+                    {stats && strategyResult.returns.some(r => r !== 0) && (
+                        <DistributionOfReturns
+                            stockDataReturns={strategyResult.returns}
+                            mean={stats.meanReturn}
+                            stddev={stats.stddevReturn}
+                            max={stats.maxReturn}
+                            min={stats.minReturn}
+                        />
+                    )}
                 </div>
 
                 {strategyResult.sp.length > 0 &&

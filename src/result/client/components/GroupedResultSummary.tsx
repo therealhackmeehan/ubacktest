@@ -12,6 +12,7 @@ interface GroupedResultsProps {
 function GroupedResultsSummary({ resultsByStrategy, setResultToHighlight }: GroupedResultsProps) {
 
     const [isExpanded, setIsExpanded] = useState<boolean>(false);
+    const [isDateRangeExpanded, setIsDateRangeExpanded] = useState<boolean>(false);
     const [dateToDisplay, setDateToDisplay] = useState<string>("");
     const [tickerToDisplay, setTickerToDisplay] = useState<string>("")
     const [hoverX, setHoverX] = useState<number | null>(null);
@@ -70,14 +71,27 @@ function GroupedResultsSummary({ resultsByStrategy, setResultToHighlight }: Grou
         return { minDate: min!, maxDate: max! };
     }, [parsedResults]);
 
-    const { averageProfitLoss, averageCagr, averageTimepoints } = useMemo(() => {
+    const averages = useMemo(() => {
         const total = (arr: typeof parsedResults, key: keyof ResultWithStrategyName) =>
             arr.reduce((sum, r) => sum + ((r[key] as number) ?? 0), 0);
 
         const count = parsedResults.length;
+
         return {
             averageProfitLoss: count ? total(parsedResults, 'pl') / count : 0,
+            averageProfitLossWCosts: count ? total(parsedResults, 'plWCosts') / count : 0,
             averageCagr: count ? total(parsedResults, 'cagr') / count : 0,
+            averageNumTrades: count ? total(parsedResults, 'numTrades') / count : 0,
+            averageNumProfitableTrades: count ? total(parsedResults, 'numProfTrades') / count : 0,
+            averagePercTradesProfitable: count ? total(parsedResults, 'percTradesProf') / count : 0,
+            averageSharpeRatio: count ? total(parsedResults, 'sharpeRatio') / count : 0,
+            averageSortinoRatio: count ? total(parsedResults, 'sortinoRatio') / count : 0,
+            averageMaxDrawdown: count ? total(parsedResults, 'maxDrawdown') / count : 0,
+            averageMaxGain: count ? total(parsedResults, 'maxGain') / count : 0,
+            averageMeanReturn: count ? total(parsedResults, 'meanReturn') / count : 0,
+            averageStdDevReturn: count ? total(parsedResults, 'stddevReturn') / count : 0,
+            averageMaxReturn: count ? total(parsedResults, 'maxReturn') / count : 0,
+            averageMinReturn: count ? total(parsedResults, 'minReturn') / count : 0,
             averageTimepoints: count ? total(parsedResults, 'length') / count : 0,
         };
     }, [parsedResults]);
@@ -133,18 +147,18 @@ function GroupedResultsSummary({ resultsByStrategy, setResultToHighlight }: Grou
                         {resultsByStrategy[0]?.strategyName ?? "Unknown"}
                     </div>
                     <div className="text-sm font-mono text-sky-700 dark:text-blue-300">
-                        avg P/L: {averageProfitLoss.toFixed(2)}%
+                        avg P/L: {averages.averageProfitLoss.toFixed(2)}%
                     </div>
                 </div>
 
                 <button
                     onClick={() => setIsExpanded(!isExpanded)}
                     disabled={resultsByStrategy.length <= 1} // Disable the button when the length is <= 1
-                    className={`flex items-center space-x-1 bg-slate-50 border-2 border-slate-100 hover:scale-90 ${resultsByStrategy.length <= 1 ? "cursor-not-allowed opacity-50" : ""
+                    className={`flex items-center px-1 space-x-1 bg-slate-50 border-2 border-slate-100 hover:scale-90 ${resultsByStrategy.length <= 1 ? "cursor-not-allowed opacity-50" : ""
                         }`}
                 >
                     <div className="text-xs font-bold tracking-tight">
-                        see {isExpanded ? "less" : "more"}
+                        see {isExpanded ? "less" : "more"} stats/analysis
                     </div>
                     {isExpanded ? <UpArrow /> : <DownArrow />}
                 </button>
@@ -152,21 +166,29 @@ function GroupedResultsSummary({ resultsByStrategy, setResultToHighlight }: Grou
             </div>
 
             {isExpanded && (
-                <div className="rounded-b-xl border-x-2 border-t-4 border-b-2 border-black/30 dark:border-white/30 bg-slate-50 mb-4 p-2 shadow-lg">
-                    <div className="text-end flex justify-around text-sm mb-2 py-2 border-b-2 border-slate-300">
-                        <div>
-                            Average P/L: <span className="font-bold">{averageProfitLoss.toFixed(2)}%</span>
-                        </div>
-                        <div>
-                            Average Annualized P/L: <span className="font-bold">{averageCagr.toFixed(2)}%</span>
-                        </div>
-                        <div>
-                            Average # of Timepoints: <span className="font-bold">{averageTimepoints.toFixed(2)}</span>
-                        </div>
+                <div className="rounded-b-xl border-x-2 border-t-4 border-b-2 border-black/30 dark:border-white/30 bg-slate-50 mb-4 p-2 shadow-lg dark:bg-boxdark-2">
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-x-6 gap-y-2 p-4">
+                        <StatItem label="Average P/L" value={averages.averageProfitLoss} unit="%" />
+                        {averages.averageProfitLoss !== averages.averageProfitLossWCosts && (
+                            <StatItem label="Average P/L (with costs)" value={averages.averageProfitLossWCosts} unit="%" />
+                        )}
+                        <StatItem label="Average CAGR" value={averages.averageCagr} unit="%" />
+                        <StatItem label="Average # of Timepoints" value={averages.averageTimepoints} />
+                        <StatItem label="Average # of Trades" value={averages.averageNumTrades} />
+                        <StatItem label="Average # of Profitable Trades" value={averages.averageNumProfitableTrades} />
+                        <StatItem label="% of Trades Profitable" value={averages.averagePercTradesProfitable} unit="%" />
+                        <StatItem label="Average Sharpe Ratio" value={averages.averageSharpeRatio} precision={3} />
+                        <StatItem label="Average Sortino Ratio" value={averages.averageSortinoRatio} precision={3} />
+                        <StatItem label="Average Max Drawdown" value={averages.averageMaxDrawdown} unit="%" />
+                        <StatItem label="Average Max Gain" value={averages.averageMaxGain} unit="%" />
+                        <StatItem label="Average Mean Return" value={averages.averageMeanReturn} unit="%" />
+                        <StatItem label="Average Std Dev of Return" value={averages.averageStdDevReturn} unit="%" />
+                        <StatItem label="Average Max Return" value={averages.averageMaxReturn} unit="%" />
+                        <StatItem label="Average Min Return" value={averages.averageMinReturn} unit="%" />
                     </div>
 
                     <div className="flex justify-between m-1">
-                        <div className="text-sm font-extralight">
+                        <div className="text-sm font-extralight dark:text-white">
                             Where have I backtested <span className="font-bold text-lg"> {resultsByStrategy[0]?.strategyName ?? "Unknown"}</span> ?
                         </div>
                         <div className="rounded-md p-1 bg-slate-200 border-2 border-slate-300">
@@ -174,80 +196,105 @@ function GroupedResultsSummary({ resultsByStrategy, setResultToHighlight }: Grou
                                 <span className="font-bold">{tickerToDisplay}</span> @ {dateToDisplay}
                             </div>
                         </div>
-                    </div>
-
-                    <div className="w-full h-120 overflow-y-auto border-2 border-slate-200">
-                        <svg
-                            width="100%"
-                            viewBox={`0 0 1000 ${Math.max(stackedLevels.length * heightPerLevel, 100)}`}
-                            preserveAspectRatio="none"
-                            onMouseMove={(e) => {
-                                const bounds = e.currentTarget.getBoundingClientRect();
-                                const svgX = ((e.clientX - bounds.left) / bounds.width) * viewBoxWidth;
-                                setHoverX(svgX);
-                                setDateToDisplay(format(xToDate(svgX), "yyyy-MM-dd"));
-                            }}
-                            onMouseLeave={() => {
-                                setDateToDisplay("");
-                                setHoverX(null);
-                            }}
+                        <button
+                            onClick={() => setIsDateRangeExpanded(!isDateRangeExpanded)}
+                            className="flex items-center space-x-1 bg-white border-2 border-slate-100 hover:scale-90"
                         >
-                            {stackedLevels.map(({ range, level }, i) => {
-                                const x1 = ((+range.start - +minDate) / (+maxDate - +minDate)) * viewBoxWidth;
-                                const x2 = ((+range.end - +minDate) / (+maxDate - +minDate)) * viewBoxWidth;
-                                const y = scaleY(level);
-                                return (
-                                    <polyline
-                                        key={i}
-                                        points={`${x1},${y} ${x2},${y}`}
-                                        stroke={(range.pl && range.pl > 0) ? "#047857" : "#b91c1c"}
-                                        strokeWidth="8"
-                                        strokeLinecap="butt"
-                                        className="hover:cursor-pointer hover:hue-rotate-15"
-                                        onMouseEnter={() => {
-                                            setResultToHighlight(range.id);
-                                            setTickerToDisplay((range.formInputs as unknown as FormInputProps).symbol.toUpperCase())
-                                        }}
-                                        onMouseLeave={() => {
-                                            setResultToHighlight('');
-                                            setTickerToDisplay("");
-                                        }}
+                            <div className="text-xs font-bold tracking-tight">
+                                see {isDateRangeExpanded ? "less" : "more"}
+                            </div>
+                            {isDateRangeExpanded ? <UpArrow /> : <DownArrow />}
+                        </button>
+                    </div>
+
+                    {isDateRangeExpanded &&
+                        <>
+                            <div className="w-full h-32 overflow-y-auto border-2 dark:border-0 border-slate-200 bg-white dark:bg-boxdark mt-4">
+                                <svg
+                                    width="100%"
+                                    viewBox={`0 0 1000 ${Math.max(stackedLevels.length * heightPerLevel, 100)}`}
+                                    preserveAspectRatio="none"
+                                    onMouseMove={(e) => {
+                                        const bounds = e.currentTarget.getBoundingClientRect();
+                                        const svgX = ((e.clientX - bounds.left) / bounds.width) * viewBoxWidth;
+                                        setHoverX(svgX);
+                                        setDateToDisplay(format(xToDate(svgX), "yyyy-MM-dd"));
+                                    }}
+                                    onMouseLeave={() => {
+                                        setDateToDisplay("");
+                                        setHoverX(null);
+                                    }}
+                                >
+                                    {stackedLevels.map(({ range, level }, i) => {
+                                        const x1 = ((+range.start - +minDate) / (+maxDate - +minDate)) * viewBoxWidth;
+                                        const x2 = ((+range.end - +minDate) / (+maxDate - +minDate)) * viewBoxWidth;
+                                        const y = scaleY(level);
+                                        return (
+                                            <polyline
+                                                key={i}
+                                                points={`${x1},${y} ${x2},${y}`}
+                                                stroke={range.pl != null && range.pl >= 0 ? "#047857" : "#b91c1c"}
+                                                strokeWidth="8"
+                                                strokeLinecap="butt"
+                                                className="hover:cursor-pointer hover:hue-rotate-15"
+                                                onMouseEnter={() => {
+                                                    setResultToHighlight(range.id);
+                                                    setTickerToDisplay((range.formInputs as unknown as FormInputProps).symbol.toUpperCase())
+                                                }}
+                                                onMouseLeave={() => {
+                                                    setResultToHighlight('');
+                                                    setTickerToDisplay("");
+                                                }}
+                                            />
+                                        );
+                                    })}
+
+                                    {hoverX !== null && (
+                                        <line
+                                            className="dark:invert"
+                                            x1={hoverX}
+                                            x2={hoverX}
+                                            y1={0}
+                                            y2={Math.max(stackedLevels.length * heightPerLevel, 100)} // Ensure this line spans the full height of the SVG container
+                                            stroke="black"
+                                            strokeDasharray="2"
+                                            strokeWidth={1}
+                                            pointerEvents="none"
+                                        />
+                                    )}
+                                </svg>
+                            </div>
+                            <svg
+                                className="border-x-2 border-slate-200 dark:border-0 dark:bg-boxdark"
+                                width="100%"
+                                viewBox="0 0 1000 20"
+                                preserveAspectRatio="none">
+                                <path d={kdePathFilled} fill="#0ea5e9" opacity="0.2" />
+                                <path d={kdePath} stroke="#0284c7" strokeWidth="2" fill="none" opacity="0.8" />
+                                {hoverX !== null && (
+                                    <line
+                                        className="dark:invert"
+                                        x1={hoverX}
+                                        x2={hoverX}
+                                        y1={0}
+                                        y2={20} // Ensure this line spans the full height of the SVG container
+                                        stroke="black"
+                                        strokeWidth={1}
+                                        pointerEvents="none"
                                     />
-                                );
-                            })}
+                                )}
+                            </svg>
+                            <div className="h-2 border-x-2 border-t-2"></div>
+                            <div className="text-xs flex justify-between text-slate-600 dark:text-white pt-1 mb-3">
+                                <div>{format(minDate, "yyyy-MM-dd")}</div>
+                                <div className="font-bold">date</div>
+                                <div>{format(maxDate, "yyyy-MM-dd")}</div>
+                            </div>
 
-                            {hoverX !== null && (
-                                <line
-                                    x1={hoverX}
-                                    x2={hoverX}
-                                    y1={0}
-                                    y2={Math.max(stackedLevels.length * heightPerLevel, 100)} // Ensure this line spans the full height of the SVG container
-                                    stroke="black"
-                                    strokeDasharray="2"
-                                    strokeWidth={1}
-                                    pointerEvents="none"
-                                />
-                            )}
-                        </svg>
-                    </div>
-
-                    <svg
-                        className="border-x-2 border-slate-200"
-                        width="100%"
-                        viewBox="0 0 1000 20"
-                        preserveAspectRatio="none">
-                        <path d={kdePathFilled} fill="#0ea5e9" opacity="0.2" />
-                        <path d={kdePath} stroke="#0284c7" strokeWidth="2" fill="none" opacity="0.8" />
-                    </svg>
-                    <div className="h-2 border-x-2 border-t-2"></div>
-                    <div className="text-xs flex justify-between text-slate-600 pt-1">
-                        <div>{format(minDate, "yyyy-MM-dd")}</div>
-                        <div>{format(maxDate, "yyyy-MM-dd")}</div>
-                    </div>
-
-                    <div className="text-xs font-light text-end italic mt-2">
-                        Each line corresponds to a backtest result for this strategy, listed below. Hover over a line to display the specific strategy details. Green lines = profitable backtests, while red lines = losses.
-                    </div>
+                            <div className="text-xs font-light text-end italic mt-2 dark:text-slate-100">
+                                Each line corresponds to a backtest result for this strategy, listed below. Hover over a line to display the specific strategy details. Green lines = profitable backtests, while red lines = losses.
+                            </div>
+                        </>}
                 </div>
             )}
         </>
@@ -255,3 +302,10 @@ function GroupedResultsSummary({ resultsByStrategy, setResultToHighlight }: Grou
 }
 
 export default GroupedResultsSummary;
+
+const StatItem = ({ label, value, unit = "", precision = 2 }: { label: string; value: number; unit?: string; precision?: number }) => (
+    <div className="flex justify-between items-center text-sm">
+        <span className="text-slate-600 dark:text-white">{label}</span>
+        <span className="font-semibold text-slate-800 dark:text-blue-300">{value.toFixed(precision)}{unit}</span>
+    </div>
+);

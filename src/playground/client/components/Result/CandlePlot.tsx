@@ -161,6 +161,7 @@ function CandlePlot({ strategyResult, costPerTrade, minDate, symbol }: LinePlotP
             },
             legend: {
                 position: 'top' as const,
+                onClick: () => {}, // 👈 disables toggling
             },
             zoom: {
                 zoom: {

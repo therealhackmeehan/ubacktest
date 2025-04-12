@@ -49,7 +49,7 @@ export default function ResultListItem({ result, highlight = false }: ResultList
 
     return (
         <>
-            <div className={`md:flex justify-between my-6 md:my-3 md:mx-1 items-center p-2 rounded-lg bg-slate-100 border-slate-200 border-2 hover:shadow-lg duration-700 dark:border-0 dark:bg-boxdark dark:shadow-none ${highlight ? "translate-x-10 shadow-lg" : ""}`}>
+            <div className={`md:flex justify-between md:mx-1 items-center p-2 rounded-lg bg-slate-100 border-slate-200 border-2 hover:shadow-lg duration-700 dark:border-0 dark:bg-boxdark dark:shadow-none ${highlight ? "translate-x-10 shadow-lg" : ""}`}>
                 <ResultHeader result={result} setResultPanelOpen={setResultPanelOpen} />
                 <div className='flex justify-between gap-x-3 items-center dark:text-white'>
                     <button className='px-3 py-1 flex rounded-lg bg-white hover:shadow-lg items-center gap-x-2 dark:bg-boxdark-2 dark:border-2 dark:border-blue-300'
