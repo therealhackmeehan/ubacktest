@@ -42,7 +42,7 @@ export default function UserDefinedPlot({ strategyResult, timestamp }: UserDefin
         'rgba(142, 68, 173, 1)', // Dark Purple
         'rgba(231, 76, 60, 1)',  // Cool Red
     ];
-    
+
     useEffect(() => {
         if (!strategyResult.userDefinedData || !strategyResult.signal || !strategyResult.close || !timestamp) return;
 
@@ -147,7 +147,7 @@ export default function UserDefinedPlot({ strategyResult, timestamp }: UserDefin
         },
     };
 
-    if (!chartData) return <div className='w-full mt-4 text-center text-xl tracking-tight'>Loading...</div>;
+    if (!chartData) return <div className='w-full h-[60vh] mt-4 text-center text-xl tracking-tight animate-pulse'>Loading...</div>;
     return (
         <ChartWrapper height={60}>
             <Line data={chartData} options={options} />

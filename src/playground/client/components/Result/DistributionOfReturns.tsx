@@ -87,6 +87,11 @@ export default function DistributionOfReturns({ stockDataReturns, mean, stddev, 
                     backgroundColor: "rgba(20, 40, 80, 0.3)",
                     borderColor: "rgba(20, 40, 80, 1)",
                     borderWidth: 1,
+                    lineTension: 0,
+                    borderJoinStyle: "round",
+                    barPercentage: .9,
+                    categoryPercentage: 1,
+                    barThickness: "flex"
                 },
                 {
                     label: "log(returns)",
@@ -94,6 +99,11 @@ export default function DistributionOfReturns({ stockDataReturns, mean, stddev, 
                     backgroundColor: "rgba(100, 150, 200, 0.3)",
                     borderColor: "rgba(100, 150, 200, 1)",
                     borderWidth: 1,
+                    lineTension: 0,
+                    borderJoinStyle: "round",
+                    barPercentage: .9,
+                    categoryPercentage: 1,
+                    barThickness: "flex"
                 },
             ],
         };
@@ -115,14 +125,21 @@ export default function DistributionOfReturns({ stockDataReturns, mean, stddev, 
         },
         scales: {
             x: {
-                ticks: {
-                    align: 'end' as const,
-                    font: {
-                        family: 'Courier New' as const,
-                        weight: 'bolder' as const,
-                        size: 11,
-                    },
-                },
+                grid: {
+                    display: false,
+                }
+                // offset: false,
+                // gridLines: {
+                //     offsetGridLines: false
+                // },
+                // ticks: {
+                //     align: "start" as const,
+                //     font: {
+                //         // family: 'Courier New' as const,
+                //         weight: 'bolder' as const,
+                //         size: 11,
+                //     },
+                // },
             },
             y: {
                 grid: {
@@ -134,7 +151,7 @@ export default function DistributionOfReturns({ stockDataReturns, mean, stddev, 
 
     return (
         <>
-            <div className="m-2 shadow-sm flex justify-between items-center">
+            <div className="m-2 flex justify-between items-center">
                 <div className="text-lg tracking-tight font-bold">Distribution of Returns</div>
                 <div className="flex justify-items-center gap-x-2">
                     {max && <div className="text-xs p-1 bg-white rounded-md font-light hover:border-2 border-slate-200 duration-100">

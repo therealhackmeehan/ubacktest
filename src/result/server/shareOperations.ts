@@ -92,14 +92,18 @@ export const getShared: GetShared<void, GetSharedProps[] | null> = async (_args,
     });
 
     // Transform shared results into GetSharedProps
-    const results: GetSharedProps[] = shared.flatMap((share: any) =>
-        share.result ? [{
-            ...share.result, // Spread all Result fields
+    const results: GetSharedProps[] = shared.flatMap((share: any) => {
+        if (!share.result) return [];
+
+        const { user, ...resultWithoutUser } = share.result;
+
+        return [{
+            ...resultWithoutUser,
             sharedID: share.id,
-            email: share.result.user?.email ?? "Unknown",
+            email: user?.email ?? "Unknown",
             accepted: share.accepted,
-        }] : []
-    );
+        }];
+    });
 
     return results.length > 0 ? results : null;
 };

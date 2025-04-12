@@ -161,7 +161,7 @@ function CandlePlot({ strategyResult, costPerTrade, minDate, symbol }: LinePlotP
             },
             legend: {
                 position: 'top' as const,
-                onClick: () => {}, // 👈 disables toggling
+                onClick: () => {},
             },
             zoom: {
                 zoom: {
@@ -223,7 +223,7 @@ function CandlePlot({ strategyResult, costPerTrade, minDate, symbol }: LinePlotP
     };
 
     if (!chartData) {
-        return <div className='w-full mt-4 text-center text-xl tracking-tight'>Loading...</div>;
+        return <div className='w-full mt-4 h-[65vh] text-center text-xl tracking-tight animate-pulse'>Loading...</div>;
     }
 
     return (
