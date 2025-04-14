@@ -28,13 +28,17 @@ export interface Stock {
 }
 
 const INPUT_FORM_HEIGHT = "inputFormHeight";
+const INPUT_FORM_USE_DATETIME = "inputFormUseDatetime";
 
 function InputForm({ formInputs, setFormInputs, run }: InputFormSubcomponentProps) {
 
     const [expanded, setExpanded] = useState<boolean>(true);
     const [displayAdvancedOptions, setDisplayAdvancedOptions] = useState<boolean>(false);
     const [matches, setMatches] = useState<Stock[]>([]);
-    const [useDatetimeLocal, setUseDatetimeLocal] = useState<boolean>(false);
+    const [useDatetimeLocal, setUseDatetimeLocal] = useState<boolean>(() => {
+        const storedValue = localStorage.getItem(INPUT_FORM_USE_DATETIME);
+        return storedValue === 'true'; // If null or anything else, defaults to false
+    });
 
     const formatDate = (date: string | Date, includeTime: boolean): string => {
         const d = new Date(date);
@@ -144,6 +148,10 @@ function InputForm({ formInputs, setFormInputs, run }: InputFormSubcomponentProp
         localStorage.setItem(INPUT_FORM_HEIGHT, JSON.stringify(position))
     }, [position])
 
+    useEffect(() => {
+        localStorage.setItem(INPUT_FORM_USE_DATETIME, JSON.stringify(useDatetimeLocal))
+    }, [useDatetimeLocal])
+
     const handleDown = (e: React.MouseEvent | React.TouchEvent) => {
         setIsDragging(true);
 
@@ -200,7 +208,7 @@ function InputForm({ formInputs, setFormInputs, run }: InputFormSubcomponentProp
                 onMouseDown={handleDown}
                 onTouchStart={handleDown}
             >
-                <VscGrabber className="justify-self-center" />
+                <VscGrabber className="mx-auto" />
             </button>
             <div className="space-y-3 overflow-auto px-1">
                 <div className="flex justify-between items-center gap-x-4 overflow-hidden">

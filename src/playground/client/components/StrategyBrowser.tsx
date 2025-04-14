@@ -50,7 +50,7 @@ function StrategyBrowser({ selectedStrategy, setSelectedStrategy, strategies, is
                         ))}
                     </>)}
 
-                <button className='justify-between items-center gap-x-2 border-2 flex bg-sky-700 border-black rounded-lg px-8 mt-4 mb-12 justify-self-center hover:bg-sky-600 dark:bg-blue-300 text-white dark:text-black dark:border-0'
+                <button className='justify-between items-center gap-x-2 border-2 flex bg-sky-700 border-black rounded-lg px-8 mx-auto mt-4 mb-12 hover:bg-sky-600 dark:bg-blue-300 text-white dark:text-black dark:border-0'
                     onClick={() => setNewProjectModalOpen(true)}>
                     <span className='font-bold text-lg'>new</span>
                     <FaPlus />

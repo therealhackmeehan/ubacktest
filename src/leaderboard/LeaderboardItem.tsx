@@ -35,7 +35,7 @@ function LeaderboardItem({ result, index }: LeaderboardItemProps) {
                     <div className='flex gap-x-4 justify-between py-1 px-2 rounded-md bg-slate-100 dark:bg-boxdark dark:text-white'>CAGR <span className='text-lg text-sky-700 font-mono dark:text-blue-300'>{result.cagr?.toFixed(2)}%</span></div>
                     <div className='flex gap-x-4 justify-between py-1 px-2 rounded-md bg-slate-200 dark:bg-boxdark dark:text-white'>P/L <span className='text-lg text-sky-700 font-mono dark:text-blue-300'>{result.pl?.toFixed(2)}%</span></div>
 
-                    <button className='px-3 py-1 w-full md:w-auto flex rounded-md bg-slate-300 justify-self-center hover:shadow-lg items-center gap-x-2 dark:bg-white text-lg md:text-xs'
+                    <button className='px-3 py-1 w-full md:w-auto flex rounded-md bg-slate-300 hover:shadow-lg items-center gap-x-2 dark:bg-white text-lg md:text-xs'
                         onClick={() => setLeaderboardPlotOpen(true)}>
                         view
                         <FiBookOpen />
