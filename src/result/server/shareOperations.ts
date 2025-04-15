@@ -22,7 +22,7 @@ export const shareResult: ShareResult<ShareResultProps, Share> = async ({ email,
         throw new HttpError(401);
     }
 
-    if (!email) throw new HttpError(400, "Email must not be null.");
+    if (!email) throw new HttpError(400, "Email inptu must be nonempty.");
 
     const recipient = await context.entities.User.findUnique({
         where: { email, },
@@ -31,7 +31,6 @@ export const shareResult: ShareResult<ShareResultProps, Share> = async ({ email,
     if (!recipient) {
         throw new HttpError(400, "We could not find that user in our database. Make sure you have their email spelled and entered correctly.")
     }
-
     if (recipient.id == context.user.id) {
         throw new HttpError(400, "You cannot share a strategy with yourself.");
     }

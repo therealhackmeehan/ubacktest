@@ -39,8 +39,10 @@ export const createResult: CreateResult<ResultCreationInfo, Result> = async ({ n
     // break down data into arrays
     const { timestamp, open, close, high, low, volume, signal, returns, sp, portfolio, portfolioWithCosts, cash, equity, cashWithCosts, equityWithCosts, userDefinedData }: StrategyResultProps = data;
     const { length, pl, plWCosts, cagr, numTrades, numProfTrades, percTradesProf, sharpeRatio, sortinoRatio, maxDrawdown, maxGain, meanReturn, stddevReturn, maxReturn, minReturn }: StatProps = stats;
+    
     return await context.entities.Result.create({
         data: {
+
             name,
             code,
 
@@ -81,6 +83,7 @@ export const createResult: CreateResult<ResultCreationInfo, Result> = async ({ n
             user: {
                 connect: { id: context.user.id },
             },
+
             fromStrategy: {
                 connect: { id: strategyId },
             },
@@ -170,7 +173,6 @@ export const getTopResults: GetTopResults<void, GetTopResultsProp> = async (_arg
         topByProfitLoss: resultsWithUsername
             .sort((a, b) => (b.pl ?? 0) - (a.pl ?? 0))
             .slice(0, 10),
-
         topByAnnualizedProfitLoss: resultsWithUsername
             .sort((a, b) => (b.cagr ?? 0) - (a.cagr ?? 0))
             .slice(0, 10),
@@ -212,7 +214,9 @@ export const togglePrivacy: TogglePrivacy<Partial<Result>, Result> = async ({ id
 
     // Toggle the `public` boolean
     return await context.entities.Result.update({
-        where: { id },
+        where: {
+            id,
+        },
         data: { public: !result.public },
     });
 };
@@ -229,8 +233,11 @@ export const renameResult: RenameResult<Partial<Result>, Result> = async ({ id, 
         },
     });
 
-    if (existingResult) {
+    if (existingResult && existingResult.id !== id) {
         throw new HttpError(400, "A result with this name already exists.");
+    }
+    if (existingResult && existingResult.id === id) {
+        throw new HttpError(400, "The new result name must be different from the current name.");
     }
 
     return await context.entities.Result.update({

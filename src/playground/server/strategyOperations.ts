@@ -10,7 +10,7 @@ import {
   type Charge,
   type RunStrategy,
 } from 'wasp/server/operations';
-import { StrategyResultProps } from '../../shared/sharedTypes';
+import { StatProps, StrategyResultProps } from '../../shared/sharedTypes';
 import StrategyPipeline from './StrategyPipeline';
 
 type FileCreationInfo = {
@@ -73,7 +73,6 @@ export const getSpecificStrategy: GetSpecificStrategy<Pick<Strategy, 'id'>, Stra
   return strategy || null;
 };
 
-
 export const deleteStrategy: DeleteStrategy<Pick<Strategy, 'id'>, Strategy> = async ({ id }, context) => {
   if (!context.user) {
     throw new HttpError(401);
@@ -92,25 +91,27 @@ export const renameStrategy: RenameStrategy<Partial<Strategy>, Strategy> = async
     throw new HttpError(401);
   }
 
-  if (name) {
-    const existingStrategy = await context.entities.Strategy.findFirst({
-      where: {
-        name,
-        user: { id: context.user.id },
-      },
-    });
+  const existingStrategy = await context.entities.Strategy.findFirst({
+    where: {
+      name,
+      user: { id: context.user.id },
+    },
+  });
 
-    if (existingStrategy) {
-      throw new HttpError(400, "A strategy with this name already exists.");
-    }
+  if (existingStrategy && existingStrategy.id !== id) {
+    throw new HttpError(400, "A strategy with this name already exists.");
+  }
+  if (existingStrategy && existingStrategy.id === id) {
+    throw new HttpError(400, "The new strategy name must be different from the current name.");
   }
 
   return await context.entities.Strategy.update({
     where: {
       id,
-      user: { id: context.user.id }
     },
-    data: { name },
+    data: {
+      name
+    },
   });
 };
 
@@ -130,6 +131,7 @@ export const updateStrategy: UpdateStrategy<Partial<Strategy>, Strategy> = async
 
 interface BacktestResultProps {
   strategyResult: StrategyResultProps;
+  statistics: StatProps;
   debugOutput: string;
   stderr: string;
   warnings: string[];
@@ -138,37 +140,37 @@ interface BacktestResultProps {
 export const runStrategy: RunStrategy<any, any> = async ({ formInputs, code }, context): Promise<BacktestResultProps> => {
 
   if (!context.user) throw new HttpError(401);
+  const user = context.user;
 
-  if (!context.user.isAdmin) {
-    // charge/make sure subscription is valid prior to running!
+  if (!user.isAdmin) {
+    const isProUser = user.subscriptionPlan === "pro";
+    const highFreqIntervals = ['1m', '2m', '5m', '15m', '30m', '1h', '90m'];
 
-    const isProUser = context.user.subscriptionPlan == "pro";
-    const proOnlyFormInputs = ['1m', '2m', '5m', '15m', '30m', '1h', '90m'];
-
-    if (proOnlyFormInputs.includes(formInputs.intval) && !isProUser) {
-      throw new HttpError(402, "High frequency backtesting is only available to pro users. Consider upgrading to a pro subscription.")
+    // Check if high-frequency backtesting is being requested by a non-Pro user
+    if (highFreqIntervals.includes(formInputs.intval) && !isProUser) {
+      throw new HttpError(402, "High frequency backtesting is only available to pro users. Consider upgrading your subscription.");
     }
 
-    console.log(context.user.credits)
-
-    if (!context.user.credits && !context.user.subscriptionPlan) {
-      throw new HttpError(402, "You must add more credits or purchase a basic monthly subscription to continue to use this software.");
+    // Ensure the user has credits or a valid subscription
+    if (!user.credits && !user.subscriptionPlan) {
+      throw new HttpError(402, "You must add more credits or purchase a subscription to continue using this service.");
     }
 
-    const status: string | null = context.user.subscriptionStatus;
+    // Handle subscription status checks
+    const subscriptionStatus = user.subscriptionStatus;
 
-    if (status && !context.user.credits) {
-      if (status === "past_due") {
+    if (subscriptionStatus && !user.credits) {
+      if (subscriptionStatus === "past_due") {
         throw new HttpError(
           402,
           "Your subscription payment is past due, and you've run out of free credits. Please update your payment to continue using the service."
         );
       }
 
-      if (status === "deleted") {
+      if (subscriptionStatus === "deleted") {
         throw new HttpError(
           402,
-          "Your subscription has been deleted, and you have no remaining free credits. Consider subscribing again to regain access."
+          "Your subscription has been deleted, and you have no remaining credits. Consider resubscribing to regain access."
         );
       }
     }
@@ -191,8 +193,12 @@ export const charge: Charge<void, void> = async (_args, context) => {
 
   if (context.user.credits && !context.user.subscriptionPlan) {
     await context.entities.User.update({
-      where: { id: context.user.id },
-      data: { credits: { decrement: 1 } },
+      where: {
+        id: context.user.id
+      },
+      data: {
+        credits: { decrement: 1 }
+      },
     });
   }
 };
