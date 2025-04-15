@@ -1,6 +1,7 @@
 import { Strategy } from "wasp/entities";
 import { getResultsForStrategy, useQuery } from "wasp/client/operations";
 import ResultListItem from "../../result/client/components/ResultListItem";
+import { Link } from "wasp/client/router";
 
 function StrategyResults({ strategy }: { strategy: Strategy }) {
     const { data: results, isLoading: isResultsLoading } = useQuery(getResultsForStrategy, {
@@ -16,11 +17,16 @@ function StrategyResults({ strategy }: { strategy: Strategy }) {
                 </span>
             </div>
             {!isResultsLoading && results && (
-                <ul className="space-y-2">
-                    {results.map((result) => (
-                        <ResultListItem key={result.id} result={result} />
-                    ))}
-                </ul>
+                <>
+                    <ul className="space-y-2">
+                        {results.map((result) => (
+                            <ResultListItem key={result.id} result={result} />
+                        ))}
+                    </ul>
+                    <div className="mt-4 text-sm text-end italic font-light dark:text-white">
+                        Check the <Link to="/results" className="font-medium not-italic">My Results</Link> page for a deeper analysis of this strategy’s performance.
+                    </div>
+                </>
             )}
         </div>
     );

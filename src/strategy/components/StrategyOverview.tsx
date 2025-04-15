@@ -10,16 +10,9 @@ function StrategyOverview({ strategy }: { strategy: Strategy }) {
     const [renameModalOpen, setRenameModalOpen] = useState<boolean>(false);
     const [deleteModalOpen, setDeleteModalOpen] = useState<boolean>(false);
 
-    const [nameToDisplay, setNameToDisplay] = useState<string>(strategy.name);
-
     function onSuccessfulDeletion() {
         setDeleteModalOpen(false);
         window.location.href = routes.HomePageRoute.build();
-    }
-
-    function onSuccesfulRename(newName: string) {
-        setNameToDisplay(newName)
-        setRenameModalOpen(false);
     }
 
     return (
@@ -30,7 +23,7 @@ function StrategyOverview({ strategy }: { strategy: Strategy }) {
             </Link>
             <div className="lg:flex justify-between items-end m-2">
                 <div className="text-3xl lg:text-6xl tracking-tight font-bold dark:text-white">
-                    <span className="text-sm mr-3 text-sky-600 dark:text-blue-300">strategy</span>{nameToDisplay}<span className="text-sky-600 dark:text-blue-300">.</span>
+                    <span className="text-sm mr-3 text-sky-600 dark:text-blue-300">strategy</span>{strategy.name}<span className="text-sky-600 dark:text-blue-300">.</span>
                 </div>
 
                 <div className="text-end mt-4 md:mt-0">
@@ -40,10 +33,10 @@ function StrategyOverview({ strategy }: { strategy: Strategy }) {
 
                     {renameModalOpen &&
                         <RenameModal
-                            currName={nameToDisplay}
+                            currName={strategy.name}
                             id={strategy.id}
                             closeModal={() => setRenameModalOpen(false)}
-                            onSuccess={onSuccesfulRename} />
+                            onSuccess={() => setRenameModalOpen(false)} />
                     }
 
                     <button className='hover:text-slate-500 dark:text-white' onClick={() => setDeleteModalOpen(true)}>
