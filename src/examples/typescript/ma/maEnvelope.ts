@@ -1,5 +1,4 @@
 export const maEnvelope =
-
     `'''
 Moving Average Envelope Strategy.
 

@@ -1,5 +1,4 @@
-const lassoReg = `
-'''
+const lassoReg = `'''
 Lasso Regression Strategy.
 
 Trains a Lasso Regression model using the past 14 days of data to predict the next day's price movement (up/down).
