@@ -18,10 +18,12 @@ export default function StrategySpecificResultList({
 }: StrategySpecificResultListProps) {
     const [selectedResults, setSelectedResults] = useState<Set<string>>(new Set());
 
-    // ✅ Select all on first render
     useEffect(() => {
-        const allIds = new Set(resultsByStrategy.map(r => r.id));
-        setSelectedResults(allIds);
+        // Avoid resetting if already selected something manually
+        if (selectedResults.size === 0) {
+            const allIds = new Set(resultsByStrategy.map(r => r.id));
+            setSelectedResults(allIds);
+        }
     }, [resultsByStrategy]);
 
     const toggleResultSelection = (id: string) => {

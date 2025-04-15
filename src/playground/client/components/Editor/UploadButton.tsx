@@ -8,7 +8,7 @@ function UploadButton({ setCode }: { setCode: (value: string) => void }) {
     const [errMsg, setErrMsg] = useState<string>('');
     const [confirmModalOpen, setConfirmModalOpen] = useState<boolean>(false);
     const confirmModalMessage =
-        "Uploading this code will delete and replace any strategy you may currently have open. Do you want to proceed?";
+        "Uploading code will delete and replace any code you may currently have written. Do you want to proceed?";
 
     function handleFileChange(event: React.ChangeEvent<HTMLInputElement>) {
         try {

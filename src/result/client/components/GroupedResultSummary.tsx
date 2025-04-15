@@ -2,7 +2,7 @@ import { useState, useMemo } from "react";
 import { DownArrow, UpArrow } from "../../../client/icons/icons-arrows";
 import { parseISO, format, setDate } from "date-fns";
 import { FormInputProps } from "../../../shared/sharedTypes";
-import { ResultWithStrategyName } from "wasp/src/playground/server/resultOperations";
+import { ResultWithStrategyName } from "../../../playground/server/resultOperations";
 
 interface GroupedResultsProps {
     resultsByStrategy: ResultWithStrategyName[];

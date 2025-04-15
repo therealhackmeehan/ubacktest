@@ -1,5 +1,4 @@
-import { StrategyResultProps } from "../../shared/sharedTypes";
-import { StatProps } from "../../shared/sharedTypes";
+import { StrategyResultProps, StatProps } from "../../shared/sharedTypes";
 
 class PortfolioCalculator {
 
@@ -32,7 +31,7 @@ class PortfolioCalculator {
             const prev = this.strategyResult['close'][i - 1];
             let stockRet = (curr - prev) / prev;
 
-            if (this.strategyResult.equity[i - 1] < 0) {
+            if (this.strategyResult.signal[i - 1] < 0) {
                 stockRet = -1 * stockRet;
             }
 
