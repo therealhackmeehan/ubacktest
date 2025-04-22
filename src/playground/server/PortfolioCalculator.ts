@@ -123,7 +123,7 @@ class PortfolioCalculator {
             }
         }
 
-        const percTradesProf = numberOfTrades !== 0 ? 100 * numberOfProfitableTrades / numberOfTrades : null;
+        const percTradesProf = numberOfTrades !== 0 ? 100 * numberOfProfitableTrades / numberOfTrades : 0;
         const maxGain = 100 * (Math.max(...this.strategyResult.portfolio) - this.strategyResult.portfolio[0]) / this.strategyResult.portfolio[0];
         const returns = this.strategyResult.returns.slice(1); // dont include the first 0% return
 
@@ -149,8 +149,8 @@ class PortfolioCalculator {
         const downsideVariance = negativeReturns.reduce((sum: number, ret: number) => sum + Math.pow(ret, 2), 0) / (negativeReturns.length || 1);
         const downsideDev = Math.sqrt(downsideVariance);
         const riskFreeRate = 0;
-        const sharpeRatio = (meanReturn - riskFreeRate) / stdDev;
-        const sortinoRatio = (meanReturn - riskFreeRate) / downsideDev;
+        const sharpeRatio = numberOfTrades !== 0 ? (meanReturn - riskFreeRate) / stdDev : null;
+        const sortinoRatio = numberOfTrades !== 0 ? (meanReturn - riskFreeRate) / downsideDev : null;
 
         return {
             length: length,

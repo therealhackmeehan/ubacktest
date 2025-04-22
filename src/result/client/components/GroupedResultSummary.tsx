@@ -16,6 +16,7 @@ function GroupedResultsSummary({ resultsByStrategy, setResultToHighlight }: Grou
     const [dateToDisplay, setDateToDisplay] = useState<string>("");
     const [tickerToDisplay, setTickerToDisplay] = useState<string>("")
     const [hoverX, setHoverX] = useState<number | null>(null);
+    const [warnings, setWarnings] = useState<string[]>([]);
 
     // constants and one-liners
     const viewBoxWidth = 1000;
@@ -28,7 +29,6 @@ function GroupedResultsSummary({ resultsByStrategy, setResultToHighlight }: Grou
     const scaleY = (level: number) => level * heightPerLevel + 2 * bandwidth;
 
     // memoized KDE and SVG actions
-
     const parsedResults = useMemo(() => {
         const parse = (str: string) => parseISO(str);
         return resultsByStrategy.map(result => ({
@@ -72,28 +72,46 @@ function GroupedResultsSummary({ resultsByStrategy, setResultToHighlight }: Grou
     }, [parsedResults]);
 
     const averages = useMemo(() => {
-        const total = (arr: typeof parsedResults, key: keyof ResultWithStrategyName) =>
-            arr.reduce((sum, r) => sum + ((r[key] as number) ?? 0), 0);
+        const total = (
+            arr: typeof parsedResults,
+            key: keyof ResultWithStrategyName,
+            label: string
+        ) => {
+            let hasNull = false;
+            const sum = arr.reduce((sum, r) => {
+                const val = r[key] as number | null | undefined;
+                if (val == null) hasNull = true;
+                return sum + (val ?? 0);
+            }, 0);
+            if (hasNull) {
+                warningsList.push(`Missing values for "${label}" in one or more results. These null values were set to 0 for the stats listed below.`);
+            }
+            return sum;
+        };
 
+        const warningsList: string[] = [];
         const count = parsedResults.length;
 
-        return {
-            averageProfitLoss: count ? total(parsedResults, 'pl') / count : 0,
-            averageProfitLossWCosts: count ? total(parsedResults, 'plWCosts') / count : 0,
-            averageCagr: count ? total(parsedResults, 'cagr') / count : 0,
-            averageNumTrades: count ? total(parsedResults, 'numTrades') / count : 0,
-            averageNumProfitableTrades: count ? total(parsedResults, 'numProfTrades') / count : 0,
-            averagePercTradesProfitable: count ? total(parsedResults, 'percTradesProf') / count : 0,
-            averageSharpeRatio: count ? total(parsedResults, 'sharpeRatio') / count : 0,
-            averageSortinoRatio: count ? total(parsedResults, 'sortinoRatio') / count : 0,
-            averageMaxDrawdown: count ? total(parsedResults, 'maxDrawdown') / count : 0,
-            averageMaxGain: count ? total(parsedResults, 'maxGain') / count : 0,
-            averageMeanReturn: count ? total(parsedResults, 'meanReturn') / count : 0,
-            averageStdDevReturn: count ? total(parsedResults, 'stddevReturn') / count : 0,
-            averageMaxReturn: count ? total(parsedResults, 'maxReturn') / count : 0,
-            averageMinReturn: count ? total(parsedResults, 'minReturn') / count : 0,
-            averageTimepoints: count ? total(parsedResults, 'length') / count : 0,
+        const result = {
+            averageProfitLoss: count ? total(parsedResults, 'pl', 'profit/loss') / count : 0,
+            averageProfitLossWCosts: count ? total(parsedResults, 'plWCosts', 'profit/loss (w/ trading costs)') / count : 0,
+            averageCagr: count ? total(parsedResults, 'cagr', 'CAGR') / count : 0,
+            averageNumTrades: count ? total(parsedResults, 'numTrades', 'number of trades') / count : 0,
+            averageNumProfitableTrades: count ? total(parsedResults, 'numProfTrades', 'number of profitable trades') / count : 0,
+            averagePercTradesProfitable: count ? total(parsedResults, 'percTradesProf', '% trades profitable') / count : 0,
+            averageSharpeRatio: count ? total(parsedResults, 'sharpeRatio', 'sharpe ratio') / count : 0,
+            averageSortinoRatio: count ? total(parsedResults, 'sortinoRatio', 'sortino ratio') / count : 0,
+            averageMaxDrawdown: count ? total(parsedResults, 'maxDrawdown', 'max drawdown') / count : 0,
+            averageMaxGain: count ? total(parsedResults, 'maxGain', 'max gain') / count : 0,
+            averageMeanReturn: count ? total(parsedResults, 'meanReturn', 'mean return') / count : 0,
+            averageStdDevReturn: count ? total(parsedResults, 'stddevReturn', 'std dev return') / count : 0,
+            averageMaxReturn: count ? total(parsedResults, 'maxReturn', 'max return') / count : 0,
+            averageMinReturn: count ? total(parsedResults, 'minReturn', 'min return') / count : 0,
+            averageTimepoints: count ? total(parsedResults, 'length', 'timepoints') / count : 0,
         };
+
+        setWarnings(warningsList);
+        return result;
     }, [parsedResults]);
 
     const xPoints = useMemo(() => {
@@ -167,6 +185,13 @@ function GroupedResultsSummary({ resultsByStrategy, setResultToHighlight }: Grou
 
             {isExpanded && (
                 <div className="rounded-b-xl border-x-2 border-t-4 border-b-2 border-black/30 dark:border-white/30 bg-slate-50 mb-4 p-2 shadow-lg dark:bg-boxdark-2">
+                    {warnings.length > 0 && (
+                        <div className="text-yellow-700 bg-yellow-100 p-2 rounded mt-4 text-sm">
+                            {warnings.map((w, i) => (
+                                <div key={i}>⚠️ {w}</div>
+                            ))}
+                        </div>
+                    )}
                     <div className="grid grid-cols-1 sm:grid-cols-2 gap-x-6 gap-y-2 p-4">
                         <StatItem label="Average P/L" value={averages.averageProfitLoss} unit="%" />
                         {averages.averageProfitLoss !== averages.averageProfitLossWCosts && (
@@ -198,7 +223,7 @@ function GroupedResultsSummary({ resultsByStrategy, setResultToHighlight }: Grou
                         </div>
                         <button
                             onClick={() => setIsDateRangeExpanded(!isDateRangeExpanded)}
-                            className="flex items-center space-x-1 bg-white border-2 border-slate-100 hover:scale-90"
+                            className="flex items-center space-x-1 bg-white border-2 border-slate-100 hover:scale-90 px-1"
                         >
                             <div className="text-xs font-bold tracking-tight">
                                 see {isDateRangeExpanded ? "less" : "more"}

@@ -35,6 +35,9 @@ function InputForm({ formInputs, setFormInputs, run }: InputFormSubcomponentProp
     const [expanded, setExpanded] = useState<boolean>(true);
     const [displayAdvancedOptions, setDisplayAdvancedOptions] = useState<boolean>(false);
     const [matches, setMatches] = useState<Stock[]>([]);
+    const [displayMatches, setDisplayMatches] = useState<boolean>(false);
+    const timeoutRef = useRef<NodeJS.Timeout | null>(null);
+
     const [useDatetimeLocal, setUseDatetimeLocal] = useState<boolean>(() => {
         const storedValue = localStorage.getItem(INPUT_FORM_USE_DATETIME);
         return storedValue === 'true'; // If null or anything else, defaults to false
@@ -78,9 +81,26 @@ function InputForm({ formInputs, setFormInputs, run }: InputFormSubcomponentProp
                         stock["Security"].toLowerCase().startsWith(value.toLowerCase())
                     )
                     .slice(0, 4);
+
                 setMatches(filteredMatches);
+                setDisplayMatches(true);
+
+                // Clear previous timeout if it exists
+                if (timeoutRef.current) {
+                    clearTimeout(timeoutRef.current);
+                }
+
+                // Set new timeout
+                timeoutRef.current = setTimeout(() => {
+                    setDisplayMatches(false);
+                }, 3000);
             } else {
                 setMatches([]); // Clear matches if input is empty
+                setDisplayMatches(false);
+
+                if (timeoutRef.current) {
+                    clearTimeout(timeoutRef.current);
+                }
             }
         }
     };
@@ -133,7 +153,7 @@ function InputForm({ formInputs, setFormInputs, run }: InputFormSubcomponentProp
 
     const [position, setPosition] = useState<{ y: number }>(() => {
         const savedPosition = localStorage.getItem(INPUT_FORM_HEIGHT);
-        const initialPosition = savedPosition ? JSON.parse(savedPosition) : { y: (window.innerHeight + window.outerHeight) / 2 };
+        const initialPosition = savedPosition ? JSON.parse(savedPosition) : { y: 200 };
 
         // Ensure y is within the visible screen bounds
         const clampedY = Math.min(Math.max(initialPosition.y, 0), window.innerHeight - 100); // 50px buffer
@@ -243,7 +263,7 @@ function InputForm({ formInputs, setFormInputs, run }: InputFormSubcomponentProp
                         />
                     </div>
 
-                    {matches.length > 0 && (
+                    {matches.length > 0 && displayMatches && (
                         <ul className="text-xs z-10 bg-white border border-gray-300 rounded shadow-lg max-h-60 overflow-y-auto text-black">
                             {matches.map((match: Stock) => (
                                 <li
