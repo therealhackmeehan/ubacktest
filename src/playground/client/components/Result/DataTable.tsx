@@ -81,10 +81,10 @@ function DataTable({ strategyResult }: { strategyResult: StrategyResultProps }) 
                     <TableHead column="returns" label="Period Return" handleSort={handleSort} />
                 </tr>
             </thead>
-            <tbody className="text-xs text-gray-700 lowercase bg-white overflow-y-auto">
+            <tbody className="text-sm text-gray-700 lowercase bg-white overflow-y-auto">
                 {sortedData.timestamp.map((date: any, index: number) => (
                     <tr
-                        className="text-center group border-b-2 border-slate-100 hover:font-bold hover:bg-slate-100 hover:-translate-x-2 duration-200 group"
+                        className="text-center border-b-2 border-slate-100 hover:font-bold hover:bg-slate-100 hover:-translate-x-2 duration-200 group"
                         key={index}
                     >
                         <td className="font-extralight">

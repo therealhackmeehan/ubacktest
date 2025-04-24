@@ -84,7 +84,7 @@ function GroupedResultsSummary({ resultsByStrategy, setResultToHighlight }: Grou
                 return sum + (val ?? 0);
             }, 0);
             if (hasNull) {
-                warningsList.push(`Missing values for "${label}" in one or more results. These null values were set to 0 for the stats listed below.`);
+                warningsList.push(`Undefined values for "${label}" in one or more results. These null values were set to 0 for the stats listed below.`);
             }
             return sum;
         };

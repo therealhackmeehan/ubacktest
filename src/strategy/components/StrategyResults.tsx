@@ -24,7 +24,7 @@ function StrategyResults({ strategy }: { strategy: Strategy }) {
                         ))}
                     </ul>
                     <div className="mt-4 text-sm text-end italic font-light dark:text-white">
-                        Check the <Link to="/results" className="font-medium not-italic">My Results</Link> page for a deeper analysis of this strategy’s performance.
+                        Check the <Link to="/results" className="font-medium not-italic hover:underline">My Results</Link> page for a deeper analysis of this strategy’s performance.
                     </div>
                 </>
             )}

@@ -54,23 +54,33 @@ function Result({ selectedStrategy, formInputs, strategyResult, stats, abilityTo
         // Get the headers (labels)
         let headers = Object.keys(strategyResult);
         headers = headers.filter(header =>
-            !['userDefinedData', 'equityWithCosts', 'cashWithCosts'].includes(header) &&
+            // we unfortunately can't let users download a large chunk of the data for legal reasons
+            !['userDefinedData', 'equityWithCosts', 'cashWithCosts', 'open', 'close', 'high', 'low', 'volume'].includes(header) &&
             !(formInputs.costPerTrade === 0 && header === 'portfolioWithCosts')
         );
 
-        // Create rows by combining data from each key (label)
-        const rowCount = strategyResult[headers[0]].length; // Get the number of rows based on the first label's length
-        const rows = Array.from({ length: rowCount }, (_, rowIndex) =>
-            headers.map((header) => strategyResult[header][rowIndex]).join(',')
+        // If timestamp exists and isn't already filtered out, rename the timestamp column
+        const includeTimestamp = headers.includes('timestamp');
+        const displayHeaders = headers.map(header =>
+            header === 'timestamp' ? 'timestamp (local time)' : header
         );
 
-        // Add the headers to the beginning of the CSV text
-        const csv = [headers.join(','), ...rows].join('\n');
+        const rowCount = strategyResult[headers[0]].length;
 
-        // Create a Blob from the CSV string
+        const rows = Array.from({ length: rowCount }, (_, rowIndex) =>
+            headers.map((header) => {
+                const value = strategyResult[header][rowIndex];
+                if (header === 'timestamp') {
+                    return new Date(value * 1000).toLocaleString().replace(',', "");
+                }
+                return value;
+            }).join(',')
+        );
+
+        const csv = [displayHeaders.join(','), ...rows].join('\n');
+
         const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
 
-        // Trigger the download
         const link = document.createElement('a');
         link.href = URL.createObjectURL(blob);
         link.download = formInputs.symbol + '_strategy_result.csv';

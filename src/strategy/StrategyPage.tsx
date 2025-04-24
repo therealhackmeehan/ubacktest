@@ -48,7 +48,7 @@ function StrategyPage() {
     }
 
     return (
-        <div className="bg-gradient-to-b from-slate-100 to-white dark:from-boxdark dark:to-boxdark-2 border-t-2 border-black">
+        <div className="bg-gradient-to-b from-slate-100 to-white dark:from-boxdark dark:to-boxdark-2">
             <div className="mx-auto max-w-7xl">
                 <div className="p-2 mx-1 md:mx-4 md:p-8">
                     <StrategyOverview strategy={strategy} />
