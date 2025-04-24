@@ -87,7 +87,7 @@ export default function Hero() {
                 to="/editor"
                 className='rounded-md px-3.5 py-2.5 text-sm font-semibold text-gray-700 ring-1 ring-inset ring-gray-200 hover:ring-2 hover:ring-sky-600 dark:hover:ring-blue-300 shadow-sm focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600 dark:text-white'
               >
-                Get Started For Free <span aria-hidden='true'>→</span>
+                Start Backtesting for Free! <span aria-hidden='true'>→</span>
               </Link>
               <a
                 href={DocsUrl}

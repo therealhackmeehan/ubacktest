@@ -16,7 +16,7 @@ function StrategyResults({ strategy }: { strategy: Strategy }) {
                     {strategy.name}
                 </span>
             </div>
-            {!isResultsLoading && results && (
+            {(!isResultsLoading && results && results.length > 0) ? (
                 <>
                     <ul className="space-y-2">
                         {results.map((result) => (
@@ -27,7 +27,11 @@ function StrategyResults({ strategy }: { strategy: Strategy }) {
                         Check the <Link to="/results" className="font-medium not-italic hover:underline">My Results</Link> page for a deeper analysis of this strategy’s performance.
                     </div>
                 </>
-            )}
+            ) :
+                <div className="mt-4 text-center font-light dark:text-white">
+                    There are currently no results saved from this strategy.
+                </div>
+            }
         </div>
     );
 }
