@@ -1,7 +1,7 @@
 import { describe, it, expect } from 'vitest';
-import validateFormInputs from '../playground/client/scripts/validateFormInputs';
-import { addMonths } from '../playground/client/components/StrategyEditor';
-import { initFormInputs } from '../playground/client/components/StrategyEditor';
+import validateFormInputs from '../../playground/client/scripts/validateFormInputs';
+import { addMonths } from '../../playground/client/components/StrategyEditor';
+import { initFormInputs } from '../../playground/client/components/StrategyEditor';
 
 describe('Form Input Validation', () => {
 

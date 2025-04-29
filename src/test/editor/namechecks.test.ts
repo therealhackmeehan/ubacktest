@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest';
-import { validateNewName } from '../playground/client/scripts/modalHelpers';
+import { validateNewName } from '../../playground/client/scripts/modalHelpers';
 
 describe('New Name Validation', () => {
     it('Should throw an error for names that are too short', () => {

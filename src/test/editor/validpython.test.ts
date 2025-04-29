@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest';
-import validatePythonCode from '../playground/client/scripts/validatePythonCode';
+import validatePythonCode from '../../playground/client/scripts/validatePythonCode';
 
 describe('Python Code Validation', () => {
     it('Should throw an error if no function is defined', () => {
