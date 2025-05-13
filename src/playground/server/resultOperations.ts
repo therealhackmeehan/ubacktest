@@ -9,7 +9,13 @@ import {
     type GetTopResults,
     type TogglePrivacy,
 } from "wasp/server/operations";
-import { StatProps, StrategyResultProps } from "../../shared/sharedTypes";
+import {
+    StatProps,
+    StrategyResultProps,
+    ResultWithStrategyName,
+    ResultWithUsername,
+    GetTopResultsProp
+} from "../../shared/sharedTypes";
 
 type ResultCreationInfo = {
     name: string;
@@ -39,7 +45,7 @@ export const createResult: CreateResult<ResultCreationInfo, Result> = async ({ n
     // break down data into arrays
     const { timestamp, open, close, high, low, volume, signal, returns, sp, portfolio, portfolioWithCosts, cash, equity, cashWithCosts, equityWithCosts, userDefinedData }: StrategyResultProps = data;
     const { length, pl, plWCosts, cagr, numTrades, numProfTrades, percTradesProf, sharpeRatio, sortinoRatio, maxDrawdown, maxGain, meanReturn, stddevReturn, maxReturn, minReturn }: StatProps = stats;
-    
+
     return await context.entities.Result.create({
         data: {
 
@@ -91,9 +97,6 @@ export const createResult: CreateResult<ResultCreationInfo, Result> = async ({ n
     });
 };
 
-export type ResultWithStrategyName = Result & {
-    strategyName: string;
-};
 
 export const getResults: GetResults<void, ResultWithStrategyName[] | null> = async (_args, context) => {
     if (!context.user) {
@@ -134,14 +137,6 @@ export const getResultsForStrategy: GetResultsForStrategy<Pick<Result, "fromStra
     });
 }
 
-export type ResultWithUsername = Result & {
-    email: string;
-};
-
-export type GetTopResultsProp = {
-    topByProfitLoss: ResultWithUsername[] | null;
-    topByAnnualizedProfitLoss: ResultWithUsername[] | null;
-}
 
 export const getTopResults: GetTopResults<void, GetTopResultsProp> = async (_args, context) => {
 

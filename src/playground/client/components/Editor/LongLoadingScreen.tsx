@@ -12,7 +12,6 @@ const messages = [
     "Crunching numbers and finding alpha... 🔎",
 ];
 
-
 function LongLoadingScreen() {
     const [messageIndex, setMessageIndex] = useState(0);
 

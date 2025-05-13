@@ -3,8 +3,7 @@ import ResultHeader from "./ResultHeader";
 import { FiBookOpen } from "react-icons/fi";
 import OpenResult from "./OpenResult";
 import DeleteShareModal from "./modals/DeleteShareModal";
-import { GetSharedProps } from "../../server/shareOperations";
-import { FormInputProps } from "../../../shared/sharedTypes";
+import { FormInputProps, GetSharedProps } from "../../../shared/sharedTypes";
 import { acceptShare } from "wasp/client/operations";
 import { MdDeleteOutline } from "react-icons/md";
 
@@ -15,7 +14,8 @@ interface SharedResultItemProps {
 const SharedResultItem = ({ result }: SharedResultItemProps) => {
     const [resultPanelOpen, setResultPanelOpen] = useState<boolean>(false);
     const [deleteSharedModalOpen, setDeleteSharedModalOpen] = useState<boolean>(false);
-
+    const username = result.email?.split('@')[0] ?? "unknown";
+    
     return (
         <li key={result.id}>
             {result.accepted ? (
@@ -23,7 +23,7 @@ const SharedResultItem = ({ result }: SharedResultItemProps) => {
                     <ResultHeader result={result} setResultPanelOpen={setResultPanelOpen} />
                     <div className="flex gap-x-2 justify-between">
                         <div className="text-xs p-2 m-1">
-                            from @{result.email?.split('@')[0] ?? "unknown"}
+                            from @{username}
                         </div>
                         <button
                             className="hover:rotate-180 p-1 duration-500"
@@ -43,7 +43,7 @@ const SharedResultItem = ({ result }: SharedResultItemProps) => {
             ) : (
                 <div className="flex justify-between gap-x-2">
                     <div className="font-light tracking-tight dark:text-white">
-                        @{result.email?.split('@')[0] ?? "unknown"} sent you a result.
+                        @{username} sent you a result.
                     </div>
                     <div className="flex justify-between gap-x-2 p-1">
                         <button

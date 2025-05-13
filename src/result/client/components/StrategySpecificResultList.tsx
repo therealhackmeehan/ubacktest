@@ -1,4 +1,4 @@
-import { ResultWithStrategyName } from "../../../playground/server/resultOperations";
+import { ResultWithStrategyName } from "../../../shared/sharedTypes";
 import { useEffect, useState } from "react";
 import ResultListItem from "./ResultListItem";
 import GroupedResultsSummary from "./GroupedResultSummary";

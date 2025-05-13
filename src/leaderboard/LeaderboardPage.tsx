@@ -4,7 +4,7 @@ import LoadingScreen from "../client/components/LoadingScreen";
 import { useQuery } from "wasp/client/operations";
 import { getTopResults } from "wasp/client/operations";
 import LeaderboardItem from "./LeaderboardItem";
-import { ResultWithUsername } from "../playground/server/resultOperations";
+import { ResultWithUsername } from "../shared/sharedTypes";
 import logo from '../client/static/logo.png'
 
 export const softModernColors = [
@@ -41,6 +41,7 @@ function LeaderboardPage() {
                 </div>
                 <div className="mt-12 p-2 md:p-8 rounded-lg bg-slate-100 dark:bg-boxdark-2">
                     <button
+                        title="leaderboardtoggle"
                         className="p-1 mb-4 font-bold text-xs justify-self-center tracking-tight rounded-md bg-white flex dark:bg-boxdark-2"
                         onClick={() => setIsProfitLoss(!isProfitLoss)}
                     >

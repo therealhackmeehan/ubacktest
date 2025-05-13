@@ -1,8 +1,7 @@
 import { useState, useMemo } from "react";
 import { DownArrow, UpArrow } from "../../../client/icons/icons-arrows";
 import { parseISO, format, setDate } from "date-fns";
-import { FormInputProps } from "../../../shared/sharedTypes";
-import { ResultWithStrategyName } from "../../../playground/server/resultOperations";
+import { ResultWithStrategyName, FormInputProps } from "../../../shared/sharedTypes";
 
 interface GroupedResultsProps {
     resultsByStrategy: ResultWithStrategyName[];
@@ -170,6 +169,7 @@ function GroupedResultsSummary({ resultsByStrategy, setResultToHighlight }: Grou
                 </div>
 
                 <button
+                    data-testid="see-more-button"
                     onClick={() => setIsExpanded(!isExpanded)}
                     disabled={resultsByStrategy.length <= 1} // Disable the button when the length is <= 1
                     className={`flex items-center px-1 space-x-1 bg-slate-50 border-2 border-slate-100 hover:scale-90 ${resultsByStrategy.length <= 1 ? "cursor-not-allowed opacity-50" : ""

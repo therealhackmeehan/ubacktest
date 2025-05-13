@@ -6,8 +6,7 @@ import InputForm from "./InputForm";
 import { runStrategy, charge, updateStrategy } from "wasp/client/operations";
 import validateFormInputs from "../../scripts/validateFormInputs";
 import validatePythonCode from "../../scripts/validatePythonCode";
-import { FormInputProps, StatProps, StrategyResultProps } from "../../../../shared/sharedTypes";
-import { type stdProps } from "../StrategyEditor";
+import { FormInputProps, StatProps, StrategyResultProps, stdProps } from "../../../../shared/sharedTypes";
 import { StrategyContext } from "../../EditorPage";
 import LongLoadingScreen from "./LongLoadingScreen";
 

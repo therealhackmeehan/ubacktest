@@ -1,8 +1,7 @@
-import { useInView } from 'react-intersection-observer';
 import { FiBookOpen } from 'react-icons/fi';
 import { useState } from 'react';
 import LeaderboardPlot from './LeaderboardPlot';
-import { ResultWithUsername } from '../playground/server/resultOperations';
+import { ResultWithUsername } from '../shared/sharedTypes';
 import { randomColor } from './LeaderboardPage';
 
 interface LeaderboardItemProps {
@@ -14,14 +13,9 @@ function LeaderboardItem({ result, index }: LeaderboardItemProps) {
 
     const [leaderboardPlotOpen, setLeaderboardPlotOpen] = useState<boolean>(false);
 
-    const { ref, inView } = useInView({
-        triggerOnce: true,
-    });
-
     return (
         <>
             <div
-                ref={ref}
                 className="border-2 md:border-0 md:border-l-8 border-sky-700/50 dark:border-blue-300 rounded-md my-6 md:my-2 bg-white p-2 justify-between md:flex duration-700 dark:bg-black"
             >
                 <div className='px-3 mt-6 md:mt-0 flex items-center gap-x-3'>

@@ -5,8 +5,8 @@ import { IoMdReturnRight } from "react-icons/io";
 import { CgArrowUp } from "react-icons/cg";
 import { GiInvertedDice5 } from "react-icons/gi";
 import { BiReset } from "react-icons/bi";
-import { initFormInputs } from "../StrategyEditor";
-import { addMonths } from "../StrategyEditor";
+import { initFormInputs } from "../initFormInputs";
+import { addMonths } from "../../scripts/addMonths";
 import { VscGrabber } from "react-icons/vsc";
 import stocks from "./stocksInSP";
 

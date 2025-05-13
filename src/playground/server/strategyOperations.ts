@@ -10,8 +10,8 @@ import {
   type Charge,
   type RunStrategy,
 } from 'wasp/server/operations';
-import { StatProps, StrategyResultProps } from '../../shared/sharedTypes';
 import StrategyPipeline from './StrategyPipeline';
+import { BacktestResultProps } from '../../shared/sharedTypes';
 
 type FileCreationInfo = {
   name: string;
@@ -127,14 +127,6 @@ export const updateStrategy: UpdateStrategy<Partial<Strategy>, Strategy> = async
     },
     data: { code },
   });
-};
-
-interface BacktestResultProps {
-  strategyResult: StrategyResultProps;
-  statistics: StatProps;
-  debugOutput: string;
-  stderr: string;
-  warnings: string[];
 };
 
 export const runStrategy: RunStrategy<any, any> = async ({ formInputs, code }, context): Promise<BacktestResultProps> => {

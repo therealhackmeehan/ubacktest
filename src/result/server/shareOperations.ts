@@ -1,21 +1,12 @@
 import { HttpError } from "wasp/server";
-import {
-    type Share,
-    type Result,
-    type User
-} from "wasp/entities";
-
+import { type Share } from "wasp/entities";
+import { ShareResultProps, GetSharedProps } from "../../shared/sharedTypes";
 import {
     type ShareResult,
     type GetShared,
     type AcceptShare,
     type DeleteShare
 } from "wasp/server/operations";
-
-export type ShareResultProps = {
-    email: User["email"];
-    resultID: Result["id"];
-};
 
 export const shareResult: ShareResult<ShareResultProps, Share> = async ({ email, resultID }, context) => {
     if (!context.user) {
@@ -62,12 +53,6 @@ export const shareResult: ShareResult<ShareResultProps, Share> = async ({ email,
         },
     });
 }
-
-export type GetSharedProps = Result & {
-    sharedID: string;
-    email: string;
-    accepted: boolean;
-};
 
 export const getShared: GetShared<void, GetSharedProps[] | null> = async (_args, context) => {
     if (!context.user) {

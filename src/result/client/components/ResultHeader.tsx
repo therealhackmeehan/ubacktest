@@ -6,6 +6,7 @@ interface ResultHeaderProps {
     setResultPanelOpen: (val: boolean) => void;
 
 }
+
 function ResultHeader({ result, setResultPanelOpen }: ResultHeaderProps) {
     return (
         <div className='flex justify-between gap-x-3 mb-3 md:mb-0'>

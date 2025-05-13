@@ -1,7 +1,7 @@
 import { useQuery, getShared } from "wasp/client/operations";
 import { useState } from "react";
 import SharedResultItem from "./SharedResultItem";
-import { GetSharedProps } from "../../server/shareOperations";
+import { GetSharedProps } from "../../../shared/sharedTypes";
 import LoadingScreen from "../../../client/components/LoadingScreen";
 
 function SharedList() {

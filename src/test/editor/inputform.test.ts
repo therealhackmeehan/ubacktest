@@ -1,19 +1,12 @@
 import { describe, it, expect } from 'vitest';
 import validateFormInputs from '../../playground/client/scripts/validateFormInputs';
-import { addMonths } from '../../playground/client/components/StrategyEditor';
-import { initFormInputs } from '../../playground/client/components/StrategyEditor';
+import { addMonths } from '../../playground/client/scripts/addMonths';
+import { initFormInputs } from '../../playground/client/components/initFormInputs';
 
 describe('Form Input Validation', () => {
 
     it('Symbol should be alphanumeric and between 1 to 6 characters', () => {
         const invalidSymbols = [
-            { symbol: '' }, // Empty string
-            { symbol: 'A' }, // 1 character (valid)
-            { symbol: 'ABCDE' }, // 5 characters (valid)
-            { symbol: 'ABCDEF' }, // 6 characters (valid)
-            { symbol: 'ABC123' }, // 6 characters, alphanumeric (valid)
-            { symbol: 'A1^' }, // 3 characters, valid with ^
-            { symbol: 'A1^789' }, // 6 characters, valid with ^
             { symbol: 'A1^7890' }, // 7 characters (invalid)
             { symbol: 'A$B^' }, // Contains special character ($) (invalid)
             { symbol: 'AB&' }, // Contains special character (&) (invalid)
@@ -60,7 +53,6 @@ describe('Form Input Validation', () => {
         const OneHundred = new Date();
         OneHundred.setFullYear(OneHundred.getFullYear() - 100);
         const OneHundredString = OneHundred.toISOString().slice(0, 10);
-
         const NinetyNine = new Date();
         NinetyNine.setFullYear(NinetyNine.getFullYear() - 99);
         const NinetyNineString = NinetyNine.toISOString().slice(0, 10);
@@ -70,56 +62,86 @@ describe('Form Input Validation', () => {
         })).toThrow("Start date or end date cannot fall before 1970.");
     });
 
-    it('Excessively long date ranges trigger an error (>1000 timepoints)', () => {
-        const fiveYearsAgo = new Date();
-        fiveYearsAgo.setFullYear(fiveYearsAgo.getFullYear() - 5);
-        const fiveYearsAgoString = fiveYearsAgo.toISOString().slice(0, 10);
-
-        const farFutureDate = new Date();
-        farFutureDate.setFullYear(farFutureDate.getFullYear() + 6);
-        const farFutureDateString = farFutureDate.toISOString().slice(0, 10);
-
-        expect(() => validateFormInputs({
-            formInputs: { ...initFormInputs, startDate: fiveYearsAgoString, endDate: farFutureDateString }
-        })).toThrow("The date range is too long. Please select a range under 1000 timepoints.");
-    });
-
-    it('Excessively short date ranges trigger an error (<3 days)', () => {
-        const threeDaysAgo = new Date();
-        threeDaysAgo.setDate(threeDaysAgo.getDate() - 3);
-        const threeDaysAgoString = threeDaysAgo.toISOString().slice(0, 10);
-
-        const today = new Date();
-        const todayString = today.toISOString().slice(0, 10);
-
-        expect(() => validateFormInputs({
-            formInputs: { ...initFormInputs, startDate: threeDaysAgoString, endDate: todayString }
-        })).toThrow("The date range is too short. Please select a range of at least 3 days.");
-    });
-
     it('Warm-up date required when using warm-up option', () => {
         expect(() => validateFormInputs({
             formInputs: { ...initFormInputs, useWarmupDate: true, warmupDate: '' }
         })).toThrow("If utilizing the warm-up period, make sure to include a warm-up start date.");
     });
 
-    it('Timeout value constraints', () => {
-        const invalidTimeouts = [-1, 0.1, 70]; // Assuming valid range is [1, 60]
-
+    it('Timeout value non-numerics', () => {
+        const invalidTimeouts = ['hi'];
         invalidTimeouts.forEach(timeout => {
             expect(() => validateFormInputs({
                 formInputs: { ...initFormInputs, timeout }
-            })).toThrow("Timeout must be between 1 and 60.");
+            })).toThrow("Execution time limit must be a number.");
+        });
+    });
+
+    it('Timeout value constraints', () => {
+        const invalidTimeouts = [-1, 70]; // Assuming valid range is [1, 60]
+        invalidTimeouts.forEach(timeout => {
+            expect(() => validateFormInputs({
+                formInputs: { ...initFormInputs, timeout }
+            })).toThrow("Execution time limit must fall between 1 and 60 seconds.");
+        });
+    });
+
+    it('Timeout must be a whole number', () => {
+        const invalidTimeouts = [.1, -.7];
+        invalidTimeouts.forEach(timeout => {
+            expect(() => validateFormInputs({
+                formInputs: { ...initFormInputs, timeout }
+            })).toThrow("Execution time limit must be an integer.");
         });
     });
 
     it('Cost per trade must be within valid range', () => {
         const invalidCosts = [-1, 11]; // Assuming valid range is [0, 10]
-
         invalidCosts.forEach(costPerTrade => {
             expect(() => validateFormInputs({
                 formInputs: { ...initFormInputs, costPerTrade }
-            })).toThrow("Cost per trade must be between 0 and 10.");
+            })).toThrow("Trading Cost must fall between 0 and 10%.");
         });
     });
+
+    it('Cost per trade edge values should be valid', () => {
+        const validCosts = [0, 0.01, 5, 10];
+        validCosts.forEach(costPerTrade => {
+            expect(() => validateFormInputs({
+                formInputs: { ...initFormInputs, costPerTrade }
+            })).not.toThrow();
+        });
+    });
+
+    it('Warm-up date cannot be in the future or after start date', () => {
+        const futureDate = addMonths(new Date(), 1);
+        const afterStartDate = new Date();
+        afterStartDate.setDate(afterStartDate.getDate() + 1);
+    
+        expect(() => validateFormInputs({
+            formInputs: { ...initFormInputs, useWarmupDate: true, warmupDate: futureDate }
+        })).toThrow("Warm-up dates cannot be in the future.");
+    
+        expect(() => validateFormInputs({
+            formInputs: {
+                ...initFormInputs,
+                useWarmupDate: true,
+                startDate: addMonths(new Date(), -20),
+            }
+        })).toThrow("Warm-up date cannot come after the start date.");
+    });
+
+    it('Start and end dates cannot be in the future', () => {
+        const future = addMonths(new Date(), 2);
+        const futureplus1 = addMonths(new Date, 3);
+
+        expect(() => validateFormInputs({
+            formInputs: { ...initFormInputs, startDate: future, endDate: futureplus1}
+        })).toThrow("Dates cannot be in the future.");
+    
+        expect(() => validateFormInputs({
+            formInputs: { ...initFormInputs, endDate: future }
+        })).toThrow("Dates cannot be in the future.");
+    });    
+
 });

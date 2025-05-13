@@ -1,11 +1,11 @@
-import { StrategyResultProps, FormInputProps } from "../../shared/sharedTypes";
+import { StrategyResultProps, FormInputProps, StatProps } from "../../shared/sharedTypes";
 import CodeExecutor from "./CodeExecutor";
 import ScriptBuilder from "./ScriptBuilder";
 import ResultValidator from "./ResultValidator";
 import STDParser from "./STDParser";
 import PortfolioCalculator from "./PortfolioCalculator";
 import APIDataConnector from "./APIDataConnector";
-import { StatProps } from "../../shared/sharedTypes";
+
 /*
     Main backend endpoint for processing of the stock trading strategy.
     Will search for data and apply the given python strategy.

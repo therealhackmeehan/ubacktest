@@ -41,7 +41,7 @@ export default function HomePage() {
             <div className="mt-12">
                 {isStrategiesLoading ? (
                     <LoadingScreen />
-                ) : strategies ? (
+                ) : strategies && strategies.length > 0 ? (
                     <ul>
                         {strategies.map((strategy: Strategy) => (
                             <StrategyDropDown key={strategy.id} strategy={strategy} />
