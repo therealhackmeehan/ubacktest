@@ -38,7 +38,7 @@ export const paymentPlanCards: Record<PaymentPlanId, PaymentPlanCard> = {
 
 const PricingPage = () => {
   const [isPaymentLoading, setIsPaymentLoading] = useState<boolean>(false);
-  
+
   const { data: user } = useAuth();
   const isUserSubscribed = !!user && !!user.subscriptionStatus && user.subscriptionStatus !== 'deleted';
 
@@ -97,9 +97,7 @@ const PricingPage = () => {
           </h2>
         </div>
         <p className='mx-auto mt-6 max-w-2xl text-center text-lg leading-8 text-gray-600 dark:text-white'>
-          Choose between Stripe and LemonSqueezy as your payment provider. Just add your Product IDs! Try it
-          out below with test credit card number <br />
-          <span className='px-2 py-1 bg-gray-100 rounded-md text-gray-700'>4242 4242 4242 4242 4242</span>
+          We've intentionally priced our product an order of magnitude below competitors—our focus right now is on showcasing what it can do, not making a quick profit.
         </p>
         <div className='isolate mx-auto mt-16 grid max-w-md grid-cols-1 gap-y-8 lg:gap-x-8 sm:mt-20 lg:mx-0 lg:max-w-none lg:grid-cols-3'>
           {Object.values(PaymentPlanId).map((planId) => (

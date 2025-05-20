@@ -77,7 +77,7 @@ export default function Hero() {
               -1 is <span className='text-sky-700 dark:text-blue-300'>short</span>.
             </h1>
             <h1 ref={ref2} className={`text-4xl my-12 font-bold text-gray-900 sm:text-6xl dark:text-white duration-1000 tracking-tight ${inView2 ? 'opacity-100' : 'opacity-0 translate-y-3'}`}>
-              The rest is up to <span className='italic text-sky-700 dark:text-blue-300'>you</span>.
+              A simple and affordable backtesting platform for<span className='italic text-sky-700 dark:text-blue-300'> algorithmic trading</span>.
             </h1>
             <p className='mt-6 mx-auto max-w-2xl text-lg leading-8 text-gray-600 dark:text-white'>
               We got the data. Go ahead and get started on your <span className='italic text-sky-700 dark:text-blue-300'>million-dollar </span>idea!

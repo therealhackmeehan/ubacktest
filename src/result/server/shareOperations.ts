@@ -7,13 +7,14 @@ import {
     type AcceptShare,
     type DeleteShare
 } from "wasp/server/operations";
+import { emailSender } from "wasp/server/email";
 
 export const shareResult: ShareResult<ShareResultProps, Share> = async ({ email, resultID }, context) => {
     if (!context.user) {
         throw new HttpError(401);
     }
 
-    if (!email) throw new HttpError(400, "Email inptu must be nonempty.");
+    if (!email) throw new HttpError(400, "Email input must be nonempty.");
 
     const recipient = await context.entities.User.findUnique({
         where: { email, },
@@ -38,6 +39,34 @@ export const shareResult: ShareResult<ShareResultProps, Share> = async ({ email,
     if (existingShare) {
         throw new HttpError(400, "You have already shared the result with this user.")
     }
+
+    await emailSender.send({
+        to: email,
+        subject: `${email} has shared a strategy result with you.`,
+        text: `Someone shared a trading strategy with you!
+
+Click the link below to view it:
+https://ubacktest.com/results
+
+Happy trading!`,
+        html: `
+    <div style="font-family: Arial, sans-serif; max-width: 600px; margin: auto; padding: 20px;">
+      <img src="https://yourdomain.com/logo.png" alt="Your Logo" style="width: 120px; margin-bottom: 20px;" />
+      <h2 style="color: #333;">You've received a trading strategy</h2>
+      <p style="font-size: 16px; color: #555;">
+        Someone thought you'd appreciate this strategy result. You can either accept or deny this share request. Click the link below to check it out:
+      </p>
+      <a href="https://uBacktest.com/results" 
+         style="display: inline-block; padding: 12px 20px; background-color: #007bff; color: white; text-decoration: none; border-radius: 5px; margin-top: 15px;">
+         View Result
+      </a>
+      <p style="font-size: 14px; color: #999; margin-top: 30px;">
+        If you have any questions or feedback, just hit reply to this email.
+      </p>
+    </div>
+  `,
+    });
+
 
     return await context.entities.Share.create({
         data: {
