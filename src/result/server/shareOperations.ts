@@ -42,7 +42,7 @@ export const shareResult: ShareResult<ShareResultProps, Share> = async ({ email,
 
     await emailSender.send({
         to: email,
-        subject: `${email} has shared a strategy result with you.`,
+        subject: `${context.user.email} has shared a strategy result with you.`,
         text: `Someone shared a trading strategy with you!
 
 Click the link below to view it:
@@ -66,7 +66,6 @@ Happy trading!`,
     </div>
   `,
     });
-
 
     return await context.entities.Share.create({
         data: {

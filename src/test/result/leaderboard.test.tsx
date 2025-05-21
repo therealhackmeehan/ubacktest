@@ -9,11 +9,12 @@ import { getTopResults } from "wasp/client/operations";
 vi.mock("../../playground/client/components/result/CandlePlot", () => ({
     default: () => <div data-testid="mocked-candle-plot">Mocked CandlePlot</div>,
 }));
+
 import LeaderboardPage from "../../leaderboard/LeaderboardPage";
 
 const { mockQuery } = mockServer();
-const mockResultWithUserName: ResultWithUsername = { ...mockResult, email: 'email1@gmail.com', pl: 10, cagr: 5 };
-const secondMockResultWithUsername: ResultWithUsername = { ...mockResult, email: 'email2@gmail.com', pl: 20, cagr: 10 };
+const mockResultWithUserName: ResultWithUsername = { ...mockResult, email: 'email1@gmail.com', pl: 7, cagr: 5 };
+const secondMockResultWithUsername: ResultWithUsername = { ...mockResult, email: 'email2@gmail.com', pl: 14, cagr: 12 };
 
 const mockLeaderboard: GetTopResultsProp = {
     topByProfitLoss: [mockResultWithUserName, secondMockResultWithUsername],
@@ -35,9 +36,8 @@ test("renders leaderboard rows with correct order and data (sorted by p/l)", asy
     const plElements = await screen.findAllByText(/%/); // crude but works if % is only in PL/CAGR
     const expectedPlOrder = [mockResultWithUserName.pl, secondMockResultWithUsername.pl];
 
-    for (let i = 0; i < expectedPlOrder.length; i++) {
-        expect(plElements[i]).toHaveTextContent((expectedPlOrder[i] as number).toFixed(2));
-    }
+    expect(plElements[1]).toHaveTextContent((expectedPlOrder[0] as number).toFixed(2));
+    expect(plElements[3]).toHaveTextContent((expectedPlOrder[1] as number).toFixed(2));
 
     // Check that view buttons are present
     const viewButtons = await screen.findAllByRole('button', { name: /view/i });
@@ -48,7 +48,8 @@ test("renders leaderboard rows with correct order and data (sorted by cagr)", as
     mockQuery(getTopResults, mockLeaderboard);
     renderInContext(<LeaderboardPage />);
 
-    const switchButton = screen.getByTitle("leaderboardtoggle");
+    await screen.findByTestId("leaderboardtoggle");
+    const switchButton = await screen.getByTestId("leaderboardtoggle");
     fireEvent.click(switchButton);
 
     const emailElements = await screen.findAllByText(/@email\d@gmail.com/);
@@ -61,9 +62,8 @@ test("renders leaderboard rows with correct order and data (sorted by cagr)", as
     const plElements = await screen.findAllByText(/%/); // crude but works if % is only in PL/CAGR
     const expectedCagrOrder = [mockResultWithUserName.cagr, secondMockResultWithUsername.cagr];
 
-    for (let i = 0; i < expectedCagrOrder.length; i++) {
-        expect(plElements[i]).toHaveTextContent((expectedCagrOrder[i] as number).toFixed(2));
-    }
+    expect(plElements[0]).toHaveTextContent((expectedCagrOrder[0] as number).toFixed(2));
+    expect(plElements[2]).toHaveTextContent((expectedCagrOrder[1] as number).toFixed(2));
 
     // Check that view buttons are present
     const viewButtons = await screen.findAllByRole('button', { name: /view/i });

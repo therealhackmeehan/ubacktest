@@ -41,7 +41,7 @@ function LeaderboardPage() {
                 </div>
                 <div className="mt-12 p-2 md:p-8 rounded-lg bg-slate-100 dark:bg-boxdark-2">
                     <button
-                        title="leaderboardtoggle"
+                        data-testid="leaderboardtoggle"
                         className="p-1 mb-4 font-bold text-xs justify-self-center tracking-tight rounded-md bg-white flex dark:bg-boxdark-2"
                         onClick={() => setIsProfitLoss(!isProfitLoss)}
                     >
