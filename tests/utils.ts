@@ -49,9 +49,11 @@ export const initEmptyStrategy = async ({ page }: { page: Page }) => {
   await page.getByText('new').click();
   await page.getByPlaceholder('Enter strategy name').fill('randomStrategyName');
   await page.getByText('Confirm').click();
-
   await page.getByText('Reject all').click();
   await page.getByText('advanced options').click();
+  await page.evaluate(() => {
+    document.body.style.zoom = '60%'; // adjust as needed
+  });
 }
 
 export const createRandomUser = () => {
@@ -103,7 +105,7 @@ export const makeStripePayment = async ({ test, page, planName }: { test: any; p
 
 export async function fillEditor(page: Page, content: string) {
   await page.evaluate((code) => {
-      const editor = (window as any).monaco.editor.getEditors()[0];
-      editor.setValue(code);
+    const editor = (window as any).monaco.editor.getEditors()[0];
+    editor.setValue(code);
   }, content);
 }
