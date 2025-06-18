@@ -5,6 +5,7 @@ class CodeExecutor {
 
     private code: string;
     private timeout: number;
+    private memoryLimit: number = 1024000;
 
     constructor(code: string, timeout: number) {
         this.code = code;
@@ -13,7 +14,7 @@ class CodeExecutor {
 
     public async execute() {
 
-        const { stdout, stderr } = await CodeExecutor.sendToJudge(this.code, this.timeout);
+        const { stdout, stderr } = await CodeExecutor.sendToJudge(this.code, this.timeout, this.memoryLimit);
 
         return {
             stdout_raw: stdout,
@@ -21,7 +22,7 @@ class CodeExecutor {
         }
     }
 
-    private static async sendToJudge(mainFileContent: string, timeout: number) {
+    private static async sendToJudge(mainFileContent: string, timeout: number, memoryLimit: number) {
 
         const url = 'https://judge0-extra-ce.p.sulu.sh/submissions?base64_encoded=true&wait=true';
         const options = {
@@ -36,6 +37,7 @@ class CodeExecutor {
                 source_code: Buffer.from(mainFileContent).toString('base64'), // Encode source code
                 wall_time_limit: timeout,
                 cpu_time_limit: timeout,
+                memory_limit: memoryLimit, // increase to 1GB
             })
         };
 
@@ -48,12 +50,33 @@ class CodeExecutor {
         const fullResult = await response.json();
         console.log(fullResult);
 
-        let { stdout, stderr } = fullResult;
+        let { stdout, stderr, message, memory, time, status } = fullResult;
+        const { id, description } = status;
+
+        // for some reason this doesn't work unless I set the null values to '' (???)
         if (!stdout) { stdout = '' } else { stdout = Buffer.from(stdout, 'base64').toString('utf-8') };
         if (!stderr) { stderr = '' } else { stderr = Buffer.from(stderr, 'base64').toString('utf-8') };
 
-        if (fullResult.message) {
-            stderr = stderr + `"${Buffer.from(fullResult.message, 'base64').toString('utf-8')}"`;
+        if (message) {
+            const decodedMessage = Buffer.from(fullResult.message, 'base64').toString('utf-8');
+            const delim = "\n════════════════ Diagnostics ════════════════";
+
+            stderr += `\n${decodedMessage.trim()}.\n`;
+
+            if (memory && time) {
+                stderr += `${delim}
+Memory Usage : ${memory} KB
+Time Elapsed : ${time} s
+Message      : ${description}`;
+            }
+
+            if (memory >= memoryLimit) {
+                stderr += `\n\n⚠️  Note: Memory usage exceeded the 1GB limit.`;
+            }
+
+            if (parseFloat(time) > timeout) {
+                stderr += `\n\n⏱️  Tip: Execution time of ${time}s exceeded the limit of ${timeout}s. You can increase this in the advanced options.`;
+            }
         }
 
         if (stderr.length === 0 && stdout.length === 0) {
