@@ -1,4 +1,3 @@
-
 '''
 Lasso Regression Strategy.
 

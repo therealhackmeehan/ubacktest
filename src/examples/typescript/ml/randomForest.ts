@@ -1,4 +1,4 @@
-const rfClassifier = `'''
+export const rfClassifier = `'''
 Random Forest Classifier.
 
 Trains a Random Forest Classifier using the past 30 days of data to predict the next day's action. 
@@ -83,5 +83,3 @@ def strategy(data):
     data = random_forest_classifier(data)
 
     return data`;
-
-export default rfClassifier;

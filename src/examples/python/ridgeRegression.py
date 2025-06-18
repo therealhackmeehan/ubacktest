@@ -1,4 +1,3 @@
-
 '''
 Ridge Regression Strategy.
 

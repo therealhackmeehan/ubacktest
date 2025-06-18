@@ -22,18 +22,20 @@ import { shortAndHold } from "./typescript/intro/shortAndHold";
 import { maEnvelope } from "./typescript/ma/maEnvelope";
 import { ama } from "./typescript/ma/ama";
 import { rsiBreakout } from "./typescript/RSI/rsiBreakout";
-import rfClassifier from "./typescript/ml/randomForest";
+import { rfClassifier } from "./typescript/ml/randomForest";
 import { donchianChannel } from "./typescript/other/donchian";
-import linReg from "./typescript/regression/linearRegression";
-import expReg from "./typescript/regression/exponentialRegression";
-import polyReg from "./typescript/regression/polynomialRegression";
-import ridgeReg from "./typescript/regression/ridgeRegression";
-import lassoReg from "./typescript/regression/lassoRegression";
-import logReg from "./typescript/ml/logisticRegression";
-import svmClassifier from "./typescript/ml/svm";
-import gbClassifier from "./typescript/ml/gradBoosting";
-import knnClassifier from "./typescript/ml/knn";
-import nnClassifier from "./typescript/ml/neuralNet";
+import { linReg } from "./typescript/regression/linearRegression";
+import { expReg } from "./typescript/regression/exponentialRegression";
+import { polyReg } from "./typescript/regression/polynomialRegression";
+import { ridgeReg } from "./typescript/regression/ridgeRegression";
+import { lassoReg } from "./typescript/regression/lassoRegression";
+import { logReg } from "./typescript/ml/logisticRegression";
+import { svmClassifier } from "./typescript/ml/svm";
+import { gbClassifier } from "./typescript/ml/gradBoosting";
+import { knnClassifier } from "./typescript/ml/knn";
+import { nnClassifier }from "./typescript/ml/neuralNet";
+import { lstm_pytorch } from "./typescript/dl/lstm_pytorch";
+import { lstm_tensorflow } from "./typescript/dl/lstm_tensorflow";
 
 type Example = {
     name: string;
@@ -203,5 +205,14 @@ export const examples: StrategyExamples = {
             script: nnClassifier
         },
     ],
-    "Deep Learning (Coming Soon...)": [],
+    "Deep Learning": [
+        {
+            name: "LSTM (PyTorch)",
+            script: lstm_pytorch
+        },
+        {
+            name: "LSTM (TensorFlow)",
+            script: lstm_tensorflow
+        },
+    ],
 };

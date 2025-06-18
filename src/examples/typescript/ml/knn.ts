@@ -1,4 +1,4 @@
-const knnClassifier = `'''
+export const knnClassifier = `'''
 K-Nearest Neighbors (KNN) Classifier.
 
 Trains a K-Nearest Neighbors Classifier using the past 30 days of data to predict the next day's action. 
@@ -83,5 +83,3 @@ def strategy(data):
     data = knn_classifier(data)
 
     return data`;
-
-export default knnClassifier;

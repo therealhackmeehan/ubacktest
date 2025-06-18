@@ -1,4 +1,3 @@
-
 '''
 Exponential Regression Strategy.
 

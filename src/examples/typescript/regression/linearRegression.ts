@@ -1,4 +1,4 @@
-const linReg = `'''
+export const linReg = `'''
 Simple Linear Regression.
 
 Trains an Linear Regression model using the past 14 days of data to predict the next day's price movement (up/down).
@@ -43,5 +43,3 @@ def strategy(data):
 
     return data
 `;
-
-export default linReg;

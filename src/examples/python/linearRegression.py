@@ -1,4 +1,3 @@
-
 '''
 Simple Linear Regression.
 

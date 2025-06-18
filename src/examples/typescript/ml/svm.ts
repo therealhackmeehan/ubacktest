@@ -1,4 +1,4 @@
-const svmClassifier = `'''
+export const svmClassifier = `'''
 Support Vector Machine (SVM) Classifier.
 
 Trains a SVC using the past 30 days of data to predict the next day's action. 
@@ -83,5 +83,3 @@ def strategy(data):
     data = svm_classifier(data)
 
     return data`;
-
-export default svmClassifier;

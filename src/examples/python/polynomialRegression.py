@@ -1,4 +1,3 @@
-
 '''
 Polynomial Regression Strategy.
 

@@ -1,4 +1,4 @@
-const nnClassifier = `'''
+export const nnClassifier = `'''
 Neural Network (MLP) Classifier.
 
 Trains a NN Classifier using the past 30 days of data to predict the next day's action. 
@@ -83,5 +83,3 @@ def strategy(data):
     data = neural_network_classifier(data)
 
     return data`;
-
-export default nnClassifier;

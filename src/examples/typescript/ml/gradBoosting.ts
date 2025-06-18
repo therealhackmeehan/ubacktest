@@ -1,4 +1,4 @@
-const gbClassifier = `'''
+export const gbClassifier = `'''
 Gradient Boosting Classifier Strategy.
 
 Trains a Gradient Boosting Classifier using the past 30 days of data to predict the next day's action. 
@@ -83,5 +83,3 @@ def strategy(data):
     data = gradient_boosting_classifier(data)
 
     return data`;
-
-export default gbClassifier;
