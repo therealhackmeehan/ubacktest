@@ -80,6 +80,7 @@ export default function Hero() {
               A simple and affordable backtesting platform for<span className='italic text-sky-700 dark:text-blue-300'> algorithmic trading</span>.
             </h1>
             <p className='mt-6 mx-auto max-w-2xl text-lg leading-8 text-gray-600 dark:text-white'>
+              {/* To Build Statistical, Machine Learning, and Deep Learning Strategies. */}
               We got the data. Go ahead and get started on your <span className='italic text-sky-700 dark:text-blue-300'>million-dollar </span>idea!
             </p>
             <div className='mt-10 flex items-center justify-center gap-x-6'>

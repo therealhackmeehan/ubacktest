@@ -26,8 +26,8 @@ export const features = [
     icon: BsDatabase,
   },
   {
-    name: 'Seamless Library Integration',
-    description: 'Preloaded with essential statistics, machine learning libraries to use out of the box.',
+    name: 'Configured for Machine/Deep Learning',
+    description: 'Preloaded with Sklearn, PyTorch, TensorFlow, and more!',
     icon: SiPandas,
   },
   {
@@ -35,11 +35,11 @@ export const features = [
     description: 'Easily store, track, and refine your trading strategies—or share them with others.',
     icon: FaSave,
   },
-  {
-    name: 'Deploy with Auto-Generated Code',
-    description: 'Effortlessly generate production-ready code to execute your strategy—even with real capital.',
-    icon: LuRocket,
-  },
+  // {
+  //   name: 'Deploy with Auto-Generated Code',
+  //   description: 'Effortlessly generate production-ready code to execute your strategy—even with real capital.',
+  //   icon: LuRocket,
+  // },
   {
     name: 'Comprehensive Docs & Examples',
     description: 'Get started instantly with pre-integrated examples—just press go and see them in action.',

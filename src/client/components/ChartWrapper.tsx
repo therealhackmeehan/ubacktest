@@ -7,7 +7,7 @@ interface ChartWrapperProps {
 
 function ChartWrapper({ children, height }: ChartWrapperProps) {
     return (
-        <div style={{ height: `${height}vh` }}>
+        <div style={{ height: `clamp(300px, ${height}vh, 700px)` }}>
             {children}
         </div>
     );

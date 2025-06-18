@@ -111,7 +111,7 @@ function Editor({ formInputs, strategyResult, setStrategyResult, setResultOpen, 
 
             <MonacoEditor codeToDisplay={codeToDisplay} setCodeToDisplay={setCodeToDisplay} />
 
-            <DebugConsole userStdout={std.out} userStderr={std.err} />
+            {(std.out || std.err) && <DebugConsole userStdout={std.out} userStderr={std.err} />}
         </>
     )
 }
