@@ -5,6 +5,7 @@ import ResultValidator from "./ResultValidator";
 import STDParser from "./STDParser";
 import PortfolioCalculator from "./PortfolioCalculator";
 import APIDataConnector from "./APIDataConnector";
+import { HttpError } from "wasp/server";
 
 /*
     Main backend endpoint for processing of the stock trading strategy.
@@ -100,8 +101,12 @@ class StrategyPipeline {
         this.strategyResult.signal = parsedOutput.signal;
         this.strategyResult.userDefinedData = parsedOutput.userDefinedData;
 
-        // If there's an error, return early
-        if (this.stderr) return this.sendJSONtoFrontend();
+        // If there's an error, and no signals found, return early
+        if (this.strategyResult.signal.length === 0) {
+            // Including this probably-impossible edge case for robustness
+            if (!this.stderr) throw new HttpError(503, 'Something went wrong. No trading signals or stderr generated. Please try again.');
+            return this.sendJSONtoFrontend();
+        }
 
         // Try to add S&P 500 data for comparison
         try {
@@ -109,7 +114,7 @@ class StrategyPipeline {
             if (StrategyPipeline.arraysAreEqual(this.strategyResult.timestamp, shortenedNormalizedQuote.timestamp)) {
                 this.strategyResult.sp = shortenedNormalizedQuote.close;
             }
-        } catch (Error: any) {
+        } catch (error: any) {
             this.warning.push("An issue occurred with fetching S&P Comparison Data, so it will be excluded from this backtest.");
         }
 

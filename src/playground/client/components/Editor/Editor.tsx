@@ -42,7 +42,7 @@ function Editor({ formInputs, strategyResult, setStrategyResult, setResultOpen, 
                 await runStrategy({ formInputs: formInputs, code: codeToDisplay });
 
             handleDebugOutput(debugOutput, stderr);
-            if (stderr) return;
+            if (stderr && strategyResult.signal.length === 0) return;
 
             setStrategyResult(strategyResult);
             setStats(statistics);

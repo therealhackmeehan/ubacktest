@@ -6,6 +6,7 @@ class CodeExecutor {
     private code: string;
     private timeout: number;
     private memoryLimit: number = 1024000;
+    private maxThreads: number = 200;
 
     constructor(code: string, timeout: number) {
         this.code = code;
@@ -14,7 +15,7 @@ class CodeExecutor {
 
     public async execute() {
 
-        const { stdout, stderr } = await CodeExecutor.sendToJudge(this.code, this.timeout, this.memoryLimit);
+        const { stdout, stderr } = await this.sendToJudge();
 
         return {
             stdout_raw: stdout,
@@ -22,7 +23,7 @@ class CodeExecutor {
         }
     }
 
-    private static async sendToJudge(mainFileContent: string, timeout: number, memoryLimit: number) {
+    private async sendToJudge() {
 
         const url = 'https://judge0-extra-ce.p.sulu.sh/submissions?base64_encoded=true&wait=true';
         const options = {
@@ -34,10 +35,11 @@ class CodeExecutor {
             },
             body: JSON.stringify({
                 language_id: 31, // Python for ML (base image)
-                source_code: Buffer.from(mainFileContent).toString('base64'), // Encode source code
-                wall_time_limit: timeout,
-                cpu_time_limit: timeout,
-                memory_limit: memoryLimit, // increase to 1GB
+                source_code: Buffer.from(this.code).toString('base64'), // Encode source code
+                wall_time_limit: this.timeout,
+                cpu_time_limit: this.timeout,
+                memory_limit: this.memoryLimit, // increase to 1GB
+                max_processes_and_or_threads: this.maxThreads,
             })
         };
 
@@ -70,12 +72,12 @@ Time Elapsed : ${time} s
 Message      : ${description}`;
             }
 
-            if (memory >= memoryLimit) {
+            if (memory >= this.memoryLimit) {
                 stderr += `\n\n⚠️  Note: Memory usage exceeded the 1GB limit.`;
             }
 
-            if (parseFloat(time) > timeout) {
-                stderr += `\n\n⏱️  Tip: Execution time of ${time}s exceeded the limit of ${timeout}s. You can increase this in the advanced options.`;
+            if (parseFloat(time) > this.timeout) {
+                stderr += `\n\n⏱️  Tip: Execution time of ${time}s exceeded the limit of ${this.timeout}s. You can increase this in the advanced options.`;
             }
         }
 

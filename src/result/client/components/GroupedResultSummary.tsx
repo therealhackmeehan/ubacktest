@@ -161,7 +161,7 @@ function GroupedResultsSummary({ resultsByStrategy, setResultToHighlight }: Grou
                 <div className="font-semibold text-slate-700 dark:text-white pb-1 flex justify-start items-center gap-x-2">
                     <div className="text-sm font-light">strategy</div>
                     <div className="italic text-xl">
-                        {resultsByStrategy[0]?.strategyName ?? "Unknown"}
+                        {resultsByStrategy[0]?.strategyName ?? "Loading..."}
                     </div>
                     <div className="text-sm font-mono text-sky-700 dark:text-blue-300">
                         avg P/L: {averages.averageProfitLoss.toFixed(2)}%
@@ -214,7 +214,7 @@ function GroupedResultsSummary({ resultsByStrategy, setResultToHighlight }: Grou
 
                     <div className="flex justify-between m-1">
                         <div className="text-sm font-extralight dark:text-white">
-                            Where have I backtested <span className="font-bold text-lg"> {resultsByStrategy[0]?.strategyName ?? "Unknown"}</span> ?
+                            Where have I backtested <span className="font-bold text-lg"> {resultsByStrategy[0]?.strategyName ?? "Loading..."}</span> ?
                         </div>
                         <div className="rounded-md p-1 bg-slate-200 border-2 border-slate-300">
                             <div className="text-xs italic font-extralight text-slate-700 font-sans">
