@@ -41,17 +41,21 @@ export const shareResult: ShareResult<ShareResultProps, Share> = async ({ email,
     }
 
     await emailSender.send({
+        from: {
+            name: "uBacktest Support",
+            email: "john@uBacktest.com",
+        },
         to: email,
-        subject: `${context.user.email} has shared a strategy result with you.`,
+        subject: `${context.user.email} has Shared a Strategy Result!.`,
         text: `Someone shared a trading strategy with you!
 
 Click the link below to view it:
-https://ubacktest.com/results
+https://uBacktest.com/results
 
 Happy trading!`,
         html: `
     <div style="font-family: Arial, sans-serif; max-width: 600px; margin: auto; padding: 20px;">
-      <img src="https://yourdomain.com/logo.png" alt="Your Logo" style="width: 120px; margin-bottom: 20px;" />
+      <img src="http://localhost:3000/uBacktestLogo.png" alt="uBacktest Logo" style="width: 120px; margin-bottom: 20px;" />
       <h2 style="color: #333;">You've received a trading strategy</h2>
       <p style="font-size: 16px; color: #555;">
         Someone thought you'd appreciate this strategy result. You can either accept or deny this share request. Click the link below to check it out:

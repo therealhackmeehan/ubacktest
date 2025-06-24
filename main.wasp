@@ -2,9 +2,7 @@ app uBacktest {
   wasp: {
     version: "^0.16.0"
   },
-
   title: "uBacktest",
-
   head: [
         "<meta property='og:type' content='website' />",
         "<meta property='og:title' content='uBacktest' />",
@@ -23,7 +21,7 @@ app uBacktest {
     methods: {
       email: {
         fromField: {
-          name: "Lucy @ uBacktest",
+          name: "John @ uBacktest",
           email: "support@ubacktest.com"
         },
         emailVerification: {
@@ -71,12 +69,12 @@ app uBacktest {
     // NOTE: "Dummy" provider is just for local development purposes.
     //   Make sure to check the server logs for the email confirmation url (it will not be sent to an address)!
     //   Once you are ready for production, switch to e.g. "SendGrid" or "Mailgun" providers. Check out https://docs.opensaas.sh/guides/email-sending/ .
-    provider: Dummy,
-    // provider: SendGrid,
+    // provider: Dummy,
+    provider: SendGrid,
     defaultFrom: {
-      name: "Matt @ uBacktest",
+      name: "uBacktest Support",
       // When using a real provider, e.g. SendGrid, you must use the same email address that you configured your account to send out emails with!
-      email: "support@ubacktest.com"
+      email: "john@ubacktest.com"
     },
   },
 }
@@ -378,30 +376,6 @@ route AdminUIButtonsRoute { path: "/admin/ui/buttons", to: AdminUIButtonsPage }
 page AdminUIButtonsPage {
   authRequired: true,
   component: import AdminUI from "@src/admin/elements/ui-elements/ButtonsPage"
-}
-//endregion
-
-//region Contact Form Messages
-// TODO: 
-// add functionality to allow users to send messages to admin
-// and make them accessible via the admin dashboard
-route AdminMessagesRoute { path: "/admin/messages", to: AdminMessagesPage }
-page AdminMessagesPage {
-  authRequired: true,
-  component: import AdminMessages from "@src/messages/MessagesPage"
-}
-//endregion
-
-//region Newsletter
-job sendNewsletter {
-  executor: PgBoss,
-  perform: {
-    fn: import { checkAndQueueNewsletterEmails } from "@src/newsletter/sendNewsletter"
-  },
-  schedule: {
-    cron: "0 7 * * 1" // at 7:00 am every Monday
-  },
-  entities: [User]
 }
 //endregion
 

@@ -8,7 +8,7 @@ import APIDataConnector from "./APIDataConnector";
 import { HttpError } from "wasp/server";
 
 /*
-    Main backend endpoint for processing of the stock trading strategy.
+    THE backend endpoint for processing of the stock trading strategy.
     Will search for data and apply the given python strategy.
 
     Returns some debug output, any warnings to display, and the JSON data
@@ -103,7 +103,7 @@ class StrategyPipeline {
 
         // If there's an error, and no signals found, return early
         if (this.strategyResult.signal.length === 0) {
-            // Including this probably-impossible edge case for robustness
+            // Including this ~probably-impossible~ edge case for robustness
             if (!this.stderr) throw new HttpError(503, 'Something went wrong. No trading signals or stderr generated. Please try again.');
             return this.sendJSONtoFrontend();
         }
