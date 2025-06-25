@@ -9,7 +9,7 @@ export default function Privacy() {
             </h4>
             <div className="border-b-2 w-full border-slate-400"></div>
             <div className="mt-12 max-w-5xl dark:text-white">
-                <p className="mb-2 italic text-sm">Last updated: May 15, 2025</p>
+                <p className="mb-2 italic text-sm">Last updated: June 25, 2025</p>
 
                 <h5 className="font-semibold text-lg mb-4 mt-8">1. Introduction</h5>
                 <p>

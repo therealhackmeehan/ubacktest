@@ -14,7 +14,7 @@ export default function TOS() {
                 <p>
                     Meehan Software Group, LLC<br />
                     84 W Broadway, Ste 200, Derry NH, 03038, USA<br />
-                    [Company Email]
+                    info@meehansoftware.com
                 </p>
 
                 <h5 className="font-semibold text-lg mb-4 mt-8">2. Description of Service</h5>
@@ -87,7 +87,7 @@ export default function TOS() {
                 <h5 className="font-semibold text-lg mb-4 mt-8">11. Contact Us</h5>
                 <p>
                     If you have any questions, please contact us at:<br />
-                    [Company Email]
+                    info@meehansoftware.com
                 </p>
             </div>
         </ContentWrapper>
