@@ -53,14 +53,6 @@ app uBacktest {
     onAuthSucceededRedirectTo: "/editor",
   },
 
-  db: {
-    // Run `wasp db seed` to seed the database with the seed functions below:
-    seeds: [
-      // Populates the database with a bunch of fake users to work with during development.
-      import { seedMockUsers } from "@src/server/scripts/dbSeeds",
-    ]
-  },
-
   client: {
     rootComponent: import App from "@src/client/App",
   },
@@ -101,11 +93,11 @@ page StrategyPage {
 }
 route TOSRoute { path: "/tos", to: TOSPage }
 page TOSPage {
-  component: import TOS from "@src/legal/termsOfService/TOS"
+  component: import TOS from "@src/legal/TOS"
 }
 route PrivacyRoute { path: "/privacy", to: PrivacyPage }
 page PrivacyPage {
-  component: import TOS from "@src/legal/privacy/Privacy"
+  component: import TOS from "@src/legal/Privacy"
 }
 route AboutRoute { path: "/about", to: AboutPage }
 page AboutPage {

@@ -24,6 +24,8 @@ interface ResultPanelProps {
     abilityToSaveNew: boolean;
 }
 
+export const isFirefox = typeof navigator !== 'undefined' && /firefox/i.test(navigator.userAgent);
+
 function Result({ selectedStrategy, formInputs, strategyResult, stats, abilityToSaveNew }: ResultPanelProps) {
 
     const [userDefinedPlotOpen, setUserDefinedPlotOpen] = useState<boolean>(true);
@@ -250,7 +252,7 @@ function Result({ selectedStrategy, formInputs, strategyResult, stats, abilityTo
             </div>
 
             {/* invisible rendition for accurate PDF rendering! */}
-            <div ref={pdfRef} style={{ position: 'absolute', zIndex: -1, left: '-10000px', top: 'auto', width: '100%' }}>
+            {!isFirefox && <div ref={pdfRef} style={{ position: 'absolute', zIndex: -1, left: '-10000px', top: 'auto', width: '100%' }}>
                 <div className="tracking-tight text-2xl font-bold text-black text-end p-6">
                     Strategy Report, Traded on {formInputs.symbol.toUpperCase()}
                 </div>
@@ -283,7 +285,7 @@ function Result({ selectedStrategy, formInputs, strategyResult, stats, abilityTo
                         </div>
                     </div>
                 }
-            </div>
+            </div>}
             {/* End Invisible PDF Rendition */}
         </>
     )

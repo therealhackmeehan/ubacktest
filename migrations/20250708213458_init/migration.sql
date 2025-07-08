@@ -7,7 +7,6 @@ CREATE TABLE "User" (
     "lastActiveTimestamp" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "isAdmin" BOOLEAN NOT NULL DEFAULT false,
     "paymentProcessorUserId" TEXT,
-    "lemonSqueezyCustomerPortalUrl" TEXT,
     "checkoutSessionId" TEXT,
     "subscriptionStatus" TEXT,
     "subscriptionPlan" TEXT,
@@ -37,12 +36,39 @@ CREATE TABLE "Result" (
     "userId" TEXT NOT NULL,
     "name" TEXT NOT NULL,
     "code" TEXT NOT NULL,
-    "profitLoss" DOUBLE PRECISION NOT NULL,
-    "profitLossAnnualized" DOUBLE PRECISION NOT NULL,
-    "timepoints" INTEGER NOT NULL,
     "public" BOOLEAN NOT NULL DEFAULT true,
     "fromStrategyID" TEXT,
-    "data" JSONB NOT NULL,
+    "length" INTEGER NOT NULL,
+    "pl" DOUBLE PRECISION,
+    "plWCosts" DOUBLE PRECISION,
+    "cagr" DOUBLE PRECISION,
+    "numTrades" INTEGER NOT NULL,
+    "numProfTrades" INTEGER NOT NULL,
+    "percTradesProf" DOUBLE PRECISION,
+    "sharpeRatio" DOUBLE PRECISION,
+    "sortinoRatio" DOUBLE PRECISION,
+    "maxDrawdown" DOUBLE PRECISION,
+    "maxGain" DOUBLE PRECISION,
+    "meanReturn" DOUBLE PRECISION,
+    "stddevReturn" DOUBLE PRECISION,
+    "maxReturn" DOUBLE PRECISION,
+    "minReturn" DOUBLE PRECISION,
+    "timestamp" DOUBLE PRECISION[],
+    "open" DOUBLE PRECISION[],
+    "close" DOUBLE PRECISION[],
+    "high" DOUBLE PRECISION[],
+    "low" DOUBLE PRECISION[],
+    "volume" DOUBLE PRECISION[],
+    "signal" DOUBLE PRECISION[],
+    "returns" DOUBLE PRECISION[],
+    "sp" DOUBLE PRECISION[],
+    "portfolio" DOUBLE PRECISION[],
+    "portfolioWithCosts" DOUBLE PRECISION[],
+    "cash" DOUBLE PRECISION[],
+    "equity" DOUBLE PRECISION[],
+    "cashWithCosts" DOUBLE PRECISION[],
+    "equityWithCosts" DOUBLE PRECISION[],
+    "userDefinedData" JSONB,
     "formInputs" JSONB NOT NULL,
 
     CONSTRAINT "Result_pkey" PRIMARY KEY ("id")
@@ -94,18 +120,6 @@ CREATE TABLE "Logs" (
     "level" TEXT NOT NULL,
 
     CONSTRAINT "Logs_pkey" PRIMARY KEY ("id")
-);
-
--- CreateTable
-CREATE TABLE "ContactFormMessage" (
-    "id" TEXT NOT NULL,
-    "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    "userId" TEXT NOT NULL,
-    "content" TEXT NOT NULL,
-    "isRead" BOOLEAN NOT NULL DEFAULT false,
-    "repliedAt" TIMESTAMP(3),
-
-    CONSTRAINT "ContactFormMessage_pkey" PRIMARY KEY ("id")
 );
 
 -- CreateTable
@@ -185,9 +199,6 @@ ALTER TABLE "Share" ADD CONSTRAINT "Share_resultID_fkey" FOREIGN KEY ("resultID"
 
 -- AddForeignKey
 ALTER TABLE "PageViewSource" ADD CONSTRAINT "PageViewSource_dailyStatsId_fkey" FOREIGN KEY ("dailyStatsId") REFERENCES "DailyStats"("id") ON DELETE SET NULL ON UPDATE CASCADE;
-
--- AddForeignKey
-ALTER TABLE "ContactFormMessage" ADD CONSTRAINT "ContactFormMessage_userId_fkey" FOREIGN KEY ("userId") REFERENCES "User"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
 ALTER TABLE "Auth" ADD CONSTRAINT "Auth_userId_fkey" FOREIGN KEY ("userId") REFERENCES "User"("id") ON DELETE CASCADE ON UPDATE CASCADE;

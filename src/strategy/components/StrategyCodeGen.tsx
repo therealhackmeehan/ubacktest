@@ -63,11 +63,11 @@ function StrategyCodeGen({ code }: { code: string | null }) {
         <div className="mt-10 p-4 rounded-lg bg-white border-2 border-sky-700 dark:border-0 dark:bg-boxdark">
             <div className="mt-2 mb-3 flex justify-between">
                 <div className="text-xl text-slate-800 tracking-tight font-extrabold dark:text-white">
-                    <span className="text-sky-600 dark:text-blue-300">Deploy this Strategy</span> with Real or Paper Money
+                    <span className="text-sky-600 dark:text-blue-300">Deploy this Strategy</span> to Alpaca with Paper Money
                     <span className="text-xs m-2 md:align-top p-1 rounded-md bg-sky-700 text-white dark:bg-blue-300 dark:text-black">BETA</span>
                 </div>
-                <a href="https://ubacktest.com" className="p-1 text-sm rounded-lg hover:cursor-pointer border-2 bg-slate-100 dark:bg-black border-black dark:border-white dark:text-white hover:scale-95 italic">
-                    How do I use this?
+                <a href="https://docs.ubacktest.com/deployment/howitworks/" className="py-1 px-2 text-sm font-light rounded-lg hover:cursor-pointer border-2 bg-slate-100 dark:bg-black border-black dark:border-white dark:text-white hover:scale-95">
+                    <span className="font-bold">How</span> do I use this?
                 </a>
             </div>
 
@@ -145,9 +145,9 @@ function StrategyCodeGen({ code }: { code: string | null }) {
                     > copy
                     </button>
                 </div>
-                {generatedCode && <div className="text-red-800 dark:text-white shadow-lg tracking-tight font-bold text-xs p-2 text-center z-9999">
+                {generatedCode && <a href="ubacktest.com" className="text-red-800 dark:text-white shadow-lg tracking-tight font-bold text-xs p-2 text-center z-9999">
                     If you've generated code, READ THE DOCS for how to best utilize it. Don't be reckless!
-                </div>}
+                </a>}
                 <Editor
                     className="invert dark:invert-0 hue-rotate-180"
                     options={editableMiniEditorOpts}

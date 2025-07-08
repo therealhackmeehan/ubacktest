@@ -1,7 +1,7 @@
 import CandlePlot from "../playground/client/components/result/CandlePlot";
 import { Result } from "wasp/entities";
 import { FormInputProps, StrategyResultProps, UserDefinedData } from "../shared/sharedTypes";
-import { MdExitToApp } from "react-icons/md";
+import { ImCancelCircle } from "react-icons/im";
 
 interface LeaderboardPlotProps {
     result: Result,
@@ -57,7 +57,7 @@ function LeaderboardPlot({ result, setLeaderboardPlotOpen, index }: LeaderboardP
                                 CAGR: <span className='bg-sky-700 text-white rounded-lg p-1 m-1'>{result.cagr?.toFixed(2)}%</span>
                             </div>
                             <button className="text-red-500 hover:-rotate-90 duration-700" onClick={() => setLeaderboardPlotOpen(false)}>
-                                <MdExitToApp size="1.5rem" />
+                                <ImCancelCircle size="1.5rem" />
                             </button>
                         </div>
                     </div>

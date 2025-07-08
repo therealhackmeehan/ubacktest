@@ -6,7 +6,6 @@ export default function About() {
         <div className='mt-16 max-w-7xl mx-auto my-auto'>
             <div className="mx-3 md:mx-8 pb-24">
                 <img src={logo} alt="uBacktest logo" className="h-32 mb-20 justify-self-center" />
-
                 <div className="md:grid grid-cols-4 dark:text-white">
                     <div className="m-4 p-1 md:p-4 col-span-2 bg-slate-100 dark:bg-boxdark-2 rounded-xl shadow-lg">
                         <h4 className='my-2 font-bold tracking-tight text-gray-900 sm:text-3xl text-2xl dark:text-white text-center'>

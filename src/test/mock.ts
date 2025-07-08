@@ -3,7 +3,6 @@ import {
     type User,
     type Result,
     type Share,
-    type ContactFormMessage
 } from "wasp/entities";
 
 import { initFormInputs } from "../playground/client/components/initFormInputs";

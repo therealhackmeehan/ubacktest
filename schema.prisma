@@ -24,7 +24,6 @@ model User {
   datePaid                  DateTime?
   credits                   Int             @default(3)
 
-  contactFormMessages       ContactFormMessage[]
   strategies                Strategy[]
   results                   Result[]
 
@@ -155,16 +154,4 @@ model Logs {
 
   message                  String
   level                    String
-}
-
-model ContactFormMessage {
-  id                        String          @id @default(uuid())
-  createdAt                 DateTime        @default(now())
-
-  user                      User            @relation(fields: [userId], references: [id])
-  userId                    String
-
-  content                   String
-  isRead                    Boolean         @default(false)
-  repliedAt                 DateTime?
 }

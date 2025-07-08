@@ -1,4 +1,4 @@
-import ContentWrapper from "../../client/components/ContentWrapper"
+import ContentWrapper from "../client/components/ContentWrapper"
 
 export default function Privacy() {
 
