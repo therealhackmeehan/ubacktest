@@ -1,11 +1,12 @@
 import { HttpError } from "wasp/server";
-import { type Share } from "wasp/entities";
+import { type Share, type User, type Result } from "wasp/entities";
 import { ShareResultProps, GetSharedProps } from "../../shared/sharedTypes";
 import {
     type ShareResult,
     type GetShared,
     type AcceptShare,
-    type DeleteShare
+    type DeleteShare,
+    type GetSharedWith,
 } from "wasp/server/operations";
 import { emailSender } from "wasp/server/email";
 
@@ -55,7 +56,7 @@ https://uBacktest.com/results
 Happy trading!`,
         html: `
     <div style="font-family: Arial, sans-serif; max-width: 600px; margin: auto; padding: 20px;">
-      <img src="http://localhost:3000/uBacktestLogo.png" alt="uBacktest Logo" style="width: 120px; margin-bottom: 20px;" />
+      <img src="../../client/static/logo.png" alt="uBacktest Logo" style="width: 120px; margin-bottom: 20px;" />
       <h2 style="color: #333;">You've received a trading strategy</h2>
       <p style="font-size: 16px; color: #555;">
         Someone thought you'd appreciate this strategy result. You can either accept or deny this share request. Click the link below to check it out:
@@ -86,6 +87,22 @@ Happy trading!`,
     });
 }
 
+export const getSharedWith: GetSharedWith<Pick<Result, "id">, Share[]> = async ({ id }, context) => {
+    if (!context.user) {
+        throw new HttpError(401);
+    }
+
+    return await context.entities.Share.findMany({
+        where: {
+            userID: context.user.id,
+            resultID: id,
+        },
+        include: {
+            receiver: true,
+        }
+    });
+}
+
 export const getShared: GetShared<void, GetSharedProps[] | null> = async (_args, context) => {
     if (!context.user) {
         throw new HttpError(401);
@@ -98,7 +115,7 @@ export const getShared: GetShared<void, GetSharedProps[] | null> = async (_args,
         include: {
             result: {
                 include: {
-                    user: true, // Assuming 'user' is the relation from Result to User
+                    user: true,
                 },
             },
         },

@@ -1,8 +1,7 @@
 import { useState } from "react";
 import ContentWrapper from "../client/components/ContentWrapper";
 import LoadingScreen from "../client/components/LoadingScreen";
-import { useQuery } from "wasp/client/operations";
-import { getTopResults } from "wasp/client/operations";
+import { useQuery, getTopResults } from "wasp/client/operations";
 import LeaderboardItem from "./LeaderboardItem";
 import { ResultWithUsername } from "../shared/sharedTypes";
 import logo from '../client/static/logo.png'

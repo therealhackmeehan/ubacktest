@@ -181,6 +181,10 @@ query getShared {
   fn: import { getShared } from "@src/result/server/shareOperations",
   entities: [Share, Result, User]
 }
+query getSharedWith {
+  fn: import { getSharedWith } from "@src/result/server/shareOperations",
+  entities: [Share, User]
+}
 action acceptShare {
   fn: import { acceptShare } from "@src/result/server/shareOperations",
   entities: [Share]

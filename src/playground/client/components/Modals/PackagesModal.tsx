@@ -28,7 +28,8 @@ export default function PackagesModal({ closeModal }: { closeModal: () => void }
                                 <div
                                     className="p-1 my-1 text-sm rounded-lg dark:bg-slate-600 duration-500"
                                 >
-                                    {packageName} <span className="text-xs font-bold">{version && version}</span>
+                                    {packageName} 
+                                    {/* <span className="text-xs font-bold">{version && version}</span> */}
                                 </div>
                             </div>
                         ))}

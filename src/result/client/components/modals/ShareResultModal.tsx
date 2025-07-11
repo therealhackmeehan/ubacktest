@@ -3,6 +3,7 @@ import { shareResult } from 'wasp/client/operations';
 import { TiDelete } from "react-icons/ti";
 import useEnterKey from '../../../../client/hooks/useEnterKey';
 import ModalLayout from '../../../../client/components/ModalLayout';
+import { useQuery, getSharedWith } from 'wasp/client/operations';
 
 interface ShareResultModalProps {
     closeModal: () => void;
@@ -16,7 +17,11 @@ export default function ShareResultModal({ closeModal, id }: ShareResultModalPro
     const [email, setEmail] = useState('');
     const [currentlyInTimeout, setCurrentlyInTimeout] = useState<boolean>(false);
     const [progress, setProgress] = useState<number>(0); // New state for tracking progress
-    
+
+    const { data: sharedWith, isLoading: isSharedWithLoading, error: sharedWithError } = useQuery(getSharedWith, {
+        id: id,
+    });
+
     const handleResultDelete = async () => {
         if (currentlyInTimeout) return;
 
@@ -71,6 +76,20 @@ export default function ShareResultModal({ closeModal, id }: ShareResultModalPro
                 className="border p-2 rounded w-full mt-4"
                 autoFocus
             />
+            {isSharedWithLoading ? (
+                <div>Loading...</div>
+            ) : sharedWithError ? (
+                <div>Error</div>
+            ) : sharedWith.length > 0 ? (
+                <div className="m-2 p-2 dark:text-white text-sm">
+                    <div className="font-semibold my-2">Currently Shared With:</div>
+                    <ul className="p-2">
+                        {sharedWith.map((sharedWithEntry, index) => (
+                            <li className="text-center text-sky-700 dark:text-blue-300" key={index}>{sharedWithEntry.receiver.email}</li>
+                        ))}
+                    </ul>
+                </div>
+            ) : null}
             <div className="flex justify-between mt-4">
                 <button
                     className="bg-gray-500 text-white p-2 rounded hover:bg-gray-700"
