@@ -1,6 +1,7 @@
 import {
     type Result,
-    type User
+    type User,
+    type Share
 } from "wasp/entities";
 
 export interface UserDefinedData {
@@ -96,6 +97,10 @@ export type ResultWithStrategyName = Result & {
 export type ResultWithUsername = Result & {
     email: string;
 };
+
+export type GetSharedWithWithReceiver = Share & {
+    receiver: User;
+}
 
 export type GetTopResultsProp = {
     topByProfitLoss: ResultWithUsername[] | null;

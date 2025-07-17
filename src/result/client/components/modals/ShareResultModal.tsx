@@ -4,6 +4,7 @@ import { TiDelete } from "react-icons/ti";
 import useEnterKey from '../../../../client/hooks/useEnterKey';
 import ModalLayout from '../../../../client/components/ModalLayout';
 import { useQuery, getSharedWith } from 'wasp/client/operations';
+import { GetSharedWithWithReceiver } from '../../../../shared/sharedTypes';
 
 interface ShareResultModalProps {
     closeModal: () => void;
@@ -57,7 +58,6 @@ export default function ShareResultModal({ closeModal, id }: ShareResultModalPro
         }
     };
 
-
     useEnterKey(handleResultDelete);
 
     return (
@@ -85,7 +85,7 @@ export default function ShareResultModal({ closeModal, id }: ShareResultModalPro
                     <div className="font-semibold my-2">Currently Shared With:</div>
                     <ul className="p-2">
                         {sharedWith.map((sharedWithEntry, index) => (
-                            <li className="text-center text-sky-700 dark:text-blue-300" key={index}>{sharedWithEntry.receiver.email}</li>
+                            <li className="text-center text-sky-700 dark:text-blue-300" key={index}>{(sharedWithEntry as GetSharedWithWithReceiver).receiver.email ?? "unknown"}</li>
                         ))}
                     </ul>
                 </div>
