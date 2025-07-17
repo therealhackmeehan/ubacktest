@@ -145,6 +145,7 @@ export default function Workflow() {
                         </div>
                     </div>
                     <div className={`col-span-1 rounded-lg p-4 dark:text-white duration-700 transform ${inView4 ? 'translate-x-0' : 'translate-x-10'}`}>
+                        <span className="rounded-lg p-1 bg-black text-white dark:text-black dark:bg-white font-light">BETA</span><br></br>
                         Found a winning strategy? <span className="font-extrabold text-title-xl text-sky-700 dark:text-blue-300 tracking-tight">Deploy</span> it to the cloud with auto-generated code for further testing.
                     </div>
 
