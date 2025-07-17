@@ -14,7 +14,7 @@ export default function FAQ({ faqs }: { faqs: FAQ[] }) {
       <dl className='mt-10 space-y-8 divide-y divide-gray-900/10'>
         {faqs.map((faq) => (
           <div key={faq.id} className='pt-8 lg:grid lg:grid-cols-12 lg:gap-8'>
-            <dt className='text-base font-semibold leading-7 text-gray-900 lg:col-span-5 dark:text-white'>
+            <dt className='text-base font-semibold leading-7 lg:col-span-5 dark:text-blue-300 text-sky-700'>
               {faq.question}
             </dt>
             <dd className='flex items-center justify-start gap-2 mt-4 lg:col-span-7 lg:mt-0'>
