@@ -78,7 +78,7 @@ model Result {
   maxReturn                 Float?
   minReturn                 Float?
 
-  timestamp                 Float[]
+  timestamp                 String[]
   open                      Float[]
   close                     Float[]
   high                      Float[]
@@ -119,7 +119,6 @@ model Share {
 
   @@unique([resultID, receiverID])
 }
-
 
 model DailyStats {
   id                               Int             @id @default(autoincrement())

@@ -1,4 +1,4 @@
-import { FormInputProps } from "../../../../shared/sharedTypes";
+import { FormInputProps, eodFreqs } from "../../../../shared/sharedTypes";
 
 function FormInputHeader({ formInputs }: { formInputs: FormInputProps }) {
 
@@ -22,6 +22,11 @@ function FormInputHeader({ formInputs }: { formInputs: FormInputProps }) {
                     trading cost @ <span className="font-bold tracking-tight text-sky-700 px-2">{formInputs.costPerTrade}%</span>
                 </div>
             </div>
+            {eodFreqs.includes(formInputs.intval) && <div className="p-2 text-sky-800">
+                <div className="font-extralight flex justify-between items-center">
+                    Using a adjusted close prices? <span className="font-bold tracking-tight text-sky-700 px-2">{formInputs.useAdjClose ? "Y" : "N"}</span>
+                </div>
+            </div>}
             <div className="p-2 text-sky-800">
                 <div className="font-extralight flex justify-between items-center">
                     Using a burn-in period? <span className="font-bold tracking-tight text-sky-700 px-2">{formInputs.useWarmupDate ? "Y" : "N"}</span>

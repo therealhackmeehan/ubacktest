@@ -3,7 +3,7 @@ import { StrategyResultProps, StatProps } from "../../shared/sharedTypes";
 class PortfolioCalculator {
 
     private costPerTrade: number;
-    private decimalPlaces: number = 4;
+    private readonly decimalPlaces: number = 4;
     private strategyResult: StrategyResultProps;
 
     constructor(costPerTrade: number, strategyResult: StrategyResultProps) {
@@ -83,8 +83,8 @@ class PortfolioCalculator {
         const plWCosts = 100 * (this.strategyResult.portfolioWithCosts[length] - this.strategyResult.portfolioWithCosts[0]) / this.strategyResult.portfolio[0];
 
         // Convert Unix timestamps to JavaScript Date objects
-        const firstDate = new Date(this.strategyResult.timestamp[0] * 1000).getTime();
-        const lastDate = new Date(this.strategyResult.timestamp[length] * 1000).getTime();
+        const firstDate = new Date(this.strategyResult.timestamp[0]).getTime();
+        const lastDate = new Date(this.strategyResult.timestamp[length]).getTime();
 
         const numberOfDays = (lastDate - firstDate) / (1000 * 60 * 60 * 24);
         const cagr = ((this.strategyResult.portfolio[length] / this.strategyResult.portfolio[0]) ** (365 / numberOfDays) - 1) * 100;
@@ -143,7 +143,7 @@ class PortfolioCalculator {
         const meanReturn = sum / returns.length;
 
         // Second pass: calculate variance and ratios
-        const variance = returns.reduce((sum: number, ret: number) => sum + Math.pow(ret - meanReturn, 2), 0) / (returns.length - 1);
+        const variance = returns.reduce((sum: number, ret: number) => sum + Math.pow(ret - meanReturn, 2), 0) / returns.length;
         const stdDev = Math.sqrt(variance);
         const negativeReturns = returns.filter((ret: number) => ret < 0);
         const downsideVariance = negativeReturns.reduce((sum: number, ret: number) => sum + Math.pow(ret, 2), 0) / (negativeReturns.length || 1);
@@ -153,7 +153,7 @@ class PortfolioCalculator {
         const sortinoRatio = numberOfTrades !== 0 ? (meanReturn - riskFreeRate) / downsideDev : null;
 
         return {
-            length: length,
+            length: this.strategyResult.portfolio.length,
             pl: pl,
             plWCosts: plWCosts,
             cagr: cagr,

@@ -65,7 +65,9 @@ export const mockResult: Result = {
     maxReturn: 0.05,
     minReturn: -0.03,
 
-    timestamp: Array.from({ length: 100 }, (_, i) => i),
+    timestamp: Array.from({ length: 100 }, (_, i) =>
+        new Date(2020, 0, 1 + i).toISOString().split("T")[0]
+    ),
     open: Array.from({ length: 100 }, () => Math.random() * 100),
     close: Array.from({ length: 100 }, () => Math.random() * 100),
     high: Array.from({ length: 100 }, () => Math.random() * 100),
@@ -85,8 +87,8 @@ export const mockResult: Result = {
     formInputs: initFormInputs as any,
 };
 
-const sender = {...mockUser, email: 'sender@gmail.com'};
-const receiver = {...mockUser, email: 'receiver@gmail.com'};
+const sender = { ...mockUser, email: 'sender@gmail.com' };
+const receiver = { ...mockUser, email: 'receiver@gmail.com' };
 export const mockShare: Share = {
     id: 'share123',
     sharedAt: new Date(),

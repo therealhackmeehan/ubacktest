@@ -5,8 +5,8 @@ class CodeExecutor {
 
     private code: string;
     private timeout: number;
-    private memoryLimit: number = 1024000;
-    private maxThreads: number = 256;
+    private readonly memoryLimit: number = 1024000;
+    private readonly maxThreads: number = 256;
 
     constructor(code: string, timeout: number) {
         this.code = code;

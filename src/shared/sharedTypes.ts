@@ -9,7 +9,7 @@ export interface UserDefinedData {
 }
 
 export interface StrategyResultProps {
-    timestamp: number[];
+    timestamp: string[];
     open: number[];
     close: number[];
     high: number[];
@@ -37,11 +37,12 @@ export interface FormInputProps {
     symbol: string;
     startDate: string;
     endDate: string;
-    intval: string;
+    intval: typeof intVals[number];
     timeout: number;
     costPerTrade: number;
     useWarmupDate: boolean;
     warmupDate: string;
+    useAdjClose: boolean;
 }
 
 export interface PythonDataProps {
@@ -111,3 +112,6 @@ export interface stdProps {
     out: string;
     err: string;
 }
+
+export const intVals: string[] = ["1min", "5min", "15min", "30min", "1hour", "90min", "3hour", "daily", "weekly", "monthly"] as const;
+export const eodFreqs: string[]  = ["daily", "weekly", "monthly"];

@@ -35,7 +35,6 @@ function ResultPage() {
                         <MyResults />
                     </GroupedResultContext.Provider>
             }
-
         </ContentWrapper>
     )
 }

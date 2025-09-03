@@ -29,11 +29,10 @@ function GroupedResultsSummary({ resultsByStrategy, setResultToHighlight }: Grou
 
     // memoized KDE and SVG actions
     const parsedResults = useMemo(() => {
-        const parse = (str: string) => parseISO(str);
         return resultsByStrategy.map(result => ({
             ...result,
-            start: parse((result.formInputs as unknown as FormInputProps).startDate),
-            end: parse((result.formInputs as unknown as FormInputProps).endDate),
+            start: new Date((result.formInputs as unknown as FormInputProps).startDate),
+            end: new Date((result.formInputs as unknown as FormInputProps).endDate),
         }));
     }, [resultsByStrategy]);
 

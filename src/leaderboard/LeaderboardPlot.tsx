@@ -1,6 +1,6 @@
 import CandlePlot from "../playground/client/components/result/CandlePlot";
 import { Result } from "wasp/entities";
-import { FormInputProps, StrategyResultProps, UserDefinedData } from "../shared/sharedTypes";
+import { eodFreqs, FormInputProps, StrategyResultProps, UserDefinedData } from "../shared/sharedTypes";
 import { ImCancelCircle } from "react-icons/im";
 
 interface LeaderboardPlotProps {
@@ -63,11 +63,10 @@ function LeaderboardPlot({ result, setLeaderboardPlotOpen, index }: LeaderboardP
                     </div>
                     <CandlePlot strategyResult={joinedInfo}
                         costPerTrade={formInputsLocal.costPerTrade}
-                        minDate={formInputsLocal.useWarmupDate ? formInputsLocal.warmupDate : formInputsLocal.startDate}
-                        symbol={formInputsLocal.symbol} />
+                        symbol={formInputsLocal.symbol}
+                        isEod={eodFreqs.includes(formInputsLocal.intval)}/>
                 </div>
             </div>
-
         </div>
     )
 }

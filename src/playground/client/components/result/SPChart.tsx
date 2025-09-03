@@ -27,7 +27,12 @@ ChartJS.register(
     TimeSeriesScale,
 );
 
-function SPChart({ strategyResult }: { strategyResult: StrategyResultProps }) {
+interface SPChartProps {
+    strategyResult: StrategyResultProps;
+    isEod: Boolean;
+}
+
+function SPChart({ strategyResult, isEod }: SPChartProps) {
 
     const [chartData, setChartData] = useState<any | null>(null);
 
@@ -36,9 +41,9 @@ function SPChart({ strategyResult }: { strategyResult: StrategyResultProps }) {
             datasets: [
                 {
                     label: 'My Strategy',
-                    data: strategyResult.timestamp.map((timestamp: number, index: number) => ({
-                        x: new Date(timestamp * 1000), // Use Date object for x
-                        y: strategyResult.portfolio[index], // Corresponding y value
+                    data: strategyResult.timestamp.map((timestamp: string, index: number) => ({
+                        x: new Date(timestamp),
+                        y: strategyResult.portfolio[index],
                     })),
                     borderColor: 'rgba(255, 0, 100, 1)',
                     backgroundColor: 'rgba(255, 0, 100, 1)',
@@ -47,9 +52,9 @@ function SPChart({ strategyResult }: { strategyResult: StrategyResultProps }) {
                 },
                 {
                     label: 'S&P 500 Index',
-                    data: strategyResult.timestamp.map((timestamp: number, index: number) => ({
-                        x: new Date(timestamp * 1000), // Use Date object for x
-                        y: strategyResult.sp[index], // Corresponding y value
+                    data: strategyResult.timestamp.map((timestamp: string, index: number) => ({
+                        x: new Date(timestamp),
+                        y: strategyResult.sp[index],
                     })),
                     borderColor: 'rgba(123, 50, 168, 1)',
                     pointRadius: 0,
@@ -74,6 +79,18 @@ function SPChart({ strategyResult }: { strategyResult: StrategyResultProps }) {
         plugins: {
             legend: {
                 position: 'right' as const,
+            },
+            tooltip: {
+                callbacks: {
+                    title: function (contexts) {
+                        if (isEod) {
+                            const value = contexts[0].parsed.x;
+                            const date = new Date(value);
+                            return date.toISOString().slice(0, 10);
+                        }
+                        return undefined;
+                    },
+                },
             },
         },
         scales: {

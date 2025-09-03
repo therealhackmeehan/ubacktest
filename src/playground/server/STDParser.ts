@@ -3,9 +3,9 @@ import { UserDefinedData } from "../../shared/sharedTypes";
 
 class STDParser {
 
-    private stdout;
-    private stderr;
-    private key;
+    private stdout: string;
+    private stderr: string;
+    private key: string;
 
     constructor(stdout: string, stderr: string, key: string) {
         this.stdout = stdout;
@@ -48,7 +48,6 @@ class STDParser {
             signal: signal,
             userDefinedData: userDefinedData,
         }
-
     }
 
     private static parsePythonOutput(stdout: string, uniqueKey: string) {

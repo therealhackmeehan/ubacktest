@@ -27,9 +27,7 @@ type ResultCreationInfo = {
 };
 
 export const createResult: CreateResult<ResultCreationInfo, Result> = async ({ name, code, data, formInputs, strategyId, stats }, context) => {
-    if (!context.user) {
-        throw new HttpError(401);
-    }
+    if (!context.user) throw new HttpError(401);
 
     const existingResult = await context.entities.Result.findFirst({
         where: {
@@ -97,11 +95,8 @@ export const createResult: CreateResult<ResultCreationInfo, Result> = async ({ n
     });
 };
 
-
 export const getResults: GetResults<void, ResultWithStrategyName[] | null> = async (_args, context) => {
-    if (!context.user) {
-        throw new HttpError(401);
-    }
+    if (!context.user) throw new HttpError(401);
 
     const results = await context.entities.Result.findMany({
         where: {
@@ -122,9 +117,7 @@ export const getResults: GetResults<void, ResultWithStrategyName[] | null> = asy
 };
 
 export const getResultsForStrategy: GetResultsForStrategy<Pick<Result, "fromStrategyID">, Result[] | null> = async ({ fromStrategyID }, context) => {
-    if (!context.user) {
-        throw new HttpError(401)
-    }
+    if (!context.user) throw new HttpError(401)
 
     return await context.entities.Result.findMany({
         where: {
@@ -137,9 +130,7 @@ export const getResultsForStrategy: GetResultsForStrategy<Pick<Result, "fromStra
     });
 }
 
-
 export const getTopResults: GetTopResults<void, GetTopResultsProp> = async (_args, context) => {
-
     const oneWeekAgo = new Date();
     oneWeekAgo.setDate(oneWeekAgo.getDate() - 7);
 
@@ -177,9 +168,7 @@ export const getTopResults: GetTopResults<void, GetTopResultsProp> = async (_arg
 };
 
 export const deleteResult: DeleteResult<Pick<Result, "id">, Result> = async ({ id }, context) => {
-    if (!context.user) {
-        throw new HttpError(401);
-    }
+    if (!context.user) throw new HttpError(401);
 
     return await context.entities.Result.delete({
         where: {
@@ -190,9 +179,7 @@ export const deleteResult: DeleteResult<Pick<Result, "id">, Result> = async ({ i
 };
 
 export const togglePrivacy: TogglePrivacy<Partial<Result>, Result> = async ({ id }, context) => {
-    if (!context.user) {
-        throw new HttpError(401);
-    }
+    if (!context.user) throw new HttpError(401);
 
     // Fetch the current result to get its `public` value
     const result = await context.entities.Result.findUnique({
@@ -217,9 +204,7 @@ export const togglePrivacy: TogglePrivacy<Partial<Result>, Result> = async ({ id
 };
 
 export const renameResult: RenameResult<Partial<Result>, Result> = async ({ id, name }, context) => {
-    if (!context.user) {
-        throw new HttpError(401);
-    }
+    if (!context.user) throw new HttpError(401);
 
     const existingResult = await context.entities.Result.findFirst({
         where: {

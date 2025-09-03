@@ -2,7 +2,12 @@ import { useState } from "react";
 import { MdSort } from "react-icons/md";
 import { StrategyResultProps } from "../../../../shared/sharedTypes";
 
-function DataTable({ strategyResult }: { strategyResult: StrategyResultProps }) {
+interface DataTableProps {
+    strategyResult: StrategyResultProps;
+    isEod: Boolean;
+}
+function DataTable({ strategyResult, isEod }: DataTableProps) {
+
     // State for sorted data and sorting configuration
     const [sortedData, setSortedData] = useState<any>(strategyResult);
     const [sortConfig, setSortConfig] = useState<{ key: string; direction: "asc" | "desc" } | null>(null);
@@ -13,7 +18,7 @@ function DataTable({ strategyResult }: { strategyResult: StrategyResultProps }) 
         setSortConfig({ key, direction });
 
         // Create a sortable array of objects
-        const combinedData: any[] = sortedData.timestamp.map((date: any, index: number) => ({
+        const combinedData: any[] = sortedData.timestamp.map((date: string, index: number) => ({
             date,
             signal: sortedData.signal[index],
             portfolio: sortedData.portfolio[index],
@@ -23,7 +28,9 @@ function DataTable({ strategyResult }: { strategyResult: StrategyResultProps }) 
         // Sort the combined data based on the selected key
         combinedData.sort((a, b) => {
             if (key === "date") {
-                return direction === "asc" ? a.date - b.date : b.date - a.date;
+                const s = new Date(a).getTime();
+                const e = new Date(b).getTime();
+                return direction === "asc" ? s - s : e - s;
             } else if (key === "signal") {
                 return direction === "asc"
                     ? a.signal - b.signal
@@ -70,7 +77,6 @@ function DataTable({ strategyResult }: { strategyResult: StrategyResultProps }) 
         }
     };
 
-
     return (
         <table className="w-full">
             <thead className="tracking-tight text-sm text-gray-700 bg-slate-200">
@@ -82,13 +88,13 @@ function DataTable({ strategyResult }: { strategyResult: StrategyResultProps }) 
                 </tr>
             </thead>
             <tbody className="text-sm text-gray-700 lowercase bg-white overflow-y-auto">
-                {sortedData.timestamp.map((date: any, index: number) => (
+                {sortedData.timestamp.map((date: string, index: number) => (
                     <tr
                         className="text-center border-b-2 border-slate-100 hover:font-bold hover:bg-slate-100 hover:-translate-x-2 duration-200 group"
                         key={index}
                     >
                         <td className="font-extralight">
-                            {new Date(date * 1000).toLocaleString()}
+                            {isEod ? date.slice(0,10) : new Date(date).toLocaleString()}
                         </td>
 
                         <td className="font-bold flex justify-center gap-x-4">

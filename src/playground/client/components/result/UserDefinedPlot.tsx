@@ -29,10 +29,11 @@ ChartJS.register(
 
 interface UserDefinedPlotProps {
     strategyResult: StrategyResultProps;
-    timestamp: number[];
+    timestamp: string[];
+    isEod: Boolean;
 }
 
-export default function UserDefinedPlot({ strategyResult, timestamp }: UserDefinedPlotProps) {
+export default function UserDefinedPlot({ strategyResult, timestamp, isEod }: UserDefinedPlotProps) {
     const [chartData, setChartData] = useState<any | null>(null);
 
     const borderColors: string[] = [
@@ -50,8 +51,8 @@ export default function UserDefinedPlot({ strategyResult, timestamp }: UserDefin
             .map(([key, values], index) => {
                 return {
                     label: key,
-                    data: values.map((value: number, idx: number) => ({
-                        x: new Date(timestamp[idx] * 1000),
+                    data: values.map((value: number, index: number) => ({
+                        x: new Date(timestamp[index]),
                         y: value,
                     })),
                     borderColor: borderColors[index % borderColors.length],
@@ -66,7 +67,7 @@ export default function UserDefinedPlot({ strategyResult, timestamp }: UserDefin
         datasets.push({
             label: "Buy/Sell Signal",
             data: strategyResult.signal.map((value: number, index: number) => ({
-                x: new Date(timestamp[index] * 1000),
+                x: new Date(timestamp[index]),
                 y: value,
             })),
             borderColor: 'rgba(0, 155, 255, .6)',
@@ -80,7 +81,7 @@ export default function UserDefinedPlot({ strategyResult, timestamp }: UserDefin
         datasets.push({
             label: "Close Price",
             data: strategyResult.close.map((value: number, index: number) => ({
-                x: new Date(timestamp[index] * 1000),
+                x: new Date(timestamp[index]),
                 y: value,
             })),
             borderColor: "rgba(123, 50, 168, 1)",
@@ -110,6 +111,18 @@ export default function UserDefinedPlot({ strategyResult, timestamp }: UserDefin
         plugins: {
             legend: {
                 position: 'top' as const,
+            },
+            tooltip: {
+                callbacks: {
+                    title: function (contexts) {
+                        if (isEod) {
+                            const value = contexts[0].parsed.x;
+                            const date = new Date(value);
+                            return date.toISOString().slice(0, 10);
+                        }
+                        return undefined;
+                    },
+                },
             },
         },
         scales: {

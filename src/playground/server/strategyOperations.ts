@@ -11,7 +11,7 @@ import {
   type RunStrategy,
 } from 'wasp/server/operations';
 import StrategyPipeline from './StrategyPipeline';
-import { BacktestResultProps } from '../../shared/sharedTypes';
+import { BacktestResultProps, eodFreqs } from '../../shared/sharedTypes';
 
 type FileCreationInfo = {
   name: string;
@@ -19,9 +19,7 @@ type FileCreationInfo = {
 };
 
 export const createStrategy: CreateStrategy<FileCreationInfo, Strategy> = async ({ name, code }, context) => {
-  if (!context.user) {
-    throw new HttpError(401);
-  }
+  if (!context.user) throw new HttpError(401);
 
   const existingStrategy = await context.entities.Strategy.findFirst({
     where: {
@@ -44,9 +42,7 @@ export const createStrategy: CreateStrategy<FileCreationInfo, Strategy> = async 
 };
 
 export const getStrategies: GetStrategies<void, Strategy[] | null> = async (_args, context) => {
-  if (!context.user) {
-    throw new HttpError(401);
-  }
+  if (!context.user) throw new HttpError(401);
 
   const strategies = await context.entities.Strategy.findMany({
     where: {
@@ -59,9 +55,7 @@ export const getStrategies: GetStrategies<void, Strategy[] | null> = async (_arg
 };
 
 export const getSpecificStrategy: GetSpecificStrategy<Pick<Strategy, 'id'>, Strategy | null> = async ({ id }, context) => {
-  if (!context.user) {
-    throw new HttpError(401);
-  }
+  if (!context.user) throw new HttpError(401);
 
   const strategy = await context.entities.Strategy.findUnique({
     where: {
@@ -74,9 +68,7 @@ export const getSpecificStrategy: GetSpecificStrategy<Pick<Strategy, 'id'>, Stra
 };
 
 export const deleteStrategy: DeleteStrategy<Pick<Strategy, 'id'>, Strategy> = async ({ id }, context) => {
-  if (!context.user) {
-    throw new HttpError(401);
-  }
+  if (!context.user) throw new HttpError(401);
 
   return await context.entities.Strategy.delete({
     where: {
@@ -87,9 +79,7 @@ export const deleteStrategy: DeleteStrategy<Pick<Strategy, 'id'>, Strategy> = as
 };
 
 export const renameStrategy: RenameStrategy<Partial<Strategy>, Strategy> = async ({ id, name }, context) => {
-  if (!context.user) {
-    throw new HttpError(401);
-  }
+  if (!context.user) throw new HttpError(401);
 
   const existingStrategy = await context.entities.Strategy.findFirst({
     where: {
@@ -116,9 +106,7 @@ export const renameStrategy: RenameStrategy<Partial<Strategy>, Strategy> = async
 };
 
 export const updateStrategy: UpdateStrategy<Partial<Strategy>, Strategy> = async ({ id, code }, context) => {
-  if (!context.user) {
-    throw new HttpError(401);
-  }
+  if (!context.user) throw new HttpError(401);
 
   return await context.entities.Strategy.update({
     where: {
@@ -130,16 +118,14 @@ export const updateStrategy: UpdateStrategy<Partial<Strategy>, Strategy> = async
 };
 
 export const runStrategy: RunStrategy<any, any> = async ({ formInputs, code }, context): Promise<BacktestResultProps> => {
-
   if (!context.user) throw new HttpError(401);
   const user = context.user;
 
   if (!user.isAdmin) {
     const isProUser = user.subscriptionPlan === "pro";
-    const highFreqIntervals = ['1m', '2m', '5m', '15m', '30m', '1h', '90m'];
 
     // Check if high-frequency backtesting is being requested by a non-Pro user
-    if (highFreqIntervals.includes(formInputs.intval) && !isProUser) {
+    if (!eodFreqs.includes(formInputs.intval) && !isProUser) {
       throw new HttpError(402, "High frequency backtesting is only available to pro users. Consider upgrading your subscription.");
     }
 
@@ -174,9 +160,7 @@ export const runStrategy: RunStrategy<any, any> = async ({ formInputs, code }, c
 };
 
 export const charge: Charge<void, void> = async (_args, context) => {
-  if (!context.user) {
-    throw new HttpError(401);
-  }
+  if (!context.user) throw new HttpError(401);
 
   if (context.user.isAdmin) {
     console.log('Avoiding charge as admin.');

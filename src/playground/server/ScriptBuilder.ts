@@ -3,8 +3,8 @@ import { PythonDataProps } from "../../shared/sharedTypes";
 class ScriptBuilder {
 
     public static build(code: string, toInsertInPython: PythonDataProps, startDate: string, uniqueKey: string): string {
-        const dateToCompare = new Date(startDate).getTime() / 1000;
 
+        console.log(JSON.stringify(startDate))
         const m =
             `${code}
 
@@ -59,10 +59,9 @@ if df.shape[0] != initHeight:
 
 df['signal'] = df['signal'].ffill().fillna(0)
 
-df = df[df['timestamp'] >= ${dateToCompare}]
+df = df[df['timestamp'] >= ${JSON.stringify(startDate)}]
 
 signalToReturn = df[['signal']].round(3).to_dict('list')
-
 colsToExclude = {"open", "close", "high", "low", "volume", "timestamp", "signal"}
 
 middleOutput = {

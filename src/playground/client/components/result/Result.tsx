@@ -4,7 +4,7 @@ import DataTable from "./DataTable"
 import DistributionOfReturns from "./DistributionOfReturns"
 import { FiArrowUp } from "react-icons/fi"
 import ResultButtonGroup from "./ResultButtonGroup"
-import { FormInputProps, StatProps, StrategyResultProps } from "../../../../shared/sharedTypes"
+import { eodFreqs, FormInputProps, StatProps, StrategyResultProps } from "../../../../shared/sharedTypes"
 import { createResult, getSpecificStrategy } from "wasp/client/operations"
 import SPChart from "./SPChart"
 import UserDefinedPlot from "./UserDefinedPlot"
@@ -28,13 +28,15 @@ export const isFirefox = typeof navigator !== 'undefined' && /firefox/i.test(nav
 
 function Result({ selectedStrategy, formInputs, strategyResult, stats, abilityToSaveNew }: ResultPanelProps) {
 
+    // EOD data is screwy and if using EOD, adjust it all to 4PM!!
+    
     const [userDefinedPlotOpen, setUserDefinedPlotOpen] = useState<boolean>(true);
     const [loading, setLoading] = useState<boolean>(false);
     const [errorMsg, setErrorMsg] = useState<string | null>('');
 
     async function saveResult(name: string) {
         if (!selectedStrategy) return;
-
+        
         const connectedStrat = await getSpecificStrategy({ id: selectedStrategy });
         if (!connectedStrat?.code) {
             throw new Error('No strategy with that result.');
@@ -53,7 +55,6 @@ function Result({ selectedStrategy, formInputs, strategyResult, stats, abilityTo
     const downloadCSV = () => {
         if (!strategyResult) return;
 
-        // Get the headers (labels)
         let headers = Object.keys(strategyResult);
         headers = headers.filter(header =>
             // we unfortunately can't let users download a large chunk of the data for legal reasons
@@ -73,14 +74,13 @@ function Result({ selectedStrategy, formInputs, strategyResult, stats, abilityTo
             headers.map((header) => {
                 const value = strategyResult[header][rowIndex];
                 if (header === 'timestamp') {
-                    return new Date(value * 1000).toLocaleString().replace(',', "");
+                    return new Date(value).toString().replace(',', "");
                 }
                 return value;
             }).join(',')
         );
 
         const csv = [displayHeaders.join(','), ...rows].join('\n');
-
         const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
 
         const link = document.createElement('a');
@@ -145,7 +145,7 @@ function Result({ selectedStrategy, formInputs, strategyResult, stats, abilityTo
         }
     };
 
-    const minDate = formInputs.useWarmupDate ? formInputs.warmupDate : null;
+    const isEod = eodFreqs.includes(formInputs.intval);
 
     return (
         <>
@@ -172,7 +172,7 @@ function Result({ selectedStrategy, formInputs, strategyResult, stats, abilityTo
                         <div className="m-1 text-xl tracking-tight text-slate-400 hover:text-slate-800 font-bold">Hypothetical Growth of $1</div>
                         <div className="font-extrabold text-xs text-sky-700/50">scroll to zoom. click to reset.</div>
                     </div>
-                    <CandlePlot strategyResult={strategyResult} costPerTrade={formInputs.costPerTrade} minDate={minDate} symbol={formInputs.symbol} />
+                    <CandlePlot strategyResult={strategyResult} costPerTrade={formInputs.costPerTrade} symbol={formInputs.symbol} isEod={isEod}/>
                     {(strategyResult.userDefinedData && Object.keys(strategyResult.userDefinedData).length > 0) && (
                         <div className="mt-1 mb-4 bg-slate-50 rounded-lg">
                             {userDefinedPlotOpen && (
@@ -180,6 +180,7 @@ function Result({ selectedStrategy, formInputs, strategyResult, stats, abilityTo
                                     <UserDefinedPlot
                                         strategyResult={strategyResult}
                                         timestamp={strategyResult.timestamp}
+                                        isEod={isEod}
                                     />
                                 </div>
                             )}
@@ -209,13 +210,13 @@ function Result({ selectedStrategy, formInputs, strategyResult, stats, abilityTo
                                 Download Data as .csv
                             </button>
                         </div>
-                        <DataTable strategyResult={strategyResult} />
+                        <DataTable strategyResult={strategyResult} isEod={eodFreqs.includes(formInputs.intval)}/>
                     </div>
                 </div>
 
                 <div className="m-8">
                     <div className="rounded-sm bg-white">
-                        <CashEquity strategyResult={strategyResult} />
+                        <CashEquity strategyResult={strategyResult} isEod={isEod} />
                     </div>
                 </div>
 
@@ -236,7 +237,7 @@ function Result({ selectedStrategy, formInputs, strategyResult, stats, abilityTo
                 {strategyResult.sp.length > 0 &&
                     <div className="m-8">
                         <div className="rounded-sm bg-white">
-                            <SPChart strategyResult={strategyResult} />
+                            <SPChart strategyResult={strategyResult} isEod={isEod}/>
                         </div>
                     </div>
                 }
@@ -258,7 +259,7 @@ function Result({ selectedStrategy, formInputs, strategyResult, stats, abilityTo
                 </div>
                 <div className="m-1 text-xl tracking-tight text-slate-400 hover:text-slate-800 font-bold">Hypothetical Growth of $1</div>
                 <div className="rounded-t-md border-2 border-slate-300 w-full">
-                    <CandlePlot strategyResult={strategyResult} costPerTrade={formInputs.costPerTrade} minDate={minDate} symbol={formInputs.symbol} />
+                    <CandlePlot strategyResult={strategyResult} costPerTrade={formInputs.costPerTrade} symbol={formInputs.symbol} isEod={isEod}/>
                 </div>
                 <FormInputHeader formInputs={formInputs} />
 
@@ -281,7 +282,7 @@ function Result({ selectedStrategy, formInputs, strategyResult, stats, abilityTo
                 {strategyResult.sp.length > 0 &&
                     <div className="m-8">
                         <div className="rounded-sm bg-white">
-                            <SPChart strategyResult={strategyResult} />
+                            <SPChart strategyResult={strategyResult} isEod={isEod} />
                         </div>
                     </div>
                 }

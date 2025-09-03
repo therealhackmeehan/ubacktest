@@ -4,7 +4,7 @@ import ScriptBuilder from "./ScriptBuilder";
 import ResultValidator from "./ResultValidator";
 import STDParser from "./STDParser";
 import PortfolioCalculator from "./PortfolioCalculator";
-import APIDataConnector from "./APIDataConnector";
+import StockDataConnection from "./StockDataConnection";
 import { HttpError } from "wasp/server";
 
 /*
@@ -64,7 +64,7 @@ class StrategyPipeline {
     // store code execution outputs
     private stderr: string = '';
     private stdout: string = '';
-    private warning: string[] = [];
+    private warnings: string[] = [];
 
     constructor(formInputs: FormInputProps, code: string) {
         this.formInputs = formInputs;
@@ -75,21 +75,22 @@ class StrategyPipeline {
     public async run() {
 
         // Initialize our Stock API Connection
-        const apiConnection = new APIDataConnector(this.formInputs);
+        const apiConnection = new StockDataConnection(this.formInputs);
 
         // Fetch stock data
         const symbol = this.formInputs.symbol;
-        const { normalizedQuote, shortenedNormalizedQuote, warning } = await apiConnection.get(symbol);
+        const { normalizedQuote, shortenedNormalizedQuote, warnings } = await apiConnection.get(symbol);
 
-        this.warning = warning;
+        this.warnings = warnings;
         this.strategyResult = {
             ...this.strategyResult,
             ...shortenedNormalizedQuote
         };
+        const cutoffDate = shortenedNormalizedQuote.timestamp[0];
 
         // Generate a unique key; surround stdout in this private key
         const key = Math.random().toString(36).substring(2, 8) + Math.random().toString(36).substring(2, 8);
-        const fullUserCode = ScriptBuilder.build(this.code, normalizedQuote, this.formInputs.startDate, key);
+        const fullUserCode = ScriptBuilder.build(this.code, normalizedQuote, cutoffDate, key);
 
         // Execute user code
         const { stdout_raw, stderr_raw } = await new CodeExecutor(fullUserCode, this.formInputs.timeout).execute();
@@ -108,14 +109,14 @@ class StrategyPipeline {
             return this.sendJSONtoFrontend();
         }
 
-        // Try to add S&P 500 data for comparison
+        // Add S&P 500 data for comparison
         try {
-            const { shortenedNormalizedQuote } = await apiConnection.get('^GSPC');
+            const { shortenedNormalizedQuote } = await apiConnection.get('SPY');
             if (StrategyPipeline.arraysAreEqual(this.strategyResult.timestamp, shortenedNormalizedQuote.timestamp)) {
                 this.strategyResult.sp = shortenedNormalizedQuote.close;
             }
         } catch (error: any) {
-            this.warning.push("An issue occurred with fetching S&P Comparison Data, so it will be excluded from this backtest.");
+            this.warnings.push("An issue occurred with fetching S&P Comparison Data, so it will be excluded from this backtest.");
         }
 
         // Calculate final portfolio results
@@ -136,7 +137,7 @@ class StrategyPipeline {
             statistics: this.statistics,
             debugOutput: this.stdout,
             stderr: this.stderr,
-            warnings: [...new Set(this.warning)],
+            warnings: [...new Set(this.warnings)],
         }
     }
 

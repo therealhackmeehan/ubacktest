@@ -27,7 +27,11 @@ ChartJS.register(
     TimeSeriesScale,
 );
 
-function CashEquity({ strategyResult }: { strategyResult: StrategyResultProps }) {
+interface CashEquityProps {
+    strategyResult: StrategyResultProps;
+    isEod: Boolean;
+}
+function CashEquity({ strategyResult, isEod }: CashEquityProps) {
 
     const [chartData, setChartData] = useState<any | null>(null);
 
@@ -36,9 +40,9 @@ function CashEquity({ strategyResult }: { strategyResult: StrategyResultProps })
             datasets: [
                 {
                     label: 'Cash Value',
-                    data: strategyResult.timestamp.map((timestamp: number, index: number) => ({
-                        x: new Date(timestamp * 1000), // Use Date object for x
-                        y: strategyResult.cash[index], // Corresponding y value
+                    data: strategyResult.timestamp.map((timestamp: string, index: number) => ({
+                        x: new Date(timestamp),
+                        y: strategyResult.cash[index],
                     })),
                     borderColor: 'rgba(255, 69, 0, 1)', // Bold Red-Orange  
                     backgroundColor: 'rgba(255, 69, 0, 1)',
@@ -48,9 +52,9 @@ function CashEquity({ strategyResult }: { strategyResult: StrategyResultProps })
                 },
                 {
                     label: 'Equity Value',
-                    data: strategyResult.timestamp.map((timestamp: number, index: number) => ({
-                        x: new Date(timestamp * 1000), // Use Date object for x
-                        y: strategyResult.equity[index], // Corresponding y value
+                    data: strategyResult.timestamp.map((timestamp: string, index: number) => ({
+                        x: new Date(timestamp),
+                        y: strategyResult.equity[index],
                     })),
                     borderColor: 'rgba(34, 139, 34, 1)', // Deep Forest Green  
                     backgroundColor: 'rgba(34, 139, 34, 1)',
@@ -60,9 +64,9 @@ function CashEquity({ strategyResult }: { strategyResult: StrategyResultProps })
                 },
                 {
                     label: 'abs(Equity Value)',
-                    data: strategyResult.timestamp.map((timestamp: number, index: number) => ({
-                        x: new Date(timestamp * 1000), // Use Date object for x
-                        y: Math.abs(strategyResult.equity[index]), // Corresponding y value
+                    data: strategyResult.timestamp.map((timestamp: string, index: number) => ({
+                        x: new Date(timestamp),
+                        y: Math.abs(strategyResult.equity[index]),
                     })),
                     borderColor: 'rgba(0, 128, 255, 1)', // Vivid Blue  
                     backgroundColor: 'rgba(0, 128, 255, 1)',
@@ -89,6 +93,18 @@ function CashEquity({ strategyResult }: { strategyResult: StrategyResultProps })
         plugins: {
             legend: {
                 position: 'right' as const,
+            },
+            tooltip: {
+                callbacks: {
+                    title: function (contexts) {
+                        if (isEod) {
+                            const value = contexts[0].parsed.x;
+                            const date = new Date(value);
+                            return date.toISOString().slice(0, 10);
+                        }
+                        return undefined;
+                    },
+                },
             },
         },
         scales: {

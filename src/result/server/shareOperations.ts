@@ -11,9 +11,7 @@ import {
 import { emailSender } from "wasp/server/email";
 
 export const shareResult: ShareResult<ShareResultProps, Share> = async ({ email, resultID }, context) => {
-    if (!context.user) {
-        throw new HttpError(401);
-    }
+    if (!context.user) throw new HttpError(401);
 
     if (!email) throw new HttpError(400, "Email input must be nonempty.");
 
@@ -88,9 +86,7 @@ Happy trading!`,
 }
 
 export const getSharedWith: GetSharedWith<Pick<Result, "id">, Share[]> = async ({ id }, context) => {
-    if (!context.user) {
-        throw new HttpError(401);
-    }
+    if (!context.user) throw new HttpError(401);
 
     return await context.entities.Share.findMany({
         where: {
@@ -104,9 +100,7 @@ export const getSharedWith: GetSharedWith<Pick<Result, "id">, Share[]> = async (
 }
 
 export const getShared: GetShared<void, GetSharedProps[] | null> = async (_args, context) => {
-    if (!context.user) {
-        throw new HttpError(401);
-    }
+    if (!context.user) throw new HttpError(401);
 
     const shared = await context.entities.Share.findMany({
         where: {
@@ -142,9 +136,7 @@ export const getShared: GetShared<void, GetSharedProps[] | null> = async (_args,
 };
 
 export const acceptShare: AcceptShare<Pick<Share, "id">, Share> = async ({ id }, context) => {
-    if (!context.user) {
-        throw new HttpError(401);
-    }
+    if (!context.user) throw new HttpError(401);
 
     const share = await context.entities.Share.findFirst({
         where: {
@@ -153,9 +145,7 @@ export const acceptShare: AcceptShare<Pick<Share, "id">, Share> = async ({ id },
         },
     });
 
-    if (!share) {
-        throw new HttpError(400, "Could not find that share to accept.");
-    }
+    if (!share) throw new HttpError(400, "Could not find that share to accept.");
 
     return await context.entities.Share.update({
         where: {
@@ -167,9 +157,7 @@ export const acceptShare: AcceptShare<Pick<Share, "id">, Share> = async ({ id },
 }
 
 export const deleteShare: DeleteShare<Pick<Share, "id">, Share> = async ({ id }, context) => {
-    if (!context.user) {
-        throw new HttpError(401);
-    }
+    if (!context.user) throw new HttpError(401);
 
     return await context.entities.Share.delete({
         where: {

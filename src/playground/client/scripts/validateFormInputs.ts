@@ -1,3 +1,5 @@
+import { intVals } from "../../../shared/sharedTypes";
+
 function validateFormInputs({ formInputs }: any) {
 
     const { symbol, startDate, endDate, intval, timeout, useWarmupDate, warmupDate, costPerTrade } = formInputs;
@@ -29,9 +31,8 @@ function validateFormInputs({ formInputs }: any) {
     }
 
     // Define allowed interval values
-    const allowedIntervals = ['1m', '2m', '5m', '15m', '30m', '1h', '90m', '1d', '5d', '1wk', '1mo', '3mo'];
-    if (!allowedIntervals.includes(intval)) {
-        throw new Error(`Invalid interval. Allowed values are: ${allowedIntervals.join(", ")}.`);
+    if (!intVals.includes(intval)) {
+        throw new Error(`Invalid interval. Allowed values are: ${intVals.join(", ")}.`);
     }
 
     if (isNaN(Number(timeout))) {
@@ -55,8 +56,8 @@ function validateFormInputs({ formInputs }: any) {
         if (wDate > today) {
             throw new Error("Warm-up dates cannot be in the future.");
         }
-        if (wDate > new Date(startDate)) {
-            throw new Error("Warm-up date cannot come after the start date.");
+        if (wDate >= new Date(startDate)) {
+            throw new Error("Warm-up date cannot come after/on the start date.");
         }
     }
 

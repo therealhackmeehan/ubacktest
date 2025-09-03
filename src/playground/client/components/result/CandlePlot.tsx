@@ -35,11 +35,11 @@ ChartJS.register(
 interface LinePlotProps {
     strategyResult: StrategyResultProps;
     costPerTrade: number;
-    minDate: string | null;
     symbol: string;
+    isEod: Boolean;
 }
 
-function CandlePlot({ strategyResult, costPerTrade, minDate, symbol }: LinePlotProps) {
+function CandlePlot({ strategyResult, costPerTrade, symbol, isEod }: LinePlotProps) {
 
     const [chartData, setChartData] = useState<any | null>(null);
     const chartRef = useRef<ChartJS | null>(null);
@@ -64,8 +64,8 @@ function CandlePlot({ strategyResult, costPerTrade, minDate, symbol }: LinePlotP
                 {
                     type: 'line',
                     label: 'My Strategy',
-                    data: strategyResult.timestamp.map((timestamp: number, index: number) => ({
-                        x: new Date(timestamp * 1000), // Use Date object for x
+                    data: strategyResult.timestamp.map((timestamp: string, index: number) => ({
+                        x: new Date(timestamp), // Use Date object for x
                         y: strategyResult.portfolio[index], // Corresponding y value
                     })),
                     borderColor: 'rgba(0, 0, 0, .8)',
@@ -78,8 +78,8 @@ function CandlePlot({ strategyResult, costPerTrade, minDate, symbol }: LinePlotP
                 {
                     type: 'candlestick',
                     label: symbol.toUpperCase(),
-                    data: strategyResult.timestamp.map((timestamp: number, index: number) => ({
-                        x: new Date(timestamp * 1000).valueOf(), // Convert timestamp to Date
+                    data: strategyResult.timestamp.map((timestamp: string, index: number) => ({
+                        x: new Date(timestamp).getTime(), // Convert timestamp to Date
                         o: strategyResult.open[index], // Open price
                         h: strategyResult.high[index], // High price
                         l: strategyResult.low[index],  // Low price
@@ -90,8 +90,8 @@ function CandlePlot({ strategyResult, costPerTrade, minDate, symbol }: LinePlotP
                 {
                     type: 'line',
                     label: 'Buy/Sell Signal',
-                    data: strategyResult.timestamp.map((timestamp: number, index: number) => ({
-                        x: new Date(timestamp * 1000),
+                    data: strategyResult.timestamp.map((timestamp: string, index: number) => ({
+                        x: new Date(timestamp),
                         y: strategyResult.signal[index],
                     })),
                     borderColor: 'rgba(0, 155, 255, .6)',
@@ -104,8 +104,8 @@ function CandlePlot({ strategyResult, costPerTrade, minDate, symbol }: LinePlotP
                 {
                     type: 'line',
                     label: 'My Strategy (w/ trading costs)',
-                    data: strategyResult.timestamp.map((timestamp: number, index: number) => ({
-                        x: new Date(timestamp * 1000),
+                    data: strategyResult.timestamp.map((timestamp: string, index: number) => ({
+                        x: new Date(timestamp),
                         y: strategyResult.portfolioWithCosts[index],
                     })),
                     borderColor: 'rgba(255, 0, 100, 0.6)',
@@ -118,7 +118,7 @@ function CandlePlot({ strategyResult, costPerTrade, minDate, symbol }: LinePlotP
             ],
         };
 
-        // Conditionally add the "My Strategy (w trading costs)" dataset
+        // Conditionally remove the "My Strategy (w trading costs)" dataset
         if (costPerTrade === 0) {
             chartData.datasets.pop();
         }
@@ -140,6 +140,14 @@ function CandlePlot({ strategyResult, costPerTrade, minDate, symbol }: LinePlotP
         plugins: {
             tooltip: {
                 callbacks: {
+                    title: function (contexts) {
+                        if (isEod) {
+                            const value = contexts[0].parsed.x;
+                            const date = new Date(value);
+                            return date.toISOString().slice(0, 10);
+                        }
+                        return undefined;
+                    },
                     label: function (context) {
                         let label = context.dataset.label || '';
                         const value = context.raw;
@@ -161,7 +169,7 @@ function CandlePlot({ strategyResult, costPerTrade, minDate, symbol }: LinePlotP
             },
             legend: {
                 position: 'top' as const,
-                onClick: () => {},
+                onClick: () => { },
             },
             zoom: {
                 zoom: {
@@ -177,7 +185,6 @@ function CandlePlot({ strategyResult, costPerTrade, minDate, symbol }: LinePlotP
         },
         scales: {
             x: {
-                ...(minDate && { min: minDate }), // Conditionally include 'min'
                 type: 'timeseries' as const,
             },
             y1: {

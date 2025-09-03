@@ -17,7 +17,7 @@ function ResultHeader({ result, setResultPanelOpen }: ResultHeaderProps) {
                 profit/loss: <span className='md:text-lg'>{result.pl?.toFixed(2)}%</span>
             </div>
             <div className='p-1 dark:brightness-200 hidden md:flex'>
-                <SmallPlot timestamp={result.timestamp} portfolio={result.portfolio} />
+                <SmallPlot portfolio={result.portfolio} />
             </div>
         </div>
     )

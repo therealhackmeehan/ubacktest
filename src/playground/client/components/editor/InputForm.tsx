@@ -9,6 +9,7 @@ import { initFormInputs } from "../initFormInputs";
 import { addMonths } from "../../scripts/addMonths";
 import { VscGrabber } from "react-icons/vsc";
 import stocks from "./stocksInSP";
+import { intVals, eodFreqs } from "../../../../shared/sharedTypes";
 
 interface InputFormSubcomponentProps {
     formInputs: FormInputProps;
@@ -28,7 +29,6 @@ export interface Stock {
 }
 
 const INPUT_FORM_HEIGHT = "inputFormHeight";
-const INPUT_FORM_USE_DATETIME = "inputFormUseDatetime";
 
 function InputForm({ formInputs, setFormInputs, run }: InputFormSubcomponentProps) {
 
@@ -38,39 +38,9 @@ function InputForm({ formInputs, setFormInputs, run }: InputFormSubcomponentProp
     const [displayMatches, setDisplayMatches] = useState<boolean>(false);
     const timeoutRef = useRef<NodeJS.Timeout | null>(null);
 
-    const [useDatetimeLocal, setUseDatetimeLocal] = useState<boolean>(() => {
-        const storedValue = localStorage.getItem(INPUT_FORM_USE_DATETIME);
-        return storedValue === 'true'; // If null or anything else, defaults to false
-    });
-
-    const formatDate = (date: string | Date, includeTime: boolean): string => {
-        const d = new Date(date);
-        if (!includeTime) {
-            d.setHours(0, 0, 0, 0); // Reset hours when not including time
-        }
-        return includeTime ? d.toISOString().slice(0, 16) : d.toISOString().slice(0, 10);
-    };
-
     const handleChange = (event: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
         const { name, value } = event.target;
-
-        const previousUseDatetime = ["1m", "2m"].includes(formInputs.intval);
-
-        setFormInputs((prevInputs: FormInputProps) => {
-            const updatedInputs = { ...prevInputs, [name]: value };
-
-            if (name === "intval") {
-                const currUseDatetime = ["1m", "2m"].includes(value);
-                if (currUseDatetime !== previousUseDatetime) {
-                    updatedInputs.startDate = formatDate(prevInputs.startDate, currUseDatetime);
-                    updatedInputs.endDate = formatDate(prevInputs.endDate, currUseDatetime);
-                    updatedInputs.warmupDate = formatDate(prevInputs.warmupDate, currUseDatetime);
-                    setUseDatetimeLocal(!useDatetimeLocal);
-                }
-            }
-
-            return updatedInputs;
-        });
+        setFormInputs((prevInputs: FormInputProps) => ({ ...prevInputs, [name]: value }));
 
         // Symbol filtering logic (remains unchanged)
         if (name === "symbol") {
@@ -133,9 +103,9 @@ function InputForm({ formInputs, setFormInputs, run }: InputFormSubcomponentProp
             ? [startOffset, endOffset]
             : [endOffset, startOffset];
 
-        const newStartDate = formatDate(addMonths(today, -newStartOffset), useDatetimeLocal);
-        const newEndDate = formatDate(addMonths(today, -newEndOffset), useDatetimeLocal);
-        const newWarmupDate = formatDate(addMonths(new Date(newStartDate), -1), useDatetimeLocal);
+        const newStartDate = addMonths(today, -newStartOffset);
+        const newEndDate = addMonths(today, -newEndOffset);
+        const newWarmupDate = addMonths(new Date(newStartDate), -1);
 
         setFormInputs({
             ...formInputs,
@@ -147,7 +117,6 @@ function InputForm({ formInputs, setFormInputs, run }: InputFormSubcomponentProp
     };
 
     const resetFormInputs = () => {
-        setUseDatetimeLocal(false);
         setFormInputs(initFormInputs);
     }
 
@@ -168,15 +137,9 @@ function InputForm({ formInputs, setFormInputs, run }: InputFormSubcomponentProp
         localStorage.setItem(INPUT_FORM_HEIGHT, JSON.stringify(position))
     }, [position])
 
-    useEffect(() => {
-        localStorage.setItem(INPUT_FORM_USE_DATETIME, JSON.stringify(useDatetimeLocal))
-    }, [useDatetimeLocal])
-
     const handleDown = (e: React.MouseEvent | React.TouchEvent) => {
         setIsDragging(true);
-
         const clientY = "touches" in e ? e.touches[0].clientY : (e as React.MouseEvent).clientY;
-
         offset.current = { y: clientY - position.y };
     };
 
@@ -282,20 +245,19 @@ function InputForm({ formInputs, setFormInputs, run }: InputFormSubcomponentProp
                             Start Date
                         </div>
                         <input
-                            type={useDatetimeLocal ? 'datetime-local' : 'date'}
+                            type="date"
                             className='text-xs text-gray-600 rounded-md border border-gray-200 shadow-md focus:outline-none focus:border-transparent focus:shadow-none duration-200 ease-in-out hover:shadow-none'
                             value={formInputs.startDate}
                             onChange={handleChange}
                             name="startDate"
                         />
-
                     </div>
                     <div className='flex items-center justify-between gap-12'>
                         <div className="tracking-tight text-xs font-bold">
                             End Date
                         </div>
                         <input
-                            type={useDatetimeLocal ? 'datetime-local' : 'date'}
+                            type="date"
                             className='text-xs text-gray-600 rounded-md border border-gray-200 shadow-md focus:outline-none focus:border-transparent focus:shadow-none duration-200 ease-in-out hover:shadow-none'
                             value={formInputs.endDate}
                             onChange={handleChange}
@@ -312,18 +274,11 @@ function InputForm({ formInputs, setFormInputs, run }: InputFormSubcomponentProp
                             onChange={handleChange}
                             name="intval"
                         >
-                            <option value="1m">1m</option>
-                            <option value="2m">2m</option>
-                            <option value="5m">5m</option>
-                            <option value="15m">15m</option>
-                            <option value="30m">30m</option>
-                            <option value="1h">1h</option>
-                            <option value="90m">90m</option>
-                            <option value="1d">1d</option>
-                            <option value="5d">5d</option>
-                            <option value="1wk">1wk</option>
-                            <option value="1mo">1mo</option>
-                            <option value="3mo">3mo</option>
+                            {intVals.map((val) => (
+                                <option key={val} value={val}>
+                                    {val}
+                                </option>
+                            ))}
                         </select>
                     </div>
 
@@ -346,7 +301,45 @@ function InputForm({ formInputs, setFormInputs, run }: InputFormSubcomponentProp
 
                     {displayAdvancedOptions &&
                         <>
-                            <div className="space-y-1 border-2 border-white bg-slate-100 rounded-md p-2 dark:bg-boxdark-2">
+                            <div className="space-y-1 border-2 border-white bg-slate-100 rounded-md p-2 dark:bg-boxdark-2 w-100">
+                                {eodFreqs.includes(formInputs.intval) && <div className='flex items-center justify-between gap-3'>
+                                    <div className="tracking-tight text-xs font-light">
+                                        Use Adjusted Close Prices
+                                    </div>
+                                    <div className="flex items-center gap-x-1">
+                                        <input
+                                            type="checkbox"
+                                            className='text-xs text-gray-600 rounded-md border border-gray-200 shadow-md focus:outline-none focus:border-transparent focus:shadow-none duration-200 ease-in-out hover:shadow-none'
+                                            checked={formInputs.useAdjClose}
+                                            onChange={(e) => {
+                                                setFormInputs((prevInputs: FormInputProps) => ({
+                                                    ...prevInputs,
+                                                    useAdjClose: !prevInputs.useAdjClose, // Sets to true or false based on checkbox state
+                                                }));
+                                            }} name="useAdjClose"
+                                        />
+                                    </div>
+                                </div>}
+                                <div className='flex items-center justify-between gap-3'>
+                                    <div className="tracking-tight text-xs font-light">
+                                        Cost Per Trade
+                                    </div>
+                                    <div className="flex items-center gap-x-1">
+                                        <input
+                                            type="number"
+                                            step={.01}
+                                            min={0}
+                                            max={100}
+                                            className='text-xs text-gray-600 rounded-md border border-gray-200 shadow-md focus:outline-none focus:border-transparent focus:shadow-none duration-200 ease-in-out hover:shadow-none'
+                                            value={formInputs.costPerTrade}
+                                            onChange={handleChange}
+                                            name="costPerTrade"
+                                        />
+                                        <div className="font-extralight">
+                                            %
+                                        </div>
+                                    </div>
+                                </div>
                                 <div className='flex items-center justify-between gap-3'>
                                     <div className="tracking-tight text-xs font-light">
                                         Exec. Time Limit
@@ -364,26 +357,6 @@ function InputForm({ formInputs, setFormInputs, run }: InputFormSubcomponentProp
                                         />
                                         <div className="font-extralight">
                                             s
-                                        </div>
-                                    </div>
-                                </div>
-                                <div className='flex items-center justify-between gap-3'>
-                                    <div className="tracking-tight text-xs font-light">
-                                        Cost Per Trade
-                                    </div>
-                                    <div className="flex items-center gap-x-1">
-                                        <input
-                                            type='number'
-                                            step={.01}
-                                            min={0}
-                                            max={100}
-                                            className='text-xs text-gray-600 rounded-md border border-gray-200 shadow-md focus:outline-none focus:border-transparent focus:shadow-none duration-200 ease-in-out hover:shadow-none'
-                                            value={formInputs.costPerTrade}
-                                            onChange={handleChange}
-                                            name="costPerTrade"
-                                        />
-                                        <div className="font-extralight">
-                                            %
                                         </div>
                                     </div>
                                 </div>
@@ -414,7 +387,7 @@ function InputForm({ formInputs, setFormInputs, run }: InputFormSubcomponentProp
                                         "Burn-In" Start Date
                                     </div>
                                     <input
-                                        type={useDatetimeLocal ? 'datetime-local' : 'date'}
+                                        type="date"
                                         className='text-xs w-full text-gray-600 rounded-md border border-gray-200 shadow-md focus:outline-none focus:border-transparent focus:shadow-none duration-200 ease-in-out hover:shadow-none'
                                         value={formInputs.warmupDate}
                                         onChange={handleChange}
