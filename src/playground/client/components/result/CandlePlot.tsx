@@ -110,7 +110,7 @@ function CandlePlot({ strategyResult, costPerTrade, symbol }: LinePlotProps) {
                     borderColor: 'rgba(255, 0, 100, 0.6)',
                     backgroundColor: 'rgba(255, 0, 100, 0.6)',
                     borderWidth: 1,
-                    hidden: true,
+                    hidden: false,
                     pointRadius: 0,
                     yAxisID: 'y1',
                 },
@@ -160,7 +160,6 @@ function CandlePlot({ strategyResult, costPerTrade, symbol }: LinePlotProps) {
             },
             legend: {
                 position: 'top' as const,
-                onClick: () => { },
             },
             zoom: {
                 zoom: {

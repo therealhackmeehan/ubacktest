@@ -28,7 +28,7 @@ export const isFirefox = typeof navigator !== 'undefined' && /firefox/i.test(nav
 
 function Result({ selectedStrategy, formInputs, strategyResult, stats, abilityToSaveNew }: ResultPanelProps) {
 
-    const [userDefinedPlotOpen, setUserDefinedPlotOpen] = useState<boolean>(true);
+    const [userDefinedPlotOpen, setUserDefinedPlotOpen] = useState<boolean>(false);
     const [loading, setLoading] = useState<boolean>(false);
     const [errorMsg, setErrorMsg] = useState<string | null>('');
 

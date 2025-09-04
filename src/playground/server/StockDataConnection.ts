@@ -62,31 +62,41 @@ class StockDataConnection {
     private processStockData(apiResult: any) {
         const quote = StockDataConnection.rowsToColumns(apiResult);
         this.validateData(quote);
-        const warnings: string[] = []; // this.generateWarnings(quote);
+        const warnings: string[] = this.generateWarnings(quote);
         const { normalizedQuote, shortenedNormalizedQuote } = this.normalizeAndShortenData(quote);
 
         return { normalizedQuote, shortenedNormalizedQuote, warnings };
     }
 
     private calcApproxDataLength(): number {
-        let totalMinutes = 0;
-        const current = this.start;
+        const start = new Date(this.start);
+        const end = new Date(this.end);
 
-        while (current.getTime() <= this.end.getTime()) {
+        let totalMinutes = 0;
+        const current = new Date(start);
+        while (current <= end) {
             const dayOfWeek = current.getDay(); // 0=Sun, 6=Sat
             if (dayOfWeek !== 0 && dayOfWeek !== 6) {
-                totalMinutes += 390;
+                totalMinutes += 24 * 60; // 6.5 hours per trading day
             }
             current.setDate(current.getDate() + 1);
         }
 
-        const minutesPerInt = this.minutesPerInterval[this.formInputs.intval as typeof intVals[number]];
-        if (!minutesPerInt) {
-            throw new Error(`Unsupported interval: ${this.formInputs.intval}`);
-        }
+        const minutesPerInt = this.minutesPerInterval[
+            this.formInputs.intval as typeof intVals[number]
+        ];
 
-        const approxPoints = Math.floor(totalMinutes / minutesPerInt);
-        return approxPoints;
+        console.log(minutesPerInt)
+        console.log(totalMinutes)
+
+        if (!minutesPerInt) throw new Error(`Unsupported interval: ${this.formInputs.intval}`);
+
+        console.log(Math.floor(totalMinutes / minutesPerInt));
+        console.log(Math.floor(totalMinutes / minutesPerInt));
+        console.log(Math.floor(totalMinutes / minutesPerInt));
+        console.log(Math.floor(totalMinutes / minutesPerInt));
+
+        return Math.floor(totalMinutes / minutesPerInt);
     }
 
     private validateData(quote: QuoteColumns): void {
@@ -120,7 +130,7 @@ class StockDataConnection {
         const { date, volume, splitFactor } = quote;
         const { intval, useAdjClose } = this.formInputs;
 
-        const msInDay = this.minutesPerInterval["daily"] * 1000;
+        const msInDay = this.minutesPerInterval["daily"] * 60 * 1000;
 
         // Pre-calc timestamps once
         const startInput = this.start.getTime();
@@ -130,9 +140,6 @@ class StockDataConnection {
 
         const warnings: string[] = [];
 
-        // Ratio of data availability
-        const ratioOfAvailability = Math.abs((startInData - endInData) / (startInput - endInput));
-
         // Date discrepancy
         const allowedDrift = 5 * msInDay;
         const isFrequentTrading = !["monthly", "weekly"].includes(intval);
@@ -141,9 +148,8 @@ class StockDataConnection {
             (Math.abs(startInData - startInput) > allowedDrift ||
                 Math.abs(endInData - endInput) > allowedDrift)
         ) {
-            warnings.push(
-                "Discrepancy between available data and selected dates. Stock may have IPO'd later or been delisted earlier."
-            );
+            console.log
+            warnings.push("Discrepancy between available data and selected dates. Stock may have IPO'd later or been delisted earlier.");
         }
 
         // EOD-specific checks
@@ -153,11 +159,6 @@ class StockDataConnection {
             }
             if (!useAdjClose && splitFactor.some(s => s !== 1)) {
                 warnings.push("Stock splits detected. This backtest is likely invalid. Consider using adjusted close prices.");
-            }
-            if (ratioOfAvailability < 0.24) {
-                warnings.push(
-                    "Large portion of data missing from requested range. Stock may have IPO'd later or been delisted earlier."
-                );
             }
         }
 
@@ -177,7 +178,7 @@ class StockDataConnection {
             (ts) => new Date(ts).getTime() >= new Date(this.formInputs.startDate).getTime()
         );
 
-        if (shortenedIndex === -1) throw new HttpError(400, "No data exists after the specified timestamp.");
+        if (shortenedIndex === -1) throw new HttpError(400, "No data exists after the specified start timestamp.");
 
         const makeShort = (arr: any[]) => arr.slice(shortenedIndex);
         const shortened = {
