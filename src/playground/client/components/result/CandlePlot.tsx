@@ -36,9 +36,10 @@ interface LinePlotProps {
     strategyResult: StrategyResultProps;
     costPerTrade: number;
     symbol: string;
+    hideTradingCosts?: boolean;
 }
 
-function CandlePlot({ strategyResult, costPerTrade, symbol }: LinePlotProps) {
+function CandlePlot({ strategyResult, costPerTrade, symbol, hideTradingCosts = false }: LinePlotProps) {
 
     const [chartData, setChartData] = useState<any | null>(null);
     const chartRef = useRef<ChartJS | null>(null);
@@ -118,7 +119,7 @@ function CandlePlot({ strategyResult, costPerTrade, symbol }: LinePlotProps) {
         };
 
         // Conditionally remove the "My Strategy (w trading costs)" dataset
-        if (costPerTrade === 0) {
+        if (costPerTrade === 0 || hideTradingCosts) {
             chartData.datasets.pop();
         }
 

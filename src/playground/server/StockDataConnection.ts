@@ -22,8 +22,8 @@ class StockDataConnection {
         "monthly": 60 * 24 * 30, // rough approximation
     };
 
-    private isEOD: Boolean;
-    private useAdjusted: Boolean;
+    private isEOD: boolean;
+    private useAdjusted: boolean;
     private start: Date;
     private end: Date;
 

@@ -64,6 +64,7 @@ function LeaderboardPlot({ result, setLeaderboardPlotOpen, index }: LeaderboardP
                     <CandlePlot strategyResult={joinedInfo}
                         costPerTrade={formInputsLocal.costPerTrade}
                         symbol={formInputsLocal.symbol}
+                        hideTradingCosts={true}
                     />
                 </div>
             </div>
