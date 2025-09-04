@@ -29,10 +29,9 @@ ChartJS.register(
 
 interface SPChartProps {
     strategyResult: StrategyResultProps;
-    isEod: Boolean;
 }
 
-function SPChart({ strategyResult, isEod }: SPChartProps) {
+function SPChart({ strategyResult }: SPChartProps) {
 
     const [chartData, setChartData] = useState<any | null>(null);
 
@@ -79,18 +78,6 @@ function SPChart({ strategyResult, isEod }: SPChartProps) {
         plugins: {
             legend: {
                 position: 'right' as const,
-            },
-            tooltip: {
-                callbacks: {
-                    title: function (contexts) {
-                        if (isEod) {
-                            const value = contexts[0].parsed.x;
-                            const date = new Date(value);
-                            return date.toISOString().slice(0, 10);
-                        }
-                        return undefined;
-                    },
-                },
             },
         },
         scales: {

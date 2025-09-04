@@ -36,10 +36,9 @@ interface LinePlotProps {
     strategyResult: StrategyResultProps;
     costPerTrade: number;
     symbol: string;
-    isEod: Boolean;
 }
 
-function CandlePlot({ strategyResult, costPerTrade, symbol, isEod }: LinePlotProps) {
+function CandlePlot({ strategyResult, costPerTrade, symbol }: LinePlotProps) {
 
     const [chartData, setChartData] = useState<any | null>(null);
     const chartRef = useRef<ChartJS | null>(null);
@@ -140,14 +139,6 @@ function CandlePlot({ strategyResult, costPerTrade, symbol, isEod }: LinePlotPro
         plugins: {
             tooltip: {
                 callbacks: {
-                    title: function (contexts) {
-                        if (isEod) {
-                            const value = contexts[0].parsed.x;
-                            const date = new Date(value);
-                            return date.toISOString().slice(0, 10);
-                        }
-                        return undefined;
-                    },
                     label: function (context) {
                         let label = context.dataset.label || '';
                         const value = context.raw;

@@ -64,7 +64,7 @@ function LeaderboardPlot({ result, setLeaderboardPlotOpen, index }: LeaderboardP
                     <CandlePlot strategyResult={joinedInfo}
                         costPerTrade={formInputsLocal.costPerTrade}
                         symbol={formInputsLocal.symbol}
-                        isEod={eodFreqs.includes(formInputsLocal.intval)}/>
+                    />
                 </div>
             </div>
         </div>

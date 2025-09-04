@@ -4,9 +4,8 @@ import { StrategyResultProps } from "../../../../shared/sharedTypes";
 
 interface DataTableProps {
     strategyResult: StrategyResultProps;
-    isEod: Boolean;
 }
-function DataTable({ strategyResult, isEod }: DataTableProps) {
+function DataTable({ strategyResult }: DataTableProps) {
 
     // State for sorted data and sorting configuration
     const [sortedData, setSortedData] = useState<any>(strategyResult);
@@ -94,7 +93,7 @@ function DataTable({ strategyResult, isEod }: DataTableProps) {
                         key={index}
                     >
                         <td className="font-extralight">
-                            {isEod ? date.slice(0,10) : new Date(date).toLocaleString()}
+                            {new Date(date).toLocaleString()}
                         </td>
 
                         <td className="font-bold flex justify-center gap-x-4">

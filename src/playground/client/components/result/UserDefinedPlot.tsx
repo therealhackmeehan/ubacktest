@@ -30,10 +30,9 @@ ChartJS.register(
 interface UserDefinedPlotProps {
     strategyResult: StrategyResultProps;
     timestamp: string[];
-    isEod: Boolean;
 }
 
-export default function UserDefinedPlot({ strategyResult, timestamp, isEod }: UserDefinedPlotProps) {
+export default function UserDefinedPlot({ strategyResult, timestamp }: UserDefinedPlotProps) {
     const [chartData, setChartData] = useState<any | null>(null);
 
     const borderColors: string[] = [
@@ -111,18 +110,6 @@ export default function UserDefinedPlot({ strategyResult, timestamp, isEod }: Us
         plugins: {
             legend: {
                 position: 'top' as const,
-            },
-            tooltip: {
-                callbacks: {
-                    title: function (contexts) {
-                        if (isEod) {
-                            const value = contexts[0].parsed.x;
-                            const date = new Date(value);
-                            return date.toISOString().slice(0, 10);
-                        }
-                        return undefined;
-                    },
-                },
             },
         },
         scales: {

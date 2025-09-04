@@ -28,15 +28,13 @@ export const isFirefox = typeof navigator !== 'undefined' && /firefox/i.test(nav
 
 function Result({ selectedStrategy, formInputs, strategyResult, stats, abilityToSaveNew }: ResultPanelProps) {
 
-    // EOD data is screwy and if using EOD, adjust it all to 4PM!!
-    
     const [userDefinedPlotOpen, setUserDefinedPlotOpen] = useState<boolean>(true);
     const [loading, setLoading] = useState<boolean>(false);
     const [errorMsg, setErrorMsg] = useState<string | null>('');
 
     async function saveResult(name: string) {
         if (!selectedStrategy) return;
-        
+
         const connectedStrat = await getSpecificStrategy({ id: selectedStrategy });
         if (!connectedStrat?.code) {
             throw new Error('No strategy with that result.');
@@ -147,10 +145,24 @@ function Result({ selectedStrategy, formInputs, strategyResult, stats, abilityTo
 
     const isEod = eodFreqs.includes(formInputs.intval);
 
+    // EOD data is screwy and if using EOD, adjust it all to 4PM!!
+    const toFourPMEasternISOString = (dateStr: string): string => {
+        const slicedDay = dateStr.slice(0,10);
+        const estDate = new Date(
+            new Date(`${slicedDay}T16:00:00`).toLocaleString("en-US", {
+                timeZone: "America/New_York",
+            })
+        );
+        return estDate.toISOString();
+    };
+
+    if (isEod) {
+        strategyResult.timestamp = strategyResult.timestamp.map(toFourPMEasternISOString);
+    }
+
     return (
         <>
             {loading && <LoadingScreen />}
-
             {errorMsg && <ErrorModal msg={errorMsg} closeModal={() => setErrorMsg('')} />}
 
             <div className="relative px-0 md:px-12 lg:px-24 bg-white min-w-187.5">
@@ -172,7 +184,7 @@ function Result({ selectedStrategy, formInputs, strategyResult, stats, abilityTo
                         <div className="m-1 text-xl tracking-tight text-slate-400 hover:text-slate-800 font-bold">Hypothetical Growth of $1</div>
                         <div className="font-extrabold text-xs text-sky-700/50">scroll to zoom. click to reset.</div>
                     </div>
-                    <CandlePlot strategyResult={strategyResult} costPerTrade={formInputs.costPerTrade} symbol={formInputs.symbol} isEod={isEod}/>
+                    <CandlePlot strategyResult={strategyResult} costPerTrade={formInputs.costPerTrade} symbol={formInputs.symbol} />
                     {(strategyResult.userDefinedData && Object.keys(strategyResult.userDefinedData).length > 0) && (
                         <div className="mt-1 mb-4 bg-slate-50 rounded-lg">
                             {userDefinedPlotOpen && (
@@ -180,7 +192,6 @@ function Result({ selectedStrategy, formInputs, strategyResult, stats, abilityTo
                                     <UserDefinedPlot
                                         strategyResult={strategyResult}
                                         timestamp={strategyResult.timestamp}
-                                        isEod={isEod}
                                     />
                                 </div>
                             )}
@@ -210,13 +221,13 @@ function Result({ selectedStrategy, formInputs, strategyResult, stats, abilityTo
                                 Download Data as .csv
                             </button>
                         </div>
-                        <DataTable strategyResult={strategyResult} isEod={eodFreqs.includes(formInputs.intval)}/>
+                        <DataTable strategyResult={strategyResult} />
                     </div>
                 </div>
 
                 <div className="m-8">
                     <div className="rounded-sm bg-white">
-                        <CashEquity strategyResult={strategyResult} isEod={isEod} />
+                        <CashEquity strategyResult={strategyResult} />
                     </div>
                 </div>
 
@@ -237,7 +248,7 @@ function Result({ selectedStrategy, formInputs, strategyResult, stats, abilityTo
                 {strategyResult.sp.length > 0 &&
                     <div className="m-8">
                         <div className="rounded-sm bg-white">
-                            <SPChart strategyResult={strategyResult} isEod={isEod}/>
+                            <SPChart strategyResult={strategyResult} />
                         </div>
                     </div>
                 }
@@ -259,7 +270,7 @@ function Result({ selectedStrategy, formInputs, strategyResult, stats, abilityTo
                 </div>
                 <div className="m-1 text-xl tracking-tight text-slate-400 hover:text-slate-800 font-bold">Hypothetical Growth of $1</div>
                 <div className="rounded-t-md border-2 border-slate-300 w-full">
-                    <CandlePlot strategyResult={strategyResult} costPerTrade={formInputs.costPerTrade} symbol={formInputs.symbol} isEod={isEod}/>
+                    <CandlePlot strategyResult={strategyResult} costPerTrade={formInputs.costPerTrade} symbol={formInputs.symbol} />
                 </div>
                 <FormInputHeader formInputs={formInputs} />
 
@@ -282,7 +293,7 @@ function Result({ selectedStrategy, formInputs, strategyResult, stats, abilityTo
                 {strategyResult.sp.length > 0 &&
                     <div className="m-8">
                         <div className="rounded-sm bg-white">
-                            <SPChart strategyResult={strategyResult} isEod={isEod} />
+                            <SPChart strategyResult={strategyResult} />
                         </div>
                     </div>
                 }

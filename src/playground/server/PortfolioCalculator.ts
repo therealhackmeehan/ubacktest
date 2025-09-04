@@ -97,7 +97,7 @@ class PortfolioCalculator {
         const hasInitialTrade = this.strategyResult.signal[0] !== 0;
         let buyPrice = this.strategyResult.portfolio[0];
 
-        for (let i = 1; i < length; i++) {
+        for (let i = 1; i <= length; i++) {
             if (this.strategyResult.signal[i] !== this.strategyResult.signal[i - 1]) {
                 numberOfTrades++;
 

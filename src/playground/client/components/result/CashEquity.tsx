@@ -29,9 +29,8 @@ ChartJS.register(
 
 interface CashEquityProps {
     strategyResult: StrategyResultProps;
-    isEod: Boolean;
 }
-function CashEquity({ strategyResult, isEod }: CashEquityProps) {
+function CashEquity({ strategyResult }: CashEquityProps) {
 
     const [chartData, setChartData] = useState<any | null>(null);
 
@@ -93,18 +92,6 @@ function CashEquity({ strategyResult, isEod }: CashEquityProps) {
         plugins: {
             legend: {
                 position: 'right' as const,
-            },
-            tooltip: {
-                callbacks: {
-                    title: function (contexts) {
-                        if (isEod) {
-                            const value = contexts[0].parsed.x;
-                            const date = new Date(value);
-                            return date.toISOString().slice(0, 10);
-                        }
-                        return undefined;
-                    },
-                },
             },
         },
         scales: {
