@@ -14,8 +14,8 @@ export default function About() {
                         <div className="text-sm md:text-lg m-3 text-center">
                             uBacktest.com was born from one developer’s quest to beat the market—a journey that’s still unfolding.
 
-                            Frustrated by the steep cost of quality stock data and outdated backtesting methods, Jack set out to build something better. He created a powerful yet accessible backtesting platform using Python, the most straightforward programming language for the job.
-
+                            Tired of expensive stock data and clunky backtesting tools, Jack set out to build something better. Using Python—the most approachable language for the task—he created a powerful yet accessible backtesting platform. What began as a personal project soon became a tool that others could use to test their own strategies.
+                            
                             With built-in examples and an intuitive UI, uBacktest makes developing trading strategies less intimidating and more exciting. Whether you're a solo trader, a Wall Street pro, or an educator, the tools to refine your strategy are now at your fingertips.
                         </div>
                     </div>

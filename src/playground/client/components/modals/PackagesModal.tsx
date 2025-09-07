@@ -3,9 +3,12 @@ import ModalLayout from "../../../../client/components/ModalLayout";
 import packages from "./packages";
 import useEnterKey from "../../../../client/hooks/useEnterKey";
 import { useState } from "react";
+import { useQuery, getPackageInfo } from "wasp/client/operations";
+import LoadingScreen from "../../../../client/components/LoadingScreen";
 
 export default function PackagesModal({ closeModal }: { closeModal: () => void }) {
 
+    const { data: packageInfo, isLoading: isPackageInfoLoading, error: packageInfoError } = useQuery(getPackageInfo);
     const [detailsOpen, setDetailsOpen] = useState<boolean>(false);
 
     useEnterKey(closeModal);
@@ -19,30 +22,18 @@ export default function PackagesModal({ closeModal }: { closeModal: () => void }
                 </button>
             </div>
 
-            {!detailsOpen && <div className='h-72 text-center overflow-y-auto m-4 p-2 dark:text-white'>
-                {Object.entries(packages).map(([category, packageDetails], categoryIndex) => (
-                    <div key={categoryIndex} className="mb-4">
-                        <h3 className="text-lg font-bold mb-2 text-end">{category}</h3>
-                        {Object.entries(packageDetails).map(([packageName, version], packageIndex) => (
-                            <div key={packageIndex}>
-                                <div
-                                    className="p-1 my-1 text-sm rounded-lg dark:bg-slate-600 duration-500"
-                                >
-                                    {packageName} 
-                                    {/* <span className="text-xs font-bold">{version && version}</span> */}
-                                </div>
-                            </div>
-                        ))}
-                    </div>
-                ))}
-            </div>}
+            {isPackageInfoLoading && <LoadingScreen />}
+
+            {!packageInfoError && packageInfo && !detailsOpen && <>
+                <textarea rows={13} className='my-4 rounded-lg w-full border-0 border-transparent resize-none bg-white font-mono text-xs text-black-700 dark:bg-black dark:text-gray-200' readOnly={true} value={packageInfo.info || "error loading package info."}>
+                </textarea>
+                <div className="text-xs mb-2 text-center dark:text-white">Package Versions Last Updated: <span className="italic">{packageInfo.date.toDateString()}</span></div>
+            </>}
 
             <button className="my-2 text-start bg-white dark:bg-boxdark text-xs duration-700 hover:underline hover:invert border-2 w-full rounded-lg border-slate-300 dark:border-white dark:text-white p-1" onClick={() => setDetailsOpen(!detailsOpen)}>{detailsOpen ? "Go Back" : "Click for More Details on Packages:"}</button>
             {detailsOpen && (
                 <div className="text-xs dark:text-white p-4 font-extralight">
-                    <p>Package versions may lag behind the latest releases. To check the current installed versions, run the following above/below a strategy:</p>
-                    <p className="text-start font-mono">import subprocess</p>
-                    <p className="text-start font-mono">print(subprocess.run(["pip", "freeze"], text=True, capture_output=True).stdout)</p>
+                    <p>Package versions may lag behind the latest releases, but we do our best to update this list weekly. </p>
                     <br></br>
                     <p>We've preinstalled a broad set of ML and Data Science packages, but not all may be relevant. Some, like visualization libraries, won’t work within the editor.</p>
                 </div>

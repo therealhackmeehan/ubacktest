@@ -120,6 +120,11 @@ model Share {
   @@unique([resultID, receiverID])
 }
 
+model PackageInfo {
+  info                             String
+  date                             DateTime        @default(now()) @unique
+}
+
 model DailyStats {
   id                               Int             @id @default(autoincrement())
   date                             DateTime        @default(now()) @unique

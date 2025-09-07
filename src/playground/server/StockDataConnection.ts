@@ -86,16 +86,7 @@ class StockDataConnection {
             this.formInputs.intval as typeof intVals[number]
         ];
 
-        console.log(minutesPerInt)
-        console.log(totalMinutes)
-
         if (!minutesPerInt) throw new Error(`Unsupported interval: ${this.formInputs.intval}`);
-
-        console.log(Math.floor(totalMinutes / minutesPerInt));
-        console.log(Math.floor(totalMinutes / minutesPerInt));
-        console.log(Math.floor(totalMinutes / minutesPerInt));
-        console.log(Math.floor(totalMinutes / minutesPerInt));
-
         return Math.floor(totalMinutes / minutesPerInt);
     }
 

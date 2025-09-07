@@ -128,7 +128,7 @@ describe('Form Input Validation', () => {
                 useWarmupDate: true,
                 startDate: addMonths(new Date(), -20),
             }
-        })).toThrow("Warm-up date cannot come after the start date.");
+        })).toThrow("Warm-up date cannot come after/on the start date.");
     });
 
     it('Start and end dates cannot be in the future', () => {

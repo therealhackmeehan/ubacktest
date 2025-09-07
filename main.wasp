@@ -206,6 +206,13 @@ action charge {
 }
 // end runStrategy
 
+//region package info updates
+query getPackageInfo {
+  fn: import {getPackageInfo } from "@src/playground/server/packageOperations",
+  entities: [PackageInfo]
+}
+//endregion
+
 //region Auth Pages
 route LoginRoute { path: "/login", to: LoginPage }
 page LoginPage {
@@ -316,6 +323,20 @@ job monthlyCreditReset {
     cron: "* * * * *" // every minute. useful for debugging
   },
   entities: [User],
+}
+// endregion
+
+// region weeklyPackageUpdate
+job weeklyPackageUpdate {
+  executor: PgBoss,
+  perform: {
+    fn: import { weeklyPackageUpdate } from "@src/playground/server/workers/weeklyPackageUpdate"
+  },
+  schedule: {
+    // cron: "0 * * * *"
+    cron: "* * * * *" // every minute. useful for debugging
+  },
+  entities: [PackageInfo],
 }
 // endregion
 

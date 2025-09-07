@@ -16,7 +16,6 @@ class CodeExecutor {
     public async execute() {
 
         const { stdout, stderr } = await this.sendToJudge();
-
         return {
             stdout_raw: stdout,
             stderr_raw: stderr,
