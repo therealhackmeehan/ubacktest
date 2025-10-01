@@ -108,7 +108,7 @@ function SPChart({ strategyResult }: SPChartProps) {
 
     return (
         <div className="m-2">
-            <div className="text-lg tracking-tight font-bold text-sky-700">Did you beat the S&P 500?</div>
+            <div className="text-lg tracking-tight font-bold text-sky-700">Did you beat the S&P 500?<span className='mx-1 text-xs italic'>(SPY)</span></div>
             <ChartWrapper height={65}>
                 <Line data={chartData} options={options} />
             </ChartWrapper>

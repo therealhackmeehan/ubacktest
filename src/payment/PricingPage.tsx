@@ -28,10 +28,10 @@ export const paymentPlanCards: Record<PaymentPlanId, PaymentPlanCard> = {
     description: 'Take Your Algorithmic Trading to the Next Level',
     features: ['Unlimited Monthly usage', 'Up to 1 minute trading frequency'],
   },
-  [PaymentPlanId.Credits10]: {
-    name: prettyPaymentPlanName(PaymentPlanId.Credits10),
+  [PaymentPlanId.Credits5]: {
+    name: prettyPaymentPlanName(PaymentPlanId.Credits5),
     price: '$.99',
-    description: '10 Successful Backtests',
+    description: '5 Successful Backtests',
     features: ['"Pay as you go" pricing model', 'Up to 1 day trading frequency'],
   },
 };

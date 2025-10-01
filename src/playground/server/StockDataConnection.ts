@@ -36,8 +36,8 @@ class StockDataConnection {
 
     public async get(symbol: string) {
         const approxDataLength = this.calcApproxDataLength();
-        if (approxDataLength > 1000) {
-            throw new HttpError(400, "Backtests limited to ~1000 data points. We calculated approximately " + approxDataLength.toString() + " timepoints");
+        if (approxDataLength > 1500) {
+            throw new HttpError(400, "Backtests limited to ~1500 data points. We calculated approximately " + approxDataLength.toString() + " timepoints.");
         }
 
         const rawData = await this.fetchStockData(symbol);
@@ -107,10 +107,10 @@ class StockDataConnection {
             throw new HttpError(400, "Invalid close prices returned.");
         }
         if (!Array.isArray(date) || date.length !== close.length) {
-            throw new HttpError(500, "Mismatch between timestamps and close prices.");
+            throw new HttpError(500, "Mismatch in lengths between timestamps and close prices.");
         }
         if (![high, low, open, volume].every((arr) => Array.isArray(arr))) {
-            throw new HttpError(500, "Expected arrays for high/low/open/volume.");
+            throw new HttpError(500, "Expected arrays for high/low/open/volume. At least one of those columns was missing from the data.");
         }
         if ([high, low, open].some((arr) => arr.length !== close.length)) {
             throw new HttpError(500, "Data length mismatch among high/low/open/close.");
@@ -139,7 +139,6 @@ class StockDataConnection {
             (Math.abs(startInData - startInput) > allowedDrift ||
                 Math.abs(endInData - endInput) > allowedDrift)
         ) {
-            console.log
             warnings.push("Discrepancy between available data and selected dates. Stock may have IPO'd later or been delisted earlier.");
         }
 

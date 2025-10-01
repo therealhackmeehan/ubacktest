@@ -66,7 +66,7 @@ export const faqs = [
   {
     id: 2,
     question: 'Do you provide the stock data? Isn\'t that super pricey?',
-    answer: 'Yes, we obtain our data from XXXXXXXX. While it is very expensive for us, our goal is to offset the costs and offer low or no fees for our users.',
+    answer: 'Yes, we obtain our data from Tiingo. While it is expensive for us, our goal is to offset the costs and offer low or no fees for our users.',
   },
   {
     id: 3,

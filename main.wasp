@@ -59,10 +59,8 @@ app uBacktest {
 
   emailSender: {
     // NOTE: "Dummy" provider is just for local development purposes.
-    //   Make sure to check the server logs for the email confirmation url (it will not be sent to an address)!
-    //   Once you are ready for production, switch to e.g. "SendGrid" or "Mailgun" providers. Check out https://docs.opensaas.sh/guides/email-sending/ .
-    provider: Dummy,
-    // provider: SendGrid,
+    // provider: Dummy,
+    provider: SendGrid,
     defaultFrom: {
       name: "uBacktest Support",
       // When using a real provider, e.g. SendGrid, you must use the same email address that you configured your account to send out emails with!
@@ -319,7 +317,7 @@ job monthlyCreditReset {
     fn: import { monthlyCreditReset } from "@src/user/workers/monthlyCreditReset"
   },
   schedule: {
-    // cron: "0 * * * *"
+    // cron: "0 0 1 * *" // every month
     cron: "* * * * *" // every minute. useful for debugging
   },
   entities: [User],
@@ -333,7 +331,7 @@ job weeklyPackageUpdate {
     fn: import { weeklyPackageUpdate } from "@src/playground/server/workers/weeklyPackageUpdate"
   },
   schedule: {
-    // cron: "0 * * * *"
+    // cron: "0 9 * * 1" // every monday at 9 AM
     cron: "* * * * *" // every minute. useful for debugging
   },
   entities: [PackageInfo],

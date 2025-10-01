@@ -63,12 +63,12 @@ export default function AppNavBar() {
         </div>
         <div className='hidden lg:flex mx-4 xl:mx-12 border-r-2 py-4 border-black/80 dark:border-blue-300'></div>
         <div className='hidden lg:flex lg:gap-x-8 lg:mr-4'>
-          <Link
-            to={"/home"}
+          <a
+            href={"https://docs.ubacktest.com/"}
             className='text-sm leading-6 text-sky-700 duration-300 ease-in-out hover:text-slate-500 dark:text-white'
           >
             Documentation
-          </Link>
+          </a>
           <Link
             to={"/pricing"}
             className='text-sm leading-6 text-sky-700 duration-300 ease-in-out hover:text-slate-500 dark:text-white'
@@ -151,13 +151,13 @@ export default function AppNavBar() {
                 >
                   Pricing
                 </Link>
-                <Link
-                  to={"/home"}
+                <a
+                  href={"https://docs.ubacktest.com/"}
                   onClick={() => setMobileMenuOpen(false)}
                   className='-mx-3 block rounded-lg px-3 py-2 text-base font-semibold leading-7 text-gray-900 hover:bg-gray-50 dark:text-white hover:dark:bg-boxdark-2'
                 >
                   Documentation
-                </Link>
+                </a>
               </div>
               <div className='py-6'>
                 {isUserLoading ? null : !user ? (
