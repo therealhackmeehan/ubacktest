@@ -1,5 +1,4 @@
-export const ichimoku =
-    `'''
+export const ichimoku = `'''
 Ichimoku Cloud Strategy.
 
 Buy when the Conversion Line crosses above the Base Line and the price is above the cloud.
@@ -52,4 +51,4 @@ def strategy(data):
         'signal'
     ] = -1  # Sell/Short signal
 
-    return data`
+    return data`;

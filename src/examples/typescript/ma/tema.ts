@@ -1,5 +1,4 @@
-export const tema =
-    `'''
+export const tema = `'''
 TEMA Crossover Strategy.
 
 Buy when the price crosses above the Triple Exponential Moving Average (TEMA).
@@ -26,4 +25,4 @@ def strategy(data):
     data.loc[data['close'] < data['TEMA'], 'signal'] = -1  # Short signal (cross below)
 
     return data
-`
+`;

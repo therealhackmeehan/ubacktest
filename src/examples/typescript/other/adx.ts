@@ -1,5 +1,4 @@
-export const adx =
-    `'''
+export const adx = `'''
 ADX Trend Strength Strategy.
 
 Buy when the +DI crosses above the -DI and the ADX is above 25 (strong uptrend).
@@ -48,4 +47,4 @@ def strategy(data):
     data.loc[(data['-DI'] > data['+DI']) & (data['ADX'] > 25), 'signal'] = -1  # Short signal
 
     return data
-`
+`;

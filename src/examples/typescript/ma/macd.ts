@@ -1,5 +1,4 @@
-export const macd =
-    `'''
+export const macd = `'''
 MACD Crossover Strategy.
 
 Buy when the MACD crosses above the signal line.
@@ -29,4 +28,4 @@ def strategy(data):
     data.loc[data['MACD'] < data['Signal_Line'], 'signal'] = -1 # Short
 
     return data
-`
+`;

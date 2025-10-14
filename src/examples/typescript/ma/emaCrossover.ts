@@ -1,5 +1,4 @@
-export const emaCrossover =
-    `'''
+export const emaCrossover = `'''
 Exponential Moving Average (EMA) Crossover Strategy.
 
 Buy when the 12-day EMA crosses above the 26-day EMA.
@@ -24,4 +23,4 @@ def strategy(data):
     data.loc[data['EMA_12'] < data['EMA_26'], 'signal'] = -1
 
     return data
-`
+`;

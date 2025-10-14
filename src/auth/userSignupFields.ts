@@ -1,7 +1,7 @@
-import { z } from 'zod';
-import { defineUserSignupFields } from 'wasp/auth/providers/types';
+import { z } from "zod";
+import { defineUserSignupFields } from "wasp/auth/providers/types";
 
-const adminEmails = process.env.ADMIN_EMAILS?.split(',') || [];
+const adminEmails = process.env.ADMIN_EMAILS?.split(",") || [];
 
 export const getEmailUserFields = defineUserSignupFields({
   username: (data: any) => data.email,
@@ -14,7 +14,7 @@ const githubDataSchema = z.object({
     emails: z.array(
       z.object({
         email: z.string(),
-      })
+      }),
     ),
     login: z.string(),
   }),
@@ -39,7 +39,7 @@ export const getGitHubUserFields = defineUserSignupFields({
 // instead of ["user"] and access args.profile.username instead
 export function getGitHubAuthConfig() {
   return {
-    scopes: ['user'],
+    scopes: ["user"],
   };
 }
 
@@ -66,7 +66,7 @@ export const getGoogleUserFields = defineUserSignupFields({
 
 export function getGoogleAuthConfig() {
   return {
-    scopes: ['profile', 'email'], // must include at least 'profile' for Google
+    scopes: ["profile", "email"], // must include at least 'profile' for Google
   };
 }
 
@@ -94,6 +94,6 @@ export const getDiscordUserFields = defineUserSignupFields({
 
 export function getDiscordAuthConfig() {
   return {
-    scopes: ['identify', 'email'],
+    scopes: ["identify", "email"],
   };
 }

@@ -1,5 +1,4 @@
-export const rsiBreakout =
-    `'''
+export const rsiBreakout = `'''
 Buy Low, Sell/Short High upon RSI exit.
 
 Buy when RSI crosses above 30 (instead of below).
@@ -41,4 +40,4 @@ def strategy(data):
     data.loc[bearish_cross, 'signal'] = -1
     
     return data
-`
+`;

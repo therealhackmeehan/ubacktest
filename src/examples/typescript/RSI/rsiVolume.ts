@@ -1,5 +1,4 @@
-export const rsiVolume =
-    `'''
+export const rsiVolume = `'''
 Buy Low, Sell//Short High with Volume Confirmation.
 
 Short stock when RSI crosses above 70 **and** volume is above its 50-day average.
@@ -38,4 +37,4 @@ def strategy(data):
     data.loc[(data['RSI'] > 70) & (data['volume'] > data['Avg_Volume']), 'signal'] = -1
 
     return data
-`
+`;

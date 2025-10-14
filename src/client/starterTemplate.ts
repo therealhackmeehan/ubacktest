@@ -1,5 +1,4 @@
-export const starterCode =
-`# check out our documentation/examples to get started!
+export const starterCode = `# check out our documentation/examples to get started!
 def strategy(data):
 
     # apply buy/sell signals here...
@@ -7,4 +6,4 @@ def strategy(data):
 
     return data`;
 
-export const starterName = 'myFirstStrategy';
+export const starterName = "myFirstStrategy";

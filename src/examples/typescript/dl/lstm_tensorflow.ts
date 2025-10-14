@@ -1,5 +1,4 @@
-export const lstm_tensorflow =
-    `'''
+export const lstm_tensorflow = `'''
 Long Short Term Memory in TensorFlow
 
 A simple LSTM model that takes normalized stock price data ("open", "high", "low", "close")

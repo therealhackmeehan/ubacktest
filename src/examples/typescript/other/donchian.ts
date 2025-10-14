@@ -1,5 +1,4 @@
-export const donchianChannel =
-    `'''
+export const donchianChannel = `'''
 Donchian Channel Breakout Strategy.
 
 Buy when the price breaks above the 20-day high.
@@ -26,4 +25,4 @@ def strategy(data):
     data.loc[data['close'] < data['Donchian_Low'], 'signal'] = -1
 
     return data
-`
+`;

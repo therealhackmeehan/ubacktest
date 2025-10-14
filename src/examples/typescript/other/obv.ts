@@ -1,5 +1,4 @@
-export const obv =
-    `'''
+export const obv = `'''
 On-Balance Volume (OBV) Strategy.
 
 Buy when the OBV crosses above the 20-day SMA (bullish confirmation).
@@ -34,4 +33,4 @@ def strategy(data):
     data.loc[data['OBV'] < data['SMA_20'], 'signal'] = -1  # Short signal
 
     return data
-`
+`;

@@ -1,5 +1,4 @@
-export const bollingerSma =
-    `'''
+export const bollingerSma = `'''
 Bollinger Bands Strategy with Moving Average Confirmation.
 
 Sell stock when the price is above the upper Bollinger Band **and** below the 50-day SMA.
@@ -47,4 +46,4 @@ def strategy(data):
     ] = -1
 
     return data
-`
+`;

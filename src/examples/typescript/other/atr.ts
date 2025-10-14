@@ -1,5 +1,4 @@
-export const atr =
-    `'''
+export const atr = `'''
 ATR Breakout Strategy.
 
 Buy when the price breaks above the previous high + ATR * multiplier.
@@ -32,4 +31,4 @@ def strategy(data):
     data.loc[data['close'] < (data['low'].shift() - data['ATR'] * atr_multiplier), 'signal'] = -1  # Short signal
 
     return data
-`
+`;

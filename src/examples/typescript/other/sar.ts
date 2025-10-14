@@ -1,5 +1,4 @@
-export const sar =
-    `'''
+export const sar = `'''
 Parabolic SAR Strategy.
 
 Buy when the Parabolic SAR is below the price (bullish trend).
@@ -73,4 +72,4 @@ def strategy(data):
     data.loc[data['close'] < data['SAR'], 'signal'] = -1  # Sell signal
 
     return data
-`
+`;

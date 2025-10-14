@@ -1,11 +1,11 @@
-import { useAuth } from 'wasp/client/auth';
-import { updateCurrentUser } from 'wasp/client/operations';
-import './Main.css';
-import AppNavBar from './components/AppNavBar';
-import CookieConsentBanner from './components/cookie-consent/Banner';
-import { useMemo, useEffect } from 'react';
-import { Outlet, useLocation } from 'react-router-dom';
-import Footer from './components/Footer';
+import { useAuth } from "wasp/client/auth";
+import { updateCurrentUser } from "wasp/client/operations";
+import "./Main.css";
+import AppNavBar from "./components/AppNavBar";
+import CookieConsentBanner from "./components/cookie-consent/Banner";
+import { useMemo, useEffect } from "react";
+import { Outlet, useLocation } from "react-router-dom";
+import Footer from "./components/Footer";
 
 /**
  * use this component to wrap all child components
@@ -16,11 +16,11 @@ export default function App() {
   const { data: user } = useAuth();
 
   const shouldDisplayFooter = useMemo(() => {
-    return !(location.pathname === '/editor');
+    return !(location.pathname === "/editor");
   }, [location]);
 
   const isAdminDashboard = useMemo(() => {
-    return location.pathname.startsWith('/admin');
+    return location.pathname.startsWith("/admin");
   }, [location]);
 
   useEffect(() => {
@@ -35,7 +35,7 @@ export default function App() {
 
   useEffect(() => {
     if (location.hash) {
-      const id = location.hash.replace('#', '');
+      const id = location.hash.replace("#", "");
       const element = document.getElementById(id);
       if (element) {
         element.scrollIntoView();
@@ -46,7 +46,7 @@ export default function App() {
   return (
     <>
       {/* two global tailwind classes */}
-      <div className='dark:bg-boxdark min-h-screen'>
+      <div className="dark:bg-boxdark min-h-screen">
         {isAdminDashboard ? (
           <Outlet />
         ) : (

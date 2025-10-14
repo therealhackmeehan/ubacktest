@@ -1,5 +1,4 @@
-export const bollinger =
-    `'''
+export const bollinger = `'''
 Bollinger Bands Strategy.
 
 Buy stock when the price dips then moves up through the lower Bollinger Band.
@@ -33,4 +32,4 @@ def strategy(data):
     data.loc[(data['close'].shift(1) > data['Upper_Band'].shift(1)) & (data['close'] < data['Upper_Band']), 'signal'] = -1
 
     return data
-`
+`;

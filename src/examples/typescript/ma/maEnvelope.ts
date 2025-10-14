@@ -1,5 +1,4 @@
-export const maEnvelope =
-    `'''
+export const maEnvelope = `'''
 Moving Average Envelope Strategy.
 
 Buy when the price touches the lower envelope band and moves up.

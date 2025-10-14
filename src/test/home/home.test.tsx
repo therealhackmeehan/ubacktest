@@ -7,7 +7,7 @@ import { mockStrategy } from "../mock";
 import HomePage from "../../home/HomePage";
 const { mockQuery } = mockServer();
 
-const secondMockStrategy = {...mockStrategy, id: '12346', name: 'strategy_2'};
+const secondMockStrategy = { ...mockStrategy, id: "12346", name: "strategy_2" };
 const mockStrategies = [mockStrategy, secondMockStrategy];
 
 test("renders strategies from mock API", async () => {
@@ -31,7 +31,7 @@ test("opens delete confirmation modal when pressing the trash icon", async () =>
   mockQuery(getStrategies, [mockStrategy]);
   renderInContext(<HomePage />);
   await screen.findByText(mockStrategy.name);
-  const deleteButton = screen.getByTitle('Delete Strategy');
+  const deleteButton = screen.getByTitle("Delete Strategy");
   fireEvent.click(deleteButton);
   await screen.findByText(/Are you sure you'd like to delete/i);
 });
@@ -40,7 +40,7 @@ test("opens rename modal when pressing the edit icon", async () => {
   mockQuery(getStrategies, [mockStrategy]);
   renderInContext(<HomePage />);
   await screen.findByText(mockStrategy.name);
-  const renameButton = screen.getByTitle('Rename Strategy');
+  const renameButton = screen.getByTitle("Rename Strategy");
   fireEvent.click(renameButton);
   await screen.findByText(/Rename Your/i);
 });

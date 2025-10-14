@@ -1,5 +1,4 @@
-export const scaledRsi =
-    `'''
+export const scaledRsi = `'''
 Scaled Buy Low, Sell High.
 
 Buy/Sell proportional to how low or high the RSI is.
@@ -30,4 +29,4 @@ def strategy(data):
     data['signal'] = (50 - data['RSI']) / 50
 
     return data
-`
+`;

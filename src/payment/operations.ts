@@ -1,17 +1,20 @@
-import type { GenerateCheckoutSession, GetCustomerPortalUrl } from 'wasp/server/operations';
-import { PaymentPlanId, paymentPlans } from './plans';
-import { paymentProcessor } from './paymentProcessor';
-import { HttpError } from 'wasp/server';
+import type {
+  GenerateCheckoutSession,
+  GetCustomerPortalUrl,
+} from "wasp/server/operations";
+import { PaymentPlanId, paymentPlans } from "./plans";
+import { paymentProcessor } from "./paymentProcessor";
+import { HttpError } from "wasp/server";
 
 export type CheckoutSession = {
   sessionUrl: string | null;
   sessionId: string;
 };
 
-export const generateCheckoutSession: GenerateCheckoutSession<PaymentPlanId, CheckoutSession> = async (
-  paymentPlanId,
-  context
-) => {
+export const generateCheckoutSession: GenerateCheckoutSession<
+  PaymentPlanId,
+  CheckoutSession
+> = async (paymentPlanId, context) => {
   if (!context.user) {
     throw new HttpError(401);
   }
@@ -20,7 +23,7 @@ export const generateCheckoutSession: GenerateCheckoutSession<PaymentPlanId, Che
   if (!userEmail) {
     throw new HttpError(
       403,
-      'User needs an email to make a payment. If using the usernameAndPassword Auth method, switch to an Auth method that provides an email.'
+      "User needs an email to make a payment. If using the usernameAndPassword Auth method, switch to an Auth method that provides an email.",
     );
   }
 
@@ -29,7 +32,7 @@ export const generateCheckoutSession: GenerateCheckoutSession<PaymentPlanId, Che
     userId,
     userEmail,
     paymentPlan,
-    prismaUserDelegate: context.entities.User
+    prismaUserDelegate: context.entities.User,
   });
 
   return {
@@ -38,7 +41,10 @@ export const generateCheckoutSession: GenerateCheckoutSession<PaymentPlanId, Che
   };
 };
 
-export const getCustomerPortalUrl: GetCustomerPortalUrl<void, string | null> = async (_args, context) => {
+export const getCustomerPortalUrl: GetCustomerPortalUrl<
+  void,
+  string | null
+> = async (_args, context) => {
   if (!context.user) {
     throw new HttpError(401);
   }

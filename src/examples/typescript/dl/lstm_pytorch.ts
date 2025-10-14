@@ -1,5 +1,4 @@
-export const lstm_pytorch =
-    `'''
+export const lstm_pytorch = `'''
 Long Short Term Memory in PyTorch
 
 A simple LSTM model that takes normalized stock price data ("open", "high", "low", "close")

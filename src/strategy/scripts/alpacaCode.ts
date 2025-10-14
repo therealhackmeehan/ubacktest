@@ -1,7 +1,11 @@
-
-export const alpacaCode = (strategyFcn: string, symbol: string, lookback: number, amount: string, timeUnit:string): string => {
-
-    return `"""
+export const alpacaCode = (
+  strategyFcn: string,
+  symbol: string,
+  lookback: number,
+  amount: string,
+  timeUnit: string,
+): string => {
+  return `"""
 Alpaca Trading Script
 ----------------------
 This script fetches historical stock data, applies a basic trading strategy, 
@@ -219,4 +223,4 @@ def trade():
 if __name__ == "__main__":
     trade()
 `;
-}
+};

@@ -1,5 +1,4 @@
-export const rsiSma =
-    `'''
+export const rsiSma = `'''
 Buy Low, Sell/Short High with Trend Confirmation.
 
 Short stock when RSI crosses above 70 **and** the stock is below its 50-day SMA.
@@ -37,4 +36,4 @@ def strategy(data):
     data.loc[(data['RSI'] > 70) & (data['close'] > data['SMA_50']), 'signal'] = -1
 
     return data
-`
+`;

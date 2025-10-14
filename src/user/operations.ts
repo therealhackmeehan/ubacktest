@@ -2,15 +2,15 @@ import {
   type UpdateCurrentUser,
   type UpdateUserById,
   type GetPaginatedUsers,
-} from 'wasp/server/operations';
-import { type User } from 'wasp/entities';
-import { HttpError } from 'wasp/server';
-import { type SubscriptionStatus } from '../payment/plans';
+} from "wasp/server/operations";
+import { type User } from "wasp/entities";
+import { HttpError } from "wasp/server";
+import { type SubscriptionStatus } from "../payment/plans";
 
-export const updateUserById: UpdateUserById<{ id: string; data: Partial<User> }, User> = async (
-  { id, data },
-  context
-) => {
+export const updateUserById: UpdateUserById<
+  { id: string; data: Partial<User> },
+  User
+> = async ({ id, data }, context) => {
   if (!context.user) {
     throw new HttpError(401);
   }
@@ -29,7 +29,10 @@ export const updateUserById: UpdateUserById<{ id: string; data: Partial<User> },
   return updatedUser;
 };
 
-export const updateCurrentUser: UpdateCurrentUser<Partial<User>, User> = async (user, context) => {
+export const updateCurrentUser: UpdateCurrentUser<Partial<User>, User> = async (
+  user,
+  context,
+) => {
   if (!context.user) {
     throw new HttpError(401);
   }
@@ -50,21 +53,35 @@ type GetPaginatedUsersInput = {
   subscriptionStatus?: SubscriptionStatus[];
 };
 type GetPaginatedUsersOutput = {
-  users: Pick<User, 'id' | 'email' | 'username' | 'lastActiveTimestamp' | 'subscriptionStatus' | 'paymentProcessorUserId'>[];
+  users: Pick<
+    User,
+    | "id"
+    | "email"
+    | "username"
+    | "lastActiveTimestamp"
+    | "subscriptionStatus"
+    | "paymentProcessorUserId"
+  >[];
   totalPages: number;
 };
 
-export const getPaginatedUsers: GetPaginatedUsers<GetPaginatedUsersInput, GetPaginatedUsersOutput> = async (
-  args,
-  context
-) => {
+export const getPaginatedUsers: GetPaginatedUsers<
+  GetPaginatedUsersInput,
+  GetPaginatedUsersOutput
+> = async (args, context) => {
   if (!context.user?.isAdmin) {
     throw new HttpError(401);
   }
 
-  const allSubscriptionStatusOptions = args.subscriptionStatus as Array<string | null> | undefined;
-  const hasNotSubscribed = allSubscriptionStatusOptions?.find((status) => status === null) 
-  let subscriptionStatusStrings = allSubscriptionStatusOptions?.filter((status) => status !== null) as string[] | undefined
+  const allSubscriptionStatusOptions = args.subscriptionStatus as
+    | Array<string | null>
+    | undefined;
+  const hasNotSubscribed = allSubscriptionStatusOptions?.find(
+    (status) => status === null,
+  );
+  let subscriptionStatusStrings = allSubscriptionStatusOptions?.filter(
+    (status) => status !== null,
+  ) as string[] | undefined;
 
   const queryResults = await context.entities.User.findMany({
     skip: args.skip,
@@ -74,7 +91,7 @@ export const getPaginatedUsers: GetPaginatedUsers<GetPaginatedUsersInput, GetPag
         {
           email: {
             contains: args.emailContains || undefined,
-            mode: 'insensitive',
+            mode: "insensitive",
           },
           isAdmin: args.isAdmin,
         },
@@ -104,7 +121,7 @@ export const getPaginatedUsers: GetPaginatedUsers<GetPaginatedUsersInput, GetPag
       paymentProcessorUserId: true,
     },
     orderBy: {
-      id: 'desc',
+      id: "desc",
     },
   });
 
@@ -114,7 +131,7 @@ export const getPaginatedUsers: GetPaginatedUsers<GetPaginatedUsersInput, GetPag
         {
           email: {
             contains: args.emailContains || undefined,
-            mode: 'insensitive',
+            mode: "insensitive",
           },
           isAdmin: args.isAdmin,
         },

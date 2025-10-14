@@ -1,5 +1,5 @@
-import { HttpError } from 'wasp/server';
-import { type Strategy } from 'wasp/entities';
+import { HttpError } from "wasp/server";
+import { type Strategy } from "wasp/entities";
 import {
   type CreateStrategy,
   type UpdateStrategy,
@@ -9,16 +9,19 @@ import {
   type GetSpecificStrategy,
   type Charge,
   type RunStrategy,
-} from 'wasp/server/operations';
-import StrategyPipeline from './StrategyPipeline';
-import { BacktestResultProps, eodFreqs } from '../../shared/sharedTypes';
+} from "wasp/server/operations";
+import StrategyPipeline from "./StrategyPipeline";
+import { BacktestResultProps, eodFreqs } from "../../shared/sharedTypes";
 
 type FileCreationInfo = {
   name: string;
   code: string;
 };
 
-export const createStrategy: CreateStrategy<FileCreationInfo, Strategy> = async ({ name, code }, context) => {
+export const createStrategy: CreateStrategy<
+  FileCreationInfo,
+  Strategy
+> = async ({ name, code }, context) => {
   if (!context.user) throw new HttpError(401);
 
   const existingStrategy = await context.entities.Strategy.findFirst({
@@ -41,44 +44,56 @@ export const createStrategy: CreateStrategy<FileCreationInfo, Strategy> = async 
   });
 };
 
-export const getStrategies: GetStrategies<void, Strategy[] | null> = async (_args, context) => {
+export const getStrategies: GetStrategies<void, Strategy[] | null> = async (
+  _args,
+  context,
+) => {
   if (!context.user) throw new HttpError(401);
 
   const strategies = await context.entities.Strategy.findMany({
     where: {
       user: { id: context.user.id },
     },
-    orderBy: { updatedAt: 'desc' },
+    orderBy: { updatedAt: "desc" },
   });
 
   return strategies.length > 0 ? strategies : null;
 };
 
-export const getSpecificStrategy: GetSpecificStrategy<Pick<Strategy, 'id'>, Strategy | null> = async ({ id }, context) => {
+export const getSpecificStrategy: GetSpecificStrategy<
+  Pick<Strategy, "id">,
+  Strategy | null
+> = async ({ id }, context) => {
   if (!context.user) throw new HttpError(401);
 
   const strategy = await context.entities.Strategy.findUnique({
     where: {
       id,
-      user: { id: context.user.id }
+      user: { id: context.user.id },
     },
   });
 
   return strategy || null;
 };
 
-export const deleteStrategy: DeleteStrategy<Pick<Strategy, 'id'>, Strategy> = async ({ id }, context) => {
+export const deleteStrategy: DeleteStrategy<
+  Pick<Strategy, "id">,
+  Strategy
+> = async ({ id }, context) => {
   if (!context.user) throw new HttpError(401);
 
   return await context.entities.Strategy.delete({
     where: {
       id,
-      user: { id: context.user.id }
+      user: { id: context.user.id },
     },
   });
 };
 
-export const renameStrategy: RenameStrategy<Partial<Strategy>, Strategy> = async ({ id, name }, context) => {
+export const renameStrategy: RenameStrategy<
+  Partial<Strategy>,
+  Strategy
+> = async ({ id, name }, context) => {
   if (!context.user) throw new HttpError(401);
 
   const existingStrategy = await context.entities.Strategy.findFirst({
@@ -92,7 +107,10 @@ export const renameStrategy: RenameStrategy<Partial<Strategy>, Strategy> = async
     throw new HttpError(400, "A strategy with this name already exists.");
   }
   if (existingStrategy && existingStrategy.id === id) {
-    throw new HttpError(400, "The new strategy name must be different from the current name.");
+    throw new HttpError(
+      400,
+      "The new strategy name must be different from the current name.",
+    );
   }
 
   return await context.entities.Strategy.update({
@@ -100,24 +118,30 @@ export const renameStrategy: RenameStrategy<Partial<Strategy>, Strategy> = async
       id,
     },
     data: {
-      name
+      name,
     },
   });
 };
 
-export const updateStrategy: UpdateStrategy<Partial<Strategy>, Strategy> = async ({ id, code }, context) => {
+export const updateStrategy: UpdateStrategy<
+  Partial<Strategy>,
+  Strategy
+> = async ({ id, code }, context) => {
   if (!context.user) throw new HttpError(401);
 
   return await context.entities.Strategy.update({
     where: {
       id,
-      user: { id: context.user.id }
+      user: { id: context.user.id },
     },
     data: { code },
   });
 };
 
-export const runStrategy: RunStrategy<any, any> = async ({ formInputs, code }, context): Promise<BacktestResultProps> => {
+export const runStrategy: RunStrategy<any, any> = async (
+  { formInputs, code },
+  context,
+): Promise<BacktestResultProps> => {
   if (!context.user) throw new HttpError(401);
   const user = context.user;
 
@@ -126,12 +150,18 @@ export const runStrategy: RunStrategy<any, any> = async ({ formInputs, code }, c
 
     // Check if high-frequency backtesting is being requested by a non-Pro user
     if (!eodFreqs.includes(formInputs.intval) && !isProUser) {
-      throw new HttpError(402, "High frequency backtesting is only available to pro users. Consider upgrading your subscription.");
+      throw new HttpError(
+        402,
+        "High frequency backtesting is only available to pro users. Consider upgrading your subscription.",
+      );
     }
 
     // Ensure the user has credits or a valid subscription
     if (!user.credits && !user.subscriptionPlan) {
-      throw new HttpError(402, "You must add more credits or purchase a subscription to continue using this service.");
+      throw new HttpError(
+        402,
+        "You must add more credits or purchase a subscription to continue using this service.",
+      );
     }
 
     // Handle subscription status checks
@@ -141,14 +171,14 @@ export const runStrategy: RunStrategy<any, any> = async ({ formInputs, code }, c
       if (subscriptionStatus === "past_due") {
         throw new HttpError(
           402,
-          "Your subscription payment is past due, and you've run out of free credits. Please update your payment to continue using the service."
+          "Your subscription payment is past due, and you've run out of free credits. Please update your payment to continue using the service.",
         );
       }
 
       if (subscriptionStatus === "deleted") {
         throw new HttpError(
           402,
-          "Your subscription has been deleted, and you have no remaining credits. Consider resubscribing to regain access."
+          "Your subscription has been deleted, and you have no remaining credits. Consider resubscribing to regain access.",
         );
       }
     }
@@ -156,24 +186,23 @@ export const runStrategy: RunStrategy<any, any> = async ({ formInputs, code }, c
 
   const strategyInstance = new StrategyPipeline(formInputs, code);
   return await strategyInstance.run();
-
 };
 
 export const charge: Charge<void, void> = async (_args, context) => {
   if (!context.user) throw new HttpError(401);
 
   if (context.user.isAdmin) {
-    console.log('Avoiding charge as admin.');
+    console.log("Avoiding charge as admin.");
     return;
   }
 
   if (context.user.credits && !context.user.subscriptionPlan) {
     await context.entities.User.update({
       where: {
-        id: context.user.id
+        id: context.user.id,
       },
       data: {
-        credits: { decrement: 1 }
+        credits: { decrement: 1 },
       },
     });
   }

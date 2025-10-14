@@ -1,12 +1,13 @@
 import { PythonDataProps } from "../../shared/sharedTypes";
 
 class ScriptBuilder {
-
-    public static build(code: string, toInsertInPython: PythonDataProps, startDate: string, uniqueKey: string): string {
-
-        console.log(JSON.stringify(startDate))
-        const m =
-            `${code}
+  public static build(
+    code: string,
+    toInsertInPython: PythonDataProps,
+    startDate: string,
+    uniqueKey: string,
+  ): string {
+    const m = `${code}
 
 import json
 import pandas as pd
@@ -74,8 +75,8 @@ sys.stdout.close()
 sys.stdout = original_stdout
 print(output)`;
 
-        return m;
-    }
+    return m;
+  }
 }
 
 export default ScriptBuilder;

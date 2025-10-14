@@ -1,5 +1,4 @@
-export const stochastic =
-    `'''
+export const stochastic = `'''
 Stochastic Oscillator Strategy.
 
 Buy when the %K line crosses above the %D line below 20 (oversold condition).
@@ -29,4 +28,4 @@ def strategy(data):
     data.loc[(data['%K'] > 80) & (data['%K'] < data['%D']), 'signal'] = -1  # Short signal
 
     return data
-`
+`;

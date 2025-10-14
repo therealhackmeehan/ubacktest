@@ -33,186 +33,186 @@ import { logReg } from "./typescript/ml/logisticRegression";
 import { svmClassifier } from "./typescript/ml/svm";
 import { gbClassifier } from "./typescript/ml/gradBoosting";
 import { knnClassifier } from "./typescript/ml/knn";
-import { nnClassifier }from "./typescript/ml/neuralNet";
+import { nnClassifier } from "./typescript/ml/neuralNet";
 import { lstm_pytorch } from "./typescript/dl/lstm_pytorch";
 import { lstm_tensorflow } from "./typescript/dl/lstm_tensorflow";
 
 type Example = {
-    name: string;
-    script: string;
+  name: string;
+  script: string;
 };
 
 type StrategyExamples = {
-    [category: string]: Example[];
+  [category: string]: Example[];
 };
 
 export const examples: StrategyExamples = {
-    "Intro": [
-        {
-            name: "Buy and Hold Strategy",
-            script: buyAndHold
-        },
-        {
-            name: "Short and Hold Strategy",
-            script: shortAndHold
-        },
-        {
-            name: "Random Strategy",
-            script: random
-        },
-        {
-            name: "(More) Random Strategy",
-            script: moreRandom
-        }
-    ],
-    "Moving Averages": [
-        {
-            name: "Simple Moving Average Crossover",
-            script: smaCrossover
-        },
-        {
-            name: "Exponential Moving Average Crossover",
-            script: emaCrossover
-        },
-        {
-            name: "Triple Exponential Moving Average",
-            script: tema
-        },
-        {
-            name: "MACD Strategy",
-            script: macd
-        },
-        {
-            name: "Moving Average Envelope Strategy",
-            script: maEnvelope
-        },
-        {
-            name: "Adaptive Moving Average",
-            script: ama
-        }
-    ],
-    "RSI-Based Strategies": [
-        {
-            name: "RSI Indicator Strategy",
-            script: rsi
-        },
-        {
-            name: "RSI Breakout Strategy",
-            script: rsiBreakout
-        },
-        {
-            name: 'RSI Indicator Strategy (Scaled)',
-            script: scaledRsi,
-        },
-        {
-            name: 'RSI Indicator Strategy with Adaptive Bounds',
-            script: adaptiveRsi,
-        },
-        {
-            name: "RSI with Moving Average Confirmation",
-            script: rsiSma
-        },
-        {
-            name: "RSI with Volume Confirmation",
-            script: rsiVolume
-        }
-    ],
-    "Bollinger Band Strategies": [
-        {
-            name: "Bollinger Bands Strategy",
-            script: bollinger
-        },
-        {
-            name: "Bollinger Bands with Moving Average Confirmation",
-            script: bollingerSma
-        },
-    ],
-    "More Useful Indicators": [
-        {
-            name: "Average True Range (ATR) Strategy",
-            script: atr
-        },
-        {
-            name: "ADX Indicator Strategy",
-            script: adx
-        },
-        {
-            name: "Donchian Channel Strategy",
-            script: donchianChannel
-        },
-        {
-            name: "Ichimoku Cloud Strategy",
-            script: ichimoku
-        },
-        {
-            name: "On-Balance Volume Strategy",
-            script: obv
-        },
-        {
-            name: "Parabolic SAR Strategy",
-            script: sar
-        },
-        {
-            name: "Stochastic Oscillator Strategy",
-            script: stochastic
-        },
-    ],
-    "Regression": [
-        {
-            name: "Simple Linear Regression",
-            script: linReg
-        },
-        {
-            name: "Exponential Regression",
-            script: expReg
-        },
-        {
-            name: "Polynomial Regression",
-            script: polyReg
-        },
-        {
-            name: "Ridge Regression",
-            script: ridgeReg
-        },
-        {
-            name: "Lasso Regression",
-            script: lassoReg
-        },
-    ],
-    "Machine Learning": [
-        {
-            name: "Logistic Regression",
-            script: logReg
-        },
-        {
-            name: "Support Vector Machines",
-            script: svmClassifier
-        },
-        {
-            name: "Gradient Boosting Classifier",
-            script: gbClassifier
-        },
-        {
-            name: "Random Forest Classifier",
-            script: rfClassifier
-        },
-        {
-            name: "KNN Classifier",
-            script: knnClassifier
-        },
-        {
-            name: "Neural Network Classifier",
-            script: nnClassifier
-        },
-    ],
-    "Deep Learning": [
-        {
-            name: "LSTM (PyTorch)",
-            script: lstm_pytorch
-        },
-        {
-            name: "LSTM (TensorFlow)",
-            script: lstm_tensorflow
-        },
-    ],
+  Intro: [
+    {
+      name: "Buy and Hold Strategy",
+      script: buyAndHold,
+    },
+    {
+      name: "Short and Hold Strategy",
+      script: shortAndHold,
+    },
+    {
+      name: "Random Strategy",
+      script: random,
+    },
+    {
+      name: "(More) Random Strategy",
+      script: moreRandom,
+    },
+  ],
+  "Moving Averages": [
+    {
+      name: "Simple Moving Average Crossover",
+      script: smaCrossover,
+    },
+    {
+      name: "Exponential Moving Average Crossover",
+      script: emaCrossover,
+    },
+    {
+      name: "Triple Exponential Moving Average",
+      script: tema,
+    },
+    {
+      name: "MACD Strategy",
+      script: macd,
+    },
+    {
+      name: "Moving Average Envelope Strategy",
+      script: maEnvelope,
+    },
+    {
+      name: "Adaptive Moving Average",
+      script: ama,
+    },
+  ],
+  "RSI-Based Strategies": [
+    {
+      name: "RSI Indicator Strategy",
+      script: rsi,
+    },
+    {
+      name: "RSI Breakout Strategy",
+      script: rsiBreakout,
+    },
+    {
+      name: "RSI Indicator Strategy (Scaled)",
+      script: scaledRsi,
+    },
+    {
+      name: "RSI Indicator Strategy with Adaptive Bounds",
+      script: adaptiveRsi,
+    },
+    {
+      name: "RSI with Moving Average Confirmation",
+      script: rsiSma,
+    },
+    {
+      name: "RSI with Volume Confirmation",
+      script: rsiVolume,
+    },
+  ],
+  "Bollinger Band Strategies": [
+    {
+      name: "Bollinger Bands Strategy",
+      script: bollinger,
+    },
+    {
+      name: "Bollinger Bands with Moving Average Confirmation",
+      script: bollingerSma,
+    },
+  ],
+  "More Useful Indicators": [
+    {
+      name: "Average True Range (ATR) Strategy",
+      script: atr,
+    },
+    {
+      name: "ADX Indicator Strategy",
+      script: adx,
+    },
+    {
+      name: "Donchian Channel Strategy",
+      script: donchianChannel,
+    },
+    {
+      name: "Ichimoku Cloud Strategy",
+      script: ichimoku,
+    },
+    {
+      name: "On-Balance Volume Strategy",
+      script: obv,
+    },
+    {
+      name: "Parabolic SAR Strategy",
+      script: sar,
+    },
+    {
+      name: "Stochastic Oscillator Strategy",
+      script: stochastic,
+    },
+  ],
+  Regression: [
+    {
+      name: "Simple Linear Regression",
+      script: linReg,
+    },
+    {
+      name: "Exponential Regression",
+      script: expReg,
+    },
+    {
+      name: "Polynomial Regression",
+      script: polyReg,
+    },
+    {
+      name: "Ridge Regression",
+      script: ridgeReg,
+    },
+    {
+      name: "Lasso Regression",
+      script: lassoReg,
+    },
+  ],
+  "Machine Learning": [
+    {
+      name: "Logistic Regression",
+      script: logReg,
+    },
+    {
+      name: "Support Vector Machines",
+      script: svmClassifier,
+    },
+    {
+      name: "Gradient Boosting Classifier",
+      script: gbClassifier,
+    },
+    {
+      name: "Random Forest Classifier",
+      script: rfClassifier,
+    },
+    {
+      name: "KNN Classifier",
+      script: knnClassifier,
+    },
+    {
+      name: "Neural Network Classifier",
+      script: nnClassifier,
+    },
+  ],
+  "Deep Learning": [
+    {
+      name: "LSTM (PyTorch)",
+      script: lstm_pytorch,
+    },
+    {
+      name: "LSTM (TensorFlow)",
+      script: lstm_tensorflow,
+    },
+  ],
 };

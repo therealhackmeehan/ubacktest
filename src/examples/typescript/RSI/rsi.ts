@@ -1,5 +1,4 @@
-export const rsi =
-    `'''
+export const rsi = `'''
 Buy Low, Sell/Short High.
 
 Buy stock when the RSI breaks below 30.
@@ -35,4 +34,4 @@ def strategy(data):
     data.loc[data['RSI'] > 70, 'signal'] = -1
 
     return data
-`
+`;

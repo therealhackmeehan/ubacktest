@@ -1,5 +1,4 @@
-export const smaCrossover =
-    `'''
+export const smaCrossover = `'''
 Simple Moving Average (SMA) Crossover Strategy.
 
 Buy when the 10-day SMA crosses above the 50-day SMA (golden cross).
@@ -23,4 +22,4 @@ def strategy(data):
     data.loc[data['SMA_10'] < data['SMA_50'], 'signal'] = -1
 
     return data
-`
+`;

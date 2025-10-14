@@ -1,1 +1,1 @@
-export const DocsUrl = 'https://docs.ubacktest.com';
+export const DocsUrl = "https://docs.ubacktest.com";
