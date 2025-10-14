@@ -1,6 +1,9 @@
 {
   "name": "ubacktest",
   "type": "module",
+  "scripts": {
+    "format": "npx prettier --write \"**/*.{ts,tsx,html,css,json,js,jsx}\""
+  },
   "dependencies": {
     "@google-analytics/data": "4.12.1",
     "@headlessui/react": "2.2.0",
