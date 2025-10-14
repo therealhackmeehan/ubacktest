@@ -2,82 +2,102 @@ import { useState } from "react";
 import { MdSort } from "react-icons/md";
 import { StrategyResultProps } from "../../../../shared/sharedTypes";
 
+type StrategyResultSortProps = Pick<
+  StrategyResultProps,
+  "timestamp" | "signal" | "portfolio" | "returns"
+>;
+
+type Row = {
+  timestamp: string;
+  signal: number;
+  portfolio: number;
+  returns: number;
+};
+
+type SortKey = keyof StrategyResultSortProps; // "timestamp" | "signal" | "portfolio" | "returns"
+
 interface DataTableProps {
   strategyResult: StrategyResultProps;
 }
+
 function DataTable({ strategyResult }: DataTableProps) {
-  // State for sorted data and sorting configuration
-  const [sortedData, setSortedData] = useState<any>(strategyResult);
+  // Extract only the fields we need
+  const initialData: StrategyResultSortProps = {
+    timestamp: strategyResult.timestamp,
+    signal: strategyResult.signal,
+    portfolio: strategyResult.portfolio,
+    returns: strategyResult.returns,
+  };
+
+  const [sortedData, setSortedData] =
+    useState<StrategyResultSortProps>(initialData);
   const [sortConfig, setSortConfig] = useState<{
-    key: string;
+    key: SortKey;
     direction: "asc" | "desc";
   } | null>(null);
 
-  // Sorting function
-  const handleSort = (key: string) => {
+  const handleSort = (key: SortKey) => {
     const direction =
       sortConfig?.key === key && sortConfig.direction === "asc"
         ? "desc"
         : "asc";
+
     setSortConfig({ key, direction });
 
-    // Create a sortable array of objects
-    const combinedData: any[] = sortedData.timestamp.map(
-      (date: string, index: number) => ({
-        date,
+    // Combine into sortable rows
+    const combinedData: Row[] = sortedData.timestamp.map(
+      (timestamp, index) => ({
+        timestamp,
         signal: sortedData.signal[index],
         portfolio: sortedData.portfolio[index],
         returns: sortedData.returns[index],
-      }),
+      })
     );
 
-    // Sort the combined data based on the selected key
+    // Sorting logic
     combinedData.sort((a, b) => {
-      if (key === "date") {
-        const s = new Date(a).getTime();
-        const e = new Date(b).getTime();
-        return direction === "asc" ? s - s : e - s;
-      } else if (key === "signal") {
-        return direction === "asc" ? a.signal - b.signal : b.signal - a.signal;
-      } else if (key === "portfolio") {
-        return direction === "asc"
-          ? a.portfolio - b.portfolio
-          : b.portfolio - a.portfolio;
-      } else if (key === "returns") {
-        return direction === "asc"
-          ? a.returns - b.returns
-          : b.returns - a.returns;
+      const valA = a[key];
+      const valB = b[key];
+
+      // Date sorting
+      if (key === "timestamp") {
+        const timeA = new Date(valA).getTime();
+        const timeB = new Date(valB).getTime();
+        return direction === "asc" ? timeA - timeB : timeB - timeA;
       }
+
+      // Numeric sorting
+      if (typeof valA === "number" && typeof valB === "number") {
+        return direction === "asc" ? valA - valB : valB - valA;
+      }
+
       return 0;
     });
 
-    // Unpack the sorted data back into separate arrays
+    // Unpack back into arrays
     setSortedData({
-      timestamp: combinedData.map((item) => item.date),
-      signal: combinedData.map((item) => item.signal),
-      portfolio: combinedData.map((item) => item.portfolio),
-      returns: combinedData.map((item) => item.returns),
+      timestamp: combinedData.map((row) => row.timestamp),
+      signal: combinedData.map((row) => row.signal),
+      portfolio: combinedData.map((row) => row.portfolio),
+      returns: combinedData.map((row) => row.returns),
     });
   };
 
-  // Get min and max returns for color scaling
+  // Min/max for color scaling
   const minReturn = Math.min(...sortedData.returns);
   const maxReturn = Math.max(...sortedData.returns);
 
-  // Function to interpolate color
   const getColor = (value: number) => {
     if (value >= 0) {
-      // Normalize positive values to [0, 1]
-      const maxPositive = Math.max(0, maxReturn); // Ensure maxPositive is non-negative
-      const percentage = maxPositive === 0 ? 0 : value / maxPositive; // Avoid division by zero
-      const green = Math.round(55 + 200 * percentage); // Scale green based on positive percentage
-      return `rgba(0, ${green}, 0, ${(0.5 * green) / 255})`; // Shades of green
+      const maxPositive = Math.max(0, maxReturn);
+      const percentage = maxPositive === 0 ? 0 : value / maxPositive;
+      const green = Math.round(55 + 200 * percentage);
+      return `rgba(0, ${green}, 0, ${(0.5 * green) / 255})`;
     } else {
-      // Normalize negative values to [0, 1]
-      const minNegative = Math.min(0, minReturn); // Ensure minNegative is non-positive
-      const percentage = minNegative === 0 ? 0 : value / minNegative; // Avoid division by zero
-      const red = Math.round(55 + 200 * percentage); // Scale red based on negative percentage
-      return `rgba(${red}, 0, 0, ${(0.5 * red) / 255})`; // Shades of red
+      const minNegative = Math.min(0, minReturn);
+      const percentage = minNegative === 0 ? 0 : value / minNegative;
+      const red = Math.round(55 + 200 * percentage);
+      return `rgba(${red}, 0, 0, ${(0.5 * red) / 255})`;
     }
   };
 
@@ -85,7 +105,7 @@ function DataTable({ strategyResult }: DataTableProps) {
     <table className="w-full">
       <thead className="tracking-tight text-sm text-gray-700 bg-slate-200">
         <tr>
-          <TableHead column="date" label="Date" handleSort={handleSort} />
+          <TableHead column="timestamp" label="Date" handleSort={handleSort} />
           <TableHead
             column="signal"
             label="Buy/Short/Hold Signal"
@@ -104,40 +124,41 @@ function DataTable({ strategyResult }: DataTableProps) {
         </tr>
       </thead>
       <tbody className="text-sm text-gray-700 lowercase bg-white overflow-y-auto">
-        {sortedData.timestamp.map((date: string, index: number) => (
+        {sortedData.timestamp.map((timestamp, index) => (
           <tr
             className="text-center border-b-2 border-slate-100 hover:font-bold hover:bg-slate-100 hover:-translate-x-2 duration-200 group"
             key={index}
           >
             <td className="font-extralight">
-              {new Date(date).toLocaleString()}
+              {new Date(timestamp).toLocaleString()}
             </td>
 
             <td className="font-bold flex justify-center gap-x-4">
               {sortedData.signal[index]}
-              <span className="text-xs text-slate-400 hidden group-hover:flex  duration-500">
+              <span className="text-xs text-slate-400 hidden group-hover:flex duration-500">
                 (
                 {sortedData.signal[index] >= -1 &&
                 sortedData.signal[index] < -0.7
                   ? "strong short"
                   : sortedData.signal[index] >= -0.7 &&
-                      sortedData.signal[index] < -0.3
-                    ? "short"
-                    : sortedData.signal[index] >= -0.3 &&
-                        sortedData.signal[index] < 0
-                      ? "weak short"
-                      : sortedData.signal[index] === 0
-                        ? "hold"
-                        : sortedData.signal[index] > 0 &&
-                            sortedData.signal[index] <= 0.3
-                          ? "weak buy"
-                          : sortedData.signal[index] > 0.3 &&
-                              sortedData.signal[index] <= 0.7
-                            ? "buy"
-                            : "strong buy"}
+                    sortedData.signal[index] < -0.3
+                  ? "short"
+                  : sortedData.signal[index] >= -0.3 &&
+                    sortedData.signal[index] < 0
+                  ? "weak short"
+                  : sortedData.signal[index] === 0
+                  ? "hold"
+                  : sortedData.signal[index] > 0 &&
+                    sortedData.signal[index] <= 0.3
+                  ? "weak buy"
+                  : sortedData.signal[index] > 0.3 &&
+                    sortedData.signal[index] <= 0.7
+                  ? "buy"
+                  : "strong buy"}
                 )
               </span>
             </td>
+
             <td className="group">
               $
               <span className="group-hover:hidden">
@@ -147,10 +168,11 @@ function DataTable({ strategyResult }: DataTableProps) {
                 {sortedData.portfolio[index].toFixed(4)}
               </span>
             </td>
+
             <td
               className="text-sm tracking-tight"
               style={{
-                background: getColor(sortedData.returns[index]), // Dynamic color
+                background: getColor(sortedData.returns[index]),
               }}
             >
               {(100 * sortedData.returns[index]).toFixed(2)}%
@@ -163,9 +185,9 @@ function DataTable({ strategyResult }: DataTableProps) {
 }
 
 interface TableHeadProps {
-  column: string;
+  column: SortKey;
   label: string;
-  handleSort: (column: string) => void;
+  handleSort: (column: SortKey) => void;
 }
 
 const TableHead = ({ column, label, handleSort }: TableHeadProps) => (

@@ -99,6 +99,10 @@ export type GetSharedWithWithReceiver = Share & {
   receiver: User;
 };
 
+export type SharedWithResultAndUser = Share & {
+  result: Result & { user: User };
+};
+
 export type GetTopResultsProp = {
   topByProfitLoss: ResultWithUsername[] | null;
   topByAnnualizedProfitLoss: ResultWithUsername[] | null;

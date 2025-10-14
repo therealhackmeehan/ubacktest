@@ -16,7 +16,7 @@ class ResultValidator {
     if (!allLengthsMatch || lengths.some((length) => length === 0)) {
       throw new HttpError(
         500,
-        "Your portfolio arrays are missing or mismatched in length.",
+        "Your portfolio arrays are missing or mismatched in length."
       );
     }
 
@@ -27,7 +27,7 @@ class ResultValidator {
         Array.isArray(data) &&
         data.every(
           (value) =>
-            value !== null && value !== undefined && !Number.isNaN(value),
+            value !== null && value !== undefined && !Number.isNaN(value)
         )
       );
     });
@@ -35,7 +35,7 @@ class ResultValidator {
     if (!allDataIsValid) {
       throw new HttpError(
         500,
-        "Your portfolio contains invalid data (null, undefined, or NaN).",
+        "Your portfolio contains invalid data (null, undefined, or NaN)."
       );
     }
 
@@ -46,29 +46,29 @@ class ResultValidator {
     if (!portfoliosNonNegative) {
       throw new HttpError(
         500,
-        "Your portfolio contains negative values, which is not allowed.",
+        "Your portfolio contains negative values, which is not allowed."
       );
     }
 
     // make sure trading signals fall within allowed range
     const returnsWithinBounds = strategyResult.returns.every(
-      (value) => value >= -1 && value <= 1,
+      (value) => value >= -1 && value <= 1
     );
     if (!returnsWithinBounds) {
       throw new HttpError(
         500,
-        "Your portfolio returns contain unrealistic values.",
+        "Your portfolio returns contain unrealistic values."
       );
     }
 
     // check timestamps for valid idx trend
     const timestampsAreMonotonic = strategyResult.timestamp.every(
-      (value, index, array) => index === 0 || value > array[index - 1],
+      (value, index, array) => index === 0 || value > array[index - 1]
     );
     if (!timestampsAreMonotonic) {
       throw new HttpError(
         500,
-        "Timestamps in your portfolio data are not in chronological order.",
+        "Timestamps in your portfolio data are not in chronological order."
       );
     }
   }

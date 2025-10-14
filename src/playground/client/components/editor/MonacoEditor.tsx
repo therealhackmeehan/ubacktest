@@ -83,7 +83,7 @@ function MonacoEditor({ codeToDisplay, setCodeToDisplay }: MonacoEditorProps) {
         setSaving(false);
         isSavingRef.current = false; // Reset the saving flag
       }, 2000);
-    } catch (err: any) {
+    } catch (error: any) {
       setErrMsg("Error in attempting to save code to the database.");
       setButtonText("save");
       setSaving(false);

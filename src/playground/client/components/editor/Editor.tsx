@@ -20,10 +20,10 @@ interface EditorProps {
   strategyResult: StrategyResultProps | null;
   setStrategyResult: (value: StrategyResultProps | null) => void;
   setResultOpen: (value: boolean) => void;
-  setFormInputs: (value: any) => void;
+  setFormInputs: React.Dispatch<React.SetStateAction<FormInputProps>>;
   setStrategyResultIsConnectedTo: (value: string) => void;
   std: stdProps;
-  setStd: (value: any) => void;
+  setStd: React.Dispatch<React.SetStateAction<stdProps>>;
   codeToDisplay: string;
   setCodeToDisplay: (value: string) => void;
   setWarningMsg: (value: string | null) => void;
@@ -68,7 +68,7 @@ function Editor({
 
       if (warnings && warnings.length > 0) {
         setWarningMsg(
-          warnings.map((str: string) => `WARNING: ${str}`).join("\n\n"),
+          warnings.map((str: string) => `WARNING: ${str}`).join("\n\n")
         );
       }
 
@@ -110,8 +110,8 @@ function Editor({
 
   function handlePreRunValidations() {
     updateStrategy({ id: selectedStrategy.id, code: codeToDisplay });
-    validateFormInputs({ formInputs });
-    validatePythonCode({ code: codeToDisplay });
+    validateFormInputs(formInputs);
+    validatePythonCode(codeToDisplay);
   }
 
   function handleDebugOutput(stdout: string, stderr: string) {
