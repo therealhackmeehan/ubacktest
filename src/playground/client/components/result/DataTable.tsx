@@ -51,7 +51,7 @@ function DataTable({ strategyResult }: DataTableProps) {
         signal: sortedData.signal[index],
         portfolio: sortedData.portfolio[index],
         returns: sortedData.returns[index],
-      })
+      }),
     );
 
     // Sorting logic
@@ -141,20 +141,20 @@ function DataTable({ strategyResult }: DataTableProps) {
                 sortedData.signal[index] < -0.7
                   ? "strong short"
                   : sortedData.signal[index] >= -0.7 &&
-                    sortedData.signal[index] < -0.3
-                  ? "short"
-                  : sortedData.signal[index] >= -0.3 &&
-                    sortedData.signal[index] < 0
-                  ? "weak short"
-                  : sortedData.signal[index] === 0
-                  ? "hold"
-                  : sortedData.signal[index] > 0 &&
-                    sortedData.signal[index] <= 0.3
-                  ? "weak buy"
-                  : sortedData.signal[index] > 0.3 &&
-                    sortedData.signal[index] <= 0.7
-                  ? "buy"
-                  : "strong buy"}
+                      sortedData.signal[index] < -0.3
+                    ? "short"
+                    : sortedData.signal[index] >= -0.3 &&
+                        sortedData.signal[index] < 0
+                      ? "weak short"
+                      : sortedData.signal[index] === 0
+                        ? "hold"
+                        : sortedData.signal[index] > 0 &&
+                            sortedData.signal[index] <= 0.3
+                          ? "weak buy"
+                          : sortedData.signal[index] > 0.3 &&
+                              sortedData.signal[index] <= 0.7
+                            ? "buy"
+                            : "strong buy"}
                 )
               </span>
             </td>

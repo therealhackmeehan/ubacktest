@@ -99,13 +99,13 @@ class StrategyPipeline {
       this.code,
       normalizedQuote,
       cutoffDate,
-      key
+      key,
     );
 
     // Execute user code
     const { stdout_raw, stderr_raw } = await new CodeExecutor(
       fullUserCode,
-      this.formInputs.timeout
+      this.formInputs.timeout,
     ).execute();
 
     // Parse execution output
@@ -121,7 +121,7 @@ class StrategyPipeline {
       if (!this.stderr)
         throw new HttpError(
           503,
-          "Something went wrong. No trading signals or stderr generated. Please try again."
+          "Something went wrong. No trading signals or stderr generated. Please try again.",
         );
       return this.sendJSONtoFrontend();
     }
@@ -132,21 +132,21 @@ class StrategyPipeline {
       if (
         StrategyPipeline.arraysAreEqual(
           this.strategyResult.timestamp,
-          shortenedNormalizedQuote.timestamp
+          shortenedNormalizedQuote.timestamp,
         )
       ) {
         this.strategyResult.sp = shortenedNormalizedQuote.close;
       }
     } catch (error: any) {
       this.warnings.push(
-        "An issue occurred with fetching S&P Comparison Data, so it will be excluded from this backtest."
+        "An issue occurred with fetching S&P Comparison Data, so it will be excluded from this backtest.",
       );
     }
 
     // Calculate final portfolio results
     const calc = new PortfolioCalculator(
       this.formInputs.costPerTrade,
-      this.strategyResult
+      this.strategyResult,
     );
     this.strategyResult = calc.calculate();
 

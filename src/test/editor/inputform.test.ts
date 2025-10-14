@@ -19,9 +19,9 @@ describe("Form Input Validation", () => {
         validateFormInputs({
           ...initFormInputs,
           symbol: input.symbol,
-        })
+        }),
       ).toThrow(
-        "Symbol must be alphanumeric (or ^ for indices) and between 1 to 6 characters."
+        "Symbol must be alphanumeric (or ^ for indices) and between 1 to 6 characters.",
       );
     });
 
@@ -33,7 +33,7 @@ describe("Form Input Validation", () => {
         validateFormInputs({
           ...initFormInputs,
           symbol,
-        })
+        }),
       ).not.toThrow();
     });
   });
@@ -55,7 +55,7 @@ describe("Form Input Validation", () => {
       validateFormInputs({
         ...initFormInputs,
         startDate: addMonths(new Date(), 1),
-      })
+      }),
     ).toThrow("Start date cannot be later than the end date");
   });
 
@@ -72,7 +72,7 @@ describe("Form Input Validation", () => {
         ...initFormInputs,
         startDate: OneHundredString,
         endDate: NinetyNineString,
-      })
+      }),
     ).toThrow("Start date or end date cannot fall before 1970.");
   });
 
@@ -82,9 +82,9 @@ describe("Form Input Validation", () => {
         ...initFormInputs,
         useWarmupDate: true,
         warmupDate: "",
-      })
+      }),
     ).toThrow(
-      "If utilizing the warm-up period, make sure to include a warm-up start date."
+      "If utilizing the warm-up period, make sure to include a warm-up start date.",
     );
   });
 
@@ -95,7 +95,7 @@ describe("Form Input Validation", () => {
         validateFormInputs({
           ...initFormInputs,
           timeout,
-        })
+        }),
       ).toThrow("Execution time limit must be a number.");
     });
   });
@@ -107,7 +107,7 @@ describe("Form Input Validation", () => {
         validateFormInputs({
           ...initFormInputs,
           timeout,
-        })
+        }),
       ).toThrow("Execution time limit must fall between 1 and 60 seconds.");
     });
   });
@@ -119,7 +119,7 @@ describe("Form Input Validation", () => {
         validateFormInputs({
           ...initFormInputs,
           timeout,
-        })
+        }),
       ).toThrow("Execution time limit must be an integer.");
     });
   });
@@ -131,7 +131,7 @@ describe("Form Input Validation", () => {
         validateFormInputs({
           ...initFormInputs,
           costPerTrade,
-        })
+        }),
       ).toThrow("Trading Cost must fall between 0 and 10%.");
     });
   });
@@ -143,7 +143,7 @@ describe("Form Input Validation", () => {
         validateFormInputs({
           ...initFormInputs,
           costPerTrade,
-        })
+        }),
       ).not.toThrow();
     });
   });
@@ -158,7 +158,7 @@ describe("Form Input Validation", () => {
         ...initFormInputs,
         useWarmupDate: true,
         warmupDate: futureDate,
-      })
+      }),
     ).toThrow("Warm-up dates cannot be in the future.");
 
     expect(() =>
@@ -166,7 +166,7 @@ describe("Form Input Validation", () => {
         ...initFormInputs,
         useWarmupDate: true,
         startDate: addMonths(new Date(), -20),
-      })
+      }),
     ).toThrow("Warm-up date cannot come after/on the start date.");
   });
 
@@ -179,14 +179,14 @@ describe("Form Input Validation", () => {
         ...initFormInputs,
         startDate: future,
         endDate: futureplus1,
-      })
+      }),
     ).toThrow("Dates cannot be in the future.");
 
     expect(() =>
       validateFormInputs({
         ...initFormInputs,
         endDate: future,
-      })
+      }),
     ).toThrow("Dates cannot be in the future.");
   });
 });

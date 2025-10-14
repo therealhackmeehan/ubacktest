@@ -46,7 +46,7 @@ export const createStrategy: CreateStrategy<
 
 export const getStrategies: GetStrategies<void, Strategy[] | null> = async (
   _args,
-  context
+  context,
 ) => {
   if (!context.user) throw new HttpError(401);
 
@@ -109,7 +109,7 @@ export const renameStrategy: RenameStrategy<
   if (existingStrategy && existingStrategy.id === id) {
     throw new HttpError(
       400,
-      "The new strategy name must be different from the current name."
+      "The new strategy name must be different from the current name.",
     );
   }
 
@@ -140,7 +140,7 @@ export const updateStrategy: UpdateStrategy<
 
 export const runStrategy: RunStrategy<any, any> = async (
   { formInputs, code },
-  context
+  context,
 ): Promise<BacktestResultProps> => {
   if (!context.user) throw new HttpError(401);
   const user = context.user;
@@ -152,7 +152,7 @@ export const runStrategy: RunStrategy<any, any> = async (
     if (!eodFreqs.includes(formInputs.intval) && !isProUser) {
       throw new HttpError(
         402,
-        "High frequency backtesting is only available to pro users. Consider upgrading your subscription."
+        "High frequency backtesting is only available to pro users. Consider upgrading your subscription.",
       );
     }
 
@@ -160,7 +160,7 @@ export const runStrategy: RunStrategy<any, any> = async (
     if (!user.credits && !user.subscriptionPlan) {
       throw new HttpError(
         402,
-        "You must add more credits or purchase a subscription to continue using this service."
+        "You must add more credits or purchase a subscription to continue using this service.",
       );
     }
 
@@ -171,14 +171,14 @@ export const runStrategy: RunStrategy<any, any> = async (
       if (subscriptionStatus === "past_due") {
         throw new HttpError(
           402,
-          "Your subscription payment is past due, and you've run out of free credits. Please update your payment to continue using the service."
+          "Your subscription payment is past due, and you've run out of free credits. Please update your payment to continue using the service.",
         );
       }
 
       if (subscriptionStatus === "deleted") {
         throw new HttpError(
           402,
-          "Your subscription has been deleted, and you have no remaining credits. Consider resubscribing to regain access."
+          "Your subscription has been deleted, and you have no remaining credits. Consider resubscribing to regain access.",
         );
       }
     }

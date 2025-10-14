@@ -28,7 +28,7 @@ type ResultCreationInfo = {
 
 export const createResult: CreateResult<ResultCreationInfo, Result> = async (
   { name, code, data, formInputs, strategyId, stats },
-  context
+  context,
 ) => {
   if (!context.user) throw new HttpError(401);
 
@@ -150,7 +150,7 @@ export const getResults: GetResults<
     ({ fromStrategy, ...rest }) => ({
       ...rest,
       strategyName: fromStrategy?.name ?? "",
-    })
+    }),
   );
 
   return resultsWithStrategyName.length > 0 ? resultsWithStrategyName : null;
@@ -175,7 +175,7 @@ export const getResultsForStrategy: GetResultsForStrategy<
 
 export const getTopResults: GetTopResults<void, GetTopResultsProp> = async (
   _args,
-  context
+  context,
 ) => {
   const oneWeekAgo = new Date();
   oneWeekAgo.setDate(oneWeekAgo.getDate() - 7);
@@ -200,7 +200,7 @@ export const getTopResults: GetTopResults<void, GetTopResultsProp> = async (
       ...rest,
       code: "obfuscated for privacy.",
       email: user?.email ? user.email.split("@")[0] : "",
-    })
+    }),
   );
 
   const toReturn: GetTopResultsProp = {
@@ -217,7 +217,7 @@ export const getTopResults: GetTopResults<void, GetTopResultsProp> = async (
 
 export const deleteResult: DeleteResult<Pick<Result, "id">, Result> = async (
   { id },
-  context
+  context,
 ) => {
   if (!context.user) throw new HttpError(401);
 
@@ -231,7 +231,7 @@ export const deleteResult: DeleteResult<Pick<Result, "id">, Result> = async (
 
 export const togglePrivacy: TogglePrivacy<Partial<Result>, Result> = async (
   { id },
-  context
+  context,
 ) => {
   if (!context.user) throw new HttpError(401);
 
@@ -259,7 +259,7 @@ export const togglePrivacy: TogglePrivacy<Partial<Result>, Result> = async (
 
 export const renameResult: RenameResult<Partial<Result>, Result> = async (
   { id, name },
-  context
+  context,
 ) => {
   if (!context.user) throw new HttpError(401);
 
@@ -276,7 +276,7 @@ export const renameResult: RenameResult<Partial<Result>, Result> = async (
   if (existingResult && existingResult.id === id) {
     throw new HttpError(
       400,
-      "The new result name must be different from the current name."
+      "The new result name must be different from the current name.",
     );
   }
 

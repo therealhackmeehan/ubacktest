@@ -16,7 +16,7 @@ import { emailSender } from "wasp/server/email";
 
 export const shareResult: ShareResult<ShareResultProps, Share> = async (
   { email, resultID },
-  context
+  context,
 ) => {
   if (!context.user) throw new HttpError(401);
 
@@ -29,7 +29,7 @@ export const shareResult: ShareResult<ShareResultProps, Share> = async (
   if (!recipient) {
     throw new HttpError(
       400,
-      "We could not find that user in our database. Make sure you have their email spelled and entered correctly."
+      "We could not find that user in our database. Make sure you have their email spelled and entered correctly.",
     );
   }
   if (recipient.id == context.user.id) {
@@ -48,7 +48,7 @@ export const shareResult: ShareResult<ShareResultProps, Share> = async (
   if (existingShare) {
     throw new HttpError(
       400,
-      "You have already shared the result with this user."
+      "You have already shared the result with this user.",
     );
   }
 
@@ -100,7 +100,7 @@ Happy trading!`,
 
 export const getSharedWith: GetSharedWith<Pick<Result, "id">, Share[]> = async (
   { id },
-  context
+  context,
 ) => {
   if (!context.user) throw new HttpError(401);
 
@@ -117,7 +117,7 @@ export const getSharedWith: GetSharedWith<Pick<Result, "id">, Share[]> = async (
 
 export const getShared: GetShared<void, GetSharedProps[] | null> = async (
   _args,
-  context
+  context,
 ) => {
   if (!context.user) throw new HttpError(401);
 
@@ -152,7 +152,7 @@ export const getShared: GetShared<void, GetSharedProps[] | null> = async (
           accepted: share.accepted,
         },
       ];
-    }
+    },
   );
 
   return results.length > 0 ? results : null;
@@ -160,7 +160,7 @@ export const getShared: GetShared<void, GetSharedProps[] | null> = async (
 
 export const acceptShare: AcceptShare<Pick<Share, "id">, Share> = async (
   { id },
-  context
+  context,
 ) => {
   if (!context.user) throw new HttpError(401);
 
@@ -184,7 +184,7 @@ export const acceptShare: AcceptShare<Pick<Share, "id">, Share> = async (
 
 export const deleteShare: DeleteShare<Pick<Share, "id">, Share> = async (
   { id },
-  context
+  context,
 ) => {
   if (!context.user) throw new HttpError(401);
 

@@ -20,7 +20,7 @@ export const StrategyContext = createContext<any>(null);
 export default function EditorPage() {
   // strategy to focus in on or display
   const [selectedStrategy, setSelectedStrategy] = useState<Strategy | null>(
-    null
+    null,
   );
   const [hasSaved, setHasSaved] = useState<boolean>(false);
 

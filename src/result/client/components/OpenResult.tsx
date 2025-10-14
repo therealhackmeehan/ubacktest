@@ -51,7 +51,7 @@ export default function OpenResult({
       try {
         if (!result.open || !result.close || !result.portfolio) {
           throw new Error(
-            "This result was not correctly loaded and is missing critical data arrays."
+            "This result was not correctly loaded and is missing critical data arrays.",
           );
         }
         // const joinedInfo: StrategyResultProps = {
