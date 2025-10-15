@@ -13,6 +13,7 @@ interface LeaderboardPlotProps {
   setLeaderboardPlotOpen: (value: boolean) => void;
   index: number;
 }
+
 function LeaderboardPlot({
   result,
   setLeaderboardPlotOpen,

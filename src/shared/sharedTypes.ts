@@ -1,10 +1,18 @@
 import { type Result, type User, type Share } from "wasp/entities";
 
+type Serializable<T> = {
+  [K in keyof T]: T[K] extends string | number | boolean | null | undefined
+    ? T[K]
+    : T[K] extends Array<infer U>
+    ? Serializable<U>[]
+    : Serializable<T[K]>;
+};
+
 export interface UserDefinedData {
   [key: string]: number[]; // The key can be any string, and the value is an array of numbers.
 }
 
-export interface StrategyResultProps {
+export type StrategyResultProps = Serializable<{
   timestamp: string[];
   open: number[];
   close: number[];
@@ -27,9 +35,9 @@ export interface StrategyResultProps {
   equityWithCosts: number[];
 
   userDefinedData: UserDefinedData;
-}
+}>;
 
-export interface FormInputProps {
+export type FormInputProps = Serializable<{
   symbol: string;
   startDate: string;
   endDate: string;
@@ -39,18 +47,18 @@ export interface FormInputProps {
   useWarmupDate: boolean;
   warmupDate: string;
   useAdjClose: boolean;
-}
+}>;
 
-export interface PythonDataProps {
+export type PythonDataProps = Serializable<{
   timestamp: number[];
   open: number[];
   close: number[];
   high: number[];
   low: number[];
   volume: number[];
-}
+}>;
 
-export interface StatProps {
+export type StatProps = Serializable<{
   length: number;
   pl: number | null;
   plWCosts: number | null;
@@ -66,7 +74,7 @@ export interface StatProps {
   stddevReturn: number | null;
   maxReturn: number | null;
   minReturn: number | null;
-}
+}>;
 
 export type ShareResultProps = {
   email: User["email"];
@@ -79,13 +87,13 @@ export type GetSharedProps = Result & {
   accepted: boolean;
 };
 
-export interface BacktestResultProps {
+export type BacktestResultProps = Serializable<{
   strategyResult: StrategyResultProps;
   statistics: StatProps;
   debugOutput: string;
   stderr: string;
   warnings: string[];
-}
+}>;
 
 export type ResultWithStrategyName = Result & {
   strategyName: string;

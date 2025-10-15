@@ -7,6 +7,7 @@ import { runStrategy, charge, updateStrategy } from "wasp/client/operations";
 import validateFormInputs from "../../scripts/validateFormInputs";
 import validatePythonCode from "../../scripts/validatePythonCode";
 import {
+  BacktestResultProps,
   FormInputProps,
   StatProps,
   StrategyResultProps,
@@ -56,7 +57,10 @@ function Editor({
       handlePreRunValidations();
 
       const { strategyResult, statistics, debugOutput, stderr, warnings } =
-        await runStrategy({ formInputs: formInputs, code: codeToDisplay });
+        await runStrategy({
+          formInputs: formInputs,
+          code: codeToDisplay,
+        });
 
       handleDebugOutput(debugOutput, stderr);
       if (stderr && strategyResult.signal.length === 0) return;

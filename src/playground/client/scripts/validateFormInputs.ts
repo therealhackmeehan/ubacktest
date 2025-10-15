@@ -1,5 +1,4 @@
-import { FormInputProps } from "wasp/src/shared/sharedTypes";
-import { intVals } from "../../../shared/sharedTypes";
+import { intVals, FormInputProps } from "../../../shared/sharedTypes";
 
 function validateFormInputs(formInputs: FormInputProps): void {
   const {

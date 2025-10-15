@@ -17,6 +17,9 @@ import {
   GetTopResultsProp,
 } from "../../shared/sharedTypes";
 
+// unfortunately, we must leave data, forminputs,
+// and stats as "any" because superJSON otherwise
+// doesn't trust they are serializable. Will look for a workaround!
 type ResultCreationInfo = {
   name: string;
   code: string;
@@ -239,9 +242,9 @@ export const togglePrivacy: TogglePrivacy<Partial<Result>, Result> = async (
   const result = await context.entities.Result.findUnique({
     where: {
       id,
-      userId: context.user.id, // Assuming `userId` is the correct field
+      userId: context.user.id,
     },
-    select: { public: true }, // Only fetch the `public` field
+    select: { public: true },
   });
 
   if (!result) {

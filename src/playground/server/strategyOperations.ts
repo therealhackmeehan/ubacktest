@@ -11,15 +11,14 @@ import {
   type RunStrategy,
 } from "wasp/server/operations";
 import StrategyPipeline from "./StrategyPipeline";
-import { BacktestResultProps, eodFreqs } from "../../shared/sharedTypes";
-
-type FileCreationInfo = {
-  name: string;
-  code: string;
-};
+import {
+  BacktestResultProps,
+  eodFreqs,
+  FormInputProps,
+} from "../../shared/sharedTypes";
 
 export const createStrategy: CreateStrategy<
-  FileCreationInfo,
+  { name: string; code: string },
   Strategy
 > = async ({ name, code }, context) => {
   if (!context.user) throw new HttpError(401);
@@ -91,7 +90,7 @@ export const deleteStrategy: DeleteStrategy<
 };
 
 export const renameStrategy: RenameStrategy<
-  Partial<Strategy>,
+  Pick<Strategy, "id" | "name">,
   Strategy
 > = async ({ id, name }, context) => {
   if (!context.user) throw new HttpError(401);
@@ -124,7 +123,7 @@ export const renameStrategy: RenameStrategy<
 };
 
 export const updateStrategy: UpdateStrategy<
-  Partial<Strategy>,
+  Pick<Strategy, "id" | "code">,
   Strategy
 > = async ({ id, code }, context) => {
   if (!context.user) throw new HttpError(401);
@@ -138,10 +137,10 @@ export const updateStrategy: UpdateStrategy<
   });
 };
 
-export const runStrategy: RunStrategy<any, any> = async (
-  { formInputs, code },
-  context
-): Promise<BacktestResultProps> => {
+export const runStrategy: RunStrategy<
+  { formInputs: FormInputProps; code: string },
+  BacktestResultProps
+> = async ({ formInputs, code }, context) => {
   if (!context.user) throw new HttpError(401);
   const user = context.user;
 
