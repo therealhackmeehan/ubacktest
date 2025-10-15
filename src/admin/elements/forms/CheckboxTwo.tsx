@@ -24,7 +24,7 @@ const CheckboxTwo = () => {
               "ml-2 flex h-5 w-5 items-center justify-center rounded border",
               {
                 "border-primary bg-gray dark:bg-transparent": enabled,
-              },
+              }
             )}
           >
             <span

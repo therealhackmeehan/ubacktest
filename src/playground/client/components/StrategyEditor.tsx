@@ -16,7 +16,7 @@ function StrategyEditor() {
   const { selectedStrategy, hasSaved } = useContext(StrategyContext);
 
   const [codeToDisplay, setCodeToDisplay] = useState<string>(
-    selectedStrategy.code,
+    selectedStrategy.code
   );
   useEffect(() => {
     if (selectedStrategy) {

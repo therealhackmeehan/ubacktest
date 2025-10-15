@@ -26,11 +26,11 @@ const secondResultPl = new RegExp(secondResult.pl?.toFixed(2) + "%", "i");
 const averagePl = new RegExp(
   ((((firstResult.pl as number) + secondResult.pl) as number) / 2).toFixed(2) +
     "%",
-  "i",
+  "i"
 );
 const warning = new RegExp(
   'Undefined values for "profit/loss" in one or more results. These null values were set to 0 for the stats listed below.',
-  "i",
+  "i"
 );
 
 const toggleGroupByParent = async () => {
@@ -113,7 +113,7 @@ test("shows warning for null P/L values", async () => {
   const warningPl = new RegExp(
     ((((firstResult.pl as number) + result2.pl) as number) / 3).toFixed(2) +
       "%",
-    "i",
+    "i"
   );
   await screen.findByText("Average P/L");
   const matches = screen.getAllByText(warningPl);

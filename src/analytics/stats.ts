@@ -13,7 +13,7 @@ export type DailyStatsProps = {
 
 export const calculateDailyStats: DailyStatsJob<never, void> = async (
   _args,
-  context,
+  context
 ) => {
   const nowUTC = new Date(Date.now());
   nowUTC.setUTCHours(0, 0, 0, 0);
@@ -53,7 +53,7 @@ export const calculateDailyStats: DailyStatsJob<never, void> = async (
         break;
       default:
         throw new Error(
-          `Unsupported payment processor: ${paymentProcessor.id}`,
+          `Unsupported payment processor: ${paymentProcessor.id}`
         );
     }
 

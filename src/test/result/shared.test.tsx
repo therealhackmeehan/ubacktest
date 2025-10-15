@@ -16,7 +16,7 @@ const noShareMessage =
 const sharedUserName = mockUser.email?.split("@")[0] ?? "unknown";
 const sharedTextRegex = new RegExp(
   `@${sharedUserName}\\s+sent you a result`,
-  "i",
+  "i"
 );
 const fromSharedRegex = new RegExp(`from @${sharedUserName}`, "i");
 const accept = "Accept";

@@ -35,7 +35,7 @@ const SwitcherOne = ({
               {
                 "!right-1 !translate-x-full !bg-primary dark:!bg-white":
                   enabled,
-              },
+              }
             )}
           ></div>
         </div>

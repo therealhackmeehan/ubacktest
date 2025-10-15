@@ -26,7 +26,7 @@ const SwitcherTwo = () => {
               {
                 "!right-1 !translate-x-full !bg-primary dark:!bg-white":
                   enabled,
-              },
+              }
             )}
           >
             <span className={cn("hidden", { "!block": enabled })}>

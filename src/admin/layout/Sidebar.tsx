@@ -18,7 +18,7 @@ const Sidebar = ({ sidebarOpen, setSidebarOpen }: SidebarProps) => {
 
   const storedSidebarExpanded = localStorage.getItem("sidebar-expanded");
   const [sidebarExpanded, setSidebarExpanded] = useState(
-    storedSidebarExpanded === null ? false : storedSidebarExpanded === "true",
+    storedSidebarExpanded === null ? false : storedSidebarExpanded === "true"
   );
 
   // close on click outside
@@ -64,7 +64,7 @@ const Sidebar = ({ sidebarOpen, setSidebarOpen }: SidebarProps) => {
         {
           "translate-x-0": sidebarOpen,
           "-translate-x-full": !sidebarOpen,
-        },
+        }
       )}
     >
       {/* <!-- SIDEBAR HEADER --> */}
@@ -116,7 +116,7 @@ const Sidebar = ({ sidebarOpen, setSidebarOpen }: SidebarProps) => {
                     "group relative flex items-center gap-2.5 rounded-sm py-2 px-4 font-medium text-bodydark1 duration-300 ease-in-out hover:bg-gray-700 dark:hover:bg-meta-4",
                     {
                       "bg-gray-700 dark:bg-meta-4": isActive,
-                    },
+                    }
                   )
                 }
               >
@@ -159,7 +159,7 @@ const Sidebar = ({ sidebarOpen, setSidebarOpen }: SidebarProps) => {
                       "group relative flex items-center gap-2.5 rounded-sm py-2 px-4 font-medium text-bodydark1 duration-300 ease-in-out hover:bg-gray-700 dark:hover:bg-meta-4",
                       {
                         "bg-gray-700 dark:bg-meta-4": isActive,
-                      },
+                      }
                     )
                   }
                 >
@@ -202,7 +202,7 @@ const Sidebar = ({ sidebarOpen, setSidebarOpen }: SidebarProps) => {
                       "group relative flex items-center gap-2.5 rounded-sm py-2 px-4 font-medium text-bodydark1 duration-300 ease-in-out hover:bg-gray-700 dark:hover:bg-meta-4",
                       {
                         "bg-gray-700 dark:bg-meta-4": isActive,
-                      },
+                      }
                     )
                   }
                 >
@@ -258,7 +258,7 @@ const Sidebar = ({ sidebarOpen, setSidebarOpen }: SidebarProps) => {
                       "group relative flex items-center gap-2.5 rounded-sm py-2 px-4 font-medium text-bodydark1 duration-300 ease-in-out hover:bg-gray-700 dark:hover:bg-meta-4",
                       {
                         "bg-gray-700 dark:bg-meta-4": isActive,
-                      },
+                      }
                     )
                   }
                 >
@@ -312,7 +312,7 @@ const Sidebar = ({ sidebarOpen, setSidebarOpen }: SidebarProps) => {
                           {
                             "bg-gray-700 dark:bg-meta-4":
                               pathname.includes("forms"),
-                          },
+                          }
                         )}
                         onClick={(e) => {
                           e.preventDefault();
@@ -356,7 +356,7 @@ const Sidebar = ({ sidebarOpen, setSidebarOpen }: SidebarProps) => {
                             "absolute right-4 top-1/2 -translate-y-1/2 fill-current",
                             {
                               "rotate-180": open,
-                            },
+                            }
                           )}
                           width="20"
                           height="20"
@@ -385,7 +385,7 @@ const Sidebar = ({ sidebarOpen, setSidebarOpen }: SidebarProps) => {
                               className={({ isActive }) =>
                                 cn(
                                   "group relative flex items-center gap-2.5 rounded-md px-4 font-medium text-bodydark2 duration-300 ease-in-out hover:text-white",
-                                  { "!text-white": isActive },
+                                  { "!text-white": isActive }
                                 )
                               }
                             >
@@ -398,7 +398,7 @@ const Sidebar = ({ sidebarOpen, setSidebarOpen }: SidebarProps) => {
                               className={({ isActive }) =>
                                 cn(
                                   "group relative flex items-center gap-2.5 rounded-md px-4 font-medium text-bodydark2 duration-300 ease-in-out hover:text-white",
-                                  { "!text-white": isActive },
+                                  { "!text-white": isActive }
                                 )
                               }
                             >
@@ -423,7 +423,7 @@ const Sidebar = ({ sidebarOpen, setSidebarOpen }: SidebarProps) => {
                       "group relative flex items-center gap-2.5 rounded-sm py-2 px-4 font-medium text-bodydark1 duration-300 ease-in-out hover:bg-gray-700 dark:hover:bg-meta-4",
                       {
                         "bg-gray-700 dark:bg-meta-4": isActive,
-                      },
+                      }
                     )
                   }
                 >
@@ -459,7 +459,7 @@ const Sidebar = ({ sidebarOpen, setSidebarOpen }: SidebarProps) => {
                           {
                             "bg-gray-700 dark:bg-meta-4":
                               pathname.includes("ui"),
-                          },
+                          }
                         )}
                         onClick={(e) => {
                           e.preventDefault();
@@ -507,7 +507,7 @@ const Sidebar = ({ sidebarOpen, setSidebarOpen }: SidebarProps) => {
                             "absolute right-4 top-1/2 -translate-y-1/2 fill-current",
                             {
                               "rotate-180": open,
-                            },
+                            }
                           )}
                           width="20"
                           height="20"
@@ -536,7 +536,7 @@ const Sidebar = ({ sidebarOpen, setSidebarOpen }: SidebarProps) => {
                               className={({ isActive }) =>
                                 cn(
                                   "group relative flex items-center gap-2.5 rounded-md px-4 font-medium text-bodydark2 duration-300 ease-in-out hover:text-white",
-                                  { "!text-white": isActive },
+                                  { "!text-white": isActive }
                                 )
                               }
                             >
@@ -549,7 +549,7 @@ const Sidebar = ({ sidebarOpen, setSidebarOpen }: SidebarProps) => {
                               className={({ isActive }) =>
                                 cn(
                                   "group relative flex items-center gap-2.5 rounded-md px-4 font-medium text-bodydark2 duration-300 ease-in-out hover:text-white",
-                                  { "!text-white": isActive },
+                                  { "!text-white": isActive }
                                 )
                               }
                             >

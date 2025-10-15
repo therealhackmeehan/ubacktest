@@ -2,7 +2,7 @@ import { type MonthlyCreditReset } from "wasp/server/jobs";
 
 export const monthlyCreditReset: MonthlyCreditReset<{}, number> = async (
   _args,
-  context,
+  context
 ) => {
   const updatedUsers = await context.entities.User.updateMany({
     where: {

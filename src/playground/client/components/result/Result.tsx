@@ -79,13 +79,13 @@ function Result({
           "low",
           "volume",
         ].includes(header) &&
-        !(formInputs.costPerTrade === 0 && header === "portfolioWithCosts"),
+        !(formInputs.costPerTrade === 0 && header === "portfolioWithCosts")
     );
 
     // If timestamp exists and isn't already filtered out, rename the timestamp column
     const includeTimestamp = headers.includes("timestamp");
     const displayHeaders = headers.map((header) =>
-      header === "timestamp" ? "timestamp (local time)" : header,
+      header === "timestamp" ? "timestamp (local time)" : header
     );
 
     const rowCount = strategyResult[headers[0]].length;
@@ -99,7 +99,7 @@ function Result({
           }
           return value;
         })
-        .join(","),
+        .join(",")
     );
 
     const csv = [displayHeaders.join(","), ...rows].join("\n");
@@ -140,7 +140,7 @@ function Result({
       // Calculate scaling to fit content while maintaining aspect ratio
       const scale = Math.min(
         availableWidth / canvasWidth,
-        availableHeight / canvasHeight,
+        availableHeight / canvasHeight
       );
       const imgWidth = canvasWidth * scale;
       const imgHeight = canvasHeight * scale;
@@ -178,14 +178,14 @@ function Result({
     const estDate = new Date(
       new Date(`${slicedDay}T16:00:00`).toLocaleString("en-US", {
         timeZone: "America/New_York",
-      }),
+      })
     );
     return estDate.toISOString();
   };
 
   if (isEod) {
     strategyResult.timestamp = strategyResult.timestamp.map(
-      toFourPMEasternISOString,
+      toFourPMEasternISOString
     );
   }
 

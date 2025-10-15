@@ -44,7 +44,7 @@ class CodeExecutor {
     if (!response.ok) {
       throw new HttpError(
         503,
-        `Code Execution Failed:\n\nStatus ${response.status}: "${response.statusText}"`,
+        `Code Execution Failed:\n\nStatus ${response.status}: "${response.statusText}"`
       );
     }
 
@@ -67,7 +67,7 @@ class CodeExecutor {
 
     if (message) {
       const decodedMessage = Buffer.from(fullResult.message, "base64").toString(
-        "utf-8",
+        "utf-8"
       );
       const delim = "\n════════════════ Diagnostics ════════════════";
 
@@ -92,7 +92,7 @@ Message      : ${description}`;
     if (stderr.length === 0 && stdout.length === 0) {
       throw new HttpError(
         503,
-        "Something went wrong. No stdout or stderr generated from that execution. Please try again.",
+        "Something went wrong. No stdout or stderr generated from that execution. Please try again."
       );
     }
 

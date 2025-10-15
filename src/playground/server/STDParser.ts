@@ -27,13 +27,13 @@ class STDParser {
           ([_, value]) =>
             Array.isArray(value) &&
             value.length === expectedLength &&
-            value.every((item) => typeof item === "number"),
-        ),
+            value.every((item) => typeof item === "number")
+        )
       );
     } else if (!parsedData && !this.stderr) {
       throw new HttpError(
         503,
-        "No output extracted from the execution engine. This usually means you're printing too much to stdout.",
+        "No output extracted from the execution engine. This usually means you're printing too much to stdout."
       );
     }
 
@@ -57,7 +57,7 @@ class STDParser {
   private static parsePythonOutput(stdout: string, uniqueKey: string) {
     const regex = new RegExp(
       `${uniqueKey}START${uniqueKey}(.*?)${uniqueKey}END${uniqueKey}`,
-      "s",
+      "s"
     );
     const match = stdout.match(regex);
     return match ? JSON.parse(match[1]) : null;
@@ -66,7 +66,7 @@ class STDParser {
   private static stripDebugOutput(stdout: string, uniqueKey: string) {
     const regex = new RegExp(
       `${uniqueKey}START${uniqueKey}(.*?)${uniqueKey}END${uniqueKey}`,
-      "s",
+      "s"
     );
     return stdout.replace(regex, "").trim();
   }

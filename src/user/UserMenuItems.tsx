@@ -25,7 +25,7 @@ export const UserMenuItems = ({
           {
             "sm:px-6": path !== "/admin",
             "px-6": path === "/admin",
-          },
+          }
         )}
       >
         <li>
@@ -62,7 +62,7 @@ export const UserMenuItems = ({
             {
               "sm:px-6": path !== "/admin",
               "px-6": path === "/admin",
-            },
+            }
           )}
         >
           <li className="flex items-center gap-3.5 text-sm font-medium duration-300 ease-in-out hover:text-slate-500">
@@ -84,7 +84,7 @@ export const UserMenuItems = ({
           {
             "sm:px-6": path !== "/admin",
             "px-6": path === "/admin",
-          },
+          }
         )}
       >
         <svg

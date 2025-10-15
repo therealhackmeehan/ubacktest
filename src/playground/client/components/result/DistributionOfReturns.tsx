@@ -18,7 +18,7 @@ ChartJS.register(
   BarElement,
   Title,
   Tooltip,
-  Legend,
+  Legend
 );
 
 interface DistributionOfReturnsProps {
@@ -52,14 +52,14 @@ export default function DistributionOfReturns({
     stockDataReturns.forEach((value) => {
       const binIndex = Math.min(
         Math.floor((value - minReturn) / binWidth),
-        binCount - 1, // Ensure max values fall into the last bin
+        binCount - 1 // Ensure max values fall into the last bin
       );
       binsNormal[binIndex]++;
     });
 
     // Process log-transformed data
     const logTransformedReturns = stockDataReturns.map(
-      (value) => Math.log(Math.abs(value) + 1) * Math.sign(value),
+      (value) => Math.log(Math.abs(value) + 1) * Math.sign(value)
     );
     const minLog = Math.min(...logTransformedReturns);
     const maxLog = Math.max(...logTransformedReturns);
@@ -69,7 +69,7 @@ export default function DistributionOfReturns({
     logTransformedReturns.forEach((value) => {
       const binIndex = Math.min(
         Math.floor((value - minLog) / logBinWidth),
-        binCount - 1, // Ensure max values fall into the last bin
+        binCount - 1 // Ensure max values fall into the last bin
       );
       binsLog[binIndex]++;
     });

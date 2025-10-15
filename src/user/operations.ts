@@ -31,7 +31,7 @@ export const updateUserById: UpdateUserById<
 
 export const updateCurrentUser: UpdateCurrentUser<Partial<User>, User> = async (
   user,
-  context,
+  context
 ) => {
   if (!context.user) {
     throw new HttpError(401);
@@ -77,10 +77,10 @@ export const getPaginatedUsers: GetPaginatedUsers<
     | Array<string | null>
     | undefined;
   const hasNotSubscribed = allSubscriptionStatusOptions?.find(
-    (status) => status === null,
+    (status) => status === null
   );
   let subscriptionStatusStrings = allSubscriptionStatusOptions?.filter(
-    (status) => status !== null,
+    (status) => status !== null
   ) as string[] | undefined;
 
   const queryResults = await context.entities.User.findMany({

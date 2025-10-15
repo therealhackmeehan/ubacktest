@@ -51,7 +51,7 @@ function DataTable({ strategyResult }: DataTableProps) {
         signal: sortedData.signal[index],
         portfolio: sortedData.portfolio[index],
         returns: sortedData.returns[index],
-      }),
+      })
     );
 
     // Sorting logic

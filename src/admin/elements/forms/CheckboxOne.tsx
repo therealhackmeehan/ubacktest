@@ -24,7 +24,7 @@ const CheckboxOne = () => {
               "mr-4 flex h-5 w-5 items-center justify-center rounded-full border",
               {
                 "border-primary": isChecked,
-              },
+              }
             )}
           >
             <span

@@ -124,7 +124,7 @@ function getUserSubscriptionStatusDescription({
 function prettyPrintStatus(
   planName: string,
   subscriptionStatus: SubscriptionStatus,
-  endOfBillingPeriod: string,
+  endOfBillingPeriod: string
 ): string {
   const statusToMessage: Record<SubscriptionStatus, string> = {
     active: `${planName}`,

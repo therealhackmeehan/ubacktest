@@ -121,7 +121,7 @@ const PricingPage = () => {
                 {
                   "ring-2": planId === bestDealPaymentPlanId,
                   "ring-1 lg:mt-8": planId !== bestDealPaymentPlanId,
-                },
+                }
               )}
             >
               {planId === bestDealPaymentPlanId && (
@@ -185,7 +185,7 @@ const PricingPage = () => {
                         planId === bestDealPaymentPlanId,
                       "text-gray-600 ring-1 ring-inset ring-sky-200 hover:ring-sky-400":
                         planId !== bestDealPaymentPlanId,
-                    },
+                    }
                   )}
                 >
                   Manage Subscription
@@ -204,7 +204,7 @@ const PricingPage = () => {
                     {
                       "opacity-50 cursor-wait": isPaymentLoading,
                     },
-                    "mt-8 block rounded-md py-2 px-3 text-center text-sm dark:text-white font-semibold leading-6 focus-visible:outline focus-visible:outline-2 focus-visible:outline-sky-400",
+                    "mt-8 block rounded-md py-2 px-3 text-center text-sm dark:text-white font-semibold leading-6 focus-visible:outline focus-visible:outline-2 focus-visible:outline-sky-400"
                   )}
                   disabled={isPaymentLoading}
                 >

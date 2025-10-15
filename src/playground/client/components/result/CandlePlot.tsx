@@ -32,7 +32,7 @@ ChartJS.register(
   TimeSeriesScale,
   CandlestickController,
   CandlestickElement,
-  zoomPlugin,
+  zoomPlugin
 );
 
 interface LinePlotProps {
@@ -74,7 +74,7 @@ function CandlePlot({
             (timestamp: string, index: number) => ({
               x: new Date(timestamp), // Use Date object for x
               y: strategyResult.portfolio[index], // Corresponding y value
-            }),
+            })
           ),
           borderColor: "rgba(0, 0, 0, .8)",
           backgroundColor: "rgba(0, 0, 0, .8)",
@@ -93,7 +93,7 @@ function CandlePlot({
               h: strategyResult.high[index], // High price
               l: strategyResult.low[index], // Low price
               c: strategyResult.close[index], // Close price
-            }),
+            })
           ),
           yAxisID: "y1",
         },
@@ -104,7 +104,7 @@ function CandlePlot({
             (timestamp: string, index: number) => ({
               x: new Date(timestamp),
               y: strategyResult.signal[index],
-            }),
+            })
           ),
           borderColor: "rgba(0, 155, 255, .6)",
           backgroundColor: "rgba(0, 155, 255, .6)",
@@ -120,7 +120,7 @@ function CandlePlot({
             (timestamp: string, index: number) => ({
               x: new Date(timestamp),
               y: strategyResult.portfolioWithCosts[index],
-            }),
+            })
           ),
           borderColor: "rgba(255, 0, 100, 0.6)",
           backgroundColor: "rgba(255, 0, 100, 0.6)",

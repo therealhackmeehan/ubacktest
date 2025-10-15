@@ -5,19 +5,19 @@ export function validateNewName(newName: string): void {
 
   if (trimmedName.length < minLength) {
     throw new Error(
-      `Project name must be at least ${minLength} characters long.`,
+      `Project name must be at least ${minLength} characters long.`
     );
   }
   if (trimmedName.length > maxLength) {
     throw new Error(
-      `Project name must be no more than ${maxLength} characters long.`,
+      `Project name must be no more than ${maxLength} characters long.`
     );
   }
 
   const validPattern = /^[a-zA-Z0-9_-]+$/;
   if (!validPattern.test(trimmedName)) {
     throw new Error(
-      "Project name can only contain letters, numbers, underscores, and hyphens.",
+      "Project name can only contain letters, numbers, underscores, and hyphens."
     );
   }
 

@@ -60,6 +60,6 @@ export function parsePaymentPlanId(planId: string): PaymentPlanId {
 
 export function getSubscriptionPaymentPlanIds(): PaymentPlanId[] {
   return Object.values(PaymentPlanId).filter(
-    (planId) => paymentPlans[planId].effect.kind === "subscription",
+    (planId) => paymentPlans[planId].effect.kind === "subscription"
   );
 }

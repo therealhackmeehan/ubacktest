@@ -145,7 +145,7 @@ const RevenueAndProfitChart = ({ weeklyStats, isLoading }: DailyStatsProps) => {
       setState((prevState) => {
         // Check if a "Revenue" series already exists
         const existingSeriesIndex = prevState.series.findIndex(
-          (series) => series.name === "Revenue",
+          (series) => series.name === "Revenue"
         );
 
         if (existingSeriesIndex >= 0) {

@@ -14,7 +14,7 @@ import { z } from "zod";
 export const stripeWebhook: PaymentsWebhook = async (
   request,
   response,
-  context,
+  context
 ) => {
   const secret = requireNodeEnvVar("STRIPE_WEBHOOK_SECRET");
   const sig = request.headers["stripe-signature"];
@@ -41,14 +41,14 @@ export const stripeWebhook: PaymentsWebhook = async (
       const updatedSubscription = event.data.object as Stripe.Subscription;
       await handleCustomerSubscriptionUpdated(
         updatedSubscription,
-        prismaUserDelegate,
+        prismaUserDelegate
       );
       break;
     case "customer.subscription.deleted":
       const deletedSubscription = event.data.object as Stripe.Subscription;
       await handleCustomerSubscriptionDeleted(
         deletedSubscription,
-        prismaUserDelegate,
+        prismaUserDelegate
       );
       break;
     default:
@@ -62,21 +62,21 @@ export const stripeWebhook: PaymentsWebhook = async (
 };
 
 export const stripeMiddlewareConfigFn: MiddlewareConfigFn = (
-  middlewareConfig,
+  middlewareConfig
 ) => {
   // We need to delete the default 'express.json' middleware and replace it with 'express.raw' middleware
   // because webhook data in the body of the request as raw JSON, not as JSON in the body of the request.
   middlewareConfig.delete("express.json");
   middlewareConfig.set(
     "express.raw",
-    express.raw({ type: "application/json" }),
+    express.raw({ type: "application/json" })
   );
   return middlewareConfig;
 };
 
 export async function handleCheckoutSessionCompleted(
   session: Stripe.Checkout.Session,
-  prismaUserDelegate: PrismaClient["user"],
+  prismaUserDelegate: PrismaClient["user"]
 ) {
   const userStripeId = validateUserStripeIdOrThrow(session.customer);
   const { line_items } = await stripe.checkout.sessions.retrieve(session.id, {
@@ -108,25 +108,25 @@ export async function handleCheckoutSessionCompleted(
       numOfCreditsPurchased,
       datePaid: new Date(),
     },
-    prismaUserDelegate,
+    prismaUserDelegate
   );
 }
 
 export async function handleInvoicePaid(
   invoice: Stripe.Invoice,
-  prismaUserDelegate: PrismaClient["user"],
+  prismaUserDelegate: PrismaClient["user"]
 ) {
   const userStripeId = validateUserStripeIdOrThrow(invoice.customer);
   const datePaid = new Date(invoice.period_start * 1000);
   return updateUserStripePaymentDetails(
     { userStripeId, datePaid },
-    prismaUserDelegate,
+    prismaUserDelegate
   );
 }
 
 export async function handleCustomerSubscriptionUpdated(
   subscription: Stripe.Subscription,
-  prismaUserDelegate: PrismaClient["user"],
+  prismaUserDelegate: PrismaClient["user"]
 ) {
   const userStripeId = validateUserStripeIdOrThrow(subscription.customer);
   let subscriptionStatus: SubscriptionStatus | undefined;
@@ -146,7 +146,7 @@ export async function handleCustomerSubscriptionUpdated(
   if (subscriptionStatus) {
     const user = await updateUserStripePaymentDetails(
       { userStripeId, subscriptionPlan, subscriptionStatus },
-      prismaUserDelegate,
+      prismaUserDelegate
     );
     // if (subscription.cancel_at_period_end) {
     //   if (user.email) {
@@ -164,17 +164,17 @@ export async function handleCustomerSubscriptionUpdated(
 
 export async function handleCustomerSubscriptionDeleted(
   subscription: Stripe.Subscription,
-  prismaUserDelegate: PrismaClient["user"],
+  prismaUserDelegate: PrismaClient["user"]
 ) {
   const userStripeId = validateUserStripeIdOrThrow(subscription.customer);
   return updateUserStripePaymentDetails(
     { userStripeId, subscriptionStatus: "deleted" },
-    prismaUserDelegate,
+    prismaUserDelegate
   );
 }
 
 function validateUserStripeIdOrThrow(
-  userStripeId: Stripe.Checkout.Session["customer"],
+  userStripeId: Stripe.Checkout.Session["customer"]
 ): string {
   if (!userStripeId) throw new HttpError(400, "No customer id");
   if (typeof userStripeId !== "string")
@@ -188,12 +188,12 @@ const LineItemsPriceSchema = z.object({
       price: z.object({
         id: z.string(),
       }),
-    }),
+    })
   ),
 });
 
 function extractPriceId(
-  items: Stripe.Checkout.Session["line_items"] | Stripe.Subscription["items"],
+  items: Stripe.Checkout.Session["line_items"] | Stripe.Subscription["items"]
 ) {
   const result = LineItemsPriceSchema.safeParse(items);
   if (!result.success) {
@@ -207,7 +207,7 @@ function extractPriceId(
 
 function getPlanIdByPriceId(priceId: string): PaymentPlanId {
   const planId = Object.values(PaymentPlanId).find(
-    (planId) => paymentPlans[planId].getPaymentProcessorPlanId() === priceId,
+    (planId) => paymentPlans[planId].getPaymentProcessorPlanId() === priceId
   );
   if (!planId) {
     throw new Error(`No plan with Stripe price id ${priceId}`);

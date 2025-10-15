@@ -66,7 +66,7 @@ export const mockResult: Result = {
 
   timestamp: Array.from(
     { length: 100 },
-    (_, i) => new Date(2020, 0, 1 + i).toISOString().split("T")[0],
+    (_, i) => new Date(2020, 0, 1 + i).toISOString().split("T")[0]
   ),
   open: Array.from({ length: 100 }, () => Math.random() * 100),
   close: Array.from({ length: 100 }, () => Math.random() * 100),
@@ -75,14 +75,14 @@ export const mockResult: Result = {
   volume: Array.from({ length: 100 }, () => Math.random() * 10000),
   signal: Array.from(
     { length: 100 },
-    () => [-1, 0, 1][Math.floor(Math.random() * 3)],
+    () => [-1, 0, 1][Math.floor(Math.random() * 3)]
   ),
   returns: Array.from({ length: 100 }, () => Math.random() * 0.02 - 0.01),
   sp: Array.from({ length: 100 }, () => Math.random() * 1000),
   portfolio: Array.from({ length: 100 }, () => 10000 + Math.random() * 1000),
   portfolioWithCosts: Array.from(
     { length: 100 },
-    () => 9800 + Math.random() * 1000,
+    () => 9800 + Math.random() * 1000
   ),
   cash: Array.from({ length: 100 }, () => Math.random() * 10000),
   equity: Array.from({ length: 100 }, () => Math.random() * 10000),

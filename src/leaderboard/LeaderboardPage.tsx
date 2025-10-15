@@ -83,7 +83,7 @@ function LeaderboardPage() {
                       result={result}
                       index={index}
                     />
-                  ),
+                  )
                 )}
               </ul>
             ) : (
@@ -95,7 +95,7 @@ function LeaderboardPage() {
               {topResults.topByAnnualizedProfitLoss.map(
                 (result: ResultWithUsername, index: number) => (
                   <LeaderboardItem key={index} result={result} index={index} />
-                ),
+                )
               )}
             </ul>
           ) : (

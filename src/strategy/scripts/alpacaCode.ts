@@ -3,7 +3,7 @@ export const alpacaCode = (
   symbol: string,
   lookback: number,
   amount: string,
-  timeUnit: string,
+  timeUnit: string
 ): string => {
   return `"""
 Alpaca Trading Script

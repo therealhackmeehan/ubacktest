@@ -8,7 +8,7 @@ function StrategyResults({ strategy }: { strategy: Strategy }) {
     getResultsForStrategy,
     {
       fromStrategyID: strategy.id,
-    },
+    }
   );
 
   return (

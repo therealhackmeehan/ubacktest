@@ -56,10 +56,10 @@ test("renders leaderboard rows with correct order and data (sorted by p/l)", asy
   ];
 
   expect(plElements[1]).toHaveTextContent(
-    (expectedPlOrder[0] as number).toFixed(2),
+    (expectedPlOrder[0] as number).toFixed(2)
   );
   expect(plElements[3]).toHaveTextContent(
-    (expectedPlOrder[1] as number).toFixed(2),
+    (expectedPlOrder[1] as number).toFixed(2)
   );
 
   // Check that view buttons are present
@@ -89,10 +89,10 @@ test("renders leaderboard rows with correct order and data (sorted by cagr)", as
   ];
 
   expect(plElements[0]).toHaveTextContent(
-    (expectedCagrOrder[0] as number).toFixed(2),
+    (expectedCagrOrder[0] as number).toFixed(2)
   );
   expect(plElements[2]).toHaveTextContent(
-    (expectedCagrOrder[1] as number).toFixed(2),
+    (expectedCagrOrder[1] as number).toFixed(2)
   );
 
   // Check that view buttons are present

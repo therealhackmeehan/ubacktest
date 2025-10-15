@@ -14,7 +14,7 @@ const githubDataSchema = z.object({
     emails: z.array(
       z.object({
         email: z.string(),
-      }),
+      })
     ),
     login: z.string(),
   }),

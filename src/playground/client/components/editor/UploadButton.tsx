@@ -23,7 +23,7 @@ function UploadButton({ setCode }: { setCode: (value: string) => void }) {
       }
     } catch (error: any) {
       setErrMsg(
-        "Error in reading in the file. Try again or use another python file.",
+        "Error in reading in the file. Try again or use another python file."
       );
     }
   }

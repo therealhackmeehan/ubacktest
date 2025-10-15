@@ -23,7 +23,7 @@ export const generateCheckoutSession: GenerateCheckoutSession<
   if (!userEmail) {
     throw new HttpError(
       403,
-      "User needs an email to make a payment. If using the usernameAndPassword Auth method, switch to an Auth method that provides an email.",
+      "User needs an email to make a payment. If using the usernameAndPassword Auth method, switch to an Auth method that provides an email."
     );
   }
 

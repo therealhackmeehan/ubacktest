@@ -12,7 +12,7 @@ export default function StrategyHeader() {
   const { data: user } = useAuth();
 
   const [nameToDisplay, setNameToDisplay] = useState<string>(
-    selectedStrategy.name,
+    selectedStrategy.name
   );
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState<boolean>(false);
   const [isRenameModalOpen, setIsRenameModalOpen] = useState<boolean>(false);

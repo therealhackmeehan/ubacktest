@@ -24,7 +24,7 @@ ChartJS.register(
   Title,
   Tooltip,
   Legend,
-  TimeSeriesScale,
+  TimeSeriesScale
 );
 
 interface CashEquityProps {
@@ -42,7 +42,7 @@ function CashEquity({ strategyResult }: CashEquityProps) {
             (timestamp: string, index: number) => ({
               x: new Date(timestamp),
               y: strategyResult.cash[index],
-            }),
+            })
           ),
           borderColor: "rgba(255, 69, 0, 1)", // Bold Red-Orange
           backgroundColor: "rgba(255, 69, 0, 1)",
@@ -56,7 +56,7 @@ function CashEquity({ strategyResult }: CashEquityProps) {
             (timestamp: string, index: number) => ({
               x: new Date(timestamp),
               y: strategyResult.equity[index],
-            }),
+            })
           ),
           borderColor: "rgba(34, 139, 34, 1)", // Deep Forest Green
           backgroundColor: "rgba(34, 139, 34, 1)",
@@ -70,7 +70,7 @@ function CashEquity({ strategyResult }: CashEquityProps) {
             (timestamp: string, index: number) => ({
               x: new Date(timestamp),
               y: Math.abs(strategyResult.equity[index]),
-            }),
+            })
           ),
           borderColor: "rgba(0, 128, 255, 1)", // Vivid Blue
           backgroundColor: "rgba(0, 128, 255, 1)",

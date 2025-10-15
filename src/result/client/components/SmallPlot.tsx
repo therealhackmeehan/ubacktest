@@ -17,7 +17,7 @@ const SmallPlot: React.FC<PlotProps> = ({
 
   if (x.length !== y.length) {
     console.error(
-      "Data length mismatch: x and y arrays must have the same length.",
+      "Data length mismatch: x and y arrays must have the same length."
     );
     return null;
   }

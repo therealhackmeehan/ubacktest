@@ -24,7 +24,7 @@ ChartJS.register(
   Title,
   Tooltip,
   Legend,
-  TimeSeriesScale,
+  TimeSeriesScale
 );
 
 interface UserDefinedPlotProps {
@@ -70,7 +70,7 @@ export default function UserDefinedPlot({
           borderWidth: 2,
           yAxisID: "y1",
         };
-      },
+      }
     );
 
     datasets.push({

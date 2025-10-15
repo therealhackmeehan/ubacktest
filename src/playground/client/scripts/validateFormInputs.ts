@@ -16,13 +16,13 @@ function validateFormInputs(formInputs: FormInputProps): void {
   // Check for missing inputs
   if (!startDate || !endDate || !symbol || !intval || !timeout) {
     throw new Error(
-      "Missing input entries. Please provide 'symbol', 'start date', 'end date', and 'trading frequency'",
+      "Missing input entries. Please provide 'symbol', 'start date', 'end date', and 'trading frequency'"
     );
   }
 
   if (useWarmupDate && !warmupDate) {
     throw new Error(
-      "If utilizing the warm-up period, make sure to include a warm-up start date.",
+      "If utilizing the warm-up period, make sure to include a warm-up start date."
     );
   }
 
@@ -44,14 +44,14 @@ function validateFormInputs(formInputs: FormInputProps): void {
   const symbolRegex = /^[A-Za-z0-9^]{1,6}$/;
   if (!symbolRegex.test(symbol)) {
     throw new Error(
-      "Symbol must be alphanumeric (or ^ for indices) and between 1 to 6 characters.",
+      "Symbol must be alphanumeric (or ^ for indices) and between 1 to 6 characters."
     );
   }
 
   // Define allowed interval values
   if (!intVals.includes(intval)) {
     throw new Error(
-      `Invalid interval. Allowed values are: ${intVals.join(", ")}.`,
+      `Invalid interval. Allowed values are: ${intVals.join(", ")}.`
     );
   }
 

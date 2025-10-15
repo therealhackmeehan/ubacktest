@@ -62,7 +62,7 @@ function ResultList({
                   resultToHighlight={resultToHighlight}
                   setResultToHighlight={setResultToHighlight}
                 />
-              ),
+              )
             )
           ) : (
             <ul className="space-y-2 my-4">

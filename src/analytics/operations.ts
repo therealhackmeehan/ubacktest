@@ -13,7 +13,7 @@ type DailyStatsValues = {
 
 export const getDailyStats: GetDailyStats<void, DailyStatsValues> = async (
   _args,
-  context,
+  context
 ) => {
   if (!context.user?.isAdmin) {
     throw new HttpError(401);

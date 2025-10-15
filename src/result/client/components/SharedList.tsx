@@ -21,7 +21,7 @@ function SharedList() {
             {(showAll ? results : results.slice(0, 10)).map(
               (result: GetSharedProps) => (
                 <SharedResultItem key={result.id} result={result} />
-              ),
+              )
             )}
           </ul>
 

@@ -17,7 +17,7 @@ export default function StrategySpecificResultList({
   setResultToHighlight,
 }: StrategySpecificResultListProps) {
   const [selectedResults, setSelectedResults] = useState<Set<string>>(
-    new Set(),
+    new Set()
   );
 
   useEffect(() => {
@@ -44,7 +44,7 @@ export default function StrategySpecificResultList({
   };
 
   const selectedResultItems = resultsByStrategy.filter((r) =>
-    selectedResults.has(r.id),
+    selectedResults.has(r.id)
   );
 
   return (

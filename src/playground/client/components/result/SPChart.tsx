@@ -24,7 +24,7 @@ ChartJS.register(
   Title,
   Tooltip,
   Legend,
-  TimeSeriesScale,
+  TimeSeriesScale
 );
 
 interface SPChartProps {
@@ -43,7 +43,7 @@ function SPChart({ strategyResult }: SPChartProps) {
             (timestamp: string, index: number) => ({
               x: new Date(timestamp),
               y: strategyResult.portfolio[index],
-            }),
+            })
           ),
           borderColor: "rgba(255, 0, 100, 1)",
           backgroundColor: "rgba(255, 0, 100, 1)",
@@ -56,7 +56,7 @@ function SPChart({ strategyResult }: SPChartProps) {
             (timestamp: string, index: number) => ({
               x: new Date(timestamp),
               y: strategyResult.sp[index],
-            }),
+            })
           ),
           borderColor: "rgba(123, 50, 168, 1)",
           pointRadius: 0,

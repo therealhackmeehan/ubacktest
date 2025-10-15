@@ -3,7 +3,7 @@ import CodeExecutor from "../CodeExecutor";
 
 export const weeklyPackageUpdate: WeeklyPackageUpdate<{}, string> = async (
   _args,
-  context,
+  context
 ) => {
   const codeToExecute = `import subprocess\nprint(subprocess.run(["pip", "freeze"], text=True, capture_output=True).stdout)`;
   const codeExecutor = new CodeExecutor(codeToExecute, 15);
@@ -17,7 +17,7 @@ export const weeklyPackageUpdate: WeeklyPackageUpdate<{}, string> = async (
   });
 
   console.log(
-    "successfully updated package details at " + packageInfoEntry.date,
+    "successfully updated package details at " + packageInfoEntry.date
   );
   return packageInfoEntry.info;
 };

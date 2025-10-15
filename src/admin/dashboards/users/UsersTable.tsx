@@ -14,7 +14,7 @@ const UsersTable = () => {
   const [page, setPage] = useState(1);
   const [email, setEmail] = useState<string | undefined>(undefined);
   const [isAdminFilter, setIsAdminFilter] = useState<boolean | undefined>(
-    undefined,
+    undefined
   );
   const [statusOptions, setStatusOptions] = useState<SubscriptionStatus[]>([]);
   const { data, isLoading, error } = useQuery(getPaginatedUsers, {
@@ -136,7 +136,7 @@ const UsersTable = () => {
                           </option>
                         );
                       }
-                    },
+                    }
                   )}
                 </select>
                 <span className="absolute top-1/2 right-4 z-10 -translate-y-1/2">

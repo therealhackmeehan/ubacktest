@@ -39,7 +39,7 @@ function StrategyCodeGen({ code }: { code: string | null }) {
       symbol,
       daysBackToTest,
       intval.amount,
-      intval.timeframe,
+      intval.timeframe
     );
     setGeneratedCode(newCode);
   }

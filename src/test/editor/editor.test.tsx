@@ -16,7 +16,7 @@ function renderWithStrategyContext(ui: any, strategy = mockStrategy) {
       value={{ selectedStrategy: strategy, setSelectedStrategy: vi.fn() }}
     >
       {ui}
-    </StrategyContext.Provider>,
+    </StrategyContext.Provider>
   );
 }
 

@@ -5,7 +5,7 @@ class ScriptBuilder {
     code: string,
     toInsertInPython: PythonDataProps,
     startDate: string,
-    uniqueKey: string,
+    uniqueKey: string
   ): string {
     const m = `${code}
 

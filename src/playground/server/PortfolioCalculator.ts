@@ -60,7 +60,7 @@ class PortfolioCalculator {
           this.strategyResult.portfolio[i] * currSignal;
 
         const tradeValue = Math.abs(
-          this.strategyResult.portfolioWithCosts[i] * (currSignal - prevSignal),
+          this.strategyResult.portfolioWithCosts[i] * (currSignal - prevSignal)
         );
         this.strategyResult.portfolioWithCosts[i] =
           this.strategyResult.portfolioWithCosts[i] - tradeValue * tradingCost;
@@ -71,28 +71,28 @@ class PortfolioCalculator {
       this.strategyResult.cash[i] = Math.max(
         0,
         this.strategyResult.portfolio[i] -
-          Math.abs(this.strategyResult.equity[i]),
+          Math.abs(this.strategyResult.equity[i])
       );
       this.strategyResult.cashWithCosts[i] = Math.max(
         0,
         this.strategyResult.portfolioWithCosts[i] -
-          Math.abs(this.strategyResult.equityWithCosts[i]),
+          Math.abs(this.strategyResult.equityWithCosts[i])
       );
     }
 
     this.strategyResult.returns = this.strategyResult.returns.map((val) =>
-      this.roundTo(val),
+      this.roundTo(val)
     );
     this.strategyResult.portfolio = this.strategyResult.portfolio.map((val) =>
-      this.roundTo(val),
+      this.roundTo(val)
     );
     this.strategyResult.portfolioWithCosts =
       this.strategyResult.portfolioWithCosts.map((val) => this.roundTo(val));
     this.strategyResult.cash = this.strategyResult.cash.map((val) =>
-      this.roundTo(val),
+      this.roundTo(val)
     );
     this.strategyResult.equity = this.strategyResult.equity.map((val) =>
-      this.roundTo(val),
+      this.roundTo(val)
     );
 
     return this.strategyResult;
@@ -197,14 +197,14 @@ class PortfolioCalculator {
     const variance =
       returns.reduce(
         (sum: number, ret: number) => sum + Math.pow(ret - meanReturn, 2),
-        0,
+        0
       ) / returns.length;
     const stdDev = Math.sqrt(variance);
     const negativeReturns = returns.filter((ret: number) => ret < 0);
     const downsideVariance =
       negativeReturns.reduce(
         (sum: number, ret: number) => sum + Math.pow(ret, 2),
-        0,
+        0
       ) / (negativeReturns.length || 1);
     const downsideDev = Math.sqrt(downsideVariance);
     const riskFreeRate = 0;

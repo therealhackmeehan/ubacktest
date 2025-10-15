@@ -18,10 +18,10 @@ export interface FetchCustomerPortalUrlArgs {
 export interface PaymentProcessor {
   id: "stripe" | "lemonsqueezy";
   createCheckoutSession: (
-    args: CreateCheckoutSessionArgs,
+    args: CreateCheckoutSessionArgs
   ) => Promise<{ session: { id: string; url: string } }>;
   fetchCustomerPortalUrl: (
-    args: FetchCustomerPortalUrlArgs,
+    args: FetchCustomerPortalUrlArgs
   ) => Promise<string | null>;
   webhook: PaymentsWebhook;
   webhookMiddlewareConfigFn: MiddlewareConfigFn;

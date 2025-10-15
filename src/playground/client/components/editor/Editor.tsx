@@ -68,7 +68,7 @@ function Editor({
 
       if (warnings && warnings.length > 0) {
         setWarningMsg(
-          warnings.map((str: string) => `WARNING: ${str}`).join("\n\n"),
+          warnings.map((str: string) => `WARNING: ${str}`).join("\n\n")
         );
       }
 
