@@ -1,6 +1,7 @@
 # Curated Examples for uBacktest.com
 
 Notes:
+
 - examples are seperated into different subcategories involving their root ideologies (mean reversion, momentum, machine learning, other)
 - examples are hard coded in typescript but are accessibly as python scripts if you run the toPython.py script and look in the python/ folder
 - to test all examples (as a generic syntax check), run test.py after generating python scripts with toPython.py

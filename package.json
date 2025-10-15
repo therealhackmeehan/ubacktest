@@ -2,7 +2,7 @@
   "name": "ubacktest",
   "type": "module",
   "scripts": {
-    "format": "npx prettier --write \"**/*.{ts,tsx,html,css,json,js,jsx}\""
+    "format": "npx prettier --write src/"
   },
   "dependencies": {
     "@google-analytics/data": "4.12.1",
