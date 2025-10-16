@@ -10,7 +10,7 @@ class PortfolioCalculator {
     this.costPerTrade = costPerTrade;
   }
 
-  public calculate() {
+  public calculate(): StrategyResultProps {
     const tradingCost = this.costPerTrade / 100;
 
     this.strategyResult.portfolio[0] = 1;

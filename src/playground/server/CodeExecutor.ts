@@ -50,6 +50,7 @@ class CodeExecutor {
 
     const fullResult = await response.json();
 
+    //FIX THIS!! Any typing
     let { stdout, stderr, message, memory, time, status } = fullResult;
     const { id, description } = status;
 

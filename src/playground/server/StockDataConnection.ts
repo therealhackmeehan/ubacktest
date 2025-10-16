@@ -2,7 +2,21 @@ import { HttpError } from "wasp/server";
 import { FormInputProps } from "../../shared/sharedTypes";
 import { intVals, eodFreqs } from "../../shared/sharedTypes";
 
-type QuoteColumns = Record<string, any[]>;
+// work on this!
+type QuoteColumns = {
+  date: number[];
+  high: number[];
+  low: number[];
+  open: number[];
+  close: number[];
+  volume: number[];
+  adjHigh: number[];
+  adjLow: number[];
+  adjOpen: number[];
+  adjClose: number[];
+  adjVolume: number[];
+  splitFactor: number[];
+};
 
 class StockDataConnection {
   private readonly baseUrlEOD: string = "https://api.tiingo.com/tiingo/daily";
@@ -212,7 +226,8 @@ class StockDataConnection {
       adjOpen,
       adjClose,
       adjVolume,
-    } = quote; // WILL THIS ERROR??
+    } = quote;
+
     const closeToUse = this.useAdjusted ? adjClose : close;
     const highToUse = this.useAdjusted ? adjHigh : high;
     const lowToUse = this.useAdjusted ? adjLow : low;

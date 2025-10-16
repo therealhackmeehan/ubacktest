@@ -7,7 +7,6 @@ import { runStrategy, charge, updateStrategy } from "wasp/client/operations";
 import validateFormInputs from "../../scripts/validateFormInputs";
 import validatePythonCode from "../../scripts/validatePythonCode";
 import {
-  BacktestResultProps,
   FormInputProps,
   StatProps,
   StrategyResultProps,

@@ -10,6 +10,7 @@ import STDParser from "./STDParser";
 import PortfolioCalculator from "./PortfolioCalculator";
 import StockDataConnection from "./StockDataConnection";
 import { HttpError } from "wasp/server";
+import { BacktestResultProps } from "wasp/src/shared/sharedTypes";
 
 /*
     THE backend endpoint for processing of the stock trading strategy.
@@ -75,7 +76,7 @@ class StrategyPipeline {
   }
 
   //________________________________________ run: main endpoint
-  public async run() {
+  public async run(): Promise<BacktestResultProps> {
     // Initialize our Stock API Connection
     const apiConnection = new StockDataConnection(this.formInputs);
 
@@ -158,7 +159,7 @@ class StrategyPipeline {
 
   //________________________________________
 
-  private sendJSONtoFrontend() {
+  private sendJSONtoFrontend(): BacktestResultProps {
     return {
       strategyResult: this.strategyResult,
       statistics: this.statistics,
