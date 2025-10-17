@@ -5,6 +5,8 @@ node_modules/
 .env.server
 .secrets
 
+.actrc
+
 .DS_Store
 
 backtesting-web-app-400ca7b83fa8.json
