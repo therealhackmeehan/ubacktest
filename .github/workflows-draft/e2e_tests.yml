@@ -2,10 +2,8 @@ name: uBacktest e2e/Workflow Tests
 
 on:
   push:
-    branches:
-      - main
-    pull request:
-      - main
+    branches: [main]
+    pull request: [main]
 
 env:
   WASP_TELEMETRY_DISABLE: 1
@@ -43,7 +41,7 @@ jobs:
         uses: actions/cache@v4
         with:
           path: ~/.npm
-          key: node-modules-${{ runner.os }}-${{ hashFiles('package-lock.json') }}-${{ hashFiles('btwa-test/package-lock.json') }}-wasp${{ env.WASP_VERSION }}-node${{ steps.setup-node.outputs.node-version }}
+          key: node-modules-${{ runner.os }}-${{ hashFiles('package-lock.json') }}-${{ hashFiles('btwa_test/package-lock.json') }}-wasp${{ env.WASP_VERSION }}-node${{ steps.setup-node.outputs.node-version }}
           restore-keys: |
             node-modules-${{ runner.os }}-
 
@@ -51,11 +49,21 @@ jobs:
         run: |
           cp .env.server.example .env.server && cp .env.client.example .env.client
 
+      # - name: "[btwa_test] Install Node.js Dependencies for Playwright Tests"
+      #   if: steps.cache-btwa-test.outputs.cache-hit != 'true'
+      #   run: |
+      #     cd btwa_test
+      #     npm ci
+
       - name: "[btwa_test] Install Node.js Dependencies for Playwright Tests"
-        if: steps.cache-btwa-test.outputs.cache-hit != 'true'
-        run: |
-          cd btwa_test
-          npm ci
+      - uses: actions/cache@v4
+        with:
+          path: btwa_test/node_modules
+          key: btwa-test-node-${{ runner.os }}-${{ hashFiles('btwa_test/package-lock.json') }}
+
+      - run: |
+        cd btwa_test
+        npm ci
 
       - name: "[btwa_test] Store Playwright's Version"
         run: |
