@@ -19,6 +19,13 @@ jobs:
       - name: Checkout the uBacktest Repository
         uses: actions/checkout@v4
 
+      - name: Checkout btwa_test repo
+        uses: actions/checkout@v4
+        with:
+          repository: therealhackmeehan/btwa_test
+          path: btwa_test
+          ref: main
+
       - name: Setup Node.js
         id: setup-node
         uses: actions/setup-node@v4
@@ -36,7 +43,7 @@ jobs:
         uses: actions/cache@v4
         with:
           path: ~/.npm
-          key: node-modules-${{ runner.os }}-${{ hashFiles('package-lock.json') }}-${{ hashFiles('e2e-tests/package-lock.json') }}-wasp${{ env.WASP_VERSION }}-node${{ steps.setup-node.outputs.node-version }}
+          key: node-modules-${{ runner.os }}-${{ hashFiles('package-lock.json') }}-${{ hashFiles('btwa-test/package-lock.json') }}-wasp${{ env.WASP_VERSION }}-node${{ steps.setup-node.outputs.node-version }}
           restore-keys: |
             node-modules-${{ runner.os }}-
 
@@ -44,44 +51,60 @@ jobs:
         run: |
           cp .env.server.example .env.server && cp .env.client.example .env.client
 
-      - name: "[e2e_tests] Install Node.js Dependencies for Playwright Tests"
-        if: steps.cache-e2e-tests.outputs.cache-hit != 'true'
+      - name: "[btwa_test] Install Node.js Dependencies for Playwright Tests"
+        if: steps.cache-btwa-test.outputs.cache-hit != 'true'
         run: |
-          cd e2e_tests
+          cd btwa_test
           npm ci
 
-      - name: "[e2e_tests] Store Playwright's Version"
+      - name: "[btwa_test] Store Playwright's Version"
         run: |
-          cd e2e_tests
+          cd btwa_test
           PLAYWRIGHT_VERSION=$(npm ls @playwright/test | grep @playwright | sed 's/.*@//')
           echo "Playwright's Version: $PLAYWRIGHT_VERSION"
           echo "PLAYWRIGHT_VERSION=$PLAYWRIGHT_VERSION" >> $GITHUB_ENV
 
-      - name: "[e2e_tests] Cache Playwright Browsers for Playwright's Version"
+      - name: "[btwa_test] Cache Playwright Browsers for Playwright's Version"
         id: cache-playwright-browsers
         uses: actions/cache@v4
         with:
           path: ~/.cache/ms-playwright
           key: playwright-browsers-${{ env.PLAYWRIGHT_VERSION }}-${{ runner.os }}
 
-      - name: "[e2e_tests] Set up Playwright"
+      - name: "[btwa_test] Set up Playwright"
         if: steps.cache-playwright-browsers.outputs.cache-hit != 'true'
         run: |
-          cd e2e_tests
+          cd btwa_test
           npx playwright install --with-deps
 
-      - name: "[e2e_tests] Run Playwright Tests"
-        env:
-          # These secretes can be set in your GitHub repo settings, e.g. https://github.com/<account>/<repo>/settings/secrets/actions
+      - name: "[btwa_test] Install Stripe CLI"
+        run: |
+          curl -s https://packages.stripe.dev/api/security/keypair/stripe-cli-gpg/public | gpg --dearmor | sudo tee /usr/share/keyrings/stripe.gpg
+          echo "deb [signed-by=/usr/share/keyrings/stripe.gpg] https://packages.stripe.dev/stripe-cli-debian-local stable main" | sudo tee -a /etc/apt/sources.list.d/stripe.list
+          sudo apt update
+          sudo apt install stripe
 
+      - name: "[btwa_test] Run Stripe CLI to listen for webhooks"
+        env:
+          STRIPE_DEVICE_NAME: ${{ secrets.STRIPE_DEVICE_NAME }}
+        run: |
+          stripe listen --api-key ${{ secrets.STRIPE_KEY }} --forward-to localhost:3001/payments-webhook &
+
+      - name: "[btwa_test] Run Playwright Tests"
+        env:
           # Server-side env vars
           JUDGE_APIKEY_SULU: ${{ secrets.JUDGE_APIKEY_SULU }}
           TIINGO_API_KEY: ${{ secrets.TIINGO_API_KEY }}
+          STRIPE_API_KEY: ${{ secrets.STRIPE_API_KEY }}
+          STRIPE_WEBHOOK_SECRET: ${{ secrets.STRIPE_WEBHOOK_SECRET }}
+          STRIPE_CUSTOMER_PORTAL_URL: ${{ secrets.STRIPE_CUSTOMER_PORTAL_URL }}
+          PAYMENTS_HOBBY_SUBSCRIPTION_PLAN_ID: ${{ secrets.PAYMENTS_HOBBY_SUBSCRIPTION_PLAN_ID }}
+          PAYMENTS_PRO_SUBSCRIPTION_PLAN_ID: ${{ secrets.PAYMENTS_PRO_SUBSCRIPTION_PLAN_ID }}
+          PAYMENTS_CREDITS_5_PLAN_ID: ${{ secrets.PAYMENTS_CREDITS_5_PLAN_ID }}
+          SKIP_EMAIL_VERIFICATION_IN_DEV: true
 
           # Client-side env vars
           REACT_APP_GOOGLE_ANALYTICS_ID: ${{ secrets.REACT_APP_GOOGLE_ANALYTICS_ID }}
-
-          SKIP_EMAIL_VERIFICATION_IN_DEV: true
         run: |
-          cd e2e_tests
+          cd btwa_test
           npm run e2e:playwright
