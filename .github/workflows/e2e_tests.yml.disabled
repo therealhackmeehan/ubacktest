@@ -1,0 +1,87 @@
+name: uBacktest e2e/Workflow Tests
+
+on:
+  push:
+    branches:
+      - main
+    pull request:
+      - main
+
+env:
+  WASP_TELEMETRY_DISABLE: 1
+  WASP_VERSION: 0.16.2
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout the uBacktest Repository
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        id: setup-node
+        uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+
+      - name: Setup Docker
+        uses: docker/setup-buildx-action@v3
+
+      - name: Install Wasp
+        run: |
+          curl -sSL https://get.wasp.sh/installer.sh | sh -s -- -v ${{ env.WASP_VERSION }}
+
+      - name: Cache Global Node Modules
+        uses: actions/cache@v4
+        with:
+          path: ~/.npm
+          key: node-modules-${{ runner.os }}-${{ hashFiles('package-lock.json') }}-${{ hashFiles('e2e-tests/package-lock.json') }}-wasp${{ env.WASP_VERSION }}-node${{ steps.setup-node.outputs.node-version }}
+          restore-keys: |
+            node-modules-${{ runner.os }}-
+
+      - name: Set ENV Vars to Mock Values
+        run: |
+          cp .env.server.example .env.server && cp .env.client.example .env.client
+
+      - name: "[e2e_tests] Install Node.js Dependencies for Playwright Tests"
+        if: steps.cache-e2e-tests.outputs.cache-hit != 'true'
+        run: |
+          cd e2e_tests
+          npm ci
+
+      - name: "[e2e_tests] Store Playwright's Version"
+        run: |
+          cd e2e_tests
+          PLAYWRIGHT_VERSION=$(npm ls @playwright/test | grep @playwright | sed 's/.*@//')
+          echo "Playwright's Version: $PLAYWRIGHT_VERSION"
+          echo "PLAYWRIGHT_VERSION=$PLAYWRIGHT_VERSION" >> $GITHUB_ENV
+
+      - name: "[e2e_tests] Cache Playwright Browsers for Playwright's Version"
+        id: cache-playwright-browsers
+        uses: actions/cache@v4
+        with:
+          path: ~/.cache/ms-playwright
+          key: playwright-browsers-${{ env.PLAYWRIGHT_VERSION }}-${{ runner.os }}
+
+      - name: "[e2e_tests] Set up Playwright"
+        if: steps.cache-playwright-browsers.outputs.cache-hit != 'true'
+        run: |
+          cd e2e_tests
+          npx playwright install --with-deps
+
+      - name: "[e2e_tests] Run Playwright Tests"
+        env:
+          # These secretes can be set in your GitHub repo settings, e.g. https://github.com/<account>/<repo>/settings/secrets/actions
+
+          # Server-side env vars
+          JUDGE_APIKEY_SULU: ${{ secrets.JUDGE_APIKEY_SULU }}
+          TIINGO_API_KEY: ${{ secrets.TIINGO_API_KEY }}
+
+          # Client-side env vars
+          REACT_APP_GOOGLE_ANALYTICS_ID: ${{ secrets.REACT_APP_GOOGLE_ANALYTICS_ID }}
+
+          SKIP_EMAIL_VERIFICATION_IN_DEV: true
+        run: |
+          cd e2e_tests
+          npm run e2e:playwright

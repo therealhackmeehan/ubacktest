@@ -1,8 +1,8 @@
 .wasp/
 node_modules/
 
-.env
-.env.*
+.env.client
+.env.server
 
 .DS_Store
 
