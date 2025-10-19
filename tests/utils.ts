@@ -58,7 +58,7 @@ export const initEmptyStrategy = async ({ page }: { page: Page }) => {
   await page.getByText("Reject all").click();
   await page.getByText("advanced options").click();
   await page.evaluate(() => {
-    document.body.style.zoom = "60%"; // adjust as needed
+    document.body.style.zoom = "60%";
   });
 };
 
