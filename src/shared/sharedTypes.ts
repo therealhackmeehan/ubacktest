@@ -4,8 +4,8 @@ type Serializable<T> = {
   [K in keyof T]: T[K] extends string | number | boolean | null | undefined
     ? T[K]
     : T[K] extends Array<infer U>
-    ? Serializable<U>[]
-    : Serializable<T[K]>;
+      ? Serializable<U>[]
+      : Serializable<T[K]>;
 };
 
 export interface UserDefinedData {
