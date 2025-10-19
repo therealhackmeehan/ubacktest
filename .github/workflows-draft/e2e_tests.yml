@@ -3,11 +3,12 @@ name: uBacktest e2e/Workflow Tests
 on:
   push:
     branches: [main]
-    pull request: [main]
+  pull_request:
+    branches: [main]
 
 env:
   WASP_TELEMETRY_DISABLE: 1
-  WASP_VERSION: 0.16.2
+  WASP_VERSION: 0.18.1
 
 jobs:
   test:
@@ -23,6 +24,7 @@ jobs:
           repository: therealhackmeehan/btwa_test
           path: btwa_test
           ref: main
+          token: ${{ secrets.BTWA_TEST_GITHUB_TOKEN }}
 
       - name: Setup Node.js
         id: setup-node
@@ -49,58 +51,54 @@ jobs:
         run: |
           cp .env.server.example .env.server && cp .env.client.example .env.client
 
-      # - name: "[btwa_test] Install Node.js Dependencies for Playwright Tests"
-      #   if: steps.cache-btwa-test.outputs.cache-hit != 'true'
-      #   run: |
-      #     cd btwa_test
-      #     npm ci
-
-      - name: "[btwa_test] Install Node.js Dependencies for Playwright Tests"
-      - uses: actions/cache@v4
+      - name: Cache btwa_test node_modules
+        id: cache-btwa-test
+        uses: actions/cache@v4
         with:
           path: btwa_test/node_modules
           key: btwa-test-node-${{ runner.os }}-${{ hashFiles('btwa_test/package-lock.json') }}
 
-      - run: |
-        cd btwa_test
-        npm ci
+      - name: Install Node.js Dependencies for Playwright Tests
+        if: steps.cache-btwa-test.outputs.cache-hit != 'true'
+        run: |
+          cd btwa_test
+          npm ci
 
-      - name: "[btwa_test] Store Playwright's Version"
+      - name: Store Playwright's Version
         run: |
           cd btwa_test
           PLAYWRIGHT_VERSION=$(npm ls @playwright/test | grep @playwright | sed 's/.*@//')
           echo "Playwright's Version: $PLAYWRIGHT_VERSION"
           echo "PLAYWRIGHT_VERSION=$PLAYWRIGHT_VERSION" >> $GITHUB_ENV
 
-      - name: "[btwa_test] Cache Playwright Browsers for Playwright's Version"
+      - name: Cache Playwright Browsers
         id: cache-playwright-browsers
         uses: actions/cache@v4
         with:
           path: ~/.cache/ms-playwright
           key: playwright-browsers-${{ env.PLAYWRIGHT_VERSION }}-${{ runner.os }}
 
-      - name: "[btwa_test] Set up Playwright"
+      - name: Set up Playwright
         if: steps.cache-playwright-browsers.outputs.cache-hit != 'true'
         run: |
           cd btwa_test
           npx playwright install --with-deps
 
-      - name: "[btwa_test] Install Stripe CLI"
+      - name: Install Stripe CLI
         run: |
           curl -s https://packages.stripe.dev/api/security/keypair/stripe-cli-gpg/public | gpg --dearmor | sudo tee /usr/share/keyrings/stripe.gpg
           echo "deb [signed-by=/usr/share/keyrings/stripe.gpg] https://packages.stripe.dev/stripe-cli-debian-local stable main" | sudo tee -a /etc/apt/sources.list.d/stripe.list
           sudo apt update
           sudo apt install stripe
 
-      - name: "[btwa_test] Run Stripe CLI to listen for webhooks"
+      - name: Run Stripe CLI to listen for webhooks
         env:
           STRIPE_DEVICE_NAME: ${{ secrets.STRIPE_DEVICE_NAME }}
         run: |
           stripe listen --api-key ${{ secrets.STRIPE_KEY }} --forward-to localhost:3001/payments-webhook &
 
-      - name: "[btwa_test] Run Playwright Tests"
+      - name: Run Playwright Tests
         env:
-          # Server-side env vars
           JUDGE_APIKEY_SULU: ${{ secrets.JUDGE_APIKEY_SULU }}
           TIINGO_API_KEY: ${{ secrets.TIINGO_API_KEY }}
           STRIPE_API_KEY: ${{ secrets.STRIPE_API_KEY }}
@@ -110,8 +108,6 @@ jobs:
           PAYMENTS_PRO_SUBSCRIPTION_PLAN_ID: ${{ secrets.PAYMENTS_PRO_SUBSCRIPTION_PLAN_ID }}
           PAYMENTS_CREDITS_5_PLAN_ID: ${{ secrets.PAYMENTS_CREDITS_5_PLAN_ID }}
           SKIP_EMAIL_VERIFICATION_IN_DEV: true
-
-          # Client-side env vars
           REACT_APP_GOOGLE_ANALYTICS_ID: ${{ secrets.REACT_APP_GOOGLE_ANALYTICS_ID }}
         run: |
           cd btwa_test

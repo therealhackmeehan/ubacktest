@@ -1,4 +1,5 @@
 import { Chart } from "react-chartjs-2";
+import { TooltipItem, ChartType, ScriptableScaleContext } from "chart.js";
 import { useState, useEffect, useRef } from "react";
 import "chartjs-adapter-date-fns";
 import zoomPlugin from "chartjs-plugin-zoom";
@@ -154,9 +155,9 @@ function CandlePlot({
     plugins: {
       tooltip: {
         callbacks: {
-          label: function (context) {
+          label: function (context: TooltipItem<ChartType>) {
             let label = context.dataset.label || "";
-            const value = context.raw;
+            const value: any = context.raw; // I hate this but its the best for now
 
             // Check if the raw value contains OHLC data
             if (
@@ -206,7 +207,7 @@ function CandlePlot({
           },
         },
         grid: {
-          color: (tick) => {
+          color: (tick: ScriptableScaleContext) => {
             // IDK why this exists at tick.tick.value
             return tick.tick.value === 1
               ? "rgba(100,100,100,.4)"

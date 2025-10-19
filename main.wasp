@@ -1,9 +1,10 @@
 app uBacktest {
   wasp: {
-    version: "^0.16.0"
+    version: "^0.18.0"
   },
   title: "uBacktest",
   head: [
+        "<link rel='icon' href='/favicon.ico' />",
         "<meta property='og:type' content='website' />",
         "<meta property='og:title' content='uBacktest' />",
         "<meta property='og:url' content='https://ubacktest.com' />",

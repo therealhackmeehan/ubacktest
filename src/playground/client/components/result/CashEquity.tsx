@@ -1,5 +1,6 @@
 import { Line } from "react-chartjs-2";
 import { useState, useEffect } from "react";
+import { ScriptableScaleContext } from "chart.js";
 import "chartjs-adapter-date-fns";
 
 import {
@@ -109,8 +110,10 @@ function CashEquity({ strategyResult }: CashEquityProps) {
           },
         },
         grid: {
-          color: ({ tick }) =>
-            tick.value == 0 ? "rgba(100,100,100,.5)" : "rgba(100,100,100,.1)",
+          color: (tick: ScriptableScaleContext) =>
+            tick.tick.value == 0
+              ? "rgba(100,100,100,.5)"
+              : "rgba(100,100,100,.1)",
           lineWidth: 2,
         },
       },

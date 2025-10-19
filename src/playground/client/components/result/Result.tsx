@@ -65,7 +65,8 @@ function Result({
   const downloadCSV = () => {
     if (!strategyResult) return;
 
-    let headers = Object.keys(strategyResult);
+    let headers = Object.keys(strategyResult) as (keyof StrategyResultProps)[];
+
     headers = headers.filter(
       (header) =>
         // we unfortunately can't let users download a large chunk of the data for legal reasons
@@ -82,21 +83,21 @@ function Result({
         !(formInputs.costPerTrade === 0 && header === "portfolioWithCosts")
     );
 
-    // If timestamp exists and isn't already filtered out, rename the timestamp column
-    const includeTimestamp = headers.includes("timestamp");
     const displayHeaders = headers.map((header) =>
       header === "timestamp" ? "timestamp (local time)" : header
     );
 
-    const rowCount = strategyResult[headers[0]].length;
+    const rowCount = strategyResult[headers[0]].length as number;
 
     const rows = Array.from({ length: rowCount }, (_, rowIndex) =>
       headers
         .map((header) => {
-          const value = strategyResult[header][rowIndex];
+          const value = (strategyResult[header] as any)[rowIndex]; // declaring as any UGH... but will look for a workaround.
+
           if (header === "timestamp") {
-            return new Date(value).toString().replace(",", "");
+            return new Date(value as string).toString().replace(",", "");
           }
+
           return value;
         })
         .join(",")

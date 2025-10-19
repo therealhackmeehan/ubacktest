@@ -1,4 +1,5 @@
 import { Line } from "react-chartjs-2";
+import { ScriptableScaleContext } from "chart.js";
 import { useState, useEffect } from "react";
 import "chartjs-adapter-date-fns";
 
@@ -93,8 +94,10 @@ function SPChart({ strategyResult }: SPChartProps) {
           },
         },
         grid: {
-          color: ({ tick }) =>
-            tick.value == 1 ? "rgba(100,100,100,.5)" : "rgba(100,100,100,0)",
+          color: (tick: ScriptableScaleContext) =>
+            tick.tick.value == 1
+              ? "rgba(100,100,100,.5)"
+              : "rgba(100,100,100,0)",
           lineWidth: 2,
         },
       },
