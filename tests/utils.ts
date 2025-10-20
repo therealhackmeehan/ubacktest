@@ -9,6 +9,11 @@ export type User = {
 
 const DEFAULT_PASSWORD = "password123";
 
+export const createRandomUser = () => {
+  const email = `${randomUUID()}@test.com`;
+  return { email, password: DEFAULT_PASSWORD } as User;
+};
+
 export const logUserIn = async ({ page, user }: { page: Page; user: User }) => {
   await page.goto("/");
   await page.getByRole("link", { name: "Log in" }).click();
@@ -50,6 +55,12 @@ export const signUserUp = async ({
     .catch((err) => console.error(err.message));
 };
 
+// export async function logNewUserIn(page: Page) {
+//   const testUser = createRandomUser();
+//   await signUserUp({ page: page, user: testUser });
+//   await logUserIn({ page: page, user: testUser });
+// }
+
 export const initEmptyStrategy = async ({ page }: { page: Page }) => {
   await page.goto("/editor");
   await page.getByText("new").click();
@@ -60,11 +71,6 @@ export const initEmptyStrategy = async ({ page }: { page: Page }) => {
   await page.evaluate(() => {
     document.body.style.zoom = "60%";
   });
-};
-
-export const createRandomUser = () => {
-  const email = `${randomUUID()}@test.com`;
-  return { email, password: DEFAULT_PASSWORD } as User;
 };
 
 export const makeStripePayment = async ({
@@ -82,7 +88,7 @@ export const makeStripePayment = async ({
   await page.waitForURL("**/pricing");
 
   let idx = 0;
-  if (planName == "credits10") {
+  if (planName == "credits5") {
     idx = 2;
   } else if (planName == "pro") {
     idx = 1;
@@ -121,7 +127,7 @@ export const makeStripePayment = async ({
 
   await page.waitForURL("**/checkout?success=true");
   await page.waitForURL("**/account");
-  if (planName != "credits10")
+  if (planName != "credits5")
     await expect(page.getByText(planName)).toBeVisible();
 };
 

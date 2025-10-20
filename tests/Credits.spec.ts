@@ -25,16 +25,17 @@ test.afterAll(async () => {
   await page.close();
 });
 
-test("User starts with 3 credits", async () => {
+test("Unsubscriber starts with 3 credits", () => {
   expect(page.url()).toContain("/editor");
   expect(page.getByText("3 tests remaining")).toBeVisible();
 });
 
-test("Buy 10 credits with stripe", async () => {
-  const PLAN_NAME = "credits10";
+test("Purchase 5 credits with stripe", async () => {
+  const PLAN_NAME = "credits5";
   await makeStripePayment({ test, page, planName: PLAN_NAME });
 });
 
-test("User now has 13 credits", async () => {
-  expect(page.getByText("Credits remaining: 13")).toBeVisible();
+test("Unsubscriber now has 8 credits on account page", async () => {
+  await expect(page.getByText("Account Information")).toBeVisible();
+  expect(page.getByText("Credits remaining: 8")).toBeVisible();
 });

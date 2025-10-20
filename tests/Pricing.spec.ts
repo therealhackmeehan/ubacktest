@@ -16,7 +16,6 @@ async function logNewUserIn() {
   await logUserIn({ page: page, user: testUser });
 }
 
-// We need to run the tests sequentially to check for functionality before and after the user pays.
 test.describe.configure({ mode: "serial" });
 
 test.beforeAll(async ({ browser }) => {
@@ -27,9 +26,8 @@ test.afterAll(async () => {
   await page.close();
 });
 
-test("User should see Log In to Buy Plan button", async () => {
+test("Unsubscriber should see Log In to buy plan button", async () => {
   await page.goto("/pricing");
-  // There are three tiers on the page, so we want to retrieve the first of the three buttons
   const buyPlanButton = page
     .getByRole("button", { name: "Log in to buy plan" })
     .first();
@@ -40,12 +38,9 @@ test("User should see Log In to Buy Plan button", async () => {
   expect(page.url()).toContain("/login");
 });
 
-test("User should see the Buy Plan button before payment", async () => {
-  // We only need to log the user in once since the tests are running sequentially
-  // and the same page is being shared between all the tests.
+test("Unsubscriber should see the buy plan button before payment", async () => {
   await logNewUserIn();
   await page.goto("/pricing");
-  // There are three tiers on the page, so we want to retrieve the first of the three buttons
   const manageSubscriptionButton = page
     .getByRole("button", { name: "Buy plan" })
     .first();
@@ -53,23 +48,19 @@ test("User should see the Buy Plan button before payment", async () => {
   await expect(manageSubscriptionButton).toBeEnabled();
 });
 
-test("Make test payment with Stripe", async () => {
+test("Purchase a hobby subscription", async () => {
   const PLAN_NAME = "Hobby";
-  // await logNewUserIn();
-  await page.goto("/");
   await makeStripePayment({ test, page, planName: PLAN_NAME });
 });
 
-test("User should see the Manage Subscription button after payment", async () => {
+test("Hobby Subscriber should see the manage subscription button after payment", async () => {
   await page.goto("/pricing");
-  // There are three tiers on the page, so we want to retrieve the first of the three buttons
   const manageSubscriptionButton = page
     .getByRole("button", { name: "Manage Subscription" })
     .first();
   await expect(manageSubscriptionButton).toBeVisible();
   await expect(manageSubscriptionButton).toBeEnabled();
   await manageSubscriptionButton.click();
-  // clicking the button should take the user to the Stripe customer portal page with substring 'billing.stripe.com' in a new window
   const newTabPromise = page.waitForEvent("popup");
   const newTab = await newTabPromise;
   await newTab.waitForLoadState();
