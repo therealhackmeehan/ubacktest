@@ -60,8 +60,8 @@ app uBacktest {
 
   emailSender: {
     // NOTE: "Dummy" provider is just for local development purposes.
-    // provider: Dummy,
-    provider: SendGrid,
+    provider: Dummy,
+    // provider: SendGrid,
     defaultFrom: {
       name: "uBacktest Support",
       // When using a real provider, e.g. SendGrid, you must use the same email address that you configured your account to send out emails with!

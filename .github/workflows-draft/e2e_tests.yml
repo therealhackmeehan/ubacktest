@@ -11,13 +11,13 @@ env:
   WASP_VERSION: 0.18.1
 
 jobs:
-  test:
+  e2e_tests:
     runs-on: ubuntu-latest
-
     steps:
       - name: Checkout the uBacktest Repository
         uses: actions/checkout@v4
-
+        with:
+          path: btwa_app
       - name: Checkout btwa_test repo
         uses: actions/checkout@v4
         with:
@@ -25,78 +25,77 @@ jobs:
           path: btwa_test
           ref: main
           token: ${{ secrets.BTWA_TEST_GITHUB_TOKEN }}
-
+      # - name: List directories
+      #   run: |
+      #     echo "Workspace: $GITHUB_WORKSPACE"
+      #     ls -la
+      #     ls -la btwa_app
+      #     ls -la btwa_test
       - name: Setup Node.js
         id: setup-node
         uses: actions/setup-node@v4
         with:
           node-version: "22"
-
       - name: Setup Docker
         uses: docker/setup-buildx-action@v3
-
       - name: Install Wasp
         run: |
           curl -sSL https://get.wasp.sh/installer.sh | sh -s -- -v ${{ env.WASP_VERSION }}
-
-      - name: Cache Global Node Modules
-        uses: actions/cache@v4
-        with:
-          path: ~/.npm
-          key: node-modules-${{ runner.os }}-${{ hashFiles('package-lock.json') }}-${{ hashFiles('btwa_test/package-lock.json') }}-wasp${{ env.WASP_VERSION }}-node${{ steps.setup-node.outputs.node-version }}
-          restore-keys: |
-            node-modules-${{ runner.os }}-
-
+      # - name: Cache Global Node Modules
+      #   uses: actions/cache@v4
+      #   with:
+      #     path: ~/.npm
+      #     key: node-modules-${{ runner.os }}-${{ hashFiles('btwa/package-lock.json') }}-${{ hashFiles('btwa_test/package-lock.json') }}-wasp${{ env.WASP_VERSION }}-node${{ steps.setup-node.outputs.node-version }}
+      #     restore-keys: |
+      #       node-modules-${{ runner.os }}-
       - name: Set ENV Vars to Mock Values
         run: |
+          cd btwa_app
           cp .env.server.example .env.server && cp .env.client.example .env.client
-
-      - name: Cache btwa_test node_modules
-        id: cache-btwa-test
-        uses: actions/cache@v4
-        with:
-          path: btwa_test/node_modules
-          key: btwa-test-node-${{ runner.os }}-${{ hashFiles('btwa_test/package-lock.json') }}
-
+      # - name: Cache btwa_test node_modules
+      #   id: cache-btwa-test
+      #   uses: actions/cache@v4
+      #   with:
+      #     path: btwa_test/node_modules
+      #     key: btwa-test-node-${{ runner.os }}-${{ hashFiles('btwa_test/package-lock.json') }}
       - name: Install Node.js Dependencies for Playwright Tests
-        if: steps.cache-btwa-test.outputs.cache-hit != 'true'
+        # if: steps.cache-btwa-test.outputs.cache-hit != 'true'
         run: |
           cd btwa_test
           npm ci
-
-      - name: Store Playwright's Version
+      - name: Install Node.js Dependencies for App
+        # if: steps.cache-btwa-test.outputs.cache-hit != 'true'
         run: |
-          cd btwa_test
-          PLAYWRIGHT_VERSION=$(npm ls @playwright/test | grep @playwright | sed 's/.*@//')
-          echo "Playwright's Version: $PLAYWRIGHT_VERSION"
-          echo "PLAYWRIGHT_VERSION=$PLAYWRIGHT_VERSION" >> $GITHUB_ENV
-
-      - name: Cache Playwright Browsers
-        id: cache-playwright-browsers
-        uses: actions/cache@v4
-        with:
-          path: ~/.cache/ms-playwright
-          key: playwright-browsers-${{ env.PLAYWRIGHT_VERSION }}-${{ runner.os }}
-
+          cd btwa_app
+          npm ci
+      # - name: Store Playwright's Version
+      #   run: |
+      #     cd btwa_test
+      #     PLAYWRIGHT_VERSION=$(npm ls @playwright/test | grep @playwright | sed 's/.*@//')
+      #     echo "Playwright's Version: $PLAYWRIGHT_VERSION"
+      #     echo "PLAYWRIGHT_VERSION=$PLAYWRIGHT_VERSION" >> $GITHUB_ENV
+      # - name: Cache Playwright Browsers
+      #   id: cache-playwright-browsers
+      #   uses: actions/cache@v4
+      #   with:
+      #     path: ~/.cache/ms-playwright
+      #     key: playwright-browsers-${{ env.PLAYWRIGHT_VERSION }}-${{ runner.os }}
       - name: Set up Playwright
-        if: steps.cache-playwright-browsers.outputs.cache-hit != 'true'
+        # if: steps.cache-playwright-browsers.outputs.cache-hit != 'true'
         run: |
           cd btwa_test
           npx playwright install --with-deps
-
       - name: Install Stripe CLI
         run: |
           curl -s https://packages.stripe.dev/api/security/keypair/stripe-cli-gpg/public | gpg --dearmor | sudo tee /usr/share/keyrings/stripe.gpg
           echo "deb [signed-by=/usr/share/keyrings/stripe.gpg] https://packages.stripe.dev/stripe-cli-debian-local stable main" | sudo tee -a /etc/apt/sources.list.d/stripe.list
           sudo apt update
           sudo apt install stripe
-
       - name: Run Stripe CLI to listen for webhooks
-        env:
-          STRIPE_DEVICE_NAME: ${{ secrets.STRIPE_DEVICE_NAME }}
+        # env:
+        #   STRIPE_DEVICE_NAME: ${{ secrets.STRIPE_DEVICE_NAME }}
         run: |
-          stripe listen --api-key ${{ secrets.STRIPE_KEY }} --forward-to localhost:3001/payments-webhook &
-
+          stripe listen --api-key ${{ secrets.STRIPE_API_KEY }} --forward-to localhost:3001/payments-webhook &
       - name: Run Playwright Tests
         env:
           JUDGE_APIKEY_SULU: ${{ secrets.JUDGE_APIKEY_SULU }}
