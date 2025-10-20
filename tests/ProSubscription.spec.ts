@@ -16,8 +16,8 @@ test.describe.configure({ mode: "serial" });
 test.beforeAll(async ({ browser }) => {
   page = await browser.newPage();
   testUser = createRandomUser();
-  await signUserUp({ page, user: testUser });
-  await logUserIn({ page, user: testUser });
+  await signUserUp(page, testUser);
+  await logUserIn(page, testUser);
 });
 
 test.afterAll(async () => {
@@ -31,7 +31,7 @@ test("Purchase pro subscription", async () => {
 test("Pro subscriber is able to perform high-frequency backtesting", async ({
   page,
 }) => {
-  await initEmptyStrategy({ page });
+  await initEmptyStrategy(page);
   await page.selectOption('select[name="intval"]', "1min");
 
   const today = new Date();
@@ -41,10 +41,8 @@ test("Pro subscriber is able to perform high-frequency backtesting", async ({
   sixDaysAgo.setDate(today.getDate() - 6);
   const formatDate = (date: Date) => date.toISOString().split("T")[0];
 
-  const startDate = formatDate(oneWeekAgo);
-  const endDate = formatDate(sixDaysAgo);
-  await page.fill('input[name="startDate"]', startDate);
-  await page.fill('input[name="endDate"]', endDate);
+  await page.fill('input[name="startDate"]', formatDate(oneWeekAgo));
+  await page.fill('input[name="endDate"]', formatDate(sixDaysAgo));
   await page.click('button:has-text("GO")');
   await expect(
     page.getByText("Stock Data and Simulated Backtest Result for")

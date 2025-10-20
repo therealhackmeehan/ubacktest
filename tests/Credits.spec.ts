@@ -16,9 +16,9 @@ test.describe.configure({ mode: "serial" });
 test.beforeAll(async ({ browser }) => {
   page = await browser.newPage();
   testUser = createRandomUser();
-  await signUserUp({ page: page, user: testUser });
-  await logUserIn({ page: page, user: testUser });
-  await initEmptyStrategy({ page: page });
+  await signUserUp(page, testUser);
+  await logUserIn(page, testUser);
+  await initEmptyStrategy(page);
 });
 
 test.afterAll(async () => {

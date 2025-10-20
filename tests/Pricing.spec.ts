@@ -12,8 +12,8 @@ let testUser: User;
 
 async function logNewUserIn() {
   testUser = createRandomUser();
-  await signUserUp({ page: page, user: testUser });
-  await logUserIn({ page: page, user: testUser });
+  await signUserUp(page, testUser);
+  await logUserIn(page, testUser);
 }
 
 test.describe.configure({ mode: "serial" });

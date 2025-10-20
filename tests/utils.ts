@@ -14,7 +14,7 @@ export const createRandomUser = () => {
   return { email, password: DEFAULT_PASSWORD } as User;
 };
 
-export const logUserIn = async ({ page, user }: { page: Page; user: User }) => {
+export const logUserIn = async (page: Page, user: User) => {
   await page.goto("/");
   await page.getByRole("link", { name: "Log in" }).click();
   await page.waitForURL("**/login", {
@@ -35,13 +35,7 @@ export const logUserIn = async ({ page, user }: { page: Page; user: User }) => {
   await page.waitForURL("**/editor");
 };
 
-export const signUserUp = async ({
-  page,
-  user,
-}: {
-  page: Page;
-  user: User;
-}) => {
+export const signUserUp = async (page: Page, user: User) => {
   await page.goto("/");
   await page.getByRole("link", { name: "Log in" }).click();
   await page.click('text="go to signup"');
@@ -55,16 +49,13 @@ export const signUserUp = async ({
     .catch((err) => console.error(err.message));
 };
 
-// export async function logNewUserIn(page: Page) {
-//   const testUser = createRandomUser();
-//   await signUserUp({ page: page, user: testUser });
-//   await logUserIn({ page: page, user: testUser });
-// }
+export const RANDOM_STRATEGY_NAME = "randomStrategyName";
+export const RANDOM_RESULT_NAME = "randomResultName";
 
-export const initEmptyStrategy = async ({ page }: { page: Page }) => {
+export const initEmptyStrategy = async (page: Page) => {
   await page.goto("/editor");
   await page.getByText("new").click();
-  await page.getByPlaceholder("Enter strategy name").fill("randomStrategyName");
+  await page.getByPlaceholder("Enter strategy name").fill(RANDOM_STRATEGY_NAME);
   await page.getByText("Confirm").click();
   await page.getByText("Reject all").click();
   await page.getByText("advanced options").click();
