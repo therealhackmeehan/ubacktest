@@ -3,14 +3,15 @@ import {
   signUserUp,
   logUserIn,
   createRandomUser,
-  type User,
-  initEmptyStrategy,
   RANDOM_RESULT_NAME,
   goToAndValidate,
   runBacktest,
   isSuccessfulBacktest,
   saveResult,
   isVisibleText,
+  clickOnText,
+  rejectCookies,
+  type User,
 } from "./utils";
 
 let page: Page;
@@ -23,7 +24,7 @@ test.beforeAll(async ({ browser }) => {
   testUser = createRandomUser();
   await signUserUp(page, testUser);
   await logUserIn(page, testUser);
-  await initEmptyStrategy(page);
+  await rejectCookies(page);
 });
 
 test.afterAll(async () => {
@@ -35,7 +36,7 @@ test("Run a simple buy-and-hold strategy", async () => {
   await isSuccessfulBacktest(page);
 });
 
-test("Press 'save result' button", async () => {
+test("Press 'save result' and name result", async () => {
   await saveResult(page);
 });
 

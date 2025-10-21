@@ -3,11 +3,12 @@ import {
   signUserUp,
   logUserIn,
   createRandomUser,
-  type User,
-  initEmptyStrategy,
+  createNewStrategy,
   runBacktest,
   isVisibleText,
   clickOnText,
+  rejectCookies,
+  type User,
 } from "./utils";
 
 let page: Page;
@@ -21,7 +22,8 @@ test.beforeAll(async ({ browser }) => {
   testUser = createRandomUser();
   await signUserUp(page, testUser);
   await logUserIn(page, testUser);
-  await initEmptyStrategy(page);
+  await rejectCookies(page);
+  await createNewStrategy(page);
 });
 
 test.afterAll(async () => {

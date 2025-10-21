@@ -3,11 +3,12 @@ import {
   signUserUp,
   logUserIn,
   createRandomUser,
-  type User,
-  initEmptyStrategy,
+  createNewStrategy,
   makeStripePayment,
   runBacktest,
   isSuccessfulBacktest,
+  rejectCookies,
+  type User,
 } from "./utils";
 
 let page: Page;
@@ -20,6 +21,7 @@ test.beforeAll(async ({ browser }) => {
   testUser = createRandomUser();
   await signUserUp(page, testUser);
   await logUserIn(page, testUser);
+  await rejectCookies(page);
 });
 
 test.afterAll(async () => {
@@ -31,19 +33,19 @@ test("Purchase pro subscription", async () => {
 });
 
 test("Pro subscriber is able to perform high-frequency backtesting", async () => {
-  await initEmptyStrategy(page);
+  await createNewStrategy(page);
 
   const today = new Date();
-  const oneWeekAgo = new Date(today);
-  oneWeekAgo.setDate(today.getDate() - 7);
-  const sixDaysAgo = new Date(today);
-  sixDaysAgo.setDate(today.getDate() - 6);
+  const daysAgo_7 = new Date(today);
+  daysAgo_7.setDate(today.getDate() - 7);
+  const daysAgo_3 = new Date(today);
+  daysAgo_3.setDate(today.getDate() - 3);
   const formatDate = (date: Date) => date.toISOString().split("T")[0];
 
   await runBacktest({
     page,
-    startDate: formatDate(oneWeekAgo),
-    endDate: formatDate(sixDaysAgo),
+    startDate: formatDate(daysAgo_7),
+    endDate: formatDate(daysAgo_3),
     intval: "5min",
   });
 

@@ -4,13 +4,14 @@ import {
   logUserIn,
   createRandomUser,
   makeStripePayment,
-  initEmptyStrategy,
-  type User,
+  createNewStrategy,
   goToAndValidate,
   runBacktest,
   isVisibleText,
   isSuccessfulBacktest,
   clickOnText,
+  rejectCookies,
+  type User,
 } from "./utils";
 
 let page: Page;
@@ -23,7 +24,8 @@ test.beforeAll(async ({ browser }) => {
   testUser = createRandomUser();
   await signUserUp(page, testUser);
   await logUserIn(page, testUser);
-  await initEmptyStrategy(page);
+  await rejectCookies(page);
+  await createNewStrategy(page);
 });
 
 test.afterAll(async () => {
@@ -34,7 +36,6 @@ test("Unsubscriber can generate 3 backtests for free", async () => {
   test.slow();
   expect(page.url()).toContain("/editor");
   await isVisibleText(page, "3 tests remaining");
-
   for (let i = 0; i < 3; i++) {
     await runBacktest({ page });
     await isSuccessfulBacktest(page);

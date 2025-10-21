@@ -4,9 +4,10 @@ import {
   logUserIn,
   createRandomUser,
   makeStripePayment,
-  initEmptyStrategy,
-  type User,
+  createNewStrategy,
   isVisibleText,
+  rejectCookies,
+  type User,
 } from "./utils";
 
 let page: Page;
@@ -19,7 +20,8 @@ test.beforeAll(async ({ browser }) => {
   testUser = createRandomUser();
   await signUserUp(page, testUser);
   await logUserIn(page, testUser);
-  await initEmptyStrategy(page);
+  await rejectCookies(page);
+  await createNewStrategy(page);
 });
 
 test.afterAll(async () => {
@@ -36,6 +38,7 @@ test("Purchase 5 credits with stripe", async () => {
 });
 
 test("Unsubscriber now has 8 credits on account page", async () => {
+  expect(page.url()).toContain("/account");
   await isVisibleText(page, "Account Information");
   await isVisibleText(page, "Credits remaining: 8");
 });

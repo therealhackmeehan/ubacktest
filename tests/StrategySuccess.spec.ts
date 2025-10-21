@@ -3,12 +3,13 @@ import {
   signUserUp,
   logUserIn,
   createRandomUser,
-  type User,
-  initEmptyStrategy,
+  createNewStrategy,
   runBacktest,
   isSuccessfulBacktest,
   chooseExample,
   clickOnText,
+  rejectCookies,
+  type User,
 } from "./utils";
 
 let page: Page;
@@ -21,7 +22,8 @@ test.beforeAll(async ({ browser }) => {
   testUser = createRandomUser();
   await signUserUp(page, testUser);
   await logUserIn(page, testUser);
-  await initEmptyStrategy(page);
+  await rejectCookies(page);
+  await createNewStrategy(page);
 });
 
 test.afterAll(async () => {
@@ -34,12 +36,18 @@ test.afterEach(async () => {
 });
 
 test("Strategy successfully runs a buy and hold strategy", async () => {
-  await chooseExample(page, "Buy and Hold");
+  await chooseExample(page, "Buy and Hold Strategy");
   await runBacktest({ page });
   await isSuccessfulBacktest(page);
 });
 
-test("Strategy successfully runs a mildly complicated example", async () => {
+test("Strategy successfully runs an easy example", async () => {
+  await chooseExample(page, "Simple Moving Average Crossover");
+  await runBacktest({ page });
+  await isSuccessfulBacktest(page);
+});
+
+test("Strategy successfully runs a medium example", async () => {
   await chooseExample(page, "Linear Regression");
   await runBacktest({ page });
   await isSuccessfulBacktest(page);
