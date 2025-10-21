@@ -14,6 +14,7 @@ import {
   clickOnText,
   rejectCookies,
   type User,
+  clickOnTestId,
 } from "./utils";
 
 let page: Page;
@@ -52,9 +53,9 @@ test("Run and save a result in testuser1's account", async () => {
 });
 
 test("Share result with testuser2", async () => {
-  await page.click('[data-testid="share-button-icon"]');
+  await clickOnTestId(page, "share-button-icon");
   await page.getByPlaceholder("Enter email").fill(testUser2.email);
-  await page.click('[data-testid="confirm-share-button"]');
+  await clickOnTestId(page, "confirm-share-button");
   await isVisibleText(
     page,
     `Success! You've shared the result with ${testUser2.email}`

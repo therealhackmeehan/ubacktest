@@ -110,24 +110,32 @@ export async function runBacktest({
   await page.click('button:has-text("GO")');
 }
 
-export async function isVisibleText(
-  page: Page,
-  text: string
-  // expectedCount: number = 1
-) {
+export async function isVisibleText(page: Page, text: string) {
   const locator = page.getByText(text);
-  // const count = await locator.count();
-  // expect(count).toBe(expectedCount);
+  const count = await locator.count();
+  expect(count).toBe(1);
   await expect(locator.first()).toBeVisible();
 }
 
-export async function clickOnText(page: Page, text: string, nth: number = 0) {
+export async function clickOnText(page: Page, text: string) {
   await isVisibleText(page, text);
-  await page.getByText(text).nth(nth).click();
+  await page.getByText(text).click();
+}
+
+async function isVisibleTestId(page: Page, testid: string) {
+  const locator = page.getByTestId(testid);
+  const count = await locator.count();
+  expect(count).toBe(1);
+  await expect(locator.first()).toBeVisible();
+}
+
+export async function clickOnTestId(page: Page, testid: string) {
+  await isVisibleTestId(page, testid);
+  await page.getByTestId(testid).click();
 }
 
 export async function saveResult(page: Page) {
-  await clickOnText(page, "save to my results", 0);
+  await page.getByText("save to my results").first().click();
   await page.getByPlaceholder("Enter result name").fill(RANDOM_RESULT_NAME);
   await clickOnText(page, "Confirm");
   await page.waitForTimeout(3500);
