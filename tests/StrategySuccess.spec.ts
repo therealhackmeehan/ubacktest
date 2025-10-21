@@ -5,7 +5,7 @@ import {
   createRandomUser,
   createNewStrategy,
   runBacktest,
-  isSuccessfulBacktest,
+  successfulBacktest,
   chooseExample,
   clickOnText,
   rejectCookies,
@@ -38,17 +38,17 @@ test.afterEach(async () => {
 test("Strategy successfully runs a buy and hold strategy", async () => {
   await chooseExample(page, "Buy and Hold Strategy");
   await runBacktest({ page });
-  await isSuccessfulBacktest(page);
+  await successfulBacktest(page);
 });
 
 test("Strategy successfully runs an easy example", async () => {
   await chooseExample(page, "Simple Moving Average Crossover");
   await runBacktest({ page });
-  await isSuccessfulBacktest(page);
+  await successfulBacktest(page);
 });
 
 test("Strategy successfully runs a medium example", async () => {
   await chooseExample(page, "Linear Regression");
   await runBacktest({ page });
-  await isSuccessfulBacktest(page);
+  await successfulBacktest(page);
 });

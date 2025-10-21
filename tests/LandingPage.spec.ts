@@ -1,5 +1,5 @@
 import { test, expect, Cookie } from "@playwright/test";
-import { isVisibleText } from "./utils";
+import { visibleText } from "./utils";
 const DOCS_URL = "https://docs.ubacktest.com";
 
 test.describe("basic landing page tests", () => {
@@ -17,10 +17,10 @@ test.describe("basic landing page tests", () => {
   });
 
   test("has section headers", async ({ page }) => {
-    await isVisibleText(page, "Frequently asked questions");
-    await isVisibleText(page, "One Powerful Editor.");
-    await isVisibleText(page, "Welcome to uBacktest.");
-    await isVisibleText(page, "All the features.");
+    await visibleText(page, "Frequently asked questions");
+    await visibleText(page, "One Powerful Editor.");
+    await visibleText(page, "Welcome to uBacktest.");
+    await visibleText(page, "All the features.");
   });
 });
 

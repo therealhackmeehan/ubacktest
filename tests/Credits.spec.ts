@@ -5,7 +5,7 @@ import {
   createRandomUser,
   makeStripePayment,
   createNewStrategy,
-  isVisibleText,
+  visibleText,
   rejectCookies,
   type User,
 } from "./utils";
@@ -30,7 +30,7 @@ test.afterAll(async () => {
 
 test("Unsubscriber starts with 3 credits", async () => {
   expect(page.url()).toContain("/editor");
-  await isVisibleText(page, "3 tests remaining");
+  await visibleText(page, "3 tests remaining");
 });
 
 test("Purchase 5 credits with stripe", async () => {
@@ -39,6 +39,6 @@ test("Purchase 5 credits with stripe", async () => {
 
 test("Unsubscriber now has 8 credits on account page", async () => {
   expect(page.url()).toContain("/account");
-  await isVisibleText(page, "Account Information");
-  await isVisibleText(page, "Credits remaining: 8");
+  await visibleText(page, "Account Information");
+  await visibleText(page, "Credits remaining: 8");
 });

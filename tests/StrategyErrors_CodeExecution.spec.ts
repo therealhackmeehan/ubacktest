@@ -6,7 +6,7 @@ import {
   fillEditor,
   createNewStrategy,
   runBacktest,
-  isVisibleText,
+  visibleText,
   rejectCookies,
   type User,
 } from "./utils";
@@ -37,7 +37,7 @@ test("Script defines strategy but with incorrect indentation", async () => {
   ); // Incorrect indentation
   await runBacktest({ page });
   await page.waitForSelector("text=Output Console", { timeout: 10000 });
-  await isVisibleText(page, "Output Console");
+  await visibleText(page, "Output Console");
 });
 
 test("Strategy does not return a DataFrame", async () => {
@@ -47,8 +47,8 @@ test("Strategy does not return a DataFrame", async () => {
   ); // Returns a string instead of DataFrame
   await runBacktest({ page });
   await page.waitForSelector("text=Output Console", { timeout: 10000 });
-  await isVisibleText(page, "Output Console");
-  await isVisibleText(page, "You must return a dataframe from your strategy.");
+  await visibleText(page, "Output Console");
+  await visibleText(page, "You must return a dataframe from your strategy.");
 });
 
 test('Strategy does not contain a "signal" column', async () => {
@@ -58,8 +58,8 @@ test('Strategy does not contain a "signal" column', async () => {
   ); // No 'signal' column
   await runBacktest({ page });
   await page.waitForSelector("text=Output Console", { timeout: 10000 });
-  await isVisibleText(page, "Output Console");
-  await isVisibleText(page, "There is no 'signal' column in the table.");
+  await visibleText(page, "Output Console");
+  await visibleText(page, "There is no 'signal' column in the table.");
 });
 
 test('Strategy returns two "signal" columns', async () => {
@@ -69,8 +69,8 @@ test('Strategy returns two "signal" columns', async () => {
   ); // Duplicate columns
   await runBacktest({ page });
   await page.waitForSelector("text=Output Console", { timeout: 10000 });
-  await isVisibleText(page, "Output Console");
-  await isVisibleText(
+  await visibleText(page, "Output Console");
+  await visibleText(
     page,
     "There are two or more 'signal' columns in the table."
   );
@@ -83,8 +83,8 @@ test('Strategy returns "signal" values outside the range [-1, 1]', async () => {
   ); // Invalid values
   await runBacktest({ page });
   await page.waitForSelector("text=Output Console", { timeout: 10000 });
-  await isVisibleText(page, "Output Console");
-  await isVisibleText(
+  await visibleText(page, "Output Console");
+  await visibleText(
     page,
     "'signal' column contains values outside the range [-1, 1]."
   );
@@ -97,8 +97,8 @@ test("Strategy changes the height of the DataFrame", async () => {
   ); // Drops rows
   await runBacktest({ page });
   await page.waitForSelector("text=Output Console", { timeout: 10000 });
-  await isVisibleText(page, "Output Console");
-  await isVisibleText(
+  await visibleText(page, "Output Console");
+  await visibleText(
     page,
     "The height of the dataframe has changed upon applying your strategy."
   );

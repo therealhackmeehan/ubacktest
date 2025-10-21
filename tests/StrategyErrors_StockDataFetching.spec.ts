@@ -5,7 +5,7 @@ import {
   createRandomUser,
   createNewStrategy,
   runBacktest,
-  isVisibleText,
+  visibleText,
   clickOnText,
   rejectCookies,
   type User,
@@ -37,7 +37,7 @@ test.afterEach(async () => {
 
 test("Nonexistent stock symbol triggers an error", async () => {
   await runBacktest({ page, symbol: "ZZZZ" });
-  await isVisibleText(page, ERROR_HEADER);
+  await visibleText(page, ERROR_HEADER);
 });
 
 test("Stock exists but does not have data in the selected date range", async () => {
@@ -54,5 +54,5 @@ test("Stock exists but does not have data in the selected date range", async () 
     startDate: sevenYearsAgoString,
     endDate: sixYearsAgoString,
   });
-  await isVisibleText(page, ERROR_HEADER);
+  await visibleText(page, ERROR_HEADER);
 });

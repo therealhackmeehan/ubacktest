@@ -1,13 +1,15 @@
 import { type Page, test, expect } from "@playwright/test";
 import { randomUUID } from "crypto";
 
+export const RANDOM_STRATEGY_NAME = "randomStrategyName123123";
+export const RANDOM_RESULT_NAME = "randomResultName";
+const DEFAULT_PASSWORD = "password123";
+
 export type User = {
   id?: number;
   email: string;
   password?: string;
 };
-
-const DEFAULT_PASSWORD = "password123";
 
 export const createRandomUser = () => {
   const email = `${randomUUID()}@test.com`;
@@ -38,7 +40,9 @@ export const logUserIn = async (page: Page, user: User) => {
 export const logUserOut = async (page: Page, email: string) => {
   await goToAndValidate(page, "/");
   await clickOnText(page, email);
-  await clickOnText(page, "Log Out");
+  await page.getByText("Log Out").click({ force: true }); // I hate this but its what needs to happen.
+  // await clickOnText(page, "Log Out");
+  await goToAndValidate(page, "/login");
 };
 
 export const signUserUp = async (page: Page, user: User) => {
@@ -54,9 +58,6 @@ export const signUserUp = async (page: Page, user: User) => {
     })
     .catch((err) => console.error(err.message));
 };
-
-export const RANDOM_STRATEGY_NAME = "randomStrategyName";
-export const RANDOM_RESULT_NAME = "randomResultName";
 
 export const createNewStrategy = async (page: Page) => {
   await goToAndValidate(page, "/editor");
@@ -78,10 +79,10 @@ export async function goToAndValidate(page: Page, ref: string) {
   expect(page.url()).toContain(ref);
 }
 
-export async function isSuccessfulBacktest(page: Page) {
-  await isVisibleText(page, "Stock Data and Simulated Backtest Result for");
-  await isVisibleText(page, "Toggle To Editor");
-  await isVisibleText(page, "Hypothetical Growth of $1");
+export async function successfulBacktest(page: Page) {
+  await visibleText(page, "Stock Data and Simulated Backtest Result for");
+  await visibleText(page, "Toggle To Editor");
+  await visibleText(page, "Hypothetical Growth of $1");
 }
 
 interface RunBacktestOptions {
@@ -99,9 +100,9 @@ export async function runBacktest({
   endDate,
   intval,
 }: RunBacktestOptions) {
+  // await zoomOut(page);
   await clickOnText(page, "reset");
   await clickOnText(page, "advanced options");
-  await zoomOut(page);
   if (symbol) await page.fill('input[name="symbol"]', symbol);
   if (startDate) await page.fill('input[name="startDate"]', startDate);
   if (endDate) await page.fill('input[name="endDate"]', endDate);
@@ -110,15 +111,15 @@ export async function runBacktest({
   await page.click('button:has-text("GO")');
 }
 
-export async function isVisibleText(page: Page, text: string) {
-  const locator = page.getByText(text);
+export async function visibleText(page: Page, text: string) {
+  const locator = await page.getByText(text);
   const count = await locator.count();
   expect(count).toBe(1);
   await expect(locator.first()).toBeVisible();
 }
 
 export async function clickOnText(page: Page, text: string) {
-  await isVisibleText(page, text);
+  await visibleText(page, text);
   await page.getByText(text).click();
 }
 
@@ -146,10 +147,10 @@ export async function chooseExample(page: Page, exampleToChoose: string) {
   await clickOnText(page, exampleToChoose);
 }
 
-export async function zoomOut(page: Page, zoom: string = "60%") {
-  await page.evaluate(() => {
+export async function zoomOut(page: Page, customZoom: string = "60%") {
+  await page.evaluate((zoom) => {
     document.body.style.zoom = zoom;
-  });
+  }, customZoom);
 }
 
 export async function rejectCookies(page: Page) {

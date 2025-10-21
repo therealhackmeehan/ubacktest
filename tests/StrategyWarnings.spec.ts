@@ -5,7 +5,7 @@ import {
   createRandomUser,
   createNewStrategy,
   runBacktest,
-  isVisibleText,
+  visibleText,
   clickOnText,
   rejectCookies,
   type User,
@@ -46,8 +46,8 @@ test("Stock exists but does not have COMPLETE data in the selected date range", 
     startDate: "2020-03-01",
     endDate: "2021-03-01",
   });
-  await isVisibleText(page, WARNING_HEADER);
-  await isVisibleText(page, WARNING_MISSING_DATA);
+  await visibleText(page, WARNING_HEADER);
+  await visibleText(page, WARNING_MISSING_DATA);
 });
 
 // const WARNING_LOW_VOLUME =

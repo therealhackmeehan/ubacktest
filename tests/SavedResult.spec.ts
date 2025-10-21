@@ -6,12 +6,13 @@ import {
   RANDOM_RESULT_NAME,
   goToAndValidate,
   runBacktest,
-  isSuccessfulBacktest,
+  successfulBacktest,
   saveResult,
-  isVisibleText,
+  visibleText,
   clickOnText,
   rejectCookies,
   type User,
+  createNewStrategy,
 } from "./utils";
 
 let page: Page;
@@ -32,8 +33,9 @@ test.afterAll(async () => {
 });
 
 test("Run a simple buy-and-hold strategy", async () => {
+  await createNewStrategy(page);
   await runBacktest({ page });
-  await isSuccessfulBacktest(page);
+  await successfulBacktest(page);
 });
 
 test("Press 'save result' and name result", async () => {
@@ -42,5 +44,5 @@ test("Press 'save result' and name result", async () => {
 
 test("Result is now available in saved results", async () => {
   await goToAndValidate(page, "/results");
-  await isVisibleText(page, RANDOM_RESULT_NAME);
+  await visibleText(page, RANDOM_RESULT_NAME);
 });

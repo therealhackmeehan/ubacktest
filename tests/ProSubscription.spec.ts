@@ -6,7 +6,7 @@ import {
   createNewStrategy,
   makeStripePayment,
   runBacktest,
-  isSuccessfulBacktest,
+  successfulBacktest,
   rejectCookies,
   type User,
 } from "./utils";
@@ -49,5 +49,5 @@ test("Pro subscriber is able to perform high-frequency backtesting", async () =>
     intval: "5min",
   });
 
-  await isSuccessfulBacktest(page);
+  await successfulBacktest(page);
 });

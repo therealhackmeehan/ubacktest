@@ -5,10 +5,10 @@ import {
   createRandomUser,
   createNewStrategy,
   runBacktest,
-  isSuccessfulBacktest,
+  successfulBacktest,
   saveResult,
   goToAndValidate,
-  isVisibleText,
+  visibleText,
   RANDOM_RESULT_NAME,
   logUserOut,
   clickOnText,
@@ -27,7 +27,6 @@ test.beforeAll(async ({ browser }) => {
   page = await browser.newPage();
   testUser1 = createRandomUser();
   testUser2 = createRandomUser();
-  await rejectCookies(page);
 });
 
 test.afterAll(async () => {
@@ -41,22 +40,23 @@ test("Create testuser2's account", async () => {
 test("Create testuser1's account", async () => {
   await signUserUp(page, testUser1);
   await logUserIn(page, testUser1);
+  await rejectCookies(page);
   await createNewStrategy(page);
 });
 
 test("Run and save a result in testuser1's account", async () => {
   await runBacktest({ page });
-  await isSuccessfulBacktest(page);
+  await successfulBacktest(page);
   await saveResult(page);
   await goToAndValidate(page, "/results");
-  await isVisibleText(page, RANDOM_RESULT_NAME);
+  await visibleText(page, RANDOM_RESULT_NAME);
 });
 
 test("Share result with testuser2", async () => {
   await clickOnTestId(page, "share-button-icon");
   await page.getByPlaceholder("Enter email").fill(testUser2.email);
   await clickOnTestId(page, "confirm-share-button");
-  await isVisibleText(
+  await visibleText(
     page,
     `Success! You've shared the result with ${testUser2.email}`
   );
@@ -71,10 +71,10 @@ test("Log out testuser1, log in testuser2", async () => {
 test("Verify the result has been shared with testuser2", async () => {
   await goToAndValidate(page, "/results");
   await clickOnText(page, "Shared with me");
-  await isVisibleText(
+  await visibleText(
     page,
     `@${testUser1.email.split("@")[0]} sent you a result.`
   );
   await clickOnText(page, "Accept");
-  await isVisibleText(page, RANDOM_RESULT_NAME);
+  await visibleText(page, RANDOM_RESULT_NAME);
 });

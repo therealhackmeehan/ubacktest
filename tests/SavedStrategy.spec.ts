@@ -6,7 +6,7 @@ import {
   createNewStrategy,
   RANDOM_STRATEGY_NAME,
   goToAndValidate,
-  isVisibleText,
+  visibleText,
   rejectCookies,
   type User,
 } from "./utils";
@@ -31,5 +31,5 @@ test.afterAll(async () => {
 
 test("Check that the new strategy is available in saved strategies", async () => {
   await goToAndValidate(page, "/home");
-  await isVisibleText(page, RANDOM_STRATEGY_NAME);
+  await visibleText(page, RANDOM_STRATEGY_NAME);
 });
