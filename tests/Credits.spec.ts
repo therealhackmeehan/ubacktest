@@ -6,6 +6,7 @@ import {
   makeStripePayment,
   initEmptyStrategy,
   type User,
+  isVisibleText,
 } from "./utils";
 
 let page: Page;
@@ -25,17 +26,16 @@ test.afterAll(async () => {
   await page.close();
 });
 
-test("Unsubscriber starts with 3 credits", () => {
+test("Unsubscriber starts with 3 credits", async () => {
   expect(page.url()).toContain("/editor");
-  expect(page.getByText("3 tests remaining")).toBeVisible();
+  await isVisibleText(page, "3 tests remaining");
 });
 
 test("Purchase 5 credits with stripe", async () => {
-  const PLAN_NAME = "credits5";
-  await makeStripePayment({ test, page, planName: PLAN_NAME });
+  await makeStripePayment({ test, page, planName: "credits5" });
 });
 
 test("Unsubscriber now has 8 credits on account page", async () => {
-  await expect(page.getByText("Account Information")).toBeVisible();
-  expect(page.getByText("Credits remaining: 8")).toBeVisible();
+  await isVisibleText(page, "Account Information");
+  await isVisibleText(page, "Credits remaining: 8");
 });

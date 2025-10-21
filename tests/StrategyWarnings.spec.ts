@@ -1,25 +1,26 @@
-import { test, expect, type Page } from "@playwright/test";
+import { test, type Page } from "@playwright/test";
 import {
   signUserUp,
   logUserIn,
   createRandomUser,
   type User,
   initEmptyStrategy,
+  runBacktest,
+  isVisibleText,
 } from "./utils";
 
 let page: Page;
 let testUser: User;
 
 const WARNING_HEADER = "Just a Heads Up...";
-
 test.describe.configure({ mode: "serial" });
 
 test.beforeAll(async ({ browser }) => {
   page = await browser.newPage();
   testUser = createRandomUser();
-  await signUserUp({ page, user: testUser });
-  await logUserIn({ page, user: testUser });
-  await initEmptyStrategy({ page: page });
+  await signUserUp(page, testUser);
+  await logUserIn(page, testUser);
+  await initEmptyStrategy(page);
 });
 
 test.afterAll(async () => {
@@ -33,20 +34,17 @@ test.afterEach(async () => {
 });
 
 const WARNING_MISSING_DATA =
-  "There appears to be a significant discrepancy between the available data and your selected start and end dates. " +
-  "This may indicate that the stock’s data is incomplete due to an IPO occurring after the specified start date, " +
-  "or the stock was delisted during the selected timeframe. Please review the date range and stock availability.";
+  "Discrepancy between available data and selected dates. Stock may have IPO'd later or been delisted earlier.";
 
 test("Stock exists but does not have COMPLETE data in the selected date range", async () => {
-  const startDate = "2020-03-01";
-  const endDate = "2021-03-01";
-
-  await page.fill('input[name="symbol"]', "ABNB"); // Airbnb IPO was in December 2020
-  await page.fill('input[name="startDate"]', startDate);
-  await page.fill('input[name="endDate"]', endDate);
-  await page.click('button:has-text("GO")');
-  await expect(page.getByText(WARNING_HEADER)).toBeVisible();
-  await expect(page.getByText(WARNING_MISSING_DATA)).toBeVisible();
+  await runBacktest({
+    page,
+    symbol: "ABNB",
+    startDate: "2020-03-01",
+    endDate: "2021-03-01",
+  });
+  await isVisibleText(page, WARNING_HEADER);
+  await isVisibleText(page, WARNING_MISSING_DATA);
 });
 
 // const WARNING_LOW_VOLUME =

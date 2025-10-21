@@ -1,4 +1,4 @@
-import { test, expect, type Page } from "@playwright/test";
+import { test, type Page } from "@playwright/test";
 import {
   signUserUp,
   logUserIn,
@@ -6,6 +6,8 @@ import {
   type User,
   initEmptyStrategy,
   makeStripePayment,
+  runBacktest,
+  isSuccessfulBacktest,
 } from "./utils";
 
 let page: Page;
@@ -28,11 +30,8 @@ test("Purchase pro subscription", async () => {
   await makeStripePayment({ test, page, planName: "pro" });
 });
 
-test("Pro subscriber is able to perform high-frequency backtesting", async ({
-  page,
-}) => {
+test("Pro subscriber is able to perform high-frequency backtesting", async () => {
   await initEmptyStrategy(page);
-  await page.selectOption('select[name="intval"]', "1min");
 
   const today = new Date();
   const oneWeekAgo = new Date(today);
@@ -41,10 +40,12 @@ test("Pro subscriber is able to perform high-frequency backtesting", async ({
   sixDaysAgo.setDate(today.getDate() - 6);
   const formatDate = (date: Date) => date.toISOString().split("T")[0];
 
-  await page.fill('input[name="startDate"]', formatDate(oneWeekAgo));
-  await page.fill('input[name="endDate"]', formatDate(sixDaysAgo));
-  await page.click('button:has-text("GO")');
-  await expect(
-    page.getByText("Stock Data and Simulated Backtest Result for")
-  ).toBeVisible();
+  await runBacktest({
+    page,
+    startDate: formatDate(oneWeekAgo),
+    endDate: formatDate(sixDaysAgo),
+    intval: "5min",
+  });
+
+  await isSuccessfulBacktest(page);
 });

@@ -6,6 +6,10 @@ import {
   makeStripePayment,
   initEmptyStrategy,
   type User,
+  goToAndValidate,
+  runBacktest,
+  isVisibleText,
+  isSuccessfulBacktest,
 } from "./utils";
 
 let page: Page;
@@ -27,61 +31,49 @@ test.afterAll(async () => {
 
 test("Unsubscriber can generate 3 backtests for free", async () => {
   test.slow();
-
   expect(page.url()).toContain("/editor");
-  expect(page.getByText("3 tests remaining")).toBeVisible();
+  await isVisibleText(page, "3 tests remaining");
 
   for (let i = 0; i < 3; i++) {
-    await page.getByText("GO").click();
-    await expect(
-      page.getByText("Stock Data and Simulated Backtest Result for")
-    ).toBeVisible();
+    await runBacktest({ page });
+    await isSuccessfulBacktest(page);
     await page.getByText("Toggle to Editor").click();
     await page.waitForTimeout(1000);
   }
 
-  expect(page.getByText("0 tests remaining")).toBeVisible();
+  await isVisibleText(page, "0 tests remaining");
 });
 
 test("Unsubscriber's 4th backtest fails", async () => {
   expect(page.url()).toContain("/editor");
-  expect(page.getByText("0 tests remaining")).toBeVisible();
-  await page.getByText("GO").click();
-  await expect(
-    page.getByText(
-      "You must add more credits or purchase a subscription to continue using this service."
-    )
-  ).toBeVisible();
-  await expect(page.getByText("Take a Look!")).toBeVisible();
+  await isVisibleText(page, "0 tests remaining");
+  await runBacktest({ page });
+  await isVisibleText(
+    page,
+    "You must add more credits or purchase a subscription to continue using this service."
+  );
+  await isVisibleText(page, "Take a Look!");
   await page.getByText("Take a Look!").click();
 });
 
 test("Purchase hobby subscription", async () => {
-  const PLAN_NAME = "Hobby";
-  await makeStripePayment({ test, page, planName: PLAN_NAME });
+  await makeStripePayment({ test, page, planName: "hobby" });
 });
 
 test("Hobby subscriber unable to run a high-freqrequency backtest", async () => {
-  await page.goto("/editor");
-  expect(page.url()).toContain("/editor");
-  await page.selectOption('select[name="intval"]', "1min");
-  await page.click('button:has-text("GO")');
-  await expect(
-    page.getByText(
-      "High frequency backtesting is only available to pro users. Consider upgrading your subscription."
-    )
-  ).toBeVisible();
-  await expect(page.getByText("Take a Look!")).toBeVisible();
+  await goToAndValidate(page, "/editor");
+  await runBacktest({ page, intval: "1min" });
+  await isVisibleText(
+    page,
+    "High frequency backtesting is only available to pro users. Consider upgrading your subscription."
+  );
+  await isVisibleText(page, "Take a Look!");
   await page.getByText("Take a Look!").click();
 });
 
 test("Hobby CAN generate another low-frequency backtest", async () => {
-  await page.goto("/editor");
-  expect(page.url()).toContain("/editor");
-  await page.selectOption('select[name="intval"]', "daily");
-  await page.getByText("GO").click();
-  await expect(
-    page.getByText("Stock Data and Simulated Backtest Result for")
-  ).toBeVisible();
+  await goToAndValidate(page, "/editor");
+  await runBacktest({ page, intval: "daily" });
+  await isSuccessfulBacktest(page);
   await page.getByText("Toggle to Editor").click();
 });

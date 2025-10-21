@@ -1,10 +1,13 @@
-import { test, expect, type Page } from "@playwright/test";
+import { test, type Page } from "@playwright/test";
 import {
   signUserUp,
   logUserIn,
   createRandomUser,
   type User,
   initEmptyStrategy,
+  runBacktest,
+  isSuccessfulBacktest,
+  chooseExample,
 } from "./utils";
 
 let page: Page;
@@ -30,32 +33,13 @@ test.afterEach(async () => {
 });
 
 test("Strategy successfully runs a buy and hold strategy", async () => {
-  await page.evaluate(() => {
-    const editor = (window as any).monaco.editor.getEditors()[0];
-    editor.setValue(`import pandas as pd
-def strategy(data):
-    data['signal'] = 1
-    return data`);
-  });
-  await page.click('button:has-text("GO")');
-  await expect(
-    page.getByText("Stock Data and Simulated Backtest Result for")
-  ).toBeVisible();
+  await chooseExample(page, "Buy and Hold");
+  await runBacktest({ page });
+  await isSuccessfulBacktest(page);
 });
 
 test("Strategy successfully runs a mildly complicated example", async () => {
-  await page.click('button:has-text("examples")');
-  await page.click('button:has-text("Linear Regression")');
-  await page.click('button:has-text("GO")');
-
-  // Wait for the results container or confirmation text to appear
-  await page.waitForSelector(
-    "text=Stock Data and Simulated Backtest Result for",
-    { timeout: 10000 }
-  );
-
-  // Assert that the expected text is visible
-  await expect(
-    page.getByText("Stock Data and Simulated Backtest Result for")
-  ).toBeVisible();
+  await chooseExample(page, "Linear Regression");
+  await runBacktest({ page });
+  await isSuccessfulBacktest(page);
 });

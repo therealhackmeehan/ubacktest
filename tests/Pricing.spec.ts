@@ -5,6 +5,7 @@ import {
   createRandomUser,
   makeStripePayment,
   type User,
+  goToAndValidate,
 } from "./utils";
 
 let page: Page;
@@ -27,7 +28,7 @@ test.afterAll(async () => {
 });
 
 test("Unsubscriber should see Log In to buy plan button", async () => {
-  await page.goto("/pricing");
+  await goToAndValidate(page, "/pricing");
   const buyPlanButton = page
     .getByRole("button", { name: "Log in to buy plan" })
     .first();
@@ -40,7 +41,7 @@ test("Unsubscriber should see Log In to buy plan button", async () => {
 
 test("Unsubscriber should see the buy plan button before payment", async () => {
   await logNewUserIn();
-  await page.goto("/pricing");
+  await goToAndValidate(page, "/pricing");
   const manageSubscriptionButton = page
     .getByRole("button", { name: "Buy plan" })
     .first();
@@ -49,12 +50,11 @@ test("Unsubscriber should see the buy plan button before payment", async () => {
 });
 
 test("Purchase a hobby subscription", async () => {
-  const PLAN_NAME = "Hobby";
-  await makeStripePayment({ test, page, planName: PLAN_NAME });
+  await makeStripePayment({ test, page, planName: "hobby" });
 });
 
 test("Hobby Subscriber should see the manage subscription button after payment", async () => {
-  await page.goto("/pricing");
+  await goToAndValidate(page, "/pricing");
   const manageSubscriptionButton = page
     .getByRole("button", { name: "Manage Subscription" })
     .first();

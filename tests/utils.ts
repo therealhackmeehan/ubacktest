@@ -53,16 +53,72 @@ export const RANDOM_STRATEGY_NAME = "randomStrategyName";
 export const RANDOM_RESULT_NAME = "randomResultName";
 
 export const initEmptyStrategy = async (page: Page) => {
-  await page.goto("/editor");
+  await goToAndValidate(page, "/editor");
   await page.getByText("new").click();
   await page.getByPlaceholder("Enter strategy name").fill(RANDOM_STRATEGY_NAME);
   await page.getByText("Confirm").click();
   await page.getByText("Reject all").click();
-  await page.getByText("advanced options").click();
   await page.evaluate(() => {
     document.body.style.zoom = "60%";
   });
 };
+
+export async function fillEditor(page: Page, content: string) {
+  await page.evaluate((code) => {
+    const editor = (window as any).monaco.editor.getEditors()[0];
+    editor.setValue(code);
+  }, content);
+}
+
+export async function goToAndValidate(page: Page, ref: string) {
+  await page.goto(ref);
+  await page.waitForURL("**/" + ref);
+  expect(page.url()).toContain(ref);
+}
+
+export async function isSuccessfulBacktest(page: Page) {
+  await isVisibleText(page, "Stock Data and Simulated Backtest Result for");
+}
+
+interface RunBacktestOptions {
+  page: Page;
+  symbol?: string;
+  startDate?: string;
+  endDate?: string;
+  intval?: string;
+}
+
+export async function runBacktest({
+  page,
+  symbol,
+  startDate,
+  endDate,
+  intval,
+}: RunBacktestOptions) {
+  await page.getByText("advanced options").click();
+  if (symbol) await page.fill('input[name="symbol"]', symbol);
+  if (startDate) await page.fill('input[name="startDate"]', startDate);
+  if (endDate) await page.fill('input[name="endDate"]', endDate);
+  if (intval) await page.selectOption('select[name="intval"]', intval);
+  // add more backtest options if needed!
+  await page.click('button:has-text("GO")');
+}
+
+export async function isVisibleText(page: Page, text: string) {
+  await expect(page.getByText(text)).toBeVisible();
+}
+
+export async function saveResult(page: Page) {
+  await page.click('button:has-text("save to my results")');
+  await page.getByPlaceholder("Enter result name").fill(RANDOM_RESULT_NAME);
+  await page.click('button:has-text("Confirm")');
+  await page.waitForTimeout(3500);
+}
+
+export async function chooseExample(page: Page, exampleToChoose: string) {
+  await page.click('button:has-text("examples")');
+  await page.click(`button:has-text(${exampleToChoose})`);
+}
 
 export const makeStripePayment = async ({
   test,
@@ -121,10 +177,3 @@ export const makeStripePayment = async ({
   if (planName != "credits5")
     await expect(page.getByText(planName)).toBeVisible();
 };
-
-export async function fillEditor(page: Page, content: string) {
-  await page.evaluate((code) => {
-    const editor = (window as any).monaco.editor.getEditors()[0];
-    editor.setValue(code);
-  }, content);
-}

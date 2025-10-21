@@ -1,4 +1,4 @@
-import { test, expect, type Page } from "@playwright/test";
+import { test, type Page } from "@playwright/test";
 import {
   signUserUp,
   logUserIn,
@@ -6,6 +6,8 @@ import {
   type User,
   initEmptyStrategy,
   RANDOM_STRATEGY_NAME,
+  goToAndValidate,
+  isVisibleText,
 } from "./utils";
 
 let page: Page;
@@ -26,7 +28,6 @@ test.afterAll(async () => {
 });
 
 test("Check that the new strategy is available in saved strategies", async () => {
-  await page.goto("/home");
-  expect(page.url()).toContain("/home");
-  await expect(page.getByText(RANDOM_STRATEGY_NAME)).toBeVisible();
+  await goToAndValidate(page, "/home");
+  await isVisibleText(page, RANDOM_STRATEGY_NAME);
 });
