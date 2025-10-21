@@ -55,7 +55,9 @@ export default function ResultListItem({
   return (
     <>
       <div
-        className={`md:flex justify-between md:mx-1 items-center p-2 rounded-lg bg-slate-100 border-slate-200 border-2 hover:shadow-lg duration-700 dark:border-0 dark:bg-boxdark dark:shadow-none ${highlight ? "translate-x-10 shadow-lg" : ""}`}
+        className={`md:flex justify-between md:mx-1 items-center p-2 rounded-lg bg-slate-100 border-slate-200 border-2 hover:shadow-lg duration-700 dark:border-0 dark:bg-boxdark dark:shadow-none ${
+          highlight ? "translate-x-10 shadow-lg" : ""
+        }`}
       >
         <ResultHeader result={result} setResultPanelOpen={setResultPanelOpen} />
         <div className="flex justify-between gap-x-3 items-center dark:text-white">
@@ -67,6 +69,7 @@ export default function ResultListItem({
             <FiBookOpen />
           </button>
           <button
+            data-testid="share-button-icon"
             className="hover:text-slate-600 hover:scale-110"
             onClick={() => setShareResultModalOpen(true)}
           >

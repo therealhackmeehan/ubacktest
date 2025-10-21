@@ -116,6 +116,7 @@ export default function ShareResultModal({
           Cancel
         </button>
         <button
+          data-testid="confirm-share-button"
           className="bg-slate-500 text-white p-2 rounded hover:bg-slate-700"
           onClick={handleResultDelete}
         >

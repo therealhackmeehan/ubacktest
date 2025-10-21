@@ -26,8 +26,10 @@ function validateFormInputs(formInputs: FormInputProps): void {
   }
 
   // Check if start date is before end date
-  if (new Date(startDate) > new Date(endDate)) {
-    throw new Error("Start date cannot be later than the end date.");
+  if (new Date(startDate) >= new Date(endDate)) {
+    throw new Error(
+      "Start date cannot be later than or equal to the end date."
+    );
   }
 
   // Check to make sure date starts in legit range
