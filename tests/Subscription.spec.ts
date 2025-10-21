@@ -10,6 +10,7 @@ import {
   runBacktest,
   isVisibleText,
   isSuccessfulBacktest,
+  clickOnText,
 } from "./utils";
 
 let page: Page;
@@ -37,7 +38,7 @@ test("Unsubscriber can generate 3 backtests for free", async () => {
   for (let i = 0; i < 3; i++) {
     await runBacktest({ page });
     await isSuccessfulBacktest(page);
-    await page.getByText("Toggle to Editor").click();
+    await clickOnText(page, "Toggle to Editor");
     await page.waitForTimeout(1000);
   }
 
@@ -53,7 +54,7 @@ test("Unsubscriber's 4th backtest fails", async () => {
     "You must add more credits or purchase a subscription to continue using this service."
   );
   await isVisibleText(page, "Take a Look!");
-  await page.getByText("Take a Look!").click();
+  await clickOnText(page, "Take a Look!");
 });
 
 test("Purchase hobby subscription", async () => {
@@ -68,12 +69,12 @@ test("Hobby subscriber unable to run a high-freqrequency backtest", async () => 
     "High frequency backtesting is only available to pro users. Consider upgrading your subscription."
   );
   await isVisibleText(page, "Take a Look!");
-  await page.getByText("Take a Look!").click();
+  await clickOnText(page, "Take a Look!");
 });
 
 test("Hobby CAN generate another low-frequency backtest", async () => {
   await goToAndValidate(page, "/editor");
   await runBacktest({ page, intval: "daily" });
   await isSuccessfulBacktest(page);
-  await page.getByText("Toggle to Editor").click();
+  await clickOnText(page, "Toggle to Editor");
 });

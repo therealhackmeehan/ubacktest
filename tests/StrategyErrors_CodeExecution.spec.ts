@@ -28,10 +28,6 @@ test.afterAll(async () => {
 });
 
 // Testing backend sucks with playwright. I'll revamp these one day. Some obvious test cases for now.
-
-// ✅ Correct strategy structure for reference
-const correctStrategy = `def strategy(data):\n\tdata['signal'] = 1\n\treturn data`;
-
 test("Script defines strategy but with incorrect indentation", async () => {
   await fillEditor(
     page,

@@ -8,6 +8,7 @@ import {
   runBacktest,
   isSuccessfulBacktest,
   chooseExample,
+  clickOnText,
 } from "./utils";
 
 let page: Page;
@@ -28,8 +29,8 @@ test.afterAll(async () => {
 });
 
 test.afterEach(async () => {
-  await page.click('button:has-text("Toggle to Editor")');
-  await page.click('button:has-text("reset")');
+  await clickOnText(page, "Toggle to Editor");
+  await clickOnText(page, "reset");
 });
 
 test("Strategy successfully runs a buy and hold strategy", async () => {

@@ -35,6 +35,11 @@ export const logUserIn = async (page: Page, user: User) => {
   await page.waitForURL("**/editor");
 };
 
+export const logUserOut = async (page: Page) => {
+  await goToAndValidate(page, "/");
+  await page.getByRole("link", { name: "Log out" }).click();
+};
+
 export const signUserUp = async (page: Page, user: User) => {
   await page.goto("/");
   await page.getByRole("link", { name: "Log in" }).click();
@@ -54,10 +59,10 @@ export const RANDOM_RESULT_NAME = "randomResultName";
 
 export const initEmptyStrategy = async (page: Page) => {
   await goToAndValidate(page, "/editor");
-  await page.getByText("new").click();
+  await clickOnText(page, "new");
   await page.getByPlaceholder("Enter strategy name").fill(RANDOM_STRATEGY_NAME);
-  await page.getByText("Confirm").click();
-  await page.getByText("Reject all").click();
+  await clickOnText(page, "Confirm");
+  await clickOnText(page, "Reject all");
   await page.evaluate(() => {
     document.body.style.zoom = "60%";
   });
@@ -78,6 +83,7 @@ export async function goToAndValidate(page: Page, ref: string) {
 
 export async function isSuccessfulBacktest(page: Page) {
   await isVisibleText(page, "Stock Data and Simulated Backtest Result for");
+  await isVisibleText(page, "Toggle to Editor");
 }
 
 interface RunBacktestOptions {
@@ -95,7 +101,8 @@ export async function runBacktest({
   endDate,
   intval,
 }: RunBacktestOptions) {
-  await page.getByText("advanced options").click();
+  await clickOnText(page, "reset");
+  await clickOnText(page, "advanced options");
   if (symbol) await page.fill('input[name="symbol"]', symbol);
   if (startDate) await page.fill('input[name="startDate"]', startDate);
   if (endDate) await page.fill('input[name="endDate"]', endDate);
@@ -105,19 +112,27 @@ export async function runBacktest({
 }
 
 export async function isVisibleText(page: Page, text: string) {
-  await expect(page.getByText(text)).toBeVisible();
+  const locator = page.getByText(text);
+  const count = await locator.count();
+  expect(count).toBe(1);
+  await expect(locator.first()).toBeVisible();
+}
+
+export async function clickOnText(page: Page, text: string) {
+  await isVisibleText(page, text);
+  await page.getByText(text).click();
 }
 
 export async function saveResult(page: Page) {
-  await page.click('button:has-text("save to my results")');
+  await clickOnText(page, "save to my results");
   await page.getByPlaceholder("Enter result name").fill(RANDOM_RESULT_NAME);
-  await page.click('button:has-text("Confirm")');
+  await clickOnText(page, "Confirm");
   await page.waitForTimeout(3500);
 }
 
 export async function chooseExample(page: Page, exampleToChoose: string) {
-  await page.click('button:has-text("examples")');
-  await page.click(`button:has-text(${exampleToChoose})`);
+  await clickOnText(page, "examples");
+  await clickOnText(page, exampleToChoose);
 }
 
 export const makeStripePayment = async ({

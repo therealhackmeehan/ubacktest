@@ -7,6 +7,7 @@ import {
   initEmptyStrategy,
   runBacktest,
   isVisibleText,
+  clickOnText,
 } from "./utils";
 
 let page: Page;
@@ -28,9 +29,9 @@ test.afterAll(async () => {
 });
 
 test.afterEach(async () => {
-  await page.click('button:has-text("OK")');
-  await page.click('button:has-text("Toggle to Editor")');
-  await page.click('button:has-text("reset")');
+  await clickOnText(page, "OK");
+  await clickOnText(page, "Toggle to Editor");
+  await clickOnText(page, "reset");
 });
 
 const WARNING_MISSING_DATA =

@@ -7,11 +7,11 @@ import {
   initEmptyStrategy,
   runBacktest,
   isVisibleText,
+  clickOnText,
 } from "./utils";
 
 let page: Page;
 let testUser: User;
-
 const ERROR_HEADER = "We've Encountered an Error...";
 
 test.describe.configure({ mode: "serial" });
@@ -29,8 +29,8 @@ test.afterAll(async () => {
 });
 
 test.afterEach(async () => {
-  await page.click('button:has-text("OK")');
-  await page.click('button:has-text("reset")');
+  await clickOnText(page, "OK");
+  await clickOnText(page, "reset");
 });
 
 test("Nonexistent stock symbol triggers an error", async () => {
