@@ -38,11 +38,8 @@ export const logUserIn = async (page: Page, user: User) => {
 };
 
 export const logUserOut = async (page: Page, email: string) => {
-  await goToAndValidate(page, "/");
-  await clickOnText(page, email);
-  await page.getByText("Log Out").click({ force: true }); // I hate this but its what needs to happen.
-  // await clickOnText(page, "Log Out");
-  await goToAndValidate(page, "/login");
+  await goToAndValidate(page, "/account");
+  await clickOnText(page, "logout");
 };
 
 export const signUserUp = async (page: Page, user: User) => {
@@ -59,12 +56,15 @@ export const signUserUp = async (page: Page, user: User) => {
     .catch((err) => console.error(err.message));
 };
 
-export const createNewStrategy = async (page: Page) => {
+export async function createNewStrategy(
+  page: Page,
+  name: string = RANDOM_STRATEGY_NAME
+) {
   await goToAndValidate(page, "/editor");
   await clickOnText(page, "new");
-  await page.getByPlaceholder("Enter strategy name").fill(RANDOM_STRATEGY_NAME);
+  await page.getByPlaceholder("Enter strategy name").fill(name);
   await clickOnText(page, "Confirm");
-};
+}
 
 export async function fillEditor(page: Page, content: string) {
   await page.evaluate((code) => {
@@ -82,7 +82,7 @@ export async function goToAndValidate(page: Page, ref: string) {
 export async function successfulBacktest(page: Page) {
   await visibleText(page, "Stock Data and Simulated Backtest Result for");
   await visibleText(page, "Toggle To Editor");
-  await visibleText(page, "Hypothetical Growth of $1");
+  await visibleTestId(page, "hypothetical-growth-header");
 }
 
 interface RunBacktestOptions {
@@ -100,7 +100,7 @@ export async function runBacktest({
   endDate,
   intval,
 }: RunBacktestOptions) {
-  // await zoomOut(page);
+  await zoomOut(page);
   await clickOnText(page, "reset");
   await clickOnText(page, "advanced options");
   if (symbol) await page.fill('input[name="symbol"]', symbol);
@@ -112,10 +112,10 @@ export async function runBacktest({
 }
 
 export async function visibleText(page: Page, text: string) {
-  const locator = await page.getByText(text);
+  const locator = page.getByText(text);
+  await expect(locator.first()).toBeVisible();
   const count = await locator.count();
   expect(count).toBe(1);
-  await expect(locator.first()).toBeVisible();
 }
 
 export async function clickOnText(page: Page, text: string) {
@@ -123,7 +123,7 @@ export async function clickOnText(page: Page, text: string) {
   await page.getByText(text).click();
 }
 
-async function isVisibleTestId(page: Page, testid: string) {
+export async function visibleTestId(page: Page, testid: string) {
   const locator = page.getByTestId(testid);
   const count = await locator.count();
   expect(count).toBe(1);
@@ -131,13 +131,16 @@ async function isVisibleTestId(page: Page, testid: string) {
 }
 
 export async function clickOnTestId(page: Page, testid: string) {
-  await isVisibleTestId(page, testid);
+  await visibleTestId(page, testid);
   await page.getByTestId(testid).click();
 }
 
-export async function saveResult(page: Page) {
+export async function saveResult(
+  page: Page,
+  name: string = RANDOM_RESULT_NAME
+) {
   await page.getByText("save to my results").first().click();
-  await page.getByPlaceholder("Enter result name").fill(RANDOM_RESULT_NAME);
+  await page.getByPlaceholder("Enter result name").fill(name);
   await clickOnText(page, "Confirm");
   await page.waitForTimeout(3500);
 }

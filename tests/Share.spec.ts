@@ -9,17 +9,18 @@ import {
   saveResult,
   goToAndValidate,
   visibleText,
-  RANDOM_RESULT_NAME,
   logUserOut,
   clickOnText,
   rejectCookies,
   type User,
   clickOnTestId,
 } from "./utils";
+import { randomUUID } from "crypto";
 
 let page: Page;
 let testUser1: User;
 let testUser2: User;
+const tempResultName = randomUUID().slice(0, 10);
 
 test.describe.configure({ mode: "serial" });
 
@@ -47,9 +48,9 @@ test("Create testuser1's account", async () => {
 test("Run and save a result in testuser1's account", async () => {
   await runBacktest({ page });
   await successfulBacktest(page);
-  await saveResult(page);
+  await saveResult(page, tempResultName);
   await goToAndValidate(page, "/results");
-  await visibleText(page, RANDOM_RESULT_NAME);
+  await visibleText(page, tempResultName);
 });
 
 test("Share result with testuser2", async () => {
@@ -76,5 +77,5 @@ test("Verify the result has been shared with testuser2", async () => {
     `@${testUser1.email.split("@")[0]} sent you a result.`
   );
   await clickOnText(page, "Accept");
-  await visibleText(page, RANDOM_RESULT_NAME);
+  await visibleText(page, tempResultName);
 });
