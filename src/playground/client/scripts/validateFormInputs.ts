@@ -36,7 +36,7 @@ function validateFormInputs(formInputs: FormInputProps): void {
     !["1min", "5min", "15min", "30min"].includes(intval)
   ) {
     throw new Error(
-      "For lower-frequency backtesting, the start date cannot equal the end date."
+      "For lower-frequency backtesting (>= 1hr), the start date cannot equal the end date."
     );
   }
 
