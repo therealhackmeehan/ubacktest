@@ -132,6 +132,7 @@ function MonacoEditor({ codeToDisplay, setCodeToDisplay }: MonacoEditorProps) {
           Included Packages
         </button>
         <button
+          data-testid="launch-examples-button"
           className="md:border-l-2 border-black dark:border-0 flex gap-x-1 px-3 py-1 hover:bg-slate-100 items-center text-center tracking-tight duration-300 dark:text-white dark:hover:text-slate-700"
           onClick={() => setExamplesModalOpen(true)}
         >
