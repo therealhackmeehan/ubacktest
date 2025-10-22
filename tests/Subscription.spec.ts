@@ -18,6 +18,7 @@ let page: Page;
 let testUser: User;
 
 test.describe.configure({ mode: "serial" });
+test.slow();
 
 test.beforeAll(async ({ browser }) => {
   page = await browser.newPage();
@@ -73,7 +74,7 @@ test("Hobby subscriber unable to run a high-freqrequency backtest", async () => 
   await clickOnText(page, "Take a Look!");
 });
 
-test("Hobby CAN generate another low-frequency backtest", async () => {
+test("Hobby subscriber can generate another low-frequency backtest", async () => {
   await goToAndValidate(page, "/editor");
   await runBacktest({ page, intval: "daily" });
   await successfulBacktest(page);

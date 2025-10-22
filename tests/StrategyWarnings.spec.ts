@@ -39,7 +39,7 @@ test.afterEach(async () => {
 const WARNING_MISSING_DATA =
   "Discrepancy between available data and selected dates. Stock may have IPO'd later or been delisted earlier.";
 
-test("Stock exists but does not have COMPLETE data in the selected date range", async () => {
+test("Stock exists but does not have complete data in the selected date range", async () => {
   await runBacktest({
     page,
     symbol: "ABNB",

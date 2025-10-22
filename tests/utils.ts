@@ -146,7 +146,7 @@ export async function saveResult(
 }
 
 export async function chooseExample(page: Page, exampleToChoose: string) {
-  await clickOnText(page, "examples");
+  await clickOnTestId(page, "launch-examples-button");
   await clickOnText(page, exampleToChoose);
 }
 
