@@ -98,7 +98,7 @@ jobs:
           stripe listen --api-key ${{ secrets.STRIPE_API_KEY }} --forward-to localhost:3001/payments-webhook &
       - name: Run Playwright Tests
         env:
-          JUDGE_APIKEY_SULU: ${{ secrets.JUDGE_APIKEY_SULU }}
+          JUDGE_APIKEY_SULU: ${{ secrets.JUDGE_API_KEY_SULU }}
           TIINGO_API_KEY: ${{ secrets.TIINGO_API_KEY }}
           STRIPE_API_KEY: ${{ secrets.STRIPE_API_KEY }}
           STRIPE_WEBHOOK_SECRET: ${{ secrets.STRIPE_WEBHOOK_SECRET }}
