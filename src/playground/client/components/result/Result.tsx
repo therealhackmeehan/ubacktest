@@ -220,7 +220,10 @@ function Result({
         {/* Strategy result plot and some form inputs */}
         <div className="m-8">
           <div className="flex justify-between">
-            <div className="m-1 text-xl tracking-tight text-slate-400 hover:text-slate-800 font-bold">
+            <div
+              data-testid="hypothetical-growth-header"
+              className="m-1 text-xl tracking-tight text-slate-400 hover:text-slate-800 font-bold"
+            >
               Hypothetical Growth of $1
             </div>
             <div className="font-extrabold text-xs text-sky-700/50">
