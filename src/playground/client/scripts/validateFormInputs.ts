@@ -26,9 +26,17 @@ function validateFormInputs(formInputs: FormInputProps): void {
   }
 
   // Check if start date is before end date
-  if (new Date(startDate) >= new Date(endDate)) {
+  if (new Date(startDate) > new Date(endDate)) {
+    throw new Error("Start date cannot be later than the end date.");
+  }
+
+  // Check if startdate === enddate and not HFT
+  if (
+    startDate === endDate &&
+    !["1min", "5min", "15min", "30min"].includes(intval)
+  ) {
     throw new Error(
-      "Start date cannot be later than or equal to the end date."
+      "For lower-frequency backtesting, the start date cannot equal the end date."
     );
   }
 

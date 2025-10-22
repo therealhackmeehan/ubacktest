@@ -34,9 +34,9 @@ class StockDataConnection {
     "1hour": 60,
     "90min": 90,
     "3hour": 180,
-    daily: 60 * 24,
-    weekly: 60 * 24 * 7,
-    monthly: 60 * 24 * 30, // rough approximation
+    daily: 60 * 6.5, // 6.5 hour trading window each day
+    weekly: 60 * 6.5 * 7,
+    monthly: 60 * 6.5 * 30, // rough approximation
   };
 
   private isEOD: boolean;
@@ -109,24 +109,20 @@ class StockDataConnection {
   private calcApproxDataLength(): number {
     const start = new Date(this.start);
     const end = new Date(this.end);
-
-    let totalMinutes = 0;
-    const current = new Date(start);
-    while (current <= end) {
-      const dayOfWeek = current.getDay(); // 0=Sun, 6=Sat
-      if (dayOfWeek !== 0 && dayOfWeek !== 6) {
-        totalMinutes += 24 * 60; // 6.5 hours per trading day
-      }
-      current.setDate(current.getDate() + 1);
-    }
-
     const minutesPerInt =
       this.minutesPerInterval[
         this.formInputs.intval as (typeof intVals)[number]
       ];
 
-    if (!minutesPerInt)
-      throw new Error(`Unsupported interval: ${this.formInputs.intval}`);
+    let totalMinutes = 0;
+    const current = new Date(start);
+
+    while (current <= end) {
+      const day = current.getDay();
+      if (day !== 0 && day !== 6) totalMinutes += 6.5 * 60;
+      current.setDate(current.getDate() + 1);
+    }
+
     return Math.floor(totalMinutes / minutesPerInt);
   }
 
