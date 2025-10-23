@@ -25,12 +25,6 @@ jobs:
           path: btwa_test
           ref: main
           token: ${{ secrets.BTWA_TEST_GITHUB_TOKEN }}
-      # - name: List directories
-      #   run: |
-      #     echo "Workspace: $GITHUB_WORKSPACE"
-      #     ls -la
-      #     ls -la btwa_app
-      #     ls -la btwa_test
       - name: Setup Node.js
         id: setup-node
         uses: actions/setup-node@v4
@@ -95,19 +89,42 @@ jobs:
         # env:
         #   STRIPE_DEVICE_NAME: ${{ secrets.STRIPE_DEVICE_NAME }}
         run: |
-          stripe listen --api-key ${{ secrets.STRIPE_API_KEY }} --forward-to localhost:3001/payments-webhook &
+          stripe listen --api-key ${{ secrets.TEST_STRIPE_API_KEY }} --forward-to localhost:3001/payments-webhook &
       - name: Run Playwright Tests
         env:
+          # server-side vars
           JUDGE_APIKEY_SULU: ${{ secrets.JUDGE_API_KEY_SULU }}
           TIINGO_API_KEY: ${{ secrets.TIINGO_API_KEY }}
-          STRIPE_API_KEY: ${{ secrets.STRIPE_API_KEY }}
-          STRIPE_WEBHOOK_SECRET: ${{ secrets.STRIPE_WEBHOOK_SECRET }}
-          STRIPE_CUSTOMER_PORTAL_URL: ${{ secrets.STRIPE_CUSTOMER_PORTAL_URL }}
-          PAYMENTS_HOBBY_SUBSCRIPTION_PLAN_ID: ${{ secrets.PAYMENTS_HOBBY_SUBSCRIPTION_PLAN_ID }}
-          PAYMENTS_PRO_SUBSCRIPTION_PLAN_ID: ${{ secrets.PAYMENTS_PRO_SUBSCRIPTION_PLAN_ID }}
-          PAYMENTS_CREDITS_5_PLAN_ID: ${{ secrets.PAYMENTS_CREDITS_5_PLAN_ID }}
+          STRIPE_API_KEY: ${{ secrets.TEST_STRIPE_API_KEY }}
+          STRIPE_WEBHOOK_SECRET: ${{ secrets.TEST_STRIPE_WEBHOOK_SECRET }}
+          STRIPE_CUSTOMER_PORTAL_URL: ${{ secrets.TEST_STRIPE_CUSTOMER_PORTAL_URL }}
+          PAYMENTS_HOBBY_SUBSCRIPTION_PLAN_ID: ${{ secrets.TEST_PAYMENTS_HOBBY_SUBSCRIPTION_PLAN_ID }}
+          PAYMENTS_PRO_SUBSCRIPTION_PLAN_ID: ${{ secrets.TEST_PAYMENTS_PRO_SUBSCRIPTION_PLAN_ID }}
+          PAYMENTS_CREDITS_5_PLAN_ID: ${{ secrets.TEST_PAYMENTS_CREDITS_5_PLAN_ID }}
+          # client-side vars
           SKIP_EMAIL_VERIFICATION_IN_DEV: true
+          DISABLE_EMAIL_SENDING: true
           REACT_APP_GOOGLE_ANALYTICS_ID: ${{ secrets.REACT_APP_GOOGLE_ANALYTICS_ID }}
         run: |
           cd btwa_test
           npm run e2e:playwright
+
+  # deploy: UNCOMMENT ONCE SETUP IN EFFECT!!!
+  #   runs-on: ubuntu-latest
+  #   steps:
+  #     - name: Checkout the uBacktest Repository
+  #       uses: actions/checkout@v4
+
+  #     - name: Install Wasp
+  #       run: |
+  #         curl -sSL https://get.wasp.sh/installer.sh | sh -s -- ${{ env.WASP_VERSION }}
+
+  #     - name: Install Flyctl
+  #       uses: superfly/flyctl-actions/setup-flyctl@master
+
+  #     - name: Deploy
+  #       env:
+  #         FLY_API_TOKEN: ${{ secrets.FLY_API_TOKEN }}
+  #       run: |
+  #         cd btwa
+  #         REACT_APP_GOOGLE_ANALYTICS_ID=${{ secrets.REACT_APP_GOOGLE_ANALYTICS_ID }} wasp deploy fly deploy

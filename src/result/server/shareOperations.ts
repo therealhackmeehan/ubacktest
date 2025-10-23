@@ -52,20 +52,25 @@ export const shareResult: ShareResult<ShareResultProps, Share> = async (
     );
   }
 
-  await emailSender.send({
-    from: {
-      name: "uBacktest Support",
-      email: "john@uBacktest.com",
-    },
-    to: email,
-    subject: `${context.user.email} has Shared a Strategy Result!.`,
-    text: `Someone shared a trading strategy with you!
+  if (process.env.DISABLE_EMAIL_SENDING) {
+    console.log(
+      `[SKIP_EMAIL_SENDING=true] Would send email to ${email}: Someone shared a trading strategy with you!`
+    );
+  } else {
+    await emailSender.send({
+      from: {
+        name: "uBacktest Support",
+        email: "john@uBacktest.com",
+      },
+      to: email,
+      subject: `${context.user.email} has Shared a Strategy Result!.`,
+      text: `Someone shared a trading strategy with you!
 
 Click the link below to view it:
 https://uBacktest.com/results
 
 Happy trading!`,
-    html: `
+      html: `
     <div style="font-family: Arial, sans-serif; max-width: 600px; margin: auto; padding: 20px;">
       <img src="../../client/static/logo.png" alt="uBacktest Logo" style="width: 120px; margin-bottom: 20px;" />
       <h2 style="color: #333;">You've received a trading strategy</h2>
@@ -81,7 +86,8 @@ Happy trading!`,
       </p>
     </div>
   `,
-  });
+    });
+  }
 
   return await context.entities.Share.create({
     data: {

@@ -2,7 +2,8 @@
   "name": "ubacktest",
   "type": "module",
   "scripts": {
-    "format": "npx prettier --write src/"
+    "format": "npx prettier --write src/",
+    "deploy": "REACT_APP_GOOGLE_ANALYTICS_ID=G-2FQJ7DZDET wasp deploy fly deploy"
   },
   "dependencies": {
     "@google-analytics/data": "4.12.1",
@@ -27,9 +28,10 @@
     "react-icons": "5.5.0",
     "react-intersection-observer": "^9.16.0",
     "react-router-dom": "^6.26.2",
-    "stripe": "11.15.0",
+    "stripe": "^19.1.0",
     "tailwind-merge": "^3.0.2",
     "tailwindcss": "^3.2.7",
+    "typewriter-effect": "^2.22.0",
     "vanilla-cookieconsent": "^3.1.0",
     "wasp": "file:.wasp/out/sdk/wasp",
     "zod": "^3.24.2"

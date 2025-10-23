@@ -8,6 +8,7 @@ import {
   useQuery,
 } from "wasp/client/operations";
 import { BsThreeDotsVertical } from "react-icons/bs";
+import Typewriter from "typewriter-effect";
 
 // store name and code in context instead of prop drilling
 export interface StrategyContextProps {
@@ -174,8 +175,21 @@ function NoStrategiesBanner({
 }) {
   return (
     <div className="overflow-y-hidden h-screen bg-blue-300/10">
-      <div className="font-bold text-center mt-12 mx-4 md:mx-7 text-3xl text-slate-800 animate-pulse tracking-tight dark:text-white dark:border-white">
-        {isStrategiesLoading ? "Loading..." : "No Strategies Exist (yet)"}
+      <div className="font-bold font-mono select-none text-center mt-12 px-2 mx-auto text-2xl text-slate-800 animate-pulse tracking-tight dark:text-white dark:border-white">
+        {isStrategiesLoading ? (
+          "Loading..."
+        ) : (
+          <Typewriter
+            options={{
+              strings: [
+                "no strategies exist (yet)",
+                "click on 'new +' to get started",
+              ],
+              autoStart: true,
+              loop: true,
+            }}
+          />
+        )}
       </div>
       <div
         className="transform-gpu overflow-hidden w-full blur-3xl sm:top-0 pointer-events-none"

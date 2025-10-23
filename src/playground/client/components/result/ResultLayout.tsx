@@ -26,7 +26,7 @@ export default function ResultLayout({
     strategyResultIsConnectedTo !== selectedStrategy
   ) {
     return (
-      <div className="border-2 p-4 border-black font-extrabold m-4 lg:m-12 blur-sm text-5xl text-slate-800/30 tracking-tight dark:text-white dark:border-white">
+      <div className="select-none border-2 p-4 border-black font-extrabold m-4 lg:m-12 blur-sm text-5xl text-slate-800/30 tracking-tight dark:text-white dark:border-white">
         No Current Result to Display for This Strategy
       </div>
     );
