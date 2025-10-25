@@ -28,7 +28,7 @@ class CodeExecutor {
       headers: {
         "Content-Type": "application/json",
         Accept: "application/json",
-        Authorization: `Bearer ${process.env.JUDGE_APIKEY_SULU}`,
+        Authorization: `Bearer ${process.env.JUDGE_API_KEY_SULU}`,
       },
       body: JSON.stringify({
         language_id: 31, // Python for ML (base image)

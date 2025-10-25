@@ -1,10 +1,11 @@
 import { requireNodeEnvVar } from "../server/utils";
 
-export type SubscriptionStatus =
-  | "past_due"
-  | "cancel_at_period_end"
-  | "active"
-  | "deleted";
+export enum SubscriptionStatus {
+  PastDue = "past_due",
+  CancelAtPeriodEnd = "cancel_at_period_end",
+  Active = "active",
+  Deleted = "deleted",
+}
 
 export enum PaymentPlanId {
   Hobby = "hobby",
