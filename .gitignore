@@ -1,0 +1,20 @@
+# ─── General system files ──────────────────────────────
+.DS_Store
+.cache/
+node_modules/
+
+# ─── Environment files ─────────────────────────────────
+.env
+.env.client
+.env.server
+backtesting-web-app-400ca7b83fa8.json
+
+# ─── Build and test output ─────────────────────────────
+reports/
+test-results/
+.wasp/
+prisma/
+
+# ─── Example and generated code ────────────────────────
+src/examples/myenv/
+src/examples/python/__pycache__/
