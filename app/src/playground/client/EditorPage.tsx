@@ -174,7 +174,7 @@ function NoStrategiesBanner({
   isStrategiesLoading: boolean;
 }) {
   return (
-    <div className="overflow-y-hidden h-screen bg-blue-300/10">
+    <div className="overflow-y-hidden h-full bg-blue-300/20">
       <div className="font-bold font-mono select-none text-center mt-12 px-2 mx-auto text-2xl text-slate-800 animate-pulse tracking-tight dark:text-white dark:border-white">
         {isStrategiesLoading ? (
           "Loading..."
