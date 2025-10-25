@@ -1,0 +1,402 @@
+app uBacktest {
+  wasp: {
+    version: "^0.18.0"
+  },
+  title: "uBacktest",
+  head: [
+        "<link rel='icon' href='/favicon.ico' />",
+        "<meta property='og:type' content='website' />",
+        "<meta property='og:title' content='uBacktest' />",
+        "<meta property='og:url' content='https://ubacktest.com' />",
+        "<meta property='og:description' content='Test algorithmic trading strategies easily and effectively.' />",
+        "<meta property='og:image' content='https://ubacktest.com/editor.png' />",
+        "<meta name='twitter:image' content='https://ubacktest.com/editor.png' />",
+        "<meta name='twitter:image:width' content='800' />",
+        "<meta name='twitter:image:height' content='400' />",
+        "<meta name='twitter:card' content='example editor view' />",
+  ],
+
+  // 🔐 Auth out of the box! https://wasp-lang.dev/docs/auth/overview
+  auth: {
+    userEntity: User,
+    methods: {
+      email: {
+        fromField: {
+          name: "John @ uBacktest",
+          email: "support@ubacktest.com"
+        },
+        emailVerification: {
+          clientRoute: EmailVerificationRoute,
+          getEmailContentFn: import { getVerificationEmailContent } from "@src/auth/email-and-pass/emails",
+        },
+        passwordReset: {
+          clientRoute: PasswordResetRoute,
+          getEmailContentFn: import { getPasswordResetEmailContent } from "@src/auth/email-and-pass/emails",
+        },
+        userSignupFields: import { getEmailUserFields } from "@src/auth/userSignupFields",
+      },
+      google: { // Guide for setting up Auth via Google
+        userSignupFields: import { getGoogleUserFields } from "@src/auth/userSignupFields",
+        configFn: import { getGoogleAuthConfig } from "@src/auth/userSignupFields",
+      },
+      gitHub: {
+         userSignupFields: import { getGitHubUserFields } from "@src/auth/userSignupFields",
+         configFn: import { getGitHubAuthConfig } from "@src/auth/userSignupFields",
+      },
+      // Uncomment to enable Discord Auth (check https://wasp-lang.dev/docs/auth/social-auth/discord for setup instructions):
+      // discord: {
+      //   userSignupFields: import { getDiscordUserFields } from "@src/auth/userSignupFields",
+      //   configFn: import { getDiscordAuthConfig } from "@src/auth/userSignupFields"
+      // }
+    },
+    onAfterSignup: import { onAfterSignup } from "@src/auth/hooks",
+    onAuthFailedRedirectTo: "/login",
+    onAuthSucceededRedirectTo: "/editor",
+  },
+
+  client: {
+    rootComponent: import App from "@src/client/App",
+  },
+
+  emailSender: {
+    // NOTE: "Dummy" provider is just for local development purposes.
+    provider: Dummy,
+    // provider: SendGrid,
+    defaultFrom: {
+      name: "uBacktest Support",
+      // When using a real provider, e.g. SendGrid, you must use the same email address that you configured your account to send out emails with!
+      email: "john@ubacktest.com"
+    },
+  },
+}
+
+// MY ROUTES
+route LandingPageRoute { path: "/", to: LandingPage }
+page LandingPage {
+  component: import LandingPage from "@src/landing-page/LandingPage"
+}
+route HomePageRoute { path: "/home", to: HomePage }
+page HomePage {
+  authRequired: true,
+  component: import HomePage from "@src/home/HomePage"
+}
+route EditorRoute { path: "/editor", to: EditorPage }
+page EditorPage {
+  authRequired: true,
+  component: import EditorPage from "@src/playground/client/EditorPage"
+}
+route StrategyRoute { path: "/strategy/:id", to: StrategyPage }
+page StrategyPage {
+  authRequired: true,
+  component: import StrategyPage from "@src/strategy/StrategyPage"
+}
+route TOSRoute { path: "/tos", to: TOSPage }
+page TOSPage {
+  component: import TOS from "@src/legal/TOS"
+}
+route PrivacyRoute { path: "/privacy", to: PrivacyPage }
+page PrivacyPage {
+  component: import TOS from "@src/legal/Privacy"
+}
+route AboutRoute { path: "/about", to: AboutPage }
+page AboutPage {
+  component: import About from "@src/about/About"
+}
+route LeaderboardRoute { path: "/leaderboard", to: LeaderboardPage }
+page LeaderboardPage {
+  component: import LeaderboardPage from "@src/leaderboard/LeaderboardPage"
+}
+route ResultRoute { path: "/results", to: ResultPage }
+page ResultPage {
+  authRequired: true,
+  component: import ResultPage from "@src/result/client/ResultPage"
+}
+// END MY ROUTES
+
+//region result-related actions
+action createResult {
+  fn: import { createResult } from "@src/playground/server/resultOperations",
+  entities: [Result] 
+}
+action renameResult {
+  fn: import { renameResult } from "@src/playground/server/resultOperations",
+  entities: [Result] 
+}
+action deleteResult {
+  fn: import { deleteResult } from "@src/playground/server/resultOperations",
+  entities: [Result] 
+}
+action togglePrivacy {
+  fn: import { togglePrivacy } from "@src/playground/server/resultOperations",
+  entities: [Result]
+}
+query getResults {
+  fn: import { getResults } from "@src/playground/server/resultOperations",
+  entities: [Result]
+}
+query getResultsForStrategy {
+  fn: import { getResultsForStrategy } from "@src/playground/server/resultOperations",
+  entities: [Result]
+}
+query getTopResults {
+  fn: import { getTopResults } from "@src/playground/server/resultOperations",
+  entities: [Result]
+}
+//endregion
+
+//region strategy-related actions
+action createStrategy {
+  fn: import { createStrategy } from "@src/playground/server/strategyOperations",
+  entities: [Strategy]
+}
+action updateStrategy {
+  fn: import { updateStrategy } from "@src/playground/server/strategyOperations",
+  entities: [Strategy]
+}
+action deleteStrategy {
+  fn: import { deleteStrategy } from "@src/playground/server/strategyOperations",
+  entities: [Strategy]
+}
+action renameStrategy {
+  fn: import { renameStrategy } from "@src/playground/server/strategyOperations",
+  entities: [Strategy]
+}
+query getStrategies {
+  fn: import { getStrategies } from "@src/playground/server/strategyOperations",
+  entities: [Strategy]
+}
+query getSpecificStrategy {
+  fn: import { getSpecificStrategy } from "@src/playground/server/strategyOperations",
+  entities: [Strategy]
+}
+//end strategy-related actions
+
+//region share-related actions
+action shareResult {
+  fn: import { shareResult } from "@src/result/server/shareOperations",
+  entities: [User, Share]
+}
+query getShared {
+  fn: import { getShared } from "@src/result/server/shareOperations",
+  entities: [Share, Result, User]
+}
+query getSharedWith {
+  fn: import { getSharedWith } from "@src/result/server/shareOperations",
+  entities: [Share, User]
+}
+action acceptShare {
+  fn: import { acceptShare } from "@src/result/server/shareOperations",
+  entities: [Share]
+}
+action deleteShare {
+  fn: import { deleteShare } from "@src/result/server/shareOperations",
+  entities: [Share]
+}
+//end share-related actions
+
+// The big action -> run strategy and initiate a backend process
+query runStrategy {
+  fn: import { runStrategy } from "@src/playground/server/strategyOperations",
+  entities: [User]
+}
+action charge {
+  fn: import { charge } from "@src/playground/server/strategyOperations",
+  entities: [User]
+}
+// end runStrategy
+
+//region package info updates
+query getPackageInfo {
+  fn: import {getPackageInfo } from "@src/playground/server/packageOperations",
+  entities: [PackageInfo]
+}
+//endregion
+
+//region Auth Pages
+route LoginRoute { path: "/login", to: LoginPage }
+page LoginPage {
+  component: import Login from "@src/auth/LoginPage"
+}
+
+route SignupRoute { path: "/signup", to: SignupPage }
+page SignupPage {
+  component: import { Signup } from "@src/auth/SignupPage"
+}
+
+route RequestPasswordResetRoute { path: "/request-password-reset", to: RequestPasswordResetPage }
+page RequestPasswordResetPage {
+  component: import { RequestPasswordResetPage } from "@src/auth/email-and-pass/RequestPasswordResetPage",
+}
+
+route PasswordResetRoute { path: "/password-reset", to: PasswordResetPage }
+page PasswordResetPage {
+  component: import { PasswordResetPage } from "@src/auth/email-and-pass/PasswordResetPage",
+}
+
+route EmailVerificationRoute { path: "/email-verification", to: EmailVerificationPage }
+page EmailVerificationPage {
+  component: import { EmailVerificationPage } from "@src/auth/email-and-pass/EmailVerificationPage",
+}
+//endregion
+
+//region User
+route AccountRoute { path: "/account", to: AccountPage }
+page AccountPage {
+  authRequired: true,
+  component: import Account from "@src/user/AccountPage"
+}
+
+query getPaginatedUsers {
+  fn: import { getPaginatedUsers } from "@src/user/operations",
+  entities: [User]
+}
+
+action updateCurrentUser {
+  fn: import { updateCurrentUser } from "@src/user/operations",
+  entities: [User]
+}
+
+action updateUserById {
+  fn: import { updateUserById } from "@src/user/operations",
+  entities: [User]
+}
+//endregion
+
+//region Payment
+route PricingPageRoute { path: "/pricing", to: PricingPage }
+page PricingPage {
+  component: import PricingPage from "@src/payment/PricingPage"
+}
+
+route CheckoutRoute { path: "/checkout", to: CheckoutPage }
+page CheckoutPage {
+  authRequired: true,
+  component: import Checkout from "@src/payment/CheckoutPage"
+}
+
+query getCustomerPortalUrl {
+  fn: import { getCustomerPortalUrl } from  "@src/payment/operations",
+  entities: [User]
+}
+
+action generateCheckoutSession {
+  fn: import { generateCheckoutSession } from "@src/payment/operations",
+  entities: [User]
+}
+
+api paymentsWebhook {
+  fn: import { paymentsWebhook } from "@src/payment/webhook",
+  entities: [User],
+  middlewareConfigFn: import { paymentsMiddlewareConfigFn } from "@src/payment/webhook",
+  httpRoute: (POST, "/payments-webhook")
+}
+//endregion
+
+//region Analytics
+query getDailyStats {
+  fn: import { getDailyStats } from "@src/analytics/operations",
+  entities: [User, DailyStats]
+}
+
+job dailyStatsJob {
+  executor: PgBoss,
+  perform: {
+    fn: import { calculateDailyStats } from "@src/analytics/stats"
+  },
+  schedule: {
+    cron: "0 * * * *" // every hour. useful in production
+    // cron: "* * * * *" // every minute. useful for debugging
+  },
+  entities: [User, DailyStats, Logs, PageViewSource]
+}
+//endregion
+
+// region monthlyCreditReset
+job monthlyCreditReset {
+  executor: PgBoss,
+  perform: {
+    fn: import { monthlyCreditReset } from "@src/user/workers/monthlyCreditReset"
+  },
+  schedule: {
+    cron: "0 0 1 * *" // every month
+    // cron: "* * * * *" // every minute. useful for debugging
+  },
+  entities: [User],
+}
+// endregion
+
+// region weeklyPackageUpdate
+job weeklyPackageUpdate {
+  executor: PgBoss,
+  perform: {
+    fn: import { weeklyPackageUpdate } from "@src/playground/server/workers/weeklyPackageUpdate"
+  },
+  schedule: {
+    cron: "0 9 * * 1" // every monday at 9 AM
+    // cron: "* * * * *" // every minute. useful for debugging
+  },
+  entities: [PackageInfo],
+}
+// endregion
+
+//region Admin Dashboard
+route AdminRoute { path: "/admin", to: AnalyticsDashboardPage }
+page AnalyticsDashboardPage {
+  authRequired: true,
+  component: import AnalyticsDashboardPage from "@src/admin/dashboards/analytics/AnalyticsDashboardPage"
+}
+
+route AdminUsersRoute { path: "/admin/users", to: AdminUsersPage }
+page AdminUsersPage {
+  authRequired: true,
+  component: import AdminUsers from "@src/admin/dashboards/users/UsersDashboardPage"
+}
+
+route AdminSettingsRoute { path: "/admin/settings", to: AdminSettingsPage }
+page AdminSettingsPage {
+  authRequired: true,
+  component: import AdminSettings from "@src/admin/elements/settings/SettingsPage"
+}
+
+route AdminChartsRoute { path: "/admin/chart", to: AdminChartsPage }
+page AdminChartsPage {
+  authRequired: true,
+  component: import AdminCharts from "@src/admin/elements/charts/ChartsPage"
+}
+
+route AdminFormElementsRoute { path: "/admin/forms/form-elements", to: AdminFormElementsPage }
+page AdminFormElementsPage {
+  authRequired: true,
+  component: import AdminForms from "@src/admin/elements/forms/FormElementsPage"
+}
+
+route AdminFormLayoutsRoute { path: "/admin/forms/form-layouts", to: AdminFormLayoutsPage }
+page AdminFormLayoutsPage {
+  authRequired: true,
+  component: import AdminForms from "@src/admin/elements/forms/FormLayoutsPage"
+}
+
+route AdminCalendarRoute { path: "/admin/calendar", to: AdminCalendarPage }
+page AdminCalendarPage {
+  authRequired: true,
+  component: import AdminCalendar from "@src/admin/elements/calendar/CalendarPage"
+}
+
+route AdminUIAlertsRoute { path: "/admin/ui/alerts", to: AdminUIAlertsPage }
+page AdminUIAlertsPage {
+  authRequired: true,
+  component: import AdminUI from "@src/admin/elements/ui-elements/AlertsPage"
+}
+
+route AdminUIButtonsRoute { path: "/admin/ui/buttons", to: AdminUIButtonsPage }
+page AdminUIButtonsPage {
+  authRequired: true,
+  component: import AdminUI from "@src/admin/elements/ui-elements/ButtonsPage"
+}
+//endregion
+
+// finally, a wildcard 404 route as a catch-all
+route WildcardRoute { path: "*", to: WildcardPage }
+page WildcardPage {
+  component: import Wildcard from "@src/client/components/Wildcard"
+}

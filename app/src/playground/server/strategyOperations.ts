@@ -1,0 +1,208 @@
+import { HttpError } from "wasp/server";
+import { type Strategy } from "wasp/entities";
+import {
+  type CreateStrategy,
+  type UpdateStrategy,
+  type DeleteStrategy,
+  type GetStrategies,
+  type RenameStrategy,
+  type GetSpecificStrategy,
+  type Charge,
+  type RunStrategy,
+} from "wasp/server/operations";
+import StrategyPipeline from "./StrategyPipeline";
+import {
+  BacktestResultProps,
+  eodFreqs,
+  FormInputProps,
+} from "../../shared/sharedTypes";
+
+export const createStrategy: CreateStrategy<
+  { name: string; code: string },
+  Strategy
+> = async ({ name, code }, context) => {
+  if (!context.user) throw new HttpError(401);
+
+  const existingStrategy = await context.entities.Strategy.findFirst({
+    where: {
+      name,
+      user: { id: context.user.id },
+    },
+  });
+
+  if (existingStrategy) {
+    throw new HttpError(400, "A strategy with this name already exists.");
+  }
+
+  return await context.entities.Strategy.create({
+    data: {
+      name,
+      code,
+      user: { connect: { id: context.user.id } },
+    },
+  });
+};
+
+export const getStrategies: GetStrategies<void, Strategy[] | null> = async (
+  _args,
+  context
+) => {
+  if (!context.user) throw new HttpError(401);
+
+  const strategies = await context.entities.Strategy.findMany({
+    where: {
+      user: { id: context.user.id },
+    },
+    orderBy: { updatedAt: "desc" },
+  });
+
+  return strategies.length > 0 ? strategies : null;
+};
+
+export const getSpecificStrategy: GetSpecificStrategy<
+  Pick<Strategy, "id">,
+  Strategy | null
+> = async ({ id }, context) => {
+  if (!context.user) throw new HttpError(401);
+
+  const strategy = await context.entities.Strategy.findUnique({
+    where: {
+      id,
+      user: { id: context.user.id },
+    },
+  });
+
+  return strategy || null;
+};
+
+export const deleteStrategy: DeleteStrategy<
+  Pick<Strategy, "id">,
+  Strategy
+> = async ({ id }, context) => {
+  if (!context.user) throw new HttpError(401);
+
+  return await context.entities.Strategy.delete({
+    where: {
+      id,
+      user: { id: context.user.id },
+    },
+  });
+};
+
+export const renameStrategy: RenameStrategy<
+  Pick<Strategy, "id" | "name">,
+  Strategy
+> = async ({ id, name }, context) => {
+  if (!context.user) throw new HttpError(401);
+
+  const existingStrategy = await context.entities.Strategy.findFirst({
+    where: {
+      name,
+      user: { id: context.user.id },
+    },
+  });
+
+  if (existingStrategy && existingStrategy.id !== id) {
+    throw new HttpError(400, "A strategy with this name already exists.");
+  }
+  if (existingStrategy && existingStrategy.id === id) {
+    throw new HttpError(
+      400,
+      "The new strategy name must be different from the current name."
+    );
+  }
+
+  return await context.entities.Strategy.update({
+    where: {
+      id,
+    },
+    data: {
+      name,
+    },
+  });
+};
+
+export const updateStrategy: UpdateStrategy<
+  Pick<Strategy, "id" | "code">,
+  Strategy
+> = async ({ id, code }, context) => {
+  if (!context.user) throw new HttpError(401);
+
+  return await context.entities.Strategy.update({
+    where: {
+      id,
+      user: { id: context.user.id },
+    },
+    data: { code },
+  });
+};
+
+export const runStrategy: RunStrategy<
+  { formInputs: FormInputProps; code: string },
+  BacktestResultProps
+> = async ({ formInputs, code }, context) => {
+  if (!context.user) throw new HttpError(401);
+  const user = context.user;
+
+  if (!user.isAdmin) {
+    const isProUser = user.subscriptionPlan === "pro";
+
+    // Check if high-frequency backtesting is being requested by a non-Pro user
+    if (!eodFreqs.includes(formInputs.intval) && !isProUser) {
+      throw new HttpError(
+        402,
+        "High frequency backtesting is only available to pro users. Consider upgrading your subscription."
+      );
+    }
+
+    // Ensure the user has credits or a valid subscription
+    if (!user.credits && !user.subscriptionPlan) {
+      throw new HttpError(
+        402,
+        "You must add more credits or purchase a subscription to continue using this service."
+      );
+    }
+
+    // Handle subscription status checks
+    const subscriptionStatus = user.subscriptionStatus;
+
+    if (subscriptionStatus && !user.credits) {
+      if (subscriptionStatus === "past_due") {
+        throw new HttpError(
+          402,
+          "Your subscription payment is past due, and you've run out of free credits. Please update your payment to continue using the service."
+        );
+      }
+
+      if (subscriptionStatus === "deleted") {
+        throw new HttpError(
+          402,
+          "Your subscription has been deleted, and you have no remaining credits. Consider resubscribing to regain access."
+        );
+      }
+    }
+  }
+
+  const strategyInstance = new StrategyPipeline(formInputs, code);
+  return await strategyInstance.run();
+};
+
+export const charge: Charge<void, void> = async (_args, context) => {
+  if (!context.user) throw new HttpError(401);
+
+  if (context.user.isAdmin) {
+    console.log("Avoiding charge as admin.");
+    return;
+  }
+
+  if (context.user.credits && !context.user.subscriptionPlan) {
+    await context.entities.User.update({
+      where: {
+        id: context.user.id,
+      },
+      data: {
+        credits: { decrement: 1 },
+      },
+    });
+  }
+};

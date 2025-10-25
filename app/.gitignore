@@ -1,0 +1,12 @@
+.wasp/
+node_modules/
+
+.env.client
+.env.server
+
+.DS_Store
+
+backtesting-web-app-400ca7b83fa8.json
+
+src/examples/myenv/
+src/examples/python/__pycache__/
