@@ -1,16 +1,14 @@
 import { test, type Page } from "@playwright/test";
 import {
   signUserUp,
-  logUserIn,
   createRandomUser,
   visibleText,
   type User,
+  logUserInQuick,
 } from "./utils";
 
 let page: Page;
 let testUser: User;
-
-test.describe.configure({ mode: "serial" });
 
 test.beforeAll(async ({ browser }) => {
   page = await browser.newPage();
@@ -22,13 +20,16 @@ test.afterAll(async () => {
 });
 
 test("Ensure unregistered user is unable to log in", async () => {
-  await logUserIn(page, testUser);
+  await logUserInQuick(page, testUser);
   await visibleText(page, "Invalid credentials");
 });
 
 test("Ensure that a registered user (with wrong password) is unable to log in", async () => {
   await signUserUp(page, testUser);
-  testUser.password = "uhohincorrectpassword";
-  await logUserIn(page, testUser);
+  const wrongPasswordUser = {
+    ...testUser,
+    password: "uhohwrongpassword123",
+  };
+  await logUserInQuick(page, wrongPasswordUser);
   await visibleText(page, "Invalid credentials");
 });

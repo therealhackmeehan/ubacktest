@@ -16,44 +16,76 @@ export const createRandomUser = () => {
   return { email, password: DEFAULT_PASSWORD } as User;
 };
 
-export const logUserIn = async (page: Page, user: User) => {
+type AuthAction = "login" | "signup";
+type AuthOptions = {
+  fast?: boolean;
+  redirectTo?: string;
+};
+
+const navigateToAuth = async (page: Page, action: AuthAction) => {
   await page.goto("/");
   await page.getByRole("link", { name: "Log in" }).click();
-  await page.waitForURL("**/login", {
-    waitUntil: "domcontentloaded",
-  });
+  if (action === "signup") await page.click('text="go to signup"');
+  await page.waitForURL(`**/${action}`, { waitUntil: "domcontentloaded" });
+};
+
+const fillAuthForm = async (page: Page, user: User) => {
   await page.fill('input[name="email"]', user.email);
-  await page.fill('input[name="password"]', DEFAULT_PASSWORD);
-  const clickLogin = page.click('button:has-text("Log in")');
+  await page.fill('input[name="password"]', user.password || DEFAULT_PASSWORD);
+};
+
+const submitAuthForm = async (page: Page, action: AuthAction, fast = false) => {
+  const buttonText = action === "login" ? "Log in" : "Sign up";
+  const click = page.click(`button:has-text("${buttonText}")`);
+
+  if (fast) {
+    await click;
+    return;
+  }
+
   await Promise.all([
     page
-      .waitForResponse((response) => {
-        return response.url().includes("login") && response.status() === 200;
-      })
+      .waitForResponse(
+        (response) =>
+          response.url().includes(action) && response.status() === 200
+      )
       .catch((err) => console.error(err.message)),
-    ,
-    clickLogin,
+    click,
   ]);
-  await page.waitForURL("**/editor");
 };
+
+export const authenticateUser = async (
+  page: Page,
+  user: User,
+  action: AuthAction,
+  options: AuthOptions = {}
+) => {
+  const { fast = false, redirectTo } = options;
+
+  await navigateToAuth(page, action);
+  await fillAuthForm(page, user);
+  await submitAuthForm(page, action, fast);
+
+  if (!fast && redirectTo) {
+    await page.waitForURL(`**/${redirectTo}`);
+  }
+};
+
+export const logUserIn = (page: Page, user: User) =>
+  authenticateUser(page, user, "login", { redirectTo: "editor" });
+
+export const logUserInQuick = (page: Page, user: User) =>
+  authenticateUser(page, user, "login", { fast: true });
+
+export const signUserUp = (page: Page, user: User) =>
+  authenticateUser(page, user, "signup");
+
+export const signUserUpQuick = (page: Page, user: User) =>
+  authenticateUser(page, user, "signup", { fast: true });
 
 export const logUserOut = async (page: Page, email: string) => {
   await goToAndValidate(page, "/account");
   await clickOnText(page, "logout");
-};
-
-export const signUserUp = async (page: Page, user: User) => {
-  await page.goto("/");
-  await page.getByRole("link", { name: "Log in" }).click();
-  await page.click('text="go to signup"');
-  await page.fill('input[name="email"]', user.email);
-  await page.fill('input[name="password"]', DEFAULT_PASSWORD);
-  await page.click('button:has-text("Sign up")');
-  await page
-    .waitForResponse((response) => {
-      return response.url().includes("signup") && response.status() === 200;
-    })
-    .catch((err) => console.error(err.message));
 };
 
 export async function createNewStrategy(

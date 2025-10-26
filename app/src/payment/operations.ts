@@ -1,30 +1,44 @@
+import * as z from "zod";
 import type {
   GenerateCheckoutSession,
   GetCustomerPortalUrl,
 } from "wasp/server/operations";
-import { PaymentPlanId, paymentPlans } from "./plans";
+import { PaymentPlanId, paymentPlans } from "../payment/plans";
 import { paymentProcessor } from "./paymentProcessor";
 import { HttpError } from "wasp/server";
+import { ensureArgsSchemaOrThrowHttpError } from "../server/validation";
 
 export type CheckoutSession = {
   sessionUrl: string | null;
   sessionId: string;
 };
 
+const generateCheckoutSessionSchema = z.nativeEnum(PaymentPlanId);
+
+type GenerateCheckoutSessionInput = z.infer<
+  typeof generateCheckoutSessionSchema
+>;
+
 export const generateCheckoutSession: GenerateCheckoutSession<
-  PaymentPlanId,
+  GenerateCheckoutSessionInput,
   CheckoutSession
-> = async (paymentPlanId, context) => {
+> = async (rawPaymentPlanId, context) => {
   if (!context.user) {
-    throw new HttpError(401);
+    throw new HttpError(
+      401,
+      "Only authenticated users are allowed to perform this operation"
+    );
   }
+
+  const paymentPlanId = ensureArgsSchemaOrThrowHttpError(
+    generateCheckoutSessionSchema,
+    rawPaymentPlanId
+  );
   const userId = context.user.id;
   const userEmail = context.user.email;
   if (!userEmail) {
-    throw new HttpError(
-      403,
-      "User needs an email to make a payment. If using the usernameAndPassword Auth method, switch to an Auth method that provides an email."
-    );
+    // If using the usernameAndPassword Auth method, switch to an Auth method that provides an email.
+    throw new HttpError(403, "User needs an email to make a payment.");
   }
 
   const paymentPlan = paymentPlans[paymentPlanId];
@@ -46,8 +60,12 @@ export const getCustomerPortalUrl: GetCustomerPortalUrl<
   string | null
 > = async (_args, context) => {
   if (!context.user) {
-    throw new HttpError(401);
+    throw new HttpError(
+      401,
+      "Only authenticated users are allowed to perform this operation"
+    );
   }
+
   return paymentProcessor.fetchCustomerPortalUrl({
     userId: context.user.id,
     prismaUserDelegate: context.entities.User,

@@ -169,7 +169,7 @@ class StockDataConnection {
     const { date, volume, splitFactor } = quote;
     const { intval, useAdjClose } = this.formInputs;
 
-    const msInDay = this.minutesPerInterval["daily"] * 60 * 1000;
+    const msInDay = 24 * 60 * 60 * 1000;
 
     // Pre-calc timestamps once
     const startInput = this.start.getTime();

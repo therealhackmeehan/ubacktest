@@ -23,7 +23,6 @@ export const stripePaymentProcessor: PaymentProcessor = {
   }: CreateCheckoutSessionArgs) => {
     const customer = await fetchStripeCustomer(userEmail);
     const stripeSession = await createStripeCheckoutSession({
-      userId,
       priceId: paymentPlan.getPaymentProcessorPlanId(),
       customerId: customer.id,
       mode: paymentPlanEffectToStripeMode(paymentPlan.effect),
