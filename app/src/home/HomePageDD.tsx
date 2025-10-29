@@ -1,8 +1,8 @@
 import { useState } from "react";
 import { type Strategy } from "wasp/entities";
 import { Link } from "wasp/client/router";
-import RenameModal from "../playground/client/components/modals/RenameModal";
-import DeleteModal from "../playground/client/components/modals/DeleteModal";
+import RenameModal from "../editor/client/components/modals/RenameModal";
+import DeleteModal from "../editor/client/components/modals/DeleteModal";
 import { MdDeleteOutline, MdOutlineEdit } from "react-icons/md";
 
 export function StrategyDropDown({ strategy }: { strategy: Strategy }) {

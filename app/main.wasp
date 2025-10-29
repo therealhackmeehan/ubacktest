@@ -83,7 +83,7 @@ page HomePage {
 route EditorRoute { path: "/editor", to: EditorPage }
 page EditorPage {
   authRequired: true,
-  component: import EditorPage from "@src/playground/client/EditorPage"
+  component: import EditorPage from "@src/editor/client/EditorPage"
 }
 route StrategyRoute { path: "/strategy/:id", to: StrategyPage }
 page StrategyPage {
@@ -115,58 +115,58 @@ page ResultPage {
 
 //region result-related actions
 action createResult {
-  fn: import { createResult } from "@src/playground/server/resultOperations",
+  fn: import { createResult } from "@src/editor/server/resultOperations",
   entities: [Result] 
 }
 action renameResult {
-  fn: import { renameResult } from "@src/playground/server/resultOperations",
+  fn: import { renameResult } from "@src/editor/server/resultOperations",
   entities: [Result] 
 }
 action deleteResult {
-  fn: import { deleteResult } from "@src/playground/server/resultOperations",
+  fn: import { deleteResult } from "@src/editor/server/resultOperations",
   entities: [Result] 
 }
 action togglePrivacy {
-  fn: import { togglePrivacy } from "@src/playground/server/resultOperations",
+  fn: import { togglePrivacy } from "@src/editor/server/resultOperations",
   entities: [Result]
 }
 query getResults {
-  fn: import { getResults } from "@src/playground/server/resultOperations",
+  fn: import { getResults } from "@src/editor/server/resultOperations",
   entities: [Result]
 }
 query getResultsForStrategy {
-  fn: import { getResultsForStrategy } from "@src/playground/server/resultOperations",
+  fn: import { getResultsForStrategy } from "@src/editor/server/resultOperations",
   entities: [Result]
 }
 query getTopResults {
-  fn: import { getTopResults } from "@src/playground/server/resultOperations",
+  fn: import { getTopResults } from "@src/editor/server/resultOperations",
   entities: [Result]
 }
 //endregion
 
 //region strategy-related actions
 action createStrategy {
-  fn: import { createStrategy } from "@src/playground/server/strategyOperations",
+  fn: import { createStrategy } from "@src/editor/server/strategyOperations",
   entities: [Strategy]
 }
 action updateStrategy {
-  fn: import { updateStrategy } from "@src/playground/server/strategyOperations",
+  fn: import { updateStrategy } from "@src/editor/server/strategyOperations",
   entities: [Strategy]
 }
 action deleteStrategy {
-  fn: import { deleteStrategy } from "@src/playground/server/strategyOperations",
+  fn: import { deleteStrategy } from "@src/editor/server/strategyOperations",
   entities: [Strategy]
 }
 action renameStrategy {
-  fn: import { renameStrategy } from "@src/playground/server/strategyOperations",
+  fn: import { renameStrategy } from "@src/editor/server/strategyOperations",
   entities: [Strategy]
 }
 query getStrategies {
-  fn: import { getStrategies } from "@src/playground/server/strategyOperations",
+  fn: import { getStrategies } from "@src/editor/server/strategyOperations",
   entities: [Strategy]
 }
 query getSpecificStrategy {
-  fn: import { getSpecificStrategy } from "@src/playground/server/strategyOperations",
+  fn: import { getSpecificStrategy } from "@src/editor/server/strategyOperations",
   entities: [Strategy]
 }
 //end strategy-related actions
@@ -196,18 +196,18 @@ action deleteShare {
 
 // The big action -> run strategy and initiate a backend process
 query runStrategy {
-  fn: import { runStrategy } from "@src/playground/server/strategyOperations",
+  fn: import { runStrategy } from "@src/editor/server/strategyOperations",
   entities: [User]
 }
 action charge {
-  fn: import { charge } from "@src/playground/server/strategyOperations",
+  fn: import { charge } from "@src/editor/server/strategyOperations",
   entities: [User]
 }
 // end runStrategy
 
 //region package info updates
 query getPackageInfo {
-  fn: import {getPackageInfo } from "@src/playground/server/packageOperations",
+  fn: import {getPackageInfo } from "@src/editor/server/packageOperations",
   entities: [PackageInfo]
 }
 //endregion
@@ -329,7 +329,7 @@ job monthlyCreditReset {
 job weeklyPackageUpdate {
   executor: PgBoss,
   perform: {
-    fn: import { weeklyPackageUpdate } from "@src/playground/server/workers/weeklyPackageUpdate"
+    fn: import { weeklyPackageUpdate } from "@src/editor/server/workers/weeklyPackageUpdate"
   },
   schedule: {
     cron: "0 9 * * 1" // every monday at 9 AM

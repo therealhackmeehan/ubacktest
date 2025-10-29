@@ -1,7 +1,7 @@
 import { Strategy } from "wasp/entities";
 import { Link, routes } from "wasp/client/router";
-import RenameModal from "../../playground/client/components/modals/RenameModal";
-import DeleteModal from "../../playground/client/components/modals/DeleteModal";
+import RenameModal from "../../editor/client/components/modals/RenameModal";
+import DeleteModal from "../../editor/client/components/modals/DeleteModal";
 import { MdArrowBack, MdDeleteOutline, MdOutlineEdit } from "react-icons/md";
 import { useState } from "react";
 

@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { renameResult } from "wasp/client/operations";
 import { TiDelete } from "react-icons/ti";
-import { validateNewName } from "../../../../playground/client/scripts/modalHelpers";
+import { validateNewName } from "../../../../editor/client/scripts/modalHelpers";
 import useEnterKey from "../../../../client/hooks/useEnterKey";
 import ModalLayout from "../../../../client/components/ModalLayout";
 

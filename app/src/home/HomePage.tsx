@@ -4,7 +4,7 @@ import { getStrategies, useQuery } from "wasp/client/operations";
 
 import { StrategyDropDown } from "./HomePageDD";
 import { IoMdAddCircleOutline } from "react-icons/io";
-import NewProjectModal from "../playground/client/components/modals/NewProjectModal";
+import NewProjectModal from "../editor/client/components/modals/NewProjectModal";
 import ContentWrapper from "../client/components/ContentWrapper";
 import LoadingScreen from "../client/components/LoadingScreen";
 

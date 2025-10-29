@@ -8,9 +8,9 @@ import {
 import copyToClipboard from "./copyToClipboard";
 import { Result } from "wasp/entities";
 import LoadingScreen from "../../../client/components/LoadingScreen";
-import ResultPanel from "../../../playground/client/components/result/Result";
+import ResultPanel from "../../../editor/client/components/result/Result";
 import { runStrategy } from "wasp/client/operations";
-import ErrorModal from "../../../playground/client/components/modals/ErrorModal";
+import ErrorModal from "../../../editor/client/components/modals/ErrorModal";
 import { TiCancel } from "react-icons/ti";
 
 interface OpenResultProps {
