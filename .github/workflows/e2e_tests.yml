@@ -54,7 +54,7 @@ jobs:
       - name: Run Playwright Tests
         env:
           # server-side vars
-          JUDGE_API_KAY_RAPD_API: ${{ secrets.JUDGE_API_KEY_RAPID_API }}
+          JUDGE_API_KEY_RAPID_API: ${{ secrets.JUDGE_API_KEY_RAPID_API }}
           TIINGO_API_KEY: ${{ secrets.TIINGO_API_KEY }}
           # payment test keys:
           STRIPE_API_KEY: ${{ secrets.TEST_STRIPE_API_KEY }}
