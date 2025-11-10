@@ -54,7 +54,7 @@ jobs:
       - name: Run Playwright Tests
         env:
           # server-side vars
-          JUDGE_API_KEY_SULU: ${{ secrets.JUDGE_API_KEY_SULU }}
+          JUDGE_API_KAY_RAPD_API: ${{ secrets.JUDGE_API_KEY_RAPID_API }}
           TIINGO_API_KEY: ${{ secrets.TIINGO_API_KEY }}
           # payment test keys:
           STRIPE_API_KEY: ${{ secrets.TEST_STRIPE_API_KEY }}
@@ -65,7 +65,7 @@ jobs:
           PAYMENTS_CREDITS_5_PLAN_ID: ${{ secrets.TEST_PAYMENTS_CREDITS_5_PLAN_ID }}
           # client-side vars
           SKIP_EMAIL_VERIFICATION_IN_DEV: true
-          DISABLE_EMAIL_SENDING: true
+          SKIP_EMAIL_SENDING_IN_DEV: true
           REACT_APP_GOOGLE_ANALYTICS_ID: ${{ secrets.REACT_APP_GOOGLE_ANALYTICS_ID }}
         run: |
           cd test

@@ -16,7 +16,7 @@ _© 2025 uBacktest. All rights reserved._
 
 ## /app
 
-The `app` subdirectory contains the bones of the app (frontend, backend, db).
+The `app` subdirectory contains the bones of the app (frontend, backend, db). The frontend and backend is NOT in seprate frontend/ backend/ folders, and itstead is factored into each portion of the app.
 
 ## /test
 

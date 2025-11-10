@@ -22,13 +22,13 @@ class CodeExecutor {
 
   private async sendToJudge() {
     const url =
-      "https://judge0-extra-ce.p.sulu.sh/submissions?base64_encoded=true&wait=true";
+      "https://judge0-extra-ce.p.rapidapi.com/submissions?base64_encoded=true&wait=true&fields=*";
     const options = {
       method: "POST",
       headers: {
+        "x-rapidapi-key": process.env.JUDGE_API_KEY_RAPID_API as string,
+        "x-rapidapi-host": "judge0-extra-ce.p.rapidapi.com",
         "Content-Type": "application/json",
-        Accept: "application/json",
-        Authorization: `Bearer ${process.env.JUDGE_API_KEY_SULU}`,
       },
       body: JSON.stringify({
         language_id: 31, // Python for ML (base image)
