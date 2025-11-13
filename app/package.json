@@ -2,7 +2,8 @@
   "name": "ubacktest",
   "type": "module",
   "scripts": {
-    "format": "npx prettier --write src/"
+    "format": "npx prettier --write src/",
+    "deploy": "REACT_APP_GOOGLE_ANALYTICS_ID=G-2FQJ7DZDET wasp deploy fly deploy"
   },
   "dependencies": {
     "@google-analytics/data": "4.12.1",
