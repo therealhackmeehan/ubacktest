@@ -8,7 +8,7 @@ on:
 
 env:
   WASP_TELEMETRY_DISABLE: 1
-  WASP_VERSION: 0.18.1
+  WASP_VERSION: 0.18.2
 
 jobs:
   e2e_tests:
@@ -77,14 +77,16 @@ jobs:
     steps:
       - name: Checkout the uBacktest Repository
         uses: actions/checkout@v4
-
+      - name: Setup Node.js
+        id: setup-node
+        uses: actions/setup-node@v4
+        with:
+          node-version: "22"
       - name: Install Wasp
         run: |
           curl -sSL https://get.wasp.sh/installer.sh | sh -s -- -v ${{ env.WASP_VERSION }}
-
       - name: Install Flyctl
         uses: superfly/flyctl-actions/setup-flyctl@master
-
       - name: Deploy
         env:
           FLY_API_TOKEN: ${{ secrets.FLY_API_TOKEN }}
