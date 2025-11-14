@@ -6,7 +6,7 @@ Created and maintained by Jack Meehan.
 
 ### This is the official repository for uBacktest.com.
 
-uBacktest.com is comprised of a **Node.js** backend, a **React/Tailwind** frontend, and a **PostgreSQL** database w/ **Prisma** ORM. We use **Wasp**, an incredible full-stack framework to coordinate the three and integrate secure authentication.
+uBacktest.com is comprised of a **Node.js** backend, a **React/Tailwind** frontend, and a **PostgreSQL** database w/ **Prisma** ORM. We use **Wasp**, an incredible full-stack framework to coordinate the three and integrate secure authentication. The client/server/db are all deployed via fly.io and CI/CD with GH actions facilitates the running of e2e tests and continuous deployment to fly.io.
 
 The purpose of this website is to test trading strategyies against legitimate stock data using Python. We present a pipeline for strategy development that culminates in (hopefully) live trading.
 

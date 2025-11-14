@@ -72,7 +72,7 @@ https://uBacktest.com/results
 Happy trading!`,
       html: `
     <div style="font-family: Arial, sans-serif; max-width: 600px; margin: auto; padding: 20px;">
-      <img src="https://docs.ubacktest.com/_astro/logo.CKDLW_89.png" alt="uBacktest Logo" style="width: 120px; margin-bottom: 20px;" />
+      <img src="https://ubacktest.com/assets/logo-CKDLW_89.png" alt="uBacktest Logo" style="width: 120px; margin-bottom: 20px;" />
       <h2 style="color: #333;">You've received a trading strategy</h2>
       <p style="font-size: 16px; color: #555;">
         Someone thought you'd appreciate this strategy result. You can either accept or deny this share request. Click the link below to check it out:

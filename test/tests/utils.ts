@@ -206,14 +206,19 @@ export const makeStripePayment = async ({
   await page.click('text="Pricing"');
   await page.waitForURL("**/pricing");
 
-  let idx = 0;
-  if (planName == "credits5") {
-    idx = 2;
-  } else if (planName == "pro") {
-    idx = 1;
-  }
+  const buttonLabels = {
+    credits5: "Buy credits",
+    basic: "Buy plan",
+    pro: "Buy plan",
+  } as const;
 
-  const buyBtn = page.getByRole("button", { name: "Buy plan" }).nth(idx);
+  const buttonIndex = planName === "pro" ? 1 : 0;
+  const buttonLabel = buttonLabels[planName] ?? "Buy plan";
+
+  const buyBtn = page
+    .getByRole("button", { name: buttonLabel })
+    .nth(buttonIndex);
+
   await expect(buyBtn).toBeVisible();
   await expect(buyBtn).toBeEnabled();
   await buyBtn.click();

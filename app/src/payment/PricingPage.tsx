@@ -208,7 +208,13 @@ const PricingPage = () => {
                   )}
                   disabled={isPaymentLoading}
                 >
-                  {!!user ? "Buy plan" : "Log in to buy plan"}
+                  {!!user
+                    ? planId === PaymentPlanId.Credits5
+                      ? "Buy credits"
+                      : "Buy plan"
+                    : planId === PaymentPlanId.Credits5
+                    ? "Log in to buy credits"
+                    : "Log in to buy plan"}
                 </button>
               )}
             </div>

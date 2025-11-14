@@ -58,6 +58,10 @@ app uBacktest {
     rootComponent: import App from "@src/client/App",
   },
 
+  server: {
+    middlewareConfigFn: import { serverMiddlewareFn } from "@src/server/middlewareConfig"
+  },
+
   emailSender: {
     // NOTE: "Dummy" provider is just for local development purposes.
     // provider: Dummy,
