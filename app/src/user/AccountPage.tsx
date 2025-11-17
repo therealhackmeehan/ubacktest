@@ -100,9 +100,9 @@ function UserCurrentPaymentPlan({
   return (
     <>
       <dd className="mt-1 text-sm text-gray-900 dark:text-gray-400 sm:col-span-1 sm:mt-0">
-        Credits remaining{" "}
+        Credits remaining
         {credits <= 3 ? (
-          <span className="text-xs italic font-light">(this month)</span>
+          <span className="text-xs italic font-light"> (this month)</span>
         ) : (
           ""
         )}

@@ -30,7 +30,7 @@ test.afterAll(async () => {
 
 test("Unsubscriber starts with 3 credits", async () => {
   expect(page.url()).toContain("/editor");
-  await visibleText(page, "3 tests remaining");
+  await visibleText(page, "3 tests remaining this month");
 });
 
 test("Purchase 5 credits with stripe", async () => {
