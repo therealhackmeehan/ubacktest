@@ -43,7 +43,7 @@ def strategy(data):
     model.fit(x, y, epochs=10, batch_size=64, verbose=0)
 
     # ---- Predict and compute signals ----
-    signals = [None] * len(data)
+    signals = [np.nan] * len(data)
 
     for i in range(seq_length, len(data) - 1):
         seq_input = scaled[i - seq_length:i].reshape(1, seq_length, 4)

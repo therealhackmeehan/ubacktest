@@ -83,10 +83,15 @@ export default function StrategyHeader() {
         {!user?.subscriptionStatus && (
           <Link
             className="place-self-center pl-3 font-bold hover:rotate-3 duration-700 hover:text-slate-900 dark:text-white"
-            to={"/pricing"}
+            to="/pricing"
           >
-            {user?.credits}
-            <span className="text-xs font-extralight"> tests remaining</span>
+            {user?.credits ?? "—"}
+            {user?.credits !== undefined && (
+              <span className="text-xs font-extralight">
+                {" "}
+                tests remaining{user.credits <= 3 ? " this month" : ""}
+              </span>
+            )}
           </Link>
         )}
       </div>
