@@ -15,14 +15,18 @@ export default function Hero() {
       <div className="mx-auto max-w-3xl text-center min-h-screen pt-[20vh] px-4">
         <h1
           ref={ref1}
-          className={`text-4xl font-bold text-gray-900 sm:text-6xl dark:text-white duration-500 tracking-tight ${inView1 ? "opacity-100" : "opacity-0 translate-y-3"}`}
+          className={`text-4xl font-bold text-gray-900 sm:text-6xl dark:text-white duration-500 tracking-tight ${
+            inView1 ? "opacity-100" : "opacity-0 translate-y-3"
+          }`}
         >
           1 is <span className="text-sky-700 dark:text-blue-300">buy</span>. -1
           is <span className="text-sky-700 dark:text-blue-300">short</span>.
         </h1>
         <h1
           ref={ref2}
-          className={`text-4xl my-12 font-bold text-gray-900 sm:text-6xl dark:text-white duration-1000 tracking-tight ${inView2 ? "opacity-100" : "opacity-0 translate-y-3"}`}
+          className={`text-4xl my-12 font-bold text-gray-900 sm:text-6xl dark:text-white duration-1000 tracking-tight ${
+            inView2 ? "opacity-100" : "opacity-0 translate-y-3"
+          }`}
         >
           A simple and affordable backtesting platform for
           <span className="italic text-sky-700 dark:text-blue-300">

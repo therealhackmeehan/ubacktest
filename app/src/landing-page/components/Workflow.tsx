@@ -36,7 +36,6 @@ import light_strategyHome from "../../client/static/light_strategyHome.png";
 import light_strategyHomeFull from "../../client/static/light_strategyHomeFull.png";
 
 export default function Workflow() {
-  // Setting up refs for each step
   const [ref1, inView1] = useInView({ triggerOnce: true });
   const [ref2, inView2] = useInView({ triggerOnce: true });
   const [ref3, inView3] = useInView({ triggerOnce: true });
@@ -45,13 +44,13 @@ export default function Workflow() {
   const height = 250;
 
   return (
-    <div className="mx-auto mt-6 lg:mt-32 max-w-7xl px-6 lg:px-8">
+    <div className="mx-auto -mt-12 lg:mt-32 max-w-7xl px-6 lg:px-8">
       <div className="mx-auto max-w-2xl text-center">
-        <p className="mt-2 text-4xl font-bold tracking-tight text-gray-900 sm:text-5xl dark:text-white">
+        <p className="mt-2 text-3xl md:text-5xl font-bold tracking-tight text-gray-900 dark:text-white">
           Welcome to{" "}
           <span className="text-sky-700 dark:text-blue-300">uBacktest</span>.
         </p>
-        <p className="mt-6 mx-auto max-w-2xl text-lg leading-8 text-gray-600 dark:text-white">
+        <p className="mt-1 md:mt-6 mx-auto max-w-2xl text-lg leading-8 text-gray-600 dark:text-white">
           Let's walk through the typical workflow.
         </p>
       </div>
@@ -60,7 +59,9 @@ export default function Workflow() {
           {/* Step 1 */}
           <div
             ref={ref1}
-            className={`col-span-2 flex justify-start gap-x-2 transition-transform duration-1000 transform ${inView1 ? "translate-x-0" : "-translate-x-10"}`}
+            className={`col-span-2 flex justify-start gap-x-2 transition-transform duration-1000 transform ${
+              inView1 ? "translate-x-0" : "-translate-x-10"
+            }`}
           >
             <div className="rounded-md bg-sky-700 dark:bg-boxdark text-white px-3 font-bold text-title-xl">
               1
@@ -83,9 +84,11 @@ export default function Workflow() {
             </div>
           </div>
           <div
-            className={`col-span-1 rounded-lg p-4 dark:text-white duration-700 transform ${inView1 ? "translate-x-0" : "translate-x-10"}`}
+            className={`text-sm md:text-base col-span-1 rounded-lg pb-4 lg:pb-0 lg:p-4 dark:text-white duration-700 transform ${
+              inView1 ? "translate-x-0" : "translate-x-10"
+            }`}
           >
-            <span className="font-extrabold text-title-xl text-sky-700 dark:text-blue-300 tracking-tight">
+            <span className="font-extrabold text-xl md:text-title-xl text-sky-700 dark:text-blue-300 tracking-tight">
               Edit
             </span>{" "}
             your strategy in the strategy editor. Assign buy, sell, and hold
@@ -96,7 +99,9 @@ export default function Workflow() {
           {/* Step 2 */}
           <div
             ref={ref2}
-            className={`col-span-2 flex justify-start gap-x-2 transition-transform duration-1000 transform ${inView2 ? "translate-x-0" : "-translate-x-10"}`}
+            className={`col-span-2 flex justify-start gap-x-2 transition-transform duration-1000 transform ${
+              inView2 ? "translate-x-0" : "-translate-x-10"
+            }`}
           >
             <div className="rounded-md bg-sky-700 dark:bg-boxdark text-white px-3 font-bold text-title-xl">
               2
@@ -113,9 +118,11 @@ export default function Workflow() {
             </div>
           </div>
           <div
-            className={`col-span-1 rounded-lg p-4 dark:text-white duration-700 transform ${inView2 ? "translate-x-0" : "translate-x-10"}`}
+            className={`text-sm md:text-base col-span-1 rounded-lg pb-4 lg:pb-0 lg:p-4 dark:text-white duration-700 transform ${
+              inView2 ? "translate-x-0" : "translate-x-10"
+            }`}
           >
-            <span className="font-extrabold text-title-xl text-sky-700 dark:text-blue-300 tracking-tight">
+            <span className="font-extrabold text-xl md:text-title-xl text-sky-700 dark:text-blue-300 tracking-tight">
               Backtest
             </span>{" "}
             your strategy with full control. Adjust stocks, timeframes, trading
@@ -125,7 +132,9 @@ export default function Workflow() {
           {/* Step 3 */}
           <div
             ref={ref3}
-            className={`col-span-2 flex justify-start gap-x-2 transition-transform duration-1000 transform ${inView3 ? "translate-x-0" : "-translate-x-10"}`}
+            className={`col-span-2 flex justify-start gap-x-2 transition-transform duration-1000 transform ${
+              inView3 ? "translate-x-0" : "-translate-x-10"
+            }`}
           >
             <div className="rounded-md bg-sky-700 dark:bg-boxdark text-white px-3 font-bold text-title-xl">
               3
@@ -148,9 +157,11 @@ export default function Workflow() {
             </div>
           </div>
           <div
-            className={`col-span-1 rounded-lg p-4 dark:text-white duration-700 transform ${inView3 ? "translate-x-0" : "translate-x-10"}`}
+            className={`text-sm md:text-base col-span-1 rounded-lg pb-4 lg:pb-0 lg:p-4 dark:text-white duration-700 transform ${
+              inView3 ? "translate-x-0" : "translate-x-10"
+            }`}
           >
-            <span className="font-extrabold text-title-xl text-sky-700 dark:text-blue-300 tracking-tight">
+            <span className="font-extrabold text-xl md:text-title-xl text-sky-700 dark:text-blue-300 tracking-tight">
               Save & Share
             </span>{" "}
             your strategies and results for future analysis. Resume, refine, and
@@ -160,7 +171,9 @@ export default function Workflow() {
           {/* Step 4 */}
           <div
             ref={ref4}
-            className={`col-span-2 flex justify-start gap-x-2 transition-transform duration-1000 transform ${inView4 ? "translate-x-0" : "-translate-x-10"}`}
+            className={`col-span-2 flex justify-start gap-x-2 transition-transform duration-1000 transform ${
+              inView4 ? "translate-x-0" : "-translate-x-10"
+            }`}
           >
             <div className="rounded-md bg-sky-700 dark:bg-boxdark text-white px-3 font-bold text-title-xl">
               4
@@ -183,14 +196,15 @@ export default function Workflow() {
             </div>
           </div>
           <div
-            className={`col-span-1 rounded-lg p-4 dark:text-white duration-700 transform ${inView4 ? "translate-x-0" : "translate-x-10"}`}
+            className={`text-sm md:text-base col-span-1 rounded-lg py-2 lg:py-0 lg:p-4 dark:text-white duration-700 transform ${
+              inView4 ? "translate-x-0" : "translate-x-10"
+            }`}
           >
-            <span className="rounded-lg p-1 bg-black text-white dark:text-black dark:bg-white font-light">
+            <span className="rounded-lg p-1 mr-2 bg-black text-white dark:text-black dark:bg-white font-light">
               BETA
             </span>
-            <br></br>
             Found a winning strategy?{" "}
-            <span className="font-extrabold text-title-xl text-sky-700 dark:text-blue-300 tracking-tight">
+            <span className="font-extrabold text-xl md:text-title-xl text-sky-700 dark:text-blue-300 tracking-tight">
               Deploy
             </span>{" "}
             it to the cloud with auto-generated code for further testing.

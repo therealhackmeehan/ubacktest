@@ -27,10 +27,9 @@ export default function AppNavBar() {
         <div className="flex lg:flex-1">
           <Link
             to="/"
-            className="-m-1.5 p-1.5 font-extrabold text-sky-700 tracking-tight text-xl dark:text-blue-300"
+            className="-m-1.5 p-1.5 font-extrabold tracking-tight text-xl text-black md:text-sky-700 dark:text-blue-300"
           >
             uBacktest.
-            {/* <img className='h-8 w-8' src={logo} alt='My SaaS App' /> */}
           </Link>
         </div>
         <div className="flex lg:hidden">
@@ -69,7 +68,7 @@ export default function AppNavBar() {
             Leaderboard
           </Link>
         </div>
-        <div className="hidden lg:flex mx-4 xl:mx-12 border-r-2 py-4 border-black/80 dark:border-blue-300"></div>
+        <div className="hidden lg:flex mx-4 xl:mx-8 border-r-2 py-4 border-black/80 dark:border-blue-300"></div>
         <div className="hidden lg:flex lg:gap-x-8 lg:mr-4">
           <a
             href={"https://docs.ubacktest.com/"}
@@ -117,7 +116,7 @@ export default function AppNavBar() {
         <Dialog.Panel className="fixed inset-y-0 right-0 z-50 w-full overflow-y-auto bg-white dark:text-white dark:bg-boxdark px-6 py-6 sm:max-w-sm sm:ring-1 sm:ring-gray-900/10">
           <div className="flex items-center justify-between">
             <a href="/" className="-m-1.5 p-1.5">
-              <span className="sr-only">Your SaaS</span>
+              <span className="sr-only">uBacktest</span>
               <NavLogo />
             </a>
             <button

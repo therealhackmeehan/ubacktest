@@ -19,7 +19,7 @@ export default function FAQ({ faqs }: { faqs: FAQ[] }) {
               {faq.question}
             </dt>
             <dd className="flex items-center justify-start gap-2 mt-4 lg:col-span-7 lg:mt-0">
-              <p className="text-base leading-7 text-gray-600 dark:text-white">
+              <p className="text-sm md:text-base leading-7 text-gray-600 dark:text-white">
                 {faq.answer}
               </p>
               {faq.href && (

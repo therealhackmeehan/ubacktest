@@ -43,17 +43,17 @@ function LeaderboardPage() {
       <div className="max-w-5xl mx-auto min-w-3xl">
         <div className="m-2 p-4 bg-slate-100 duration-1000 rounded-lg shadow-xl flex justify-between dark:text-white dark:bg-boxdark-2 items-center">
           <img src={logo} className="h-12" />
-          <div className="text-3xl font-extrabold tracking-tight">
+          <div className="text-3xl font-extrabold tracking-tight text-end">
             <span className="text-sm">weekly global </span>Leaderboard
           </div>
         </div>
-        <div className="text-center text-sm font-light my-4 dark:text-white">
+        <div className="text-center text-xs md:text-sm font-light my-4 dark:text-white">
           <p>
             Saved results are public by default, but your code is{" "}
             <span className="italic">never</span> public. Only your success.
           </p>
         </div>
-        <div className="mt-12 p-2 md:p-8 rounded-lg bg-slate-100 dark:bg-boxdark-2">
+        <div className="mt-6 md:mt-12 p-2 md:p-8 rounded-lg bg-slate-100 dark:bg-boxdark-2">
           <button
             data-testid="leaderboardtoggle"
             className="p-1 mb-4 font-bold text-xs justify-self-center tracking-tight rounded-md bg-white flex dark:bg-boxdark-2"
@@ -61,13 +61,21 @@ function LeaderboardPage() {
           >
             <div className="mx-2 dark:text-blue-300">rank by</div>
             <div
-              className={`duration-1000 ${!isProfitLoss ? "text-black dark:text-white dark:underline dark:font-extrabold" : "text-slate-200 dark:font-light"}`}
+              className={`duration-1000 ${
+                !isProfitLoss
+                  ? "text-black dark:text-white dark:underline dark:font-extrabold"
+                  : "text-slate-200 dark:font-light"
+              }`}
             >
               CAGR
             </div>
             <div className="border-2 border-sky-700 mx-2 dark:border-blue-300"></div>
             <div
-              className={`duration-1000 ${isProfitLoss ? "text-black dark:text-white dark:underline dark:font-extrabold" : "text-slate-200 dark:font-light"}`}
+              className={`duration-1000 ${
+                isProfitLoss
+                  ? "text-black dark:text-white dark:underline dark:font-extrabold"
+                  : "text-slate-200 dark:font-light"
+              }`}
             >
               Total Profit/Loss
             </div>

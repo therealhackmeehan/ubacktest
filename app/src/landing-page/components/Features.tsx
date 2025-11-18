@@ -14,11 +14,11 @@ export default function Features({ features }: { features: Feature[] }) {
       className="mx-auto mt-36 lg:mt-54 max-w-7xl px-6 lg:px-8"
     >
       <div className="mx-auto max-w-2xl text-center">
-        <p className="mt-2 text-4xl font-bold tracking-tight text-gray-900 sm:text-5xl dark:text-white">
+        <p className="mt-2 text-3xl md:text-5xl font-bold tracking-tight text-gray-900 dark:text-white">
           All the{" "}
           <span className="text-sky-700 dark:text-blue-300">features</span>.
         </p>
-        <p className="mt-6 text-lg leading-8 text-gray-600 dark:text-white">
+        <p className="mt-2 md:mt-6 md:text-lg leading-8 text-gray-600 dark:text-white">
           We've tried to make this backtesting software both feature-rich and
           easy to use.
         </p>
@@ -31,7 +31,9 @@ export default function Features({ features }: { features: Feature[] }) {
               <div
                 key={feature.name}
                 ref={ref}
-                className={`relative pl-16 transition-transform duration-1000 transform ${inView ? "opacity-100" : "-translate-y-6 opacity-0"}`}
+                className={`relative pl-16 transition-transform duration-1000 transform ${
+                  inView ? "opacity-100" : "-translate-y-6 opacity-0"
+                }`}
               >
                 <dt className="text-base font-semibold leading-7 text-gray-900 dark:text-white">
                   <div className="absolute left-0 top-0 flex h-10 w-10 items-center justify-center border border-sky-600 dark:border-blue-300 bg-slate-100/50 dark:bg-boxdark rounded-lg">
@@ -41,7 +43,7 @@ export default function Features({ features }: { features: Feature[] }) {
                   </div>
                   {feature.name}
                 </dt>
-                <dd className="mt-2 text-base leading-7 text-gray-600 dark:text-white">
+                <dd className="mt-2 text-sm md:text-base leading-7 text-gray-600 dark:text-white">
                   {feature.description}
                 </dd>
               </div>

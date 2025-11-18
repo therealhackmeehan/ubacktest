@@ -203,12 +203,14 @@ function GroupedResultsSummary({
   return (
     <>
       <div className="border-b-2 border-black/30 dark:border-white/30 flex justify-between items-center">
-        <div className="font-semibold text-slate-700 dark:text-white pb-1 flex justify-start items-center gap-x-2">
-          <div className="text-sm font-light">strategy</div>
-          <div className="italic text-xl">
+        <div className="font-semibold text-slate-700 dark:text-white pb-1 sm:flex justify-start items-baseline gap-x-1 md:gap-x-2">
+          <div className="text-xs md:text-sm font-light hidden md:flex">
+            strategy
+          </div>
+          <div className="italic md:text-xl">
             {resultsByStrategy[0]?.strategyName ?? "Loading..."}
           </div>
-          <div className="text-sm font-mono text-sky-700 dark:text-blue-300">
+          <div className="text-xs md:text-sm lg:font-mono text-sky-700 dark:text-blue-300">
             avg P/L: {averages.averageProfitLoss.toFixed(2)}%
           </div>
         </div>
@@ -237,7 +239,7 @@ function GroupedResultsSummary({
               ))}
             </div>
           )}
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-x-6 gap-y-2 p-4">
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-x-6 gap-y-2 p-2 md:p-4">
             <StatItem
               label="Average P/L"
               value={averages.averageProfitLoss}
@@ -315,7 +317,7 @@ function GroupedResultsSummary({
             />
           </div>
 
-          <div className="flex justify-between m-1">
+          <div className="hidden md:flex justify-between m-1">
             <div className="text-sm font-extralight dark:text-white">
               Where have I backtested{" "}
               <span className="font-bold text-lg">
@@ -346,7 +348,10 @@ function GroupedResultsSummary({
               <div className="w-full h-32 overflow-y-auto border-2 dark:border-0 border-slate-200 bg-white dark:bg-boxdark mt-4">
                 <svg
                   width="100%"
-                  viewBox={`0 0 1000 ${Math.max(stackedLevels.length * heightPerLevel, 100)}`}
+                  viewBox={`0 0 1000 ${Math.max(
+                    stackedLevels.length * heightPerLevel,
+                    100
+                  )}`}
                   preserveAspectRatio="none"
                   onMouseMove={(e) => {
                     const bounds = e.currentTarget.getBoundingClientRect();
@@ -472,7 +477,7 @@ const StatItem = ({
   unit?: string;
   precision?: number;
 }) => (
-  <div className="flex justify-between items-center text-sm">
+  <div className="flex justify-between items-center text-xs md:text-sm">
     <span className="text-slate-600 dark:text-white">{label}</span>
     <span className="font-semibold text-slate-800 dark:text-blue-300">
       {value.toFixed(precision)}

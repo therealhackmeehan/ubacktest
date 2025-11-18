@@ -45,7 +45,7 @@ export default function HomePage() {
         />
       )}
 
-      <div className="mt-12">
+      <div className="mt-8 md:mt-12">
         {isStrategiesLoading ? (
           <LoadingScreen />
         ) : strategies && strategies.length > 0 ? (

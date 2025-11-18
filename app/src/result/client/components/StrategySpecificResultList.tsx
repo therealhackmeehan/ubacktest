@@ -48,7 +48,7 @@ export default function StrategySpecificResultList({
   );
 
   return (
-    <div key={strategyId} className="mb-4 lg:mb-8">
+    <div key={strategyId} className="mb-4 lg:mb-8 mt-4 md:mt-0">
       <GroupedResultsSummary
         resultsByStrategy={selectedResultItems}
         setResultToHighlight={setResultToHighlight}

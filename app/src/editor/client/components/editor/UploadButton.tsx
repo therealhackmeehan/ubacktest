@@ -56,7 +56,7 @@ function UploadButton({ setCode }: { setCode: (value: string) => void }) {
       <button
         type="button"
         onClick={() => setConfirmModalOpen(true)}
-        className="flex px-3 py-1 items-center hover:bg-slate-100 duration-300 text-center text-gray-800 tracking-tight dark:hover:text-slate-700 dark:text-white"
+        className="flex px-3 py-1 items-center w-full hover:bg-slate-100 duration-300 text-center text-gray-800 tracking-tight dark:hover:text-slate-700 dark:text-white"
       >
         <FiUpload size="1.2rem" className="pr-1" />
         upload <span className="text-xs ml-1 font-extralight">(.py file)</span>

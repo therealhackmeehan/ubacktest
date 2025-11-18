@@ -68,7 +68,7 @@ function StrategyCodeGen({ code }: { code: string | null }) {
     <div className="mt-10 p-4 rounded-lg bg-white border-2 border-sky-700 dark:border-0 dark:bg-boxdark">
       <div className="mt-2 mb-3 flex justify-between">
         <div className="text-xl text-slate-800 tracking-tight font-extrabold dark:text-white">
-          <span className="text-sky-600 dark:text-blue-300">
+          <span className="text-sky-700 dark:text-blue-300">
             Deploy this Strategy
           </span>{" "}
           to Alpaca with Paper Money
@@ -172,13 +172,10 @@ function StrategyCodeGen({ code }: { code: string | null }) {
           </button>
         </div>
         {generatedCode && (
-          <a
-            href="ubacktest.com"
-            className="text-red-800 dark:text-white shadow-lg tracking-tight font-bold text-xs p-2 text-center z-9999"
-          >
+          <div className="text-red-800 dark:text-white shadow-lg tracking-tight font-bold text-xs p-2 text-center z-9999">
             If you've generated code, READ THE DOCS for how to best utilize it.
             Don't be reckless!
-          </a>
+          </div>
         )}
         <Editor
           className="invert dark:invert-0 hue-rotate-180"

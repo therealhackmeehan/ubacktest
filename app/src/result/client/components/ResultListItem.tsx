@@ -55,14 +55,14 @@ export default function ResultListItem({
   return (
     <>
       <div
-        className={`md:flex justify-between md:mx-1 items-center p-2 rounded-lg bg-slate-100 border-slate-200 border-2 hover:shadow-lg duration-700 dark:border-0 dark:bg-boxdark dark:shadow-none ${
+        className={`md:flex justify-between md:mx-1 items-center p-2 rounded-lg bg-slate-100 border-slate-200 border-2 hover:shadow-lg duration-700 dark:border-0 dark:bg-boxdark-2 dark:shadow-none ${
           highlight ? "translate-x-10 shadow-lg" : ""
         }`}
       >
         <ResultHeader result={result} setResultPanelOpen={setResultPanelOpen} />
-        <div className="flex justify-between gap-x-3 items-center dark:text-white">
+        <div className="flex justify-center gap-x-3 items-center dark:text-white">
           <button
-            className="px-3 py-1 flex rounded-lg bg-white hover:shadow-lg items-center gap-x-2 dark:bg-boxdark-2 dark:border-2 dark:border-blue-300"
+            className="px-3 py-1 flex rounded-lg bg-white hover:shadow-lg items-center gap-x-2 dark:bg-boxdark dark:border-2 dark:border-blue-300"
             onClick={() => setResultPanelOpen(!resultPanelOpen)}
           >
             view
@@ -99,8 +99,24 @@ export default function ResultListItem({
           >
             <MdDeleteOutline />
           </button>
-          <div className="font-mono text-xs dark:text-blue-300">
-            saved: {result.createdAt.toLocaleString()}
+          <div className="font-mono text-xs dark:text-blue-300 flex md:hidden lg:flex">
+            saved:{" "}
+            {(() => {
+              const date = new Date(result.createdAt);
+              const now = new Date();
+
+              const isToday =
+                date.getFullYear() === now.getFullYear() &&
+                date.getMonth() === now.getMonth() &&
+                date.getDate() === now.getDate();
+
+              return isToday
+                ? date.toLocaleTimeString([], {
+                    hour: "2-digit",
+                    minute: "2-digit",
+                  })
+                : date.toLocaleDateString();
+            })()}
           </div>
         </div>
       </div>

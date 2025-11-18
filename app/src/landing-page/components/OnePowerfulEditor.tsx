@@ -8,12 +8,12 @@ export default function OnePowerfulEditor() {
       className="mx-auto mt-36 lg:mt-54 max-w-7xl px-6 lg:px-8"
     >
       <div className="mx-auto max-w-2xl text-center">
-        <p className="mt-2 text-4xl font-bold tracking-tight text-gray-900 sm:text-5xl dark:text-white">
+        <p className="mt-2 text-3xl md:text-5xl font-bold tracking-tight text-gray-900 dark:text-white">
           One <span className="text-sky-700 dark:text-blue-300">Powerful</span>{" "}
           Editor.
         </p>
       </div>
-      <div className="mx-auto mt-16 w-full sm:mt-20 lg:mt-24">
+      <div className="mx-auto mt-8 md:mt-16 w-full lg:mt-24">
         <div className="dark:hidden hover:scale-90 duration-700 z-50">
           <img
             src={light_maximizedEditor}

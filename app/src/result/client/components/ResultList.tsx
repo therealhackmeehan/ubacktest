@@ -37,7 +37,7 @@ function ResultList({
     <>
       {results && results.length > 0 ? (
         <>
-          <div className="text-end">
+          <div className="text-start md:text-end">
             <label className="inline-flex items-center cursor-pointer">
               <input
                 data-testid="group-by-parent"
