@@ -16,8 +16,7 @@ function ResultHeader({ result, setResultPanelOpen }: ResultHeaderProps) {
         {result.name}
       </button>
       <div className="text-xs border-l-2 border-black/40 px-2 py-1 md:py-0 bg-white dark:bg-boxdark dark:text-white">
-        P/L:{" "}
-        <span className="md:text-lg font-bold">{result.pl?.toFixed(2)}%</span>
+        P/L: <span className="md:text-lg">{result.pl?.toFixed(2)}%</span>
       </div>
       <div className="p-1 dark:brightness-200 hidden md:flex">
         <SmallPlot portfolio={result.portfolio} />

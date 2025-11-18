@@ -118,14 +118,14 @@ function MonacoEditor({ codeToDisplay, setCodeToDisplay }: MonacoEditorProps) {
           disabled={saving}
           type="button"
           onClick={saveCodeToDB} // Keep the existing button functionality
-          className="flex px-3 py-1 w-full items-center text-center tracking-tight hover:bg-slate-100 duration-300 dark:text-white dark:hover:text-slate-700"
+          className="flex px-3 py-1 items-center text-center tracking-tight hover:bg-slate-100 duration-300 dark:text-white dark:hover:text-slate-700"
         >
           <FiSave size="1.2rem" className="pr-1" /> {buttonText}
         </button>
         <DownloadButton code={codeToDisplay} />
         <UploadButton setCode={setCodeToDisplay} />
         <button
-          className="md:border-l-2 border-black dark:border-0 w-full flex gap-x-1 px-3 py-1 hover:bg-slate-100 items-center text-center tracking-tight duration-300 dark:text-white dark:hover:text-slate-700"
+          className="md:border-l-2 border-black dark:border-0 flex gap-x-1 px-3 py-1 hover:bg-slate-100 items-center text-center tracking-tight duration-300 dark:text-white dark:hover:text-slate-700"
           onClick={() => setPackagesModalOpen(true)}
         >
           <MdLaunch />
@@ -133,7 +133,7 @@ function MonacoEditor({ codeToDisplay, setCodeToDisplay }: MonacoEditorProps) {
         </button>
         <button
           data-testid="launch-examples-button"
-          className="md:border-l-2 border-black dark:border-0 w-full flex gap-x-1 px-3 py-1 hover:bg-slate-100 items-center text-center tracking-tight duration-300 dark:text-white dark:hover:text-slate-700"
+          className="md:border-l-2 border-black dark:border-0 flex gap-x-1 px-3 py-1 hover:bg-slate-100 items-center text-center tracking-tight duration-300 dark:text-white dark:hover:text-slate-700"
           onClick={() => setExamplesModalOpen(true)}
         >
           <BsQuestionOctagon />
