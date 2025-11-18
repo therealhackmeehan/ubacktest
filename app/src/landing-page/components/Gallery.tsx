@@ -13,6 +13,30 @@ import dark_example from "../../client/static/dark_example.png";
 
 const baseImgClass = "rounded-md shadow-2xl ring-1 ring-gray-900/30";
 
+// Reusable wrapper that animates on scroll
+function FadeInSection({
+  children,
+  className = "",
+}: {
+  children: React.ReactNode;
+  className?: string;
+}) {
+  const [ref, inView] = useInView({ triggerOnce: true });
+
+  return (
+    <div
+      ref={ref}
+      className={`
+        transform transition-all duration-1000 
+        ${inView ? "translate-y-0 opacity-100" : "translate-y-60 opacity-0"}
+        ${className}
+      `}
+    >
+      {children}
+    </div>
+  );
+}
+
 function ImageSwitcher({
   light,
   dark,
@@ -41,67 +65,60 @@ function ImageSwitcher({
 }
 
 export default function Gallery() {
-  const [ref, inView] = useInView({ triggerOnce: true });
-
   return (
     <div className="mx-2 lg:mx-auto mb-[33vh]">
       <div className="mt-34 w-full grid md:grid-cols-5 gap-2 md:gap-3 md:-space-y-36">
         {/* image 1 */}
-        <div
-          ref={ref}
-          className={`md:col-span-4 pl-6 md:pl-0 hover:scale-90 duration-1000 z-50 transform ${
-            inView ? "translate-x-0" : "translate-x-60"
-          }`}
-        >
+        <FadeInSection className="md:col-span-4 pl-6 md:pl-0 hover:scale-90 duration-700 z-50">
           <ImageSwitcher
             light={light_editorOnly}
             dark={dark_editorOnly}
             alt="editor"
           />
-        </div>
+        </FadeInSection>
 
         {/* image 2 */}
-        <div className="md:col-span-4 md:col-start-2 pr-6 hover:scale-90 duration-700 z-50">
+        <FadeInSection className="md:col-span-4 md:col-start-2 pr-6 hover:scale-90 duration-700 z-50">
           <img
             src={result_stock1}
             alt="basic backtest result"
             className={baseImgClass}
           />
-        </div>
+        </FadeInSection>
 
         {/* image 3 */}
-        <div className="hidden md:flex md:col-span-4 md:col-start-1 hover:scale-90 duration-700 z-50">
+        <FadeInSection className="hidden md:flex md:col-span-4 md:col-start-1 hover:scale-90 duration-500 z-50">
           <ImageSwitcher
             light={light_engine}
             dark={dark_engine}
             alt="backtest engine"
             className="max-h-60 md:max-h-100"
           />
-        </div>
+        </FadeInSection>
 
         {/* image 4 */}
-        <div className="md:col-start-2 pl-6 md:pr-12 md:col-span-4 hover:scale-90 duration-700 z-50">
+        <FadeInSection className="md:col-start-2 pl-6 md:pr-12 md:col-span-4 hover:scale-90 duration-300 z-50">
           <img src={light_SP} alt="compare to sp500" className={baseImgClass} />
-        </div>
+        </FadeInSection>
 
-        {/* image 5 */}
-        <div className="md:hidden pr-6 hover:scale-90 duration-700 z-50">
+        {/* image 5 (mobile only) */}
+        <FadeInSection className="md:hidden pr-6 hover:scale-90 duration-700 z-50">
           <ImageSwitcher
             light={light_example}
             dark={dark_example}
             alt="strategy home"
             className="max-h-75"
           />
-        </div>
+        </FadeInSection>
 
-        {/* image 6 */}
-        <div className="md:hidden pl-6 hover:scale-90 duration-700 z-50">
+        {/* image 6 (mobile only) */}
+        <FadeInSection className="md:hidden pl-6 hover:scale-90 duration-700 z-50">
           <img
             src={light_cashEquity}
             alt="cash vs. equity chart"
             className={baseImgClass}
           />
-        </div>
+        </FadeInSection>
       </div>
     </div>
   );

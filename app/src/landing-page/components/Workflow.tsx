@@ -71,13 +71,13 @@ export default function Workflow() {
                 <img
                   src={dark_editorOnlyComplex}
                   height={height}
-                  alt="editorOnly"
+                  alt="editor (dark)"
                   className="hidden dark:flex rounded-md shadow-2xl ring-1 ring-gray-900/10"
                 />
                 <img
                   src={light_editorOnlyComplex}
                   height={height}
-                  alt="editorOnly"
+                  alt="editor (light)"
                   className="dark:hidden rounded-md shadow-2xl ring-1 ring-gray-900/10"
                 />
               </div>
@@ -85,7 +85,7 @@ export default function Workflow() {
           </div>
           <div
             className={`text-sm md:text-base col-span-1 rounded-lg pb-4 lg:pb-0 lg:p-4 dark:text-white duration-700 transform ${
-              inView1 ? "translate-x-0" : "translate-x-10"
+              inView1 ? "translate-x-0" : "-translate-x-60 md:translate-x-10"
             }`}
           >
             <span className="font-extrabold text-xl md:text-title-xl text-sky-700 dark:text-blue-300 tracking-tight">
@@ -111,7 +111,7 @@ export default function Workflow() {
                 <img
                   src={light_dataTable}
                   height={height}
-                  alt="dataTable"
+                  alt="data table (light)"
                   className="rounded-md shadow-2xl ring-1 ring-gray-900/10"
                 />
               </div>
@@ -119,7 +119,7 @@ export default function Workflow() {
           </div>
           <div
             className={`text-sm md:text-base col-span-1 rounded-lg pb-4 lg:pb-0 lg:p-4 dark:text-white duration-700 transform ${
-              inView2 ? "translate-x-0" : "translate-x-10"
+              inView2 ? "translate-x-0" : "-translate-x-60 md:translate-x-10"
             }`}
           >
             <span className="font-extrabold text-xl md:text-title-xl text-sky-700 dark:text-blue-300 tracking-tight">
@@ -144,13 +144,13 @@ export default function Workflow() {
                 <img
                   src={dark_results}
                   height={height}
-                  alt="results"
+                  alt="results (dark)"
                   className="hidden dark:flex rounded-md shadow-2xl ring-1 ring-gray-900/10"
                 />
                 <img
                   src={light_results}
                   height={height}
-                  alt="results"
+                  alt="results (light)"
                   className="dark:hidden rounded-md shadow-2xl ring-1 ring-gray-900/10"
                 />
               </div>
@@ -158,7 +158,7 @@ export default function Workflow() {
           </div>
           <div
             className={`text-sm md:text-base col-span-1 rounded-lg pb-4 lg:pb-0 lg:p-4 dark:text-white duration-700 transform ${
-              inView3 ? "translate-x-0" : "translate-x-10"
+              inView3 ? "translate-x-0" : "-translate-x-60 md:translate-x-10"
             }`}
           >
             <span className="font-extrabold text-xl md:text-title-xl text-sky-700 dark:text-blue-300 tracking-tight">
@@ -183,13 +183,13 @@ export default function Workflow() {
                 <img
                   src={dark_deploy}
                   height={height}
-                  alt="deployment"
+                  alt="deployment (dark)"
                   className="hidden dark:flex rounded-md shadow-2xl ring-1 ring-gray-900/10"
                 />
                 <img
                   src={light_deploy}
                   height={height}
-                  alt="deployment"
+                  alt="deployment (light)"
                   className="dark:hidden rounded-md shadow-2xl ring-1 ring-gray-900/10"
                 />
               </div>
@@ -197,7 +197,7 @@ export default function Workflow() {
           </div>
           <div
             className={`text-sm md:text-base col-span-1 rounded-lg py-2 lg:py-0 lg:p-4 dark:text-white duration-700 transform ${
-              inView4 ? "translate-x-0" : "translate-x-10"
+              inView4 ? "translate-x-0" : "-translate-x-60 md:translate-x-10"
             }`}
           >
             <span className="rounded-lg p-1 mr-2 bg-black text-white dark:text-black dark:bg-white font-light">

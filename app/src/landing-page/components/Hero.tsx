@@ -24,14 +24,14 @@ export default function Hero() {
         </h1>
         <h1
           ref={ref2}
-          className={`text-4xl my-12 font-bold text-gray-900 sm:text-6xl dark:text-white duration-1000 tracking-tight ${
+          className={`my-12 font-bold text-gray-900 text-4xl dark:text-white duration-1000 tracking-tight ${
             inView2 ? "opacity-100" : "opacity-0 translate-y-3"
           }`}
         >
-          A simple and affordable backtesting platform for
+          A simple & affordable backtesting platform ready for
           <span className="italic text-sky-700 dark:text-blue-300">
             {" "}
-            algorithmic trading
+            machine/deep learning
           </span>
           .
         </h1>
@@ -41,7 +41,7 @@ export default function Hero() {
           <span className="italic text-sky-700 dark:text-blue-300">
             million-dollar{" "}
           </span>
-          idea!
+          trading strategy!
         </p>
         <div className="mt-10 flex items-center justify-center gap-x-6">
           <Link

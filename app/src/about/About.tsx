@@ -14,7 +14,7 @@ export default function About() {
             <h4 className="my-2 font-bold tracking-tight text-gray-900 text-xl md:text-2xl dark:text-white text-center">
               About Us
             </h4>
-            <div className="text-xs md:text-lg m-3 text-start md:text-center">
+            <div className="text-sm md:text-lg m-3 text-start md:text-center">
               uBacktest.com was born from one developer’s quest to beat the
               market—a journey that’s still unfolding. Tired of expensive stock
               data and clunky backtesting tools, Jack set out to build something
@@ -33,7 +33,7 @@ export default function About() {
               <h4 className="my-2 font-bold tracking-tight text-gray-900 text-xl md:text-2xl dark:text-white text-center">
                 Contact Us
               </h4>
-              <div className="text-xs md:text-lg m-3 font-light">
+              <div className="text-sm md:text-lg m-3 font-light">
                 uBacktest is a new product, and we’d love to hear your feedback!
                 Whether you’ve found a bug, have a suggestion, or just want to
                 share your experience, we’re all ears. Your insights help us

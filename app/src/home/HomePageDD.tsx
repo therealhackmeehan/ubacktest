@@ -13,7 +13,7 @@ export function StrategyDropDown({ strategy }: { strategy: Strategy }) {
   return (
     <li
       key={strategy.id}
-      className="border-t-2 border-gray-100 p-3 transition-all duration-[500ms]"
+      className="border-t-2 border-gray-100 md:px-2 py-3 transition-all duration-[500ms]"
     >
       <div className="flex justify-between">
         <div className="flex gap-x-2 items-center">
