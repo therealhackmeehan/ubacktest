@@ -1,20 +1,21 @@
-<div style="margin: 15px;">
-    <div align="center" style="font-size: 30px; font-weight: bold; display: flex; justify-content: center; align-items: center;">
-        <img style="height: 36px; margin: 10px;" src="app/src/client/static/logo.png"/>
-        uBacktest<span style="font-weight: 12">.com</span>
-    </div>
-    <div align="center" style="font-size: 16px;">
-        <a style="color: #99ccff;" href="https://ubacktest.com">uBacktest.com</a> |
-        <a style="color: #009fff;" href="https://docs.ubacktest.com">Documentation</a> |
-        <a href="https://meehansoftware.com" style="font-size: 13px; background: #fff; color: #000; padding: 3px 6px; border-radius: 4px; font-weight: 500;">Meehan Software Group</a>
-    </div>
+<h1 align="center">
+    <img height=32 src="app/src/client/static/logo.png"/>
+    uBacktest
+</h1>
+
+<div align="center">
+    <a href="https://ubacktest.com">uBacktest.com</a> &middot
+    <a  href="https://docs.ubacktest.com">Documentation</a> &middot
+    <a href="https://meehansoftware.com">Meehan Software Group</a>
 </div>
 
-<div align="center" style="margin: 18px 0;">
-  <img src="app/src/client/static/light_maximizedEditor.png" style="max-height: 450px; border-radius: 6px;" />
+<br>
+
+<div align="center">
+  <img src="app/src/client/static/light_maximizedEditor.png" width=1000 />
 </div>
 
-<div align="center" style="margin-bottom: 20px;">
+<div align="center">
   Created and maintained by <a href="https://github.com/therealhackmeehan">Jack Meehan</a>.
 </div>
 
@@ -25,40 +26,38 @@
 ## Why uBacktest?
 
 <table>
-  <tr align="center">
-    <td width="50%" valign="top">
-      <div style="border:1px solid #ccc;border-radius:12px;padding:14px;margin:10px;">
-        <h3>🚀 Code with Python and Pandas</h3>
+    <td>
+      <div>
+        <h4>🚀 Code with Python and Pandas</h3>
         <p>No need to learn a new scripting language—use full-powered Python and Pandas immediately.</p>
       </div>
-      <div style="border:1px solid #ccc;border-radius:12px;padding:14px;margin:10px;">
-        <h3>🤖 Machine & Deep Learning Ready</h3>
+      <div>
+        <h4>🤖 Machine & Deep Learning Ready</h3>
         <p>Preloaded with scikit-learn, PyTorch, TensorFlow, and more.</p>
       </div>
-      <div style="border:1px solid #ccc;border-radius:12px;padding:14px;margin:10px;">
-        <h3>📚 Docs & Examples</h3>
+      <div>
+        <h4>📚 Docs & Examples</h3>
         <p>Jump in instantly with built-in examples—just press <strong>Go</strong>.</p>
       </div>
-      <div style="border:1px solid #ccc;border-radius:12px;padding:14px;margin:10px;">
-        <h3>🔄 Import & Export Scripts</h3>
+      <div>
+        <h4>🔄 Import & Export Scripts</h3>
         <p>Write code anywhere, then bring it into uBacktest with seamless execution.</p>
       </div>
     </td>
-    <td width="50%" valign="top">
-      <div style="border:1px solid #ccc;border-radius:12px;padding:14px;margin:10px;">
-        <h3>📈 Stock Data Included</h3>
+    <td width="50%">
+      <div>
+        <h4>📈 Stock Data Included</h3>
         <p>Select a ticker and date range—no costly feeds or local setup required.</p>
       </div>
-      <div style="border:1px solid #ccc;border-radius:12px;padding:14px;margin:10px;">
-        <h3>💾 Save & Share Strategies</h3>
+      <div>
+        <h4>💾 Save & Share Strategies</h3>
         <p>Track and refine your trading ideas—or share them with others.</p>
       </div>
-      <div style="border:1px solid #ccc;border-radius:12px;padding:14px;margin:10px;">
-        <h3>🔧 Fully Customizable Backtesting</h3>
+      <div>
+        <h4>🔧 Fully Customizable Backtesting</h3>
         <p>Control stock, date range, trading costs, and more for tailored results.</p>
       </div>
     </td>
-  </tr>
 </table>
 
 ## Getting Started
@@ -123,16 +122,16 @@ You may add as many helper columns as you want.
 
 Example “buy-and-hold” strategy:
 
-<div align="center" style="margin: 12px;">
-  <img src="app/src/client/static/light_editorOnly.png" style="max-height: 350px; border-radius: 6px;" />
+<div align=center>
+  <img src="app/src/client/static/light_editorOnly.png" width=600 />
 </div>
 
 You can use indicators, statistical rules, ML models, deep learning, or anything Python supports.
 
 See all examples in the docs.
 
-<div align="center" style="margin: 12px;">
-  <img src="app/src/client/static/light_example.png" style="max-height: 450px; border-radius: 6px;" />
+<div align=center>
+<img src="app/src/client/static/light_example.png" width=400/>
 </div>
 
 ## Usage Terms
@@ -169,12 +168,14 @@ Playwright end-to-end tests.
 
 ### **/.github**
 
+![Test and Deploy](https://github.com/therealhackmeehan/ubacktest/actions/workflows/e2e_tests.yml/badge.svg)
+
 GitHub Actions workflows.
 
-<div align="center" style="margin-top: 30px;">
-  <img src="app/src/client/static/light_sp.png" />
+<div align="center">
+    <img src="app/src/client/static/light_SP.png"/>
 </div>
 
-<div align="center" style="margin-top: 10px;">
+<div align="center">
   <strong>© 2025 Meehan Software Group, LLC. All rights reserved.</strong>
 </div>
