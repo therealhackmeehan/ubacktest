@@ -23,7 +23,7 @@ export default function Footer() {
         Footer
       </h2>
       <div className="p-4 w-full text-center md:text-start place-self-end text-slate-500 dark:text-white/50 pb-6 text-xs md:pb-0 md:text-base">
-        © 2025 uBacktest. All rights reserved.
+        © 2025 Meehan Software Group, LLC. All rights reserved.
       </div>
       <div className="flex gap-20">
         {Object.entries(footerLinks).map(([section, links]) => (

@@ -1,23 +1,180 @@
-# uBacktest.com
+<div style="margin: 15px;">
+    <div align="center" style="font-size: 30px; font-weight: bold; display: flex; justify-content: center; align-items: center;">
+        <img style="height: 36px; margin: 10px;" src="app/src/client/static/logo.png"/>
+        uBacktest<span style="font-weight: 12">.com</span>
+    </div>
+    <div align="center" style="font-size: 16px;">
+        <a style="color: #99ccff;" href="https://ubacktest.com">uBacktest.com</a> |
+        <a style="color: #009fff;" href="https://docs.ubacktest.com">Documentation</a> |
+        <a href="https://meehansoftware.com" style="font-size: 13px; background: #fff; color: #000; padding: 3px 6px; border-radius: 4px; font-weight: 500;">Meehan Software Group</a>
+    </div>
+</div>
 
----
+<div align="center" style="margin: 18px 0;">
+  <img src="app/src/client/static/light_maximizedEditor.png" style="max-height: 450px; border-radius: 6px;" />
+</div>
 
-Created and maintained by Jack Meehan.
+<div align="center" style="margin-bottom: 20px;">
+  Created and maintained by <a href="https://github.com/therealhackmeehan">Jack Meehan</a>.
+</div>
 
-### This is the official repository for uBacktest.com.
+## What is uBacktest?
 
-uBacktest.com is comprised of a **Node.js** backend, a **React/Tailwind** frontend, and a **PostgreSQL** database w/ **Prisma** ORM. We use **Wasp**, an incredible full-stack framework to coordinate the three and integrate secure authentication. The client/server/db are all deployed via fly.io and CI/CD with GH actions facilitates the running of e2e tests and continuous deployment to fly.io.
+[**uBacktest.com**](https://uBacktest.com) is a web platform for evaluating algorithmic trading strategies against real historical market data—helping you move from idea → validation → (optionally) live-trading readiness.
 
-The purpose of this website is to test trading strategyies against legitimate stock data using Python. We present a pipeline for strategy development that culminates in (hopefully) live trading.
+## Why uBacktest?
 
-uBacktest is free to a certain point, with a paid service to supplement the cost of hosting, stock data, and storage. There are hobby and pro plans, but also credit-based purchases that enable a specific number of backtests.
+<table>
+  <tr align="center">
+    <td width="50%" valign="top">
+      <div style="border:1px solid #ccc;border-radius:12px;padding:14px;margin:10px;">
+        <h3>🚀 Code with Python and Pandas</h3>
+        <p>No need to learn a new scripting language—use full-powered Python and Pandas immediately.</p>
+      </div>
+      <div style="border:1px solid #ccc;border-radius:12px;padding:14px;margin:10px;">
+        <h3>🤖 Machine & Deep Learning Ready</h3>
+        <p>Preloaded with scikit-learn, PyTorch, TensorFlow, and more.</p>
+      </div>
+      <div style="border:1px solid #ccc;border-radius:12px;padding:14px;margin:10px;">
+        <h3>📚 Docs & Examples</h3>
+        <p>Jump in instantly with built-in examples—just press <strong>Go</strong>.</p>
+      </div>
+      <div style="border:1px solid #ccc;border-radius:12px;padding:14px;margin:10px;">
+        <h3>🔄 Import & Export Scripts</h3>
+        <p>Write code anywhere, then bring it into uBacktest with seamless execution.</p>
+      </div>
+    </td>
+    <td width="50%" valign="top">
+      <div style="border:1px solid #ccc;border-radius:12px;padding:14px;margin:10px;">
+        <h3>📈 Stock Data Included</h3>
+        <p>Select a ticker and date range—no costly feeds or local setup required.</p>
+      </div>
+      <div style="border:1px solid #ccc;border-radius:12px;padding:14px;margin:10px;">
+        <h3>💾 Save & Share Strategies</h3>
+        <p>Track and refine your trading ideas—or share them with others.</p>
+      </div>
+      <div style="border:1px solid #ccc;border-radius:12px;padding:14px;margin:10px;">
+        <h3>🔧 Fully Customizable Backtesting</h3>
+        <p>Control stock, date range, trading costs, and more for tailored results.</p>
+      </div>
+    </td>
+  </tr>
+</table>
 
-_© 2025 uBacktest. All rights reserved._
+## Getting Started
 
-## /app
+All users (including the free tier) need an account so strategies can be saved and reused.  
+After signing up:
 
-The `app` subdirectory contains the bones of the app (frontend, backend, db). The frontend and backend is NOT in seprate frontend/ backend/ folders, and itstead is factored into each portion of the app.
+1. Open the **Strategy Editor**
+2. Click **+ New** to create a strategy
+3. Name it
+4. You'll start with a template “buy-and-hold” strategy
 
-## /test
+From there, you can modify or build entirely new strategies using Python.
 
-The `test` subdirectory contains the playwright e2e tests for the app.
+## How It Works (For the Nerds)
+
+The uBacktest engine works as follows:
+
+1. Retrieves the selected historical stock data via API
+2. Injects the cleaned and formatted dataset into your `strategy()` function
+3. Executes python code inside a secure [Judge0](https://judge0.com) sandbox
+4. Ensures the strategy outputs a valid, day-by-day series of trading signals
+
+Once execution is complete, the Node.js backend processes the results by iterating through the generated signals and producing:
+
+- Chart-ready time series
+- Performance metrics
+- Risk and robustness analytics
+
+Historical price data is sourced from a paid, professional market data provider.
+
+## Tech Stack
+
+uBacktest uses:
+
+- 🐝 [**Wasp**](https://wasp.sh) — unified full-stack architecture
+- 🟩 **Node.js** — backend API + server logic
+- ⚛️ **React** + 🎨 **Tailwind CSS** — frontend UI
+- 🐘 **PostgreSQL** (via Prisma ORM) — database + schema management
+- 💳 **Stripe** — payments and subscription billing
+- 🚀 **Fly.io** — hosting & deployment
+- 🧪 **Playwright** — end-to-end testing
+- 🔄 **GitHub Actions** — CI/CD pipeline
+
+## The 10,000-Foot How-To
+
+_The most accurate, up-to-date guide is always in the  
+👉 **[uBacktest Docs](https://docs.ubacktest.com)**_
+
+Every trading strategy must define:
+
+```python
+def strategy(data):
+
+    # add a column of buy/sell signals here!
+
+    return data
+```
+
+The returned DataFrame must contain a `signal` column (case-insensitive).
+You may add as many helper columns as you want.
+
+Example “buy-and-hold” strategy:
+
+<div align="center" style="margin: 12px;">
+  <img src="app/src/client/static/light_editorOnly.png" style="max-height: 350px; border-radius: 6px;" />
+</div>
+
+You can use indicators, statistical rules, ML models, deep learning, or anything Python supports.
+
+See all examples in the docs.
+
+<div align="center" style="margin: 12px;">
+  <img src="app/src/client/static/light_example.png" style="max-height: 450px; border-radius: 6px;" />
+</div>
+
+## Usage Terms
+
+This repository is licensed under:
+
+### **Creative Commons Attribution–NonCommercial–NoDerivatives 4.0 (CC BY-NC-ND 4.0)**
+
+✔️ **Permitted**
+
+- Viewing the source
+- Linking to this repo
+- Educational study
+
+❌ **Not permitted**
+
+- Commercial use
+- Redistribution
+- Modification or derivatives
+- Integration into software
+
+For additional rights: **[support@ubacktest.com](mailto:support@ubacktest.com)**
+
+## Repository Structure
+
+### **/app**
+
+Main application code (UI + server + database schema).
+Uses a vertical feature-based architecture.
+
+### **/test**
+
+Playwright end-to-end tests.
+
+### **/.github**
+
+GitHub Actions workflows.
+
+<div align="center" style="margin-top: 30px;">
+  <img src="app/src/client/static/light_sp.png" />
+</div>
+
+<div align="center" style="margin-top: 10px;">
+  <strong>© 2025 Meehan Software Group, LLC. All rights reserved.</strong>
+</div>
