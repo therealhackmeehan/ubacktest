@@ -15,7 +15,6 @@ from torch import nn
 from sklearn.preprocessing import MinMaxScaler
 from torch.utils.data import Dataset, DataLoader
 
-
 # ---- LSTM Model ----
 class LSTMModel(nn.Module):
     def __init__(self, input_size=4, hidden_size=64, num_layers=2):

@@ -19,7 +19,7 @@ import { BacktestResultProps } from "wasp/src/shared/sharedTypes";
     Returns some debug output, any warnings to display, and the JSON data
     describing the result of the strategy.
 
-    (c) Jack Meehan 2025, uBacktest.com
+    (c) 2025 Meehan Software Group, LLC. All rights reserved.
 */
 
 class StrategyPipeline {
