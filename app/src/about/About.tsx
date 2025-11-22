@@ -43,8 +43,8 @@ export default function About() {
               </div>
             </div>
             <div className="text-start md:text-center mt-4 mx-4 mb-2">
-              <div className="md:text-xl">
-                📩 Contact us at{" "}
+              <div className="md:text-lg">
+                Contact us at{" "}
                 <a
                   href="mailto:support@uBacktest.com"
                   className="font-bold hover:font-extrabold hover:underline"
