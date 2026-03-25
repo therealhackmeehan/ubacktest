@@ -17,7 +17,7 @@ import { useState, useRef, useEffect } from "react";
 import html2canvas from "html2canvas";
 import { jsPDF } from "jspdf";
 import LoadingScreen from "../../../../client/components/LoadingScreen";
-import CandlePlot from "./CandlePlot";
+import CandlePlot from "./financial/CandlePlot";
 import ErrorModal from "../modals/ErrorModal";
 import CashEquity from "./CashEquity";
 
@@ -80,11 +80,11 @@ function Result({
           "low",
           "volume",
         ].includes(header) &&
-        !(formInputs.costPerTrade === 0 && header === "portfolioWithCosts")
+        !(formInputs.costPerTrade === 0 && header === "portfolioWithCosts"),
     );
 
     const displayHeaders = headers.map((header) =>
-      header === "timestamp" ? "timestamp (local time)" : header
+      header === "timestamp" ? "timestamp (local time)" : header,
     );
 
     const rowCount = strategyResult[headers[0]].length as number;
@@ -100,7 +100,7 @@ function Result({
 
           return value;
         })
-        .join(",")
+        .join(","),
     );
 
     const csv = [displayHeaders.join(","), ...rows].join("\n");
@@ -141,7 +141,7 @@ function Result({
       // Calculate scaling to fit content while maintaining aspect ratio
       const scale = Math.min(
         availableWidth / canvasWidth,
-        availableHeight / canvasHeight
+        availableHeight / canvasHeight,
       );
       const imgWidth = canvasWidth * scale;
       const imgHeight = canvasHeight * scale;
@@ -179,14 +179,14 @@ function Result({
     const estDate = new Date(
       new Date(`${slicedDay}T16:00:00`).toLocaleString("en-US", {
         timeZone: "America/New_York",
-      })
+      }),
     );
     return estDate.toISOString();
   };
 
   if (isEod) {
     strategyResult.timestamp = strategyResult.timestamp.map(
-      toFourPMEasternISOString
+      toFourPMEasternISOString,
     );
   }
 
