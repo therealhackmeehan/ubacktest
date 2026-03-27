@@ -1,9 +1,13 @@
+import { useState, useEffect, useRef } from "react";
+import ChartWrapper from "../../../../../../client/components/ChartWrapper";
+import { StrategyResultProps } from "../../../../../../shared/sharedTypes";
+import { buildCandlePlot } from "./build";
+import { MixedChartType, MixedDataPoint } from "../plot-types";
+
 import { Chart } from "react-chartjs-2";
 import { TooltipItem, ScriptableScaleContext, ChartData } from "chart.js";
-import { useState, useEffect, useRef } from "react";
 import "chartjs-adapter-date-fns";
 import zoomPlugin from "chartjs-plugin-zoom";
-
 import {
   Chart as ChartJSInstance,
   CategoryScale,
@@ -20,14 +24,6 @@ import {
   CandlestickController,
   CandlestickElement,
 } from "chartjs-chart-financial";
-
-import ChartWrapper from "../../../../../client/components/ChartWrapper";
-import {
-  buildCandlePlot,
-  MixedChartType,
-  MixedDataPoint,
-} from "./candlePlotBuilder";
-import { StrategyResultProps } from "../../../../../shared/sharedTypes";
 
 ChartJSInstance.register(
   CategoryScale,

@@ -1,7 +1,7 @@
 import FormInputHeader from "./FormInputHeader";
 import MainStatistics from "./MainStatistics";
 import DataTable from "./DataTable";
-import DistributionOfReturns from "./DistributionOfReturns";
+import DistributionOfReturns from "./plots/distributionOfReturns/DistributionOfReturns";
 import { FiArrowUp } from "react-icons/fi";
 import ResultButtonGroup from "./ResultButtonGroup";
 import {
@@ -11,15 +11,15 @@ import {
   StrategyResultProps,
 } from "../../../../shared/sharedTypes";
 import { createResult, getSpecificStrategy } from "wasp/client/operations";
-import SPChart from "./SPChart";
-import UserDefinedPlot from "./UserDefinedPlot";
+import SPChart from "./plots/spchart/SPChart";
+import UserDefinedPlot from "./plots/userDefined/UserDefinedPlot";
 import { useState, useRef, useEffect } from "react";
 import html2canvas from "html2canvas";
 import { jsPDF } from "jspdf";
 import LoadingScreen from "../../../../client/components/LoadingScreen";
-import CandlePlot from "./financial/CandlePlot";
+import CandlePlot from "./plots/candle/CandlePlot";
 import ErrorModal from "../modals/ErrorModal";
-import CashEquity from "./CashEquity";
+import CashEquity from "./plots/cashEquity/CashEquity";
 
 interface ResultPanelProps {
   selectedStrategy: string | null;

@@ -1,4 +1,6 @@
 import { useEffect, useState } from "react";
+import ChartWrapper from "../../../../../../client/components/ChartWrapper";
+
 import { Bar } from "react-chartjs-2";
 import {
   Chart as ChartJS,
@@ -8,17 +10,16 @@ import {
   Title,
   Tooltip,
   Legend,
+  ChartData,
 } from "chart.js";
-import ChartWrapper from "../../../../client/components/ChartWrapper";
 
-// Register chart components
 ChartJS.register(
   CategoryScale,
   LinearScale,
   BarElement,
   Title,
   Tooltip,
-  Legend
+  Legend,
 );
 
 interface DistributionOfReturnsProps {
@@ -36,10 +37,11 @@ export default function DistributionOfReturns({
   max,
   min,
 }: DistributionOfReturnsProps) {
-  const [returnsChartData, setReturnsChartData] = useState<any>({
-    labels: [],
-    datasets: [],
-  });
+  const [returnsChartData, setReturnsChartData] =
+    useState<ChartData<"bar"> | null>({
+      labels: [],
+      datasets: [],
+    });
 
   useEffect(() => {
     // Process normal data
@@ -52,14 +54,14 @@ export default function DistributionOfReturns({
     stockDataReturns.forEach((value) => {
       const binIndex = Math.min(
         Math.floor((value - minReturn) / binWidth),
-        binCount - 1 // Ensure max values fall into the last bin
+        binCount - 1, // Ensure max values fall into the last bin
       );
       binsNormal[binIndex]++;
     });
 
     // Process log-transformed data
     const logTransformedReturns = stockDataReturns.map(
-      (value) => Math.log(Math.abs(value) + 1) * Math.sign(value)
+      (value) => Math.log(Math.abs(value) + 1) * Math.sign(value),
     );
     const minLog = Math.min(...logTransformedReturns);
     const maxLog = Math.max(...logTransformedReturns);
@@ -69,7 +71,7 @@ export default function DistributionOfReturns({
     logTransformedReturns.forEach((value) => {
       const binIndex = Math.min(
         Math.floor((value - minLog) / logBinWidth),
-        binCount - 1 // Ensure max values fall into the last bin
+        binCount - 1, // Ensure max values fall into the last bin
       );
       binsLog[binIndex]++;
     });
@@ -90,7 +92,7 @@ export default function DistributionOfReturns({
     });
 
     // Chart data with two datasets
-    const chartData = {
+    const chartData: ChartData<"bar"> | null = {
       labels: binLabels,
       datasets: [
         {
@@ -99,8 +101,6 @@ export default function DistributionOfReturns({
           backgroundColor: "rgba(20, 40, 80, 0.3)",
           borderColor: "rgba(20, 40, 80, 1)",
           borderWidth: 1,
-          lineTension: 0,
-          borderJoinStyle: "round",
           barPercentage: 0.9,
           categoryPercentage: 1,
           barThickness: "flex",
@@ -111,8 +111,6 @@ export default function DistributionOfReturns({
           backgroundColor: "rgba(100, 150, 200, 0.3)",
           borderColor: "rgba(100, 150, 200, 1)",
           borderWidth: 1,
-          lineTension: 0,
-          borderJoinStyle: "round",
           barPercentage: 0.9,
           categoryPercentage: 1,
           barThickness: "flex",
@@ -140,18 +138,6 @@ export default function DistributionOfReturns({
         grid: {
           display: false,
         },
-        // offset: false,
-        // gridLines: {
-        //     offsetGridLines: false
-        // },
-        // ticks: {
-        //     align: "start" as const,
-        //     font: {
-        //         // family: 'Courier New' as const,
-        //         weight: 'bolder' as const,
-        //         size: 11,
-        //     },
-        // },
       },
       y: {
         grid: {
@@ -191,7 +177,7 @@ export default function DistributionOfReturns({
         </div>
       </div>
       <ChartWrapper height={20}>
-        <Bar data={returnsChartData} options={options} />
+        {returnsChartData && <Bar data={returnsChartData} options={options} />}
       </ChartWrapper>
     </>
   );

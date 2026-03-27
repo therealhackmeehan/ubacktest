@@ -1,8 +1,10 @@
-import { Line } from "react-chartjs-2";
 import { useState, useEffect } from "react";
-import { ScriptableScaleContext } from "chart.js";
-import "chartjs-adapter-date-fns";
+import { StrategyResultProps } from "../../../../../../shared/sharedTypes";
+import ChartWrapper from "../../../../../../client/components/ChartWrapper";
 
+import { Line } from "react-chartjs-2";
+import { ChartData, ScriptableScaleContext } from "chart.js";
+import "chartjs-adapter-date-fns";
 import {
   Chart as ChartJS,
   CategoryScale,
@@ -14,8 +16,7 @@ import {
   Legend,
   TimeSeriesScale,
 } from "chart.js";
-import { StrategyResultProps } from "../../../../shared/sharedTypes";
-import ChartWrapper from "../../../../client/components/ChartWrapper";
+import { LinePoint } from "../plot-types";
 
 ChartJS.register(
   CategoryScale,
@@ -25,14 +26,18 @@ ChartJS.register(
   Title,
   Tooltip,
   Legend,
-  TimeSeriesScale
+  TimeSeriesScale,
 );
 
 interface CashEquityProps {
   strategyResult: StrategyResultProps;
 }
+
 function CashEquity({ strategyResult }: CashEquityProps) {
-  const [chartData, setChartData] = useState<any | null>(null);
+  const [chartData, setChartData] = useState<ChartData<
+    "line",
+    LinePoint[]
+  > | null>(null);
 
   useEffect(() => {
     let chartData = {
@@ -43,7 +48,7 @@ function CashEquity({ strategyResult }: CashEquityProps) {
             (timestamp: string, index: number) => ({
               x: new Date(timestamp),
               y: strategyResult.cash[index],
-            })
+            }),
           ),
           borderColor: "rgba(255, 69, 0, 1)", // Bold Red-Orange
           backgroundColor: "rgba(255, 69, 0, 1)",
@@ -57,7 +62,7 @@ function CashEquity({ strategyResult }: CashEquityProps) {
             (timestamp: string, index: number) => ({
               x: new Date(timestamp),
               y: strategyResult.equity[index],
-            })
+            }),
           ),
           borderColor: "rgba(34, 139, 34, 1)", // Deep Forest Green
           backgroundColor: "rgba(34, 139, 34, 1)",
@@ -71,7 +76,7 @@ function CashEquity({ strategyResult }: CashEquityProps) {
             (timestamp: string, index: number) => ({
               x: new Date(timestamp),
               y: Math.abs(strategyResult.equity[index]),
-            })
+            }),
           ),
           borderColor: "rgba(0, 128, 255, 1)", // Vivid Blue
           backgroundColor: "rgba(0, 128, 255, 1)",

@@ -1,22 +1,6 @@
 import { ChartData } from "chart.js";
-import { StrategyResultProps } from "../../../../../shared/sharedTypes";
-
-export type MixedChartType = "line" | "candlestick";
-
-export type LinePoint = {
-  x: Date;
-  y: number;
-};
-
-export type CandlePoint = {
-  x: number;
-  o: number;
-  h: number;
-  l: number;
-  c: number;
-};
-
-export type MixedDataPoint = LinePoint | CandlePoint | null;
+import { StrategyResultProps } from "../../../../../../shared/sharedTypes";
+import { MixedChartType } from "../plot-types";
 
 export function buildCandlePlot(
   strategyResult: StrategyResultProps,

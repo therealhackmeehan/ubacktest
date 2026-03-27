@@ -1,8 +1,9 @@
-import { Line } from "react-chartjs-2";
-import { ScriptableScaleContext } from "chart.js";
 import { useState, useEffect } from "react";
-import "chartjs-adapter-date-fns";
+import { StrategyResultProps } from "../../../../../../shared/sharedTypes";
+import ChartWrapper from "../../../../../../client/components/ChartWrapper";
 
+import { Line } from "react-chartjs-2";
+import "chartjs-adapter-date-fns";
 import {
   Chart as ChartJS,
   CategoryScale,
@@ -13,9 +14,8 @@ import {
   Tooltip,
   Legend,
   TimeSeriesScale,
+  ScriptableScaleContext,
 } from "chart.js";
-import { StrategyResultProps } from "../../../../shared/sharedTypes";
-import ChartWrapper from "../../../../client/components/ChartWrapper";
 
 ChartJS.register(
   CategoryScale,
@@ -25,7 +25,7 @@ ChartJS.register(
   Title,
   Tooltip,
   Legend,
-  TimeSeriesScale
+  TimeSeriesScale,
 );
 
 interface SPChartProps {
@@ -44,7 +44,7 @@ function SPChart({ strategyResult }: SPChartProps) {
             (timestamp: string, index: number) => ({
               x: new Date(timestamp),
               y: strategyResult.portfolio[index],
-            })
+            }),
           ),
           borderColor: "rgba(255, 0, 100, 1)",
           backgroundColor: "rgba(255, 0, 100, 1)",
@@ -57,7 +57,7 @@ function SPChart({ strategyResult }: SPChartProps) {
             (timestamp: string, index: number) => ({
               x: new Date(timestamp),
               y: strategyResult.sp[index],
-            })
+            }),
           ),
           borderColor: "rgba(123, 50, 168, 1)",
           pointRadius: 0,

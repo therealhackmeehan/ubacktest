@@ -1,8 +1,9 @@
-import { StrategyResultProps } from "../../../../shared/sharedTypes";
-import { Line } from "react-chartjs-2";
 import { useState, useEffect } from "react";
-import "chartjs-adapter-date-fns";
+import { StrategyResultProps } from "../../../../../../shared/sharedTypes";
+import ChartWrapper from "../../../../../../client/components/ChartWrapper";
 
+import { Line } from "react-chartjs-2";
+import "chartjs-adapter-date-fns";
 import {
   Chart as ChartJS,
   CategoryScale,
@@ -14,7 +15,6 @@ import {
   Legend,
   TimeSeriesScale,
 } from "chart.js";
-import ChartWrapper from "../../../../client/components/ChartWrapper";
 
 ChartJS.register(
   CategoryScale,
@@ -24,7 +24,7 @@ ChartJS.register(
   Title,
   Tooltip,
   Legend,
-  TimeSeriesScale
+  TimeSeriesScale,
 );
 
 interface UserDefinedPlotProps {
@@ -70,7 +70,7 @@ export default function UserDefinedPlot({
           borderWidth: 2,
           yAxisID: "y1",
         };
-      }
+      },
     );
 
     datasets.push({
