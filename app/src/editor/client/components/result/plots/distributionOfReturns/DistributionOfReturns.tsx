@@ -13,6 +13,7 @@ import {
   Legend,
   ChartData,
 } from "chart.js";
+import { BarChartState } from "../plot-types";
 
 ChartJS.register(
   CategoryScale,
@@ -38,15 +39,12 @@ export default function DistributionOfReturns({
   max,
   min,
 }: DistributionOfReturnsProps) {
-  const [returnsChartData, setReturnsChartData] = useState<
-    ChartData<"bar", number[], string>
-  >({
+  const [returnsChartData, setReturnsChartData] = useState<BarChartState>({
     labels: [],
     datasets: [],
   });
 
   useEffect(() => {
-    // Process normal data
     const chartData = buildDosChart(stockDataReturns);
     setReturnsChartData(chartData);
   }, [stockDataReturns]);

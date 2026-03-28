@@ -17,7 +17,7 @@ import {
   Legend,
   TimeSeriesScale,
 } from "chart.js";
-import { LinePoint } from "../plot-types";
+import { LineChartState, LinePoint } from "../plot-types";
 
 ChartJS.register(
   CategoryScale,
@@ -35,10 +35,7 @@ interface CashEquityProps {
 }
 
 function CashEquity({ strategyResult }: CashEquityProps) {
-  const [chartData, setChartData] = useState<ChartData<
-    "line",
-    LinePoint[]
-  > | null>(null);
+  const [chartData, setChartData] = useState<LineChartState>(null);
 
   useEffect(() => {
     let chartData = buildCashEquity(strategyResult);

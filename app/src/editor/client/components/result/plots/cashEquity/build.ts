@@ -49,5 +49,6 @@ export default function buildCashEquity(
       stepped: true,
     },
   ];
+
   return { datasets: datasets };
 }

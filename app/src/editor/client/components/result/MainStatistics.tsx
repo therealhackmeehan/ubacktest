@@ -1,4 +1,4 @@
-import { Stat } from "../../../../shared/sharedTypes";
+import { type Stat } from "../../../../shared/sharedTypes";
 
 function MainStatistics({ stats }: { stats: Stat }) {
   return (

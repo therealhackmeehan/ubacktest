@@ -1,3 +1,5 @@
+import { ChartData } from "chart.js";
+
 export type LinePoint = {
   x: Date;
   y: number;
@@ -12,3 +14,7 @@ export type CandlePoint = {
 };
 
 export type MixedDataPoint = LinePoint | CandlePoint | null;
+
+export type LineChartState = ChartData<"line", LinePoint[]> | null;
+export type BarChartState = ChartData<"bar", number[], string>;
+export type FinancialChartState = ChartData<"line" | "candlestick"> | null;

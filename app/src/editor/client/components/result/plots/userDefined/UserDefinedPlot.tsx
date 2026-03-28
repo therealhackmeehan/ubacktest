@@ -17,7 +17,7 @@ import {
   ChartData,
 } from "chart.js";
 import buildUserDefined from "./build";
-import { LinePoint } from "../plot-types";
+import { LineChartState, LinePoint } from "../plot-types";
 
 ChartJS.register(
   CategoryScale,
@@ -32,29 +32,25 @@ ChartJS.register(
 
 interface UserDefinedPlotProps {
   strategyResult: StrategyResult;
-  timestamp: StrategyResult["timestamp"];
 }
 
 export default function UserDefinedPlot({
   strategyResult,
-  timestamp,
 }: UserDefinedPlotProps) {
-  const [chartData, setChartData] = useState<ChartData<
-    "line",
-    LinePoint[]
-  > | null>(null);
+  const [chartData, setChartData] = useState<LineChartState>(null);
+
   useEffect(() => {
     if (
       !strategyResult.userDefinedData ||
       !strategyResult.signal ||
       !strategyResult.close ||
-      !timestamp
+      !strategyResult.timestamp
     )
       return;
 
-    const datasets = buildUserDefined(strategyResult, timestamp);
+    const datasets = buildUserDefined(strategyResult);
     setChartData(datasets);
-  }, [strategyResult, timestamp]);
+  }, [strategyResult]);
 
   const options = {
     responsive: true,

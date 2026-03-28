@@ -18,7 +18,7 @@ import {
   ChartData,
 } from "chart.js";
 import buildSpChart from "./build";
-import { LinePoint } from "../plot-types";
+import { LineChartState, LinePoint } from "../plot-types";
 
 ChartJS.register(
   CategoryScale,
@@ -36,10 +36,7 @@ interface SPChartProps {
 }
 
 function SPChart({ strategyResult }: SPChartProps) {
-  const [chartData, setChartData] = useState<ChartData<
-    "line",
-    LinePoint[]
-  > | null>(null);
+  const [chartData, setChartData] = useState<LineChartState>(null);
 
   useEffect(() => {
     let chartData = buildSpChart(strategyResult);

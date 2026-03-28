@@ -2,7 +2,7 @@ import { useState, useEffect, useRef } from "react";
 import ChartWrapper from "../../../../../../client/components/ChartWrapper";
 import { StrategyResult } from "../../../../../../shared/sharedTypes";
 import { buildCandlePlot } from "./build";
-import { MixedDataPoint } from "../plot-types";
+import { FinancialChartState, MixedDataPoint } from "../plot-types";
 
 import { Chart } from "react-chartjs-2";
 import { TooltipItem, ScriptableScaleContext, ChartData } from "chart.js";
@@ -39,7 +39,7 @@ ChartJSInstance.register(
   zoomPlugin,
 );
 
-interface LinePlotProps {
+interface CandlePlotProps {
   strategyResult: StrategyResult;
   costPerTrade: number;
   symbol: string;
@@ -51,11 +51,8 @@ function CandlePlot({
   costPerTrade,
   symbol,
   hideTradingCosts = false,
-}: LinePlotProps) {
-  const [chartData, setChartData] = useState<ChartData<
-    "line" | "candlestick"
-  > | null>(null);
-
+}: CandlePlotProps) {
+  const [chartData, setChartData] = useState<FinancialChartState>(null);
   const chartRef = useRef<ChartJSInstance<"line" | "candlestick"> | null>(null);
 
   const resetZ = () => {

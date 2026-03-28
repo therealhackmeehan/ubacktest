@@ -12,14 +12,13 @@ const borderColors: string[] = [
 
 export default function buildUserDefined(
   strategyResult: StrategyResult,
-  timestamp: StrategyResult["timestamp"],
 ): ChartData<"line", LinePoint[]> {
   const datasets = Object.entries(strategyResult.userDefinedData).map(
     ([key, values], index) => {
       return {
         label: key,
         data: values.map((value: number, index: number) => ({
-          x: new Date(timestamp[index]),
+          x: new Date(strategyResult.timestamp[index]),
           y: value,
         })),
         borderColor: borderColors[index % borderColors.length],
@@ -35,7 +34,7 @@ export default function buildUserDefined(
   datasets.push({
     label: "Buy/Sell Signal",
     data: strategyResult.signal.map((value: number, index: number) => ({
-      x: new Date(timestamp[index]),
+      x: new Date(strategyResult.timestamp[index]),
       y: value,
     })),
     borderColor: "rgba(0, 155, 255, .6)",
@@ -49,7 +48,7 @@ export default function buildUserDefined(
   datasets.push({
     label: "Close Price",
     data: strategyResult.close.map((value: number, index: number) => ({
-      x: new Date(timestamp[index]),
+      x: new Date(strategyResult.timestamp[index]),
       y: value,
     })),
     borderColor: "rgba(123, 50, 168, 1)",
