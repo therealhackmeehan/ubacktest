@@ -10,11 +10,11 @@ import {
   type TogglePrivacy,
 } from "wasp/server/operations";
 import {
-  StatProps,
-  StrategyResultProps,
+  Stat,
+  StrategyResult,
   ResultWithStrategyName,
   ResultWithUsername,
-  GetTopResultsProp,
+  TopResult,
 } from "../../shared/sharedTypes";
 
 // unfortunately, we must leave data, forminputs,
@@ -31,7 +31,7 @@ type ResultCreationInfo = {
 
 export const createResult: CreateResult<ResultCreationInfo, Result> = async (
   { name, code, data, formInputs, strategyId, stats },
-  context
+  context,
 ) => {
   if (!context.user) throw new HttpError(401);
 
@@ -64,7 +64,7 @@ export const createResult: CreateResult<ResultCreationInfo, Result> = async (
     cashWithCosts,
     equityWithCosts,
     userDefinedData,
-  }: StrategyResultProps = data;
+  }: StrategyResult = data;
   const {
     length,
     pl,
@@ -81,7 +81,7 @@ export const createResult: CreateResult<ResultCreationInfo, Result> = async (
     stddevReturn,
     maxReturn,
     minReturn,
-  }: StatProps = stats;
+  }: Stat = stats;
 
   return await context.entities.Result.create({
     data: {
@@ -153,7 +153,7 @@ export const getResults: GetResults<
     ({ fromStrategy, ...rest }) => ({
       ...rest,
       strategyName: fromStrategy?.name ?? "",
-    })
+    }),
   );
 
   return resultsWithStrategyName.length > 0 ? resultsWithStrategyName : null;
@@ -176,9 +176,9 @@ export const getResultsForStrategy: GetResultsForStrategy<
   });
 };
 
-export const getTopResults: GetTopResults<void, GetTopResultsProp> = async (
+export const getTopResults: GetTopResults<void, TopResult> = async (
   _args,
-  context
+  context,
 ) => {
   const oneWeekAgo = new Date();
   oneWeekAgo.setDate(oneWeekAgo.getDate() - 7);
@@ -203,10 +203,10 @@ export const getTopResults: GetTopResults<void, GetTopResultsProp> = async (
       ...rest,
       code: "obfuscated for privacy.",
       email: user?.email ? user.email.split("@")[0] : "",
-    })
+    }),
   );
 
-  const toReturn: GetTopResultsProp = {
+  const toReturn: TopResult = {
     topByProfitLoss: resultsWithUsername
       .sort((a, b) => (b.pl ?? 0) - (a.pl ?? 0))
       .slice(0, 10),
@@ -220,7 +220,7 @@ export const getTopResults: GetTopResults<void, GetTopResultsProp> = async (
 
 export const deleteResult: DeleteResult<Pick<Result, "id">, Result> = async (
   { id },
-  context
+  context,
 ) => {
   if (!context.user) throw new HttpError(401);
 
@@ -234,7 +234,7 @@ export const deleteResult: DeleteResult<Pick<Result, "id">, Result> = async (
 
 export const togglePrivacy: TogglePrivacy<Partial<Result>, Result> = async (
   { id },
-  context
+  context,
 ) => {
   if (!context.user) throw new HttpError(401);
 
@@ -262,7 +262,7 @@ export const togglePrivacy: TogglePrivacy<Partial<Result>, Result> = async (
 
 export const renameResult: RenameResult<Partial<Result>, Result> = async (
   { id, name },
-  context
+  context,
 ) => {
   if (!context.user) throw new HttpError(401);
 
@@ -279,7 +279,7 @@ export const renameResult: RenameResult<Partial<Result>, Result> = async (
   if (existingResult && existingResult.id === id) {
     throw new HttpError(
       400,
-      "The new result name must be different from the current name."
+      "The new result name must be different from the current name.",
     );
   }
 

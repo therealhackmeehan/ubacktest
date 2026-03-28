@@ -6,9 +6,9 @@ import { FiArrowUp } from "react-icons/fi";
 import ResultButtonGroup from "./ResultButtonGroup";
 import {
   eodFreqs,
-  FormInputProps,
-  StatProps,
-  StrategyResultProps,
+  FormInput,
+  Stat,
+  StrategyResult,
 } from "../../../../shared/sharedTypes";
 import { createResult, getSpecificStrategy } from "wasp/client/operations";
 import SPChart from "./plots/spchart/SPChart";
@@ -23,9 +23,9 @@ import CashEquity from "./plots/cashEquity/CashEquity";
 
 interface ResultPanelProps {
   selectedStrategy: string | null;
-  formInputs: FormInputProps;
-  strategyResult: StrategyResultProps;
-  stats: StatProps;
+  formInputs: FormInput;
+  strategyResult: StrategyResult;
+  stats: Stat;
   abilityToSaveNew: boolean;
 }
 
@@ -65,7 +65,7 @@ function Result({
   const downloadCSV = () => {
     if (!strategyResult) return;
 
-    let headers = Object.keys(strategyResult) as (keyof StrategyResultProps)[];
+    let headers = Object.keys(strategyResult) as (keyof StrategyResult)[];
 
     headers = headers.filter(
       (header) =>

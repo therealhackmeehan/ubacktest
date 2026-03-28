@@ -12,7 +12,7 @@ export interface UserDefinedData {
   [key: string]: number[]; // The key can be any string, and the value is an array of numbers.
 }
 
-export type StrategyResultProps = Serializable<{
+export type StrategyResult = Serializable<{
   timestamp: string[];
   open: number[];
   close: number[];
@@ -37,7 +37,7 @@ export type StrategyResultProps = Serializable<{
   userDefinedData: UserDefinedData;
 }>;
 
-export type FormInputProps = Serializable<{
+export type FormInput = Serializable<{
   symbol: string;
   startDate: string;
   endDate: string;
@@ -49,7 +49,7 @@ export type FormInputProps = Serializable<{
   useAdjClose: boolean;
 }>;
 
-export type PythonDataProps = Serializable<{
+export type PythonData = Serializable<{
   timestamp: number[];
   open: number[];
   close: number[];
@@ -58,7 +58,7 @@ export type PythonDataProps = Serializable<{
   volume: number[];
 }>;
 
-export type StatProps = Serializable<{
+export type Stat = Serializable<{
   length: number;
   pl: number | null;
   plWCosts: number | null;
@@ -76,20 +76,20 @@ export type StatProps = Serializable<{
   minReturn: number | null;
 }>;
 
-export type ShareResultProps = {
+export type ShareResult = {
   email: User["email"];
   resultID: Result["id"];
 };
 
-export type GetSharedProps = Result & {
+export type GetShared = Result & {
   sharedID: string;
   email: string;
   accepted: boolean;
 };
 
-export type BacktestResultProps = Serializable<{
-  strategyResult: StrategyResultProps;
-  statistics: StatProps;
+export type BacktestResult = Serializable<{
+  strategyResult: StrategyResult;
+  statistics: Stat;
   debugOutput: string;
   stderr: string;
   warnings: string[];
@@ -111,7 +111,7 @@ export type SharedWithResultAndUser = Share & {
   result: Result & { user: User };
 };
 
-export type GetTopResultsProp = {
+export type TopResult = {
   topByProfitLoss: ResultWithUsername[] | null;
   topByAnnualizedProfitLoss: ResultWithUsername[] | null;
 };

@@ -3,12 +3,12 @@ import ResultHeader from "./ResultHeader";
 import { FiBookOpen } from "react-icons/fi";
 import OpenResult from "./OpenResult";
 import DeleteShareModal from "./modals/DeleteShareModal";
-import { FormInputProps, GetSharedProps } from "../../../shared/sharedTypes";
+import { FormInput, GetShared } from "../../../shared/sharedTypes";
 import { acceptShare } from "wasp/client/operations";
 import { MdDeleteOutline } from "react-icons/md";
 
 interface SharedResultItemProps {
-  result: GetSharedProps;
+  result: GetShared;
 }
 
 const SharedResultItem = ({ result }: SharedResultItemProps) => {
@@ -74,7 +74,7 @@ const SharedResultItem = ({ result }: SharedResultItemProps) => {
 
       {resultPanelOpen && (
         <OpenResult
-          formInputs={result.formInputs as unknown as FormInputProps}
+          formInputs={result.formInputs as unknown as FormInput}
           setResultPanelOpen={setResultPanelOpen}
           result={result}
         />

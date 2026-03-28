@@ -1,7 +1,7 @@
 import { ApexOptions } from "apexcharts";
 import React, { useState, useMemo, useEffect } from "react";
 import ReactApexChart from "react-apexcharts";
-import { type DailyStatsProps } from "../../../analytics/stats";
+import { type DailyStat } from "../../../analytics/stats";
 
 const options: ApexOptions = {
   legend: {
@@ -109,7 +109,7 @@ interface ChartOneState {
   }[];
 }
 
-const RevenueAndProfitChart = ({ weeklyStats, isLoading }: DailyStatsProps) => {
+const RevenueAndProfitChart = ({ weeklyStats, isLoading }: DailyStat) => {
   const dailyRevenueArray = useMemo(() => {
     if (!!weeklyStats && weeklyStats?.length > 0) {
       const sortedWeeks = weeklyStats?.sort((a, b) => {
@@ -145,7 +145,7 @@ const RevenueAndProfitChart = ({ weeklyStats, isLoading }: DailyStatsProps) => {
       setState((prevState) => {
         // Check if a "Revenue" series already exists
         const existingSeriesIndex = prevState.series.findIndex(
-          (series) => series.name === "Revenue"
+          (series) => series.name === "Revenue",
         );
 
         if (existingSeriesIndex >= 0) {

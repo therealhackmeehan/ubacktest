@@ -7,27 +7,27 @@ import { runStrategy, charge, updateStrategy } from "wasp/client/operations";
 import validateFormInputs from "../../scripts/validateFormInputs";
 import validatePythonCode from "../../scripts/validatePythonCode";
 import {
-  FormInputProps,
-  StatProps,
-  StrategyResultProps,
+  FormInput,
+  Stat,
+  StrategyResult,
   stdProps,
 } from "../../../../shared/sharedTypes";
 import { StrategyContext } from "../../EditorPage";
 import LongLoadingScreen from "./LongLoadingScreen";
 
 interface EditorProps {
-  formInputs: FormInputProps;
-  strategyResult: StrategyResultProps | null;
-  setStrategyResult: (value: StrategyResultProps | null) => void;
+  formInputs: FormInput;
+  strategyResult: StrategyResult | null;
+  setStrategyResult: (value: StrategyResult | null) => void;
   setResultOpen: (value: boolean) => void;
-  setFormInputs: React.Dispatch<React.SetStateAction<FormInputProps>>;
+  setFormInputs: React.Dispatch<React.SetStateAction<FormInput>>;
   setStrategyResultIsConnectedTo: (value: string) => void;
   std: stdProps;
   setStd: React.Dispatch<React.SetStateAction<stdProps>>;
   codeToDisplay: string;
   setCodeToDisplay: (value: string) => void;
   setWarningMsg: (value: string | null) => void;
-  setStats: (value: StatProps | null) => void;
+  setStats: (value: Stat | null) => void;
 }
 
 function Editor({

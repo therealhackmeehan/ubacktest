@@ -1,8 +1,8 @@
 import { useState, useRef, useEffect } from "react";
 import {
-  FormInputProps,
-  StatProps,
-  StrategyResultProps,
+  FormInput,
+  Stat,
+  StrategyResult,
   UserDefinedData,
 } from "../../../shared/sharedTypes";
 import copyToClipboard from "./copyToClipboard";
@@ -14,7 +14,7 @@ import ErrorModal from "../../../editor/client/components/modals/ErrorModal";
 import { TiCancel } from "react-icons/ti";
 
 interface OpenResultProps {
-  formInputs: FormInputProps;
+  formInputs: FormInput;
   setResultPanelOpen: (value: boolean) => void;
   result: Result;
 }
@@ -24,9 +24,10 @@ export default function OpenResult({
   setResultPanelOpen,
   result,
 }: OpenResultProps) {
-  const [strategyResult, setStrategyResult] =
-    useState<StrategyResultProps | null>(null);
-  const [statResult, setStatResult] = useState<StatProps | null>(null);
+  const [strategyResult, setStrategyResult] = useState<StrategyResult | null>(
+    null,
+  );
+  const [statResult, setStatResult] = useState<Stat | null>(null);
   const [loading, setLoading] = useState(true);
   const [errMsg, setErrMsg] = useState("");
 
@@ -51,10 +52,10 @@ export default function OpenResult({
       try {
         if (!result.open || !result.close || !result.portfolio) {
           throw new Error(
-            "This result was not correctly loaded and is missing critical data arrays."
+            "This result was not correctly loaded and is missing critical data arrays.",
           );
         }
-        // const joinedInfo: StrategyResultProps = {
+        // const joinedInfo: StrategyResult = {
         //     timestamp: result.timestamp,
         //     open: result.open,
         //     close: result.close,
@@ -80,7 +81,7 @@ export default function OpenResult({
         // };
         // setStrategyResult(joinedInfo);
 
-        // const joinedStats: StatProps = {
+        // const joinedStats: Stat = {
         //     length: result.length,
         //     pl: result.pl,
         //     plWCosts: result.plWCosts,
@@ -100,7 +101,7 @@ export default function OpenResult({
 
         // setStatResult(joinedStats);
 
-        const strategyKeys: (keyof StrategyResultProps)[] = [
+        const strategyKeys: (keyof StrategyResult)[] = [
           "timestamp",
           "open",
           "close",
@@ -119,7 +120,7 @@ export default function OpenResult({
           "userDefinedData",
         ];
 
-        const statKeys: (keyof StatProps)[] = [
+        const statKeys: (keyof Stat)[] = [
           "length",
           "pl",
           "plWCosts",
@@ -137,8 +138,8 @@ export default function OpenResult({
           "minReturn",
         ];
 
-        setStrategyResult(pick<StrategyResultProps>(result, strategyKeys));
-        setStatResult(pick<StatProps>(result, statKeys));
+        setStrategyResult(pick<StrategyResult>(result, strategyKeys));
+        setStatResult(pick<Stat>(result, statKeys));
       } catch (error: any) {
         setErrMsg(`Error running strategy: ${error.message || error}`);
       } finally {

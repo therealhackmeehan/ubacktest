@@ -1,6 +1,6 @@
 import { FaCaretDown, FaCaretUp } from "react-icons/fa";
 import React, { useState, useRef, useEffect } from "react";
-import { FormInputProps } from "../../../../shared/sharedTypes";
+import { FormInput } from "../../../../shared/sharedTypes";
 import { IoMdReturnRight } from "react-icons/io";
 import { CgArrowUp } from "react-icons/cg";
 import { GiInvertedDice5 } from "react-icons/gi";
@@ -12,8 +12,8 @@ import stocks from "./stocksInSP";
 import { intVals, eodFreqs } from "../../../../shared/sharedTypes";
 
 interface InputFormSubcomponentProps {
-  formInputs: FormInputProps;
-  setFormInputs: React.Dispatch<React.SetStateAction<FormInputProps>>;
+  formInputs: FormInput;
+  setFormInputs: React.Dispatch<React.SetStateAction<FormInput>>;
   run: () => Promise<void>;
 }
 
@@ -43,10 +43,10 @@ function InputForm({
   const timeoutRef = useRef<NodeJS.Timeout | null>(null);
 
   const handleChange = (
-    event: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>
+    event: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>,
   ) => {
     const { name, value } = event.target;
-    setFormInputs((prevInputs: FormInputProps) => ({
+    setFormInputs((prevInputs: FormInput) => ({
       ...prevInputs,
       [name]: value,
     }));
@@ -58,7 +58,7 @@ function InputForm({
           .filter(
             (stock: Stock) =>
               stock["Symbol"].toLowerCase().startsWith(value.toLowerCase()) ||
-              stock["Security"].toLowerCase().startsWith(value.toLowerCase())
+              stock["Security"].toLowerCase().startsWith(value.toLowerCase()),
           )
           .slice(0, 4);
 
@@ -87,7 +87,7 @@ function InputForm({
 
   const handleSelect = (symbol: string) => {
     // Update form inputs with selected symbol and clear matches
-    setFormInputs((prevInputs: FormInputProps) => ({
+    setFormInputs((prevInputs: FormInput) => ({
       ...prevInputs,
       symbol,
     }));
@@ -140,7 +140,7 @@ function InputForm({
     // Ensure y is within the visible screen bounds
     const clampedY = Math.min(
       Math.max(initialPosition.y, 0),
-      window.innerHeight - 100
+      window.innerHeight - 100,
     ); // 50px buffer
 
     return { y: clampedY };
@@ -168,7 +168,7 @@ function InputForm({
     const newY = clientY - offset.current.y;
     const clampedY = Math.max(
       0,
-      Math.min(newY, window.innerHeight - window.innerHeight / 3)
+      Math.min(newY, window.innerHeight - window.innerHeight / 3),
     );
 
     setPosition({ y: clampedY });
@@ -350,7 +350,7 @@ function InputForm({
                           className="text-xs text-gray-600 rounded-md border border-gray-200 shadow-md focus:outline-none focus:border-transparent focus:shadow-none duration-200 ease-in-out hover:shadow-none"
                           checked={formInputs.useAdjClose}
                           onChange={(e) => {
-                            setFormInputs((prevInputs: FormInputProps) => ({
+                            setFormInputs((prevInputs: FormInput) => ({
                               ...prevInputs,
                               useAdjClose: !prevInputs.useAdjClose, // Sets to true or false based on checkbox state
                             }));
@@ -407,7 +407,7 @@ function InputForm({
                         type="checkbox"
                         className="text-xs text-gray-600 rounded-md border border-gray-200 shadow-md focus:outline-none focus:border-transparent focus:shadow-none duration-200 ease-in-out hover:shadow-none"
                         onChange={(e) => {
-                          setFormInputs((prevInputs: FormInputProps) => ({
+                          setFormInputs((prevInputs: FormInput) => ({
                             ...prevInputs,
                             useWarmupDate: e.target.checked, // Sets to true or false based on checkbox state
                           }));

@@ -1,7 +1,7 @@
-import { FormInputProps } from "../../../shared/sharedTypes";
+import { FormInput } from "../../../shared/sharedTypes";
 import { addMonths } from "../scripts/addMonths";
 
-export const initFormInputs: FormInputProps = {
+export const initFormInputs: FormInput = {
   symbol: "AAPL",
   startDate: addMonths(new Date(), -12), // 12 months ago
   endDate: addMonths(new Date(), -6), // 6 months ago

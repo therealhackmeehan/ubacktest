@@ -1,12 +1,12 @@
 import { useMemo } from "react";
 import { UpArrow, DownArrow } from "../../../client/icons/icons-arrows";
-import { type DailyStatsProps } from "../../../analytics/stats";
+import { type DailyStat } from "../../../analytics/stats";
 
 const TotalRevenueCard = ({
   dailyStats,
   weeklyStats,
   isLoading,
-}: DailyStatsProps) => {
+}: DailyStat) => {
   const isDeltaPositive = useMemo(() => {
     if (!weeklyStats) return false;
     return weeklyStats[0].totalRevenue - weeklyStats[1]?.totalRevenue > 0;

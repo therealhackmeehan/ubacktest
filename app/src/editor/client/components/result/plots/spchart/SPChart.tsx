@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { StrategyResultProps } from "../../../../../../shared/sharedTypes";
+import { StrategyResult } from "../../../../../../shared/sharedTypes";
 import ChartWrapper from "../../../../../../client/components/ChartWrapper";
 
 import { Line } from "react-chartjs-2";
@@ -15,7 +15,10 @@ import {
   Legend,
   TimeSeriesScale,
   ScriptableScaleContext,
+  ChartData,
 } from "chart.js";
+import buildSpChart from "./build";
+import { LinePoint } from "../plot-types";
 
 ChartJS.register(
   CategoryScale,
@@ -29,43 +32,17 @@ ChartJS.register(
 );
 
 interface SPChartProps {
-  strategyResult: StrategyResultProps;
+  strategyResult: StrategyResult;
 }
 
 function SPChart({ strategyResult }: SPChartProps) {
-  const [chartData, setChartData] = useState<any | null>(null);
+  const [chartData, setChartData] = useState<ChartData<
+    "line",
+    LinePoint[]
+  > | null>(null);
 
   useEffect(() => {
-    let chartData = {
-      datasets: [
-        {
-          label: "My Strategy",
-          data: strategyResult.timestamp.map(
-            (timestamp: string, index: number) => ({
-              x: new Date(timestamp),
-              y: strategyResult.portfolio[index],
-            }),
-          ),
-          borderColor: "rgba(255, 0, 100, 1)",
-          backgroundColor: "rgba(255, 0, 100, 1)",
-          pointRadius: 0,
-          borderWidth: 1,
-        },
-        {
-          label: "S&P 500 Index",
-          data: strategyResult.timestamp.map(
-            (timestamp: string, index: number) => ({
-              x: new Date(timestamp),
-              y: strategyResult.sp[index],
-            }),
-          ),
-          borderColor: "rgba(123, 50, 168, 1)",
-          pointRadius: 0,
-          borderWidth: 1,
-        },
-      ],
-    };
-
+    let chartData = buildSpChart(strategyResult);
     setChartData(chartData);
   }, [strategyResult]);
 

@@ -1,5 +1,5 @@
 import { HttpError } from "wasp/server";
-import { FormInputProps } from "../../shared/sharedTypes";
+import { FormInput } from "../../shared/sharedTypes";
 import { intVals, eodFreqs } from "../../shared/sharedTypes";
 
 // work on this!
@@ -44,13 +44,13 @@ class StockDataConnection {
   private start: Date;
   private end: Date;
 
-  constructor(private formInputs: FormInputProps) {
+  constructor(private formInputs: FormInput) {
     this.isEOD = eodFreqs.includes(this.formInputs.intval);
     this.useAdjusted = this.isEOD && this.formInputs.useAdjClose;
     this.start = new Date(
       this.formInputs.useWarmupDate
         ? this.formInputs.warmupDate
-        : this.formInputs.startDate
+        : this.formInputs.startDate,
     );
     this.end = new Date(this.formInputs.endDate);
   }
@@ -62,7 +62,7 @@ class StockDataConnection {
         400,
         "Backtests limited to ~1500 data points. We calculated approximately " +
           approxDataLength.toString() +
-          " timepoints."
+          " timepoints.",
       );
     }
 
@@ -91,7 +91,7 @@ class StockDataConnection {
         503,
         `Error in retrieving data for ${symbol}.\n\n${
           json || "'Unknown Error'"
-        }.`
+        }.`,
       );
     return json;
   }
@@ -139,7 +139,7 @@ class StockDataConnection {
     if (close.length < 5) {
       throw new HttpError(
         400,
-        "Less than 5 data points available for backtest."
+        "Less than 5 data points available for backtest.",
       );
     }
     if (!close.every((p) => typeof p === "number" && !isNaN(p))) {
@@ -148,19 +148,19 @@ class StockDataConnection {
     if (!Array.isArray(date) || date.length !== close.length) {
       throw new HttpError(
         500,
-        "Mismatch in lengths between timestamps and close prices."
+        "Mismatch in lengths between timestamps and close prices.",
       );
     }
     if (![high, low, open, volume].every((arr) => Array.isArray(arr))) {
       throw new HttpError(
         500,
-        "Expected arrays for high/low/open/volume. At least one of those columns was missing from the data."
+        "Expected arrays for high/low/open/volume. At least one of those columns was missing from the data.",
       );
     }
     if ([high, low, open].some((arr) => arr.length !== close.length)) {
       throw new HttpError(
         500,
-        "Data length mismatch among high/low/open/close."
+        "Data length mismatch among high/low/open/close.",
       );
     }
   }
@@ -188,7 +188,7 @@ class StockDataConnection {
         Math.abs(endInData - endInput) > allowedDrift)
     ) {
       warnings.push(
-        "Discrepancy between available data and selected dates. Stock may have IPO'd later or been delisted earlier."
+        "Discrepancy between available data and selected dates. Stock may have IPO'd later or been delisted earlier.",
       );
     }
 
@@ -196,12 +196,12 @@ class StockDataConnection {
     if (this.isEOD) {
       if (volume.some((v) => v < 1000)) {
         warnings.push(
-          "Low trading volume detected. This may cause volatility and unpredictability."
+          "Low trading volume detected. This may cause volatility and unpredictability.",
         );
       }
       if (!useAdjClose && splitFactor.some((s) => s !== 1)) {
         warnings.push(
-          "Stock splits detected. This backtest is likely invalid. Consider using adjusted close prices."
+          "Stock splits detected. This backtest is likely invalid. Consider using adjusted close prices.",
         );
       }
     }
@@ -233,13 +233,13 @@ class StockDataConnection {
     // chop data after burn-in
     const shortenedIndex = date.findIndex(
       (ts) =>
-        new Date(ts).getTime() >= new Date(this.formInputs.startDate).getTime()
+        new Date(ts).getTime() >= new Date(this.formInputs.startDate).getTime(),
     );
 
     if (shortenedIndex === -1)
       throw new HttpError(
         400,
-        "No data exists after the specified start timestamp."
+        "No data exists after the specified start timestamp.",
       );
 
     const makeShort = (arr: any[]) => arr.slice(shortenedIndex);
@@ -261,7 +261,7 @@ class StockDataConnection {
       prices.map(
         (p) =>
           Math.round((p / firstPrice) * 10 ** this.decimalPlaces) /
-          10 ** this.decimalPlaces
+          10 ** this.decimalPlaces,
       );
 
     return {

@@ -1,11 +1,11 @@
-import { PythonDataProps } from "../../shared/sharedTypes";
+import { PythonData } from "../../shared/sharedTypes";
 
 class ScriptBuilder {
   public static build(
     code: string,
-    toInsertInPython: PythonDataProps,
+    toInsertInPython: PythonData,
     startDate: string,
-    uniqueKey: string
+    uniqueKey: string,
   ): string {
     const m = `${code}
 

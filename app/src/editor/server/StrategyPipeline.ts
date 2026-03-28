@@ -1,8 +1,4 @@
-import {
-  StrategyResultProps,
-  FormInputProps,
-  StatProps,
-} from "../../shared/sharedTypes";
+import { StrategyResult, FormInput, Stat } from "../../shared/sharedTypes";
 import CodeExecutor from "./CodeExecutor";
 import ScriptBuilder from "./ScriptBuilder";
 import ResultValidator from "./ResultValidator";
@@ -10,7 +6,7 @@ import STDParser from "./STDParser";
 import PortfolioCalculator from "./PortfolioCalculator";
 import StockDataConnection from "./StockDataConnection";
 import { HttpError } from "wasp/server";
-import { BacktestResultProps } from "wasp/src/shared/sharedTypes";
+import { BacktestResult } from "wasp/src/shared/sharedTypes";
 
 /*
     THE backend endpoint for processing of the stock trading strategy.
@@ -24,11 +20,11 @@ import { BacktestResultProps } from "wasp/src/shared/sharedTypes";
 
 class StrategyPipeline {
   // Store user inputs in formInputs, code in code.
-  private formInputs: FormInputProps;
+  private formInputs: FormInput;
   private code: string;
 
   // initialize the final result with empty arrays
-  private strategyResult: StrategyResultProps = {
+  private strategyResult: StrategyResult = {
     timestamp: [],
     open: [],
     close: [],
@@ -47,7 +43,7 @@ class StrategyPipeline {
     userDefinedData: {},
   };
 
-  private statistics: StatProps = {
+  private statistics: Stat = {
     length: 0,
     pl: null,
     plWCosts: null,
@@ -70,13 +66,13 @@ class StrategyPipeline {
   private stdout: string = "";
   private warnings: string[] = [];
 
-  constructor(formInputs: FormInputProps, code: string) {
+  constructor(formInputs: FormInput, code: string) {
     this.formInputs = formInputs;
     this.code = code;
   }
 
   //________________________________________ run: main endpoint
-  public async run(): Promise<BacktestResultProps> {
+  public async run(): Promise<BacktestResult> {
     // Initialize our Stock API Connection
     const apiConnection = new StockDataConnection(this.formInputs);
 
@@ -100,13 +96,13 @@ class StrategyPipeline {
       this.code,
       normalizedQuote,
       cutoffDate,
-      key
+      key,
     );
 
     // Execute user code
     const { stdout_raw, stderr_raw } = await new CodeExecutor(
       fullUserCode,
-      this.formInputs.timeout
+      this.formInputs.timeout,
     ).execute();
 
     // Parse execution output
@@ -122,7 +118,7 @@ class StrategyPipeline {
       if (!this.stderr)
         throw new HttpError(
           503,
-          "Something went wrong. No trading signals or stderr generated. Please try again."
+          "Something went wrong. No trading signals or stderr generated. Please try again.",
         );
       return this.sendJSONtoFrontend();
     }
@@ -133,21 +129,21 @@ class StrategyPipeline {
       if (
         StrategyPipeline.arraysAreEqual(
           this.strategyResult.timestamp,
-          shortenedNormalizedQuote.timestamp
+          shortenedNormalizedQuote.timestamp,
         )
       ) {
         this.strategyResult.sp = shortenedNormalizedQuote.close;
       }
     } catch (error: any) {
       this.warnings.push(
-        "An issue occurred with fetching S&P Comparison Data, so it will be excluded from this backtest."
+        "An issue occurred with fetching S&P Comparison Data, so it will be excluded from this backtest.",
       );
     }
 
     // Calculate final portfolio results
     const calc = new PortfolioCalculator(
       this.formInputs.costPerTrade,
-      this.strategyResult
+      this.strategyResult,
     );
     this.strategyResult = calc.calculate();
 
@@ -159,7 +155,7 @@ class StrategyPipeline {
 
   //________________________________________
 
-  private sendJSONtoFrontend(): BacktestResultProps {
+  private sendJSONtoFrontend(): BacktestResult {
     return {
       strategyResult: this.strategyResult,
       statistics: this.statistics,

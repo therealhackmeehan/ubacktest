@@ -1,10 +1,7 @@
 import { useState, useMemo } from "react";
 import { DownArrow, UpArrow } from "../../../client/icons/icons-arrows";
 import { parseISO, format, setDate } from "date-fns";
-import {
-  ResultWithStrategyName,
-  FormInputProps,
-} from "../../../shared/sharedTypes";
+import { ResultWithStrategyName, FormInput } from "../../../shared/sharedTypes";
 
 interface GroupedResultsProps {
   resultsByStrategy: ResultWithStrategyName[];
@@ -38,10 +35,8 @@ function GroupedResultsSummary({
   const parsedResults = useMemo(() => {
     return resultsByStrategy.map((result) => ({
       ...result,
-      start: new Date(
-        (result.formInputs as unknown as FormInputProps).startDate
-      ),
-      end: new Date((result.formInputs as unknown as FormInputProps).endDate),
+      start: new Date((result.formInputs as unknown as FormInput).startDate),
+      end: new Date((result.formInputs as unknown as FormInput).endDate),
     }));
   }, [resultsByStrategy]);
 
@@ -55,7 +50,7 @@ function GroupedResultsSummary({
           (l) =>
             l.level === level &&
             l.range.end > range.start &&
-            l.range.start < range.end
+            l.range.start < range.end,
         )
       ) {
         level++;
@@ -82,7 +77,7 @@ function GroupedResultsSummary({
     const total = (
       arr: typeof parsedResults,
       key: keyof ResultWithStrategyName,
-      label: string
+      label: string,
     ) => {
       let hasNull = false;
       const sum = arr.reduce((sum, r) => {
@@ -92,7 +87,7 @@ function GroupedResultsSummary({
       }, 0);
       if (hasNull) {
         warningsList.push(
-          `Undefined values for "${label}" in one or more results. These null values were set to 0 for the stats listed below.`
+          `Undefined values for "${label}" in one or more results. These null values were set to 0 for the stats listed below.`,
         );
       }
       return sum;
@@ -162,7 +157,7 @@ function GroupedResultsSummary({
       const start = +range.start;
       const end = +range.end;
       const steps = Math.ceil(
-        (end - start) / (resolution * 1000 * 60 * 60 * 24)
+        (end - start) / (resolution * 1000 * 60 * 60 * 24),
       );
       for (let i = 0; i <= steps; i++) {
         const t = start + ((end - start) * i) / steps;
@@ -181,7 +176,7 @@ function GroupedResultsSummary({
       const x = (i / (sampleCount - 1)) * viewBoxWidth;
       const density = xPoints.reduce(
         (sum, xi) => sum + kernel((x - xi) / bandwidth),
-        0
+        0,
       );
       return { x, y: density };
     });
@@ -350,7 +345,7 @@ function GroupedResultsSummary({
                   width="100%"
                   viewBox={`0 0 1000 ${Math.max(
                     stackedLevels.length * heightPerLevel,
-                    100
+                    100,
                   )}`}
                   preserveAspectRatio="none"
                   onMouseMove={(e) => {
@@ -389,8 +384,8 @@ function GroupedResultsSummary({
                           setResultToHighlight(range.id);
                           setTickerToDisplay(
                             (
-                              range.formInputs as unknown as FormInputProps
-                            ).symbol.toUpperCase()
+                              range.formInputs as unknown as FormInput
+                            ).symbol.toUpperCase(),
                           );
                         }}
                         onMouseLeave={() => {

@@ -1,5 +1,3 @@
-export type MixedChartType = "line" | "candlestick";
-
 export type LinePoint = {
   x: Date;
   y: number;

@@ -2,8 +2,8 @@ import CandlePlot from "../editor/client/components/result/candle/CandlePlot";
 import { Result } from "wasp/entities";
 import {
   eodFreqs,
-  FormInputProps,
-  StrategyResultProps,
+  FormInput,
+  StrategyResult,
   UserDefinedData,
 } from "../shared/sharedTypes";
 import { ImCancelCircle } from "react-icons/im";
@@ -19,9 +19,9 @@ function LeaderboardPlot({
   setLeaderboardPlotOpen,
   index,
 }: LeaderboardPlotProps) {
-  const formInputsLocal = result.formInputs as unknown as FormInputProps;
+  const formInputsLocal = result.formInputs as unknown as FormInput;
 
-  const joinedInfo: StrategyResultProps = {
+  const joinedInfo: StrategyResult = {
     timestamp: result.timestamp,
     open: result.open,
     close: result.close,

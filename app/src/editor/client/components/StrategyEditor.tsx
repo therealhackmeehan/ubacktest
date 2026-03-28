@@ -2,9 +2,9 @@ import { useState, useContext, useEffect } from "react";
 import Editor from "./editor/Editor";
 import ResultLayout from "./result/ResultLayout";
 import {
-  FormInputProps,
-  StatProps,
-  StrategyResultProps,
+  FormInput,
+  Stat,
+  StrategyResult,
   stdProps,
 } from "../../../shared/sharedTypes";
 import { StrategyContext } from "../EditorPage";
@@ -16,7 +16,7 @@ function StrategyEditor() {
   const { selectedStrategy, hasSaved } = useContext(StrategyContext);
 
   const [codeToDisplay, setCodeToDisplay] = useState<string>(
-    selectedStrategy.code
+    selectedStrategy.code,
   );
   useEffect(() => {
     if (selectedStrategy) {
@@ -26,19 +26,20 @@ function StrategyEditor() {
 
   const [warningMsg, setWarningMsg] = useState<string | null>("");
   const [resultOpen, setResultOpen] = useState<boolean>(false);
-  const [strategyResult, setStrategyResult] =
-    useState<StrategyResultProps | null>(null);
+  const [strategyResult, setStrategyResult] = useState<StrategyResult | null>(
+    null,
+  );
   const [strategyResultIsConnectedTo, setStrategyResultIsConnectedTo] =
     useState<string>("");
 
-  const [stats, setStats] = useState<StatProps | null>(null);
+  const [stats, setStats] = useState<Stat | null>(null);
 
   const loadFormInputs = () => {
     const savedInputs = localStorage.getItem("formInputs");
     return savedInputs ? JSON.parse(savedInputs) : initFormInputs;
   };
 
-  const [formInputs, setFormInputs] = useState<FormInputProps>(loadFormInputs);
+  const [formInputs, setFormInputs] = useState<FormInput>(loadFormInputs);
 
   const [std, setStd] = useState<stdProps>({
     out: "",

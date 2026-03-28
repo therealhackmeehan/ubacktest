@@ -1,6 +1,6 @@
-import { FormInputProps, eodFreqs } from "../../../../shared/sharedTypes";
+import { FormInput, eodFreqs } from "../../../../shared/sharedTypes";
 
-function FormInputHeader({ formInputs }: { formInputs: FormInputProps }) {
+function FormInputHeader({ formInputs }: { formInputs: FormInput }) {
   return (
     <div className="flex justify-between bg-slate-100 p-1 mt-1 rounded-lg text-xs shadow-sm">
       <div className="p-2">

@@ -1,8 +1,8 @@
 import { useState, useEffect, useRef } from "react";
 import ChartWrapper from "../../../../../../client/components/ChartWrapper";
-import { StrategyResultProps } from "../../../../../../shared/sharedTypes";
+import { StrategyResult } from "../../../../../../shared/sharedTypes";
 import { buildCandlePlot } from "./build";
-import { MixedChartType, MixedDataPoint } from "../plot-types";
+import { MixedDataPoint } from "../plot-types";
 
 import { Chart } from "react-chartjs-2";
 import { TooltipItem, ScriptableScaleContext, ChartData } from "chart.js";
@@ -40,7 +40,7 @@ ChartJSInstance.register(
 );
 
 interface LinePlotProps {
-  strategyResult: StrategyResultProps;
+  strategyResult: StrategyResult;
   costPerTrade: number;
   symbol: string;
   hideTradingCosts?: boolean;
@@ -52,11 +52,11 @@ function CandlePlot({
   symbol,
   hideTradingCosts = false,
 }: LinePlotProps) {
-  const [chartData, setChartData] = useState<ChartData<MixedChartType> | null>(
-    null,
-  );
+  const [chartData, setChartData] = useState<ChartData<
+    "line" | "candlestick"
+  > | null>(null);
 
-  const chartRef = useRef<ChartJSInstance<MixedChartType> | null>(null);
+  const chartRef = useRef<ChartJSInstance<"line" | "candlestick"> | null>(null);
 
   const resetZ = () => {
     chartRef.current?.resetZoom();

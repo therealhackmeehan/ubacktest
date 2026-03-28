@@ -1,9 +1,9 @@
 import { useMemo } from "react";
 import { cn } from "../../../client/cn";
 import { UpArrow, DownArrow } from "../../../client/icons/icons-arrows";
-import { type DailyStatsProps } from "../../../analytics/stats";
+import { type DailyStat } from "../../../analytics/stats";
 
-const TotalPayingUsersCard = ({ dailyStats, isLoading }: DailyStatsProps) => {
+const TotalPayingUsersCard = ({ dailyStats, isLoading }: DailyStat) => {
   const isDeltaPositive = useMemo(() => {
     return !!dailyStats?.paidUserDelta && dailyStats?.paidUserDelta > 0;
   }, [dailyStats]);

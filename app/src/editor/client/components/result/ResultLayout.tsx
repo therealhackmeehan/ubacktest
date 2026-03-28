@@ -1,16 +1,16 @@
 import {
-  FormInputProps,
-  StrategyResultProps,
-  StatProps,
+  FormInput,
+  StrategyResult,
+  Stat,
 } from "../../../../shared/sharedTypes";
 import Result from "./Result";
 
 interface ResultProps {
-  strategyResult: StrategyResultProps | null;
-  formInputs: FormInputProps;
+  strategyResult: StrategyResult | null;
+  formInputs: FormInput;
   strategyResultIsConnectedTo: string;
   selectedStrategy: string;
-  stats: StatProps | null;
+  stats: Stat | null;
 }
 
 export default function ResultLayout({

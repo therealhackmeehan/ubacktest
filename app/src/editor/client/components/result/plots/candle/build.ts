@@ -1,13 +1,12 @@
 import { ChartData } from "chart.js";
-import { StrategyResultProps } from "../../../../../../shared/sharedTypes";
-import { MixedChartType } from "../plot-types";
+import { StrategyResult } from "../../../../../../shared/sharedTypes";
 
 export function buildCandlePlot(
-  strategyResult: StrategyResultProps,
+  strategyResult: StrategyResult,
   symbol: string,
   costPerTrade: number,
   hideTradingCosts: boolean,
-): ChartData<MixedChartType> {
+): ChartData<"line" | "candlestick"> {
   const datasets = [
     {
       type: "line" as const,
@@ -68,5 +67,5 @@ export function buildCandlePlot(
     datasets.pop();
   }
 
-  return { datasets: datasets } as ChartData<MixedChartType>;
+  return { datasets: datasets } as ChartData<"line" | "candlestick">;
 }

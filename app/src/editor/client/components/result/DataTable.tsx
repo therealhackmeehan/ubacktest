@@ -1,9 +1,9 @@
 import { useState } from "react";
 import { MdSort } from "react-icons/md";
-import { StrategyResultProps } from "../../../../shared/sharedTypes";
+import { StrategyResult } from "../../../../shared/sharedTypes";
 
 type StrategyResultSortProps = Pick<
-  StrategyResultProps,
+  StrategyResult,
   "timestamp" | "signal" | "portfolio" | "returns"
 >;
 
@@ -17,7 +17,7 @@ type Row = {
 type SortKey = keyof StrategyResultSortProps; // "timestamp" | "signal" | "portfolio" | "returns"
 
 interface DataTableProps {
-  strategyResult: StrategyResultProps;
+  strategyResult: StrategyResult;
 }
 
 function DataTable({ strategyResult }: DataTableProps) {
@@ -51,7 +51,7 @@ function DataTable({ strategyResult }: DataTableProps) {
         signal: sortedData.signal[index],
         portfolio: sortedData.portfolio[index],
         returns: sortedData.returns[index],
-      })
+      }),
     );
 
     // Sorting logic

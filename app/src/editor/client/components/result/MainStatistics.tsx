@@ -1,6 +1,6 @@
-import { StatProps } from "../../../../shared/sharedTypes";
+import { Stat } from "../../../../shared/sharedTypes";
 
-function MainStatistics({ stats }: { stats: StatProps }) {
+function MainStatistics({ stats }: { stats: Stat }) {
   return (
     <div className="p-4 col-span-1 bg-slate-100 rounded-lg shadow-sm">
       <div className="font-extrabold mb-2 text-xl text-start tracking-tight p-2 rounded-lg bg-white">

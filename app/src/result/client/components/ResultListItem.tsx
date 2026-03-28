@@ -3,7 +3,7 @@ import { FiBookOpen } from "react-icons/fi";
 import { MdOutlineEdit, MdDeleteOutline } from "react-icons/md";
 import { GoShare } from "react-icons/go";
 import { type Result } from "wasp/entities";
-import { FormInputProps } from "../../../shared/sharedTypes";
+import { FormInput } from "../../../shared/sharedTypes";
 import RenameResultModal from "./modals/RenameResultModal";
 import DeleteResultModal from "./modals/DeleteResultModal";
 import OpenResult from "./OpenResult";
@@ -22,7 +22,7 @@ export default function ResultListItem({
   result,
   highlight = false,
 }: ResultListItemProps) {
-  const formInputs = result.formInputs as unknown as FormInputProps;
+  const formInputs = result.formInputs as unknown as FormInput;
   const [resultPanelOpen, setResultPanelOpen] = useState<boolean>(false);
 
   const [renameResultModalOpen, setRenameResultModalOpen] =

@@ -11,11 +11,7 @@ import {
   type RunStrategy,
 } from "wasp/server/operations";
 import StrategyPipeline from "./StrategyPipeline";
-import {
-  BacktestResultProps,
-  eodFreqs,
-  FormInputProps,
-} from "../../shared/sharedTypes";
+import { BacktestResult, eodFreqs, FormInput } from "../../shared/sharedTypes";
 
 export const createStrategy: CreateStrategy<
   { name: string; code: string },
@@ -45,7 +41,7 @@ export const createStrategy: CreateStrategy<
 
 export const getStrategies: GetStrategies<void, Strategy[] | null> = async (
   _args,
-  context
+  context,
 ) => {
   if (!context.user) throw new HttpError(401);
 
@@ -108,7 +104,7 @@ export const renameStrategy: RenameStrategy<
   if (existingStrategy && existingStrategy.id === id) {
     throw new HttpError(
       400,
-      "The new strategy name must be different from the current name."
+      "The new strategy name must be different from the current name.",
     );
   }
 
@@ -138,8 +134,8 @@ export const updateStrategy: UpdateStrategy<
 };
 
 export const runStrategy: RunStrategy<
-  { formInputs: FormInputProps; code: string },
-  BacktestResultProps
+  { formInputs: FormInput; code: string },
+  BacktestResult
 > = async ({ formInputs, code }, context) => {
   if (!context.user) throw new HttpError(401);
   const user = context.user;
@@ -151,7 +147,7 @@ export const runStrategy: RunStrategy<
     if (!eodFreqs.includes(formInputs.intval) && !isProUser) {
       throw new HttpError(
         402,
-        "High frequency backtesting is only available to pro users. Consider upgrading your subscription."
+        "High frequency backtesting is only available to pro users. Consider upgrading your subscription.",
       );
     }
 
@@ -159,7 +155,7 @@ export const runStrategy: RunStrategy<
     if (!user.credits && !user.subscriptionPlan) {
       throw new HttpError(
         402,
-        "You must add more credits or purchase a subscription to continue using this service."
+        "You must add more credits or purchase a subscription to continue using this service.",
       );
     }
 
@@ -170,14 +166,14 @@ export const runStrategy: RunStrategy<
       if (subscriptionStatus === "past_due") {
         throw new HttpError(
           402,
-          "Your subscription payment is past due, and you've run out of free credits. Please update your payment to continue using the service."
+          "Your subscription payment is past due, and you've run out of free credits. Please update your payment to continue using the service.",
         );
       }
 
       if (subscriptionStatus === "deleted") {
         throw new HttpError(
           402,
-          "Your subscription has been deleted, and you have no remaining credits. Consider resubscribing to regain access."
+          "Your subscription has been deleted, and you have no remaining credits. Consider resubscribing to regain access.",
         );
       }
     }
