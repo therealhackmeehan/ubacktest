@@ -40,5 +40,5 @@ test("Purchase 5 credits with stripe", async () => {
 test("Unsubscriber now has 8 credits on account page", async () => {
   expect(page.url()).toContain("/account");
   await visibleText(page, "Account Information");
-  await visibleText(page, "Credits remaining (this month): 8");
+  await visibleText(page, "Credits remaining: 8");
 });
