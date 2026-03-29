@@ -47,7 +47,7 @@ const submitAuthForm = async (page: Page, action: AuthAction, fast = false) => {
     page
       .waitForResponse(
         (response) =>
-          response.url().includes(action) && response.status() === 200
+          response.url().includes(action) && response.status() === 200,
       )
       .catch((err) => console.error(err.message)),
     click,
@@ -58,7 +58,7 @@ export const authenticateUser = async (
   page: Page,
   user: User,
   action: AuthAction,
-  options: AuthOptions = {}
+  options: AuthOptions = {},
 ) => {
   const { fast = false, redirectTo } = options;
 
@@ -90,7 +90,7 @@ export const logUserOut = async (page: Page, email: string) => {
 
 export async function createNewStrategy(
   page: Page,
-  name: string = RANDOM_STRATEGY_NAME
+  name: string = RANDOM_STRATEGY_NAME,
 ) {
   await goToAndValidate(page, "/editor");
   await clickOnText(page, "new");
@@ -169,7 +169,7 @@ export async function clickOnTestId(page: Page, testid: string) {
 
 export async function saveResult(
   page: Page,
-  name: string = RANDOM_RESULT_NAME
+  name: string = RANDOM_RESULT_NAME,
 ) {
   await page.getByText("save to my results").first().click();
   await page.getByPlaceholder("Enter result name").fill(name);
@@ -232,7 +232,7 @@ export const makeStripePayment = async ({
     .click({ force: true });
 
   await page.fill('input[name="cardNumber"]', "4242424242424242");
-  await page.getByPlaceholder("MM / YY").fill("1225");
+  await page.getByPlaceholder("MM / YY").fill("1229");
   await page.getByPlaceholder("CVC").fill("123");
   await page.getByPlaceholder("Full name on card").fill("Test User");
   const countrySelect = page.getByLabel("Country or region");
@@ -242,7 +242,7 @@ export const makeStripePayment = async ({
   await page.waitForResponse(
     (response) =>
       response.url().includes("trusted-types-checker") &&
-      response.status() === 200
+      response.status() === 200,
   );
   const payBtn = page.getByTestId("hosted-payment-submit-button");
   await expect(payBtn).toBeVisible();
