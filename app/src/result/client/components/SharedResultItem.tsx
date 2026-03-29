@@ -3,12 +3,12 @@ import ResultHeader from "./ResultHeader";
 import { FiBookOpen } from "react-icons/fi";
 import OpenResult from "./OpenResult";
 import DeleteShareModal from "./modals/DeleteShareModal";
-import { FormInput, GetShared } from "../../../shared/sharedTypes";
+import { FormInput, GetSharedT } from "../../../shared/sharedTypes";
 import { acceptShare } from "wasp/client/operations";
 import { MdDeleteOutline } from "react-icons/md";
 
 interface SharedResultItemProps {
-  result: GetShared;
+  result: GetSharedT;
 }
 
 const SharedResultItem = ({ result }: SharedResultItemProps) => {

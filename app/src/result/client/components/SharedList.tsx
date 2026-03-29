@@ -1,7 +1,7 @@
 import { useQuery, getShared } from "wasp/client/operations";
 import { useState } from "react";
 import SharedResultItem from "./SharedResultItem";
-import { GetShared } from "../../../shared/sharedTypes";
+import { GetSharedT } from "../../../shared/sharedTypes";
 import LoadingScreen from "../../../client/components/LoadingScreen";
 
 function SharedList() {
@@ -19,7 +19,7 @@ function SharedList() {
         <>
           <ul>
             {(showAll ? results : results.slice(0, 10)).map(
-              (result: GetShared) => (
+              (result: GetSharedT) => (
                 <SharedResultItem key={result.id} result={result} />
               ),
             )}

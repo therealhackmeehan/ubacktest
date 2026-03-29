@@ -76,12 +76,12 @@ export type Stat = Serializable<{
   minReturn: number | null;
 }>;
 
-export type ShareResult = {
+export type ShareResultT = {
   email: User["email"];
   resultID: Result["id"];
 };
 
-export type GetShared = Result & {
+export type GetSharedT = Result & {
   sharedID: string;
   email: string;
   accepted: boolean;

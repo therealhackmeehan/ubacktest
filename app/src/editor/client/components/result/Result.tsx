@@ -240,10 +240,7 @@ function Result({
               <div className="mt-1 mb-4 bg-slate-50 rounded-lg">
                 {userDefinedPlotOpen && (
                   <div className="mt-2">
-                    <UserDefinedPlot
-                      strategyResult={strategyResult}
-                      timestamp={strategyResult.timestamp}
-                    />
+                    <UserDefinedPlot strategyResult={strategyResult} />
                   </div>
                 )}
                 <button

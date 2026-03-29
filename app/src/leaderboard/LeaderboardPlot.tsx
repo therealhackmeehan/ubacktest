@@ -1,4 +1,4 @@
-import CandlePlot from "../editor/client/components/result/candle/CandlePlot";
+import CandlePlot from "../editor/client/components/result/plots/candle/CandlePlot";
 import { Result } from "wasp/entities";
 import {
   eodFreqs,

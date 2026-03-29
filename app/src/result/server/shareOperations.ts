@@ -1,8 +1,8 @@
 import { HttpError } from "wasp/server";
 import { type Share, type User, type Result } from "wasp/entities";
 import {
-  ShareResult,
-  GetShared,
+  ShareResultT,
+  GetSharedT,
   SharedWithResultAndUser,
 } from "../../shared/sharedTypes";
 import {
@@ -14,7 +14,7 @@ import {
 } from "wasp/server/operations";
 import { emailSender } from "wasp/server/email";
 
-export const shareResult: ShareResult<ShareResult, Share> = async (
+export const shareResult: ShareResult<ShareResultT, Share> = async (
   { email, resultID },
   context,
 ) => {
@@ -121,7 +121,7 @@ export const getSharedWith: GetSharedWith<Pick<Result, "id">, Share[]> = async (
   });
 };
 
-export const getShared: GetShared<void, GetShared[] | null> = async (
+export const getShared: GetShared<void, GetSharedT[] | null> = async (
   _args,
   context,
 ) => {
@@ -143,8 +143,8 @@ export const getShared: GetShared<void, GetShared[] | null> = async (
     },
   });
 
-  // Transform shared results into GetShared
-  const results: GetShared[] = shared.flatMap(
+  // Transform shared results into GetSharedT
+  const results: GetSharedT[] = shared.flatMap(
     (share: SharedWithResultAndUser) => {
       if (!share.result) return [];
 
