@@ -33,8 +33,8 @@ class CodeExecutor {
       body: JSON.stringify({
         language_id: 31, // Python for ML (base image)
         source_code: Buffer.from(this.code).toString("base64"), // Encode source code
-        wall_time_limit: this.timeout,
-        cpu_time_limit: this.timeout,
+        cpu_time_limit: 59, // this.timeout,
+        wall_time_limit: 89, // this.timeout,
         memory_limit: this.memoryLimit, // increase to 1GB
         max_processes_and_or_threads: this.maxThreads,
       }),
@@ -42,16 +42,16 @@ class CodeExecutor {
 
     const response = await fetch(url, options);
     if (!response.ok) {
+      // TODO, put in better error message after processing response.json()
       throw new HttpError(
         503,
-        `Code Execution Failed:\n\nStatus ${response.status}: "${response.statusText}"`
+        `Code Execution Failed:\n\nStatus ${response.status} - ${response.statusText}`,
       );
     }
 
     const fullResult = await response.json();
-
-    //FIX THIS!! Any typing
-    let { stdout, stderr, message, memory, time, status } = fullResult;
+    let { stdout, stderr, message, memory, wall_time, time, status } =
+      fullResult as Judge0Result;
     const { id, description } = status;
 
     // for some reason this doesn't work unless I set the null values to '' (???)
@@ -68,7 +68,7 @@ class CodeExecutor {
 
     if (message) {
       const decodedMessage = Buffer.from(fullResult.message, "base64").toString(
-        "utf-8"
+        "utf-8",
       );
       const delim = "\n════════════════ Diagnostics ════════════════";
 
@@ -93,7 +93,7 @@ Message      : ${description}`;
     if (stderr.length === 0 && stdout.length === 0) {
       throw new HttpError(
         503,
-        "Something went wrong. No stdout or stderr generated from that execution. Please try again."
+        "Something went wrong. No stdout or stderr generated from that execution. Please try again.",
       );
     }
 
@@ -102,3 +102,48 @@ Message      : ${description}`;
 }
 
 export default CodeExecutor;
+
+export type Judge0Result = {
+  source_code: string;
+  language_id: number;
+  stdin: string | null;
+  expected_output: string | null;
+  stdout: string | null;
+  status_id: number;
+  created_at: string; // ISO timestamp
+  finished_at: string; // ISO timestamp
+  time: string; // CPU time (seconds, as string)
+  memory: number; // in KB
+  stderr: string | null;
+  token: string;
+  number_of_runs: number;
+  cpu_time_limit: string; // seconds
+  cpu_extra_time: string; // seconds
+  wall_time_limit: string; // seconds
+  memory_limit: number; // KB
+  stack_limit: number; // KB
+  max_processes_and_or_threads: number;
+  enable_per_process_and_thread_time_limit: boolean;
+  enable_per_process_and_thread_memory_limit: boolean;
+  max_file_size: number; // KB
+  compile_output: string | null;
+  exit_code: number | null;
+  exit_signal: number | null;
+  message: string | null; // Base64-encoded
+  wall_time: string; // actual runtime in seconds
+  compiler_options: string | null;
+  command_line_arguments: string | null;
+  redirect_stderr_to_stdout: boolean;
+  callback_url: string | null;
+  additional_files: any[] | null;
+  enable_network: boolean;
+  post_execution_filesystem: string | null; // Base64 ZIP of filesystem
+  status: {
+    id: number;
+    description: string;
+  };
+  language: {
+    id: number;
+    name: string;
+  };
+};
