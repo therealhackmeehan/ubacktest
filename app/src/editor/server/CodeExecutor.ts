@@ -86,7 +86,7 @@ Message      : ${description}`;
       }
 
       if (parseFloat(time) > this.timeout) {
-        stderr += `\n\n⏱️  Tip: Execution time of ${time}s exceeded the limit of ${this.timeout}s. You can increase this in the advanced options.`;
+        stderr += `\n\n⏱️  Tip: Execution time of ${time}s exceeded the limit of ${this.timeout}s. You can increase this in the advanced options. Do note we are currently experiencing a memory timing issue that cuts off even simple strategies, and we're working on a fix.`;
       }
     }
 
